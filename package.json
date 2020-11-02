@@ -1,0 +1,29 @@
+{
+  "name": "@nitric/sdk",
+  "version": "0.1.0",
+  "description": "Nitric NodeJS client sdk",
+  "author": "Nitric <https://github.com/nitric-dev>",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "scripts": {
+    "build": "yarn run gen-services && yarn run gen-types && yarn run fix-type-deps && yarn run fix-js-deps && tsc",
+    "gen-services": "grpc_tools_node_protoc --js_out=import_style=commonjs,binary:./src/interfaces --grpc_out=./src/interfaces --plugin=protoc-gen-grpc=`which grpc_tools_node_protoc_plugin` -I ./contracts ./contracts/**/*.proto",
+    "gen-types": "grpc_tools_node_protoc --plugin=protoc-gen-ts=`which grpc_tools_node_protoc_ts_plugin` --ts_out=./src/interfaces -I ./contracts ./contracts/**/*.proto",
+    "fix-type-deps": "replace-in-files --string='from \"grpc\"' --replacement='from \"@grpc/grpc-js\"' ./src/**/*.d.ts",
+    "fix-js-deps": "replace-in-files --string=\"require('grpc')\" --replacement=\"require('@grpc/grpc-js')\" ./src/**/*.js"
+  },
+  "contributors": [
+    "Jye Cusch <jye.cusch@gmail.com>",
+    "Tim Holm <timothy.j.holm@gmail.com>"
+  ],
+  "dependencies": {
+    "@grpc/grpc-js": "^1.1.7"
+  },
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "typescript": "^3.3",
+    "grpc-tools": "^1.9.1",
+    "grpc-tools-ts": "^2.3.0",
+    "replace-in-files-cli": "latest"
+  }
+}
