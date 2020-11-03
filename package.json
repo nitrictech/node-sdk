@@ -7,11 +7,11 @@
   "types": "lib/index.d.ts",
   "scripts": {
     "build": "yarn run gen-services && yarn run gen-types && yarn run fix-type-deps && yarn run fix-js-deps && tsc && yarn run copy-types",
-    "gen-services": "grpc_tools_node_protoc --js_out=import_style=commonjs,binary:./src/interfaces --grpc_out=./src/interfaces --plugin=protoc-gen-grpc=`which grpc_tools_node_protoc_plugin` -I ./contracts ./contracts/**/*.proto",
-    "gen-types": "grpc_tools_node_protoc --plugin=protoc-gen-ts=`which grpc_tools_node_protoc_ts_plugin` --ts_out=./src/interfaces -I ./contracts ./contracts/**/*.proto",
+    "gen-services": "grpc_tools_node_protoc --js_out=import_style=commonjs,binary:./src/interfaces --grpc_out=./src/interfaces --plugin=protoc-gen-grpc=`which grpc_tools_node_protoc_plugin` -I ./contracts ./contracts/proto/**/*.proto",
+    "gen-types": "grpc_tools_node_protoc --plugin=protoc-gen-ts=`which grpc_tools_node_protoc_ts_plugin` --ts_out=./src/interfaces -I ./contracts ./contracts/proto/**/*.proto",
     "fix-type-deps": "replace-in-files --string='from \"grpc\"' --replacement='from \"@grpc/grpc-js\"' ./src/**/*.d.ts",
     "fix-js-deps": "replace-in-files --string=\"require('grpc')\" --replacement=\"require('@grpc/grpc-js')\" ./src/**/*.js",
-    "copy-types": "cp src/interfaces/proto/* lib/interfaces/proto"
+    "copy-types": "cp src/interfaces/proto/**/* lib/interfaces/proto"
   },
   "contributors": [
     "Jye Cusch <jye.cusch@gmail.com>",
