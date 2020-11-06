@@ -15,8 +15,8 @@
     "copy-types": "cp src/interfaces/proto/**/* lib/interfaces/proto"
   },
   "contributors": [
-    "Jye Cusch <jye.cusch@gmail.com>",
-    "Tim Holm <timothy.j.holm@gmail.com>"
+    "Jye Cusch <jye.cusch@nitric.io>",
+    "Tim Holm <tim.holm@nitric.io>"
   ],
   "dependencies": {
     "@grpc/grpc-js": "^1.1.7"
