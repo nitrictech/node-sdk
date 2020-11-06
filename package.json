@@ -22,9 +22,10 @@
   },
   "license": "UNLICENSED",
   "devDependencies": {
-    "typescript": "^3.3",
     "grpc-tools": "^1.9.1",
     "grpc-tools-ts": "^2.3.0",
-    "replace-in-files-cli": "latest"
+    "replace-in-files-cli": "latest",
+    "standard-version": "^9.0.0",
+    "typescript": "^3.3"
   }
 }
