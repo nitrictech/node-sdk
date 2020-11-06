@@ -21,7 +21,7 @@ export class EventingClient {
     );
   }
 
-  async getTopics() {
+  async getTopics(): Promise<v1.GetTopicsReply> {
     return new Promise((resolve, reject) => {
       this.grpcClient.getTopics(null, (error, response) => {
         if (error) {
