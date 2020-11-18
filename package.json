@@ -19,7 +19,8 @@
     "Tim Holm <tim.holm@nitric.io>"
   ],
   "dependencies": {
-    "@grpc/grpc-js": "^1.1.7"
+    "@grpc/grpc-js": "^1.1.7",
+    "google-protobuf": "3.14.0"
   },
   "license": "UNLICENSED",
   "devDependencies": {
@@ -27,6 +28,7 @@
     "grpc-tools-ts": "^2.3.0",
     "replace-in-files-cli": "latest",
     "standard-version": "^9.0.0",
-    "typescript": "^3.3"
+    "typescript": "^3.3",
+    "@types/google-protobuf": "3.2.7"
   }
 }
