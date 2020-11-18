@@ -2,9 +2,10 @@ import process from 'process';
 
 import { v1 } from './interfaces';
 import * as grpc from '@grpc/grpc-js';
-import { CreateDocumentRequest, DeleteDocumentRequest, GetDocumentRequest, UpdateDocumentRequest } from './interfaces/v1';
+import { CreateDocumentRequest, DeleteDocumentRequest, GetDocumentRequest, GetRequest, PublishRequest, PutRequest, UpdateDocumentRequest } from './interfaces/v1';
 import { Empty } from 'google-protobuf/google/protobuf/empty_pb';
 import { Struct } from 'google-protobuf/google/protobuf/struct_pb';
+import { uuid } from "uuidv4";
 
 const AMBASSADOR_ADDRESS = process.env.AMBASSADOR_ADDRESS || '127.0.0.1';
 const AMBASSADOR_PORT = process.env.AMBASSADOR_PORT || '50051';
@@ -92,6 +93,12 @@ export class DocumentsClient<T extends {[key:string]: any}> {
   }
 }
 
+interface NitricEvent {
+  requestId?: string;
+  payloadType?: string;
+  payload: Record<string, any>;
+}
+
 /**
  * 
  */
@@ -105,19 +112,32 @@ export class EventingClient {
     );
   }
 
-  async getTopics(): Promise<v1.GetTopicsReply> {
+  async getTopics(): Promise<string[]> {
     return new Promise((resolve, reject) => {
       this.grpcClient.getTopics(null, (error, response) => {
         if (error) {
           reject(error); 
         } else {
-          resolve(response);
+          resolve(response.getTopicsList());
         }
       });
     });
   }
 
-  async publish(request: v1.PublishRequest): Promise<Empty> {
+  async publish(
+    topic: string, 
+    { requestId = uuid(), payloadType = "none", payload }: NitricEvent
+  ): Promise<Empty> {
+    const request = new PublishRequest();
+    const evt = new v1.NitricEvent();
+
+    evt.setRequestid(requestId);
+    evt.setPayload(Struct.fromJavaScript(payload));
+    evt.setPayloadtype(payloadType);
+
+    request.setTopicname(topic);
+    request.setEvent(evt);
+    
     return new Promise<Empty>((resolve, reject) => {
       this.grpcClient.publish(request, (error, response) => {
         if (error) {
@@ -143,25 +163,34 @@ export class StorageClient {
     );
   }
 
-  async put(request: v1.PutRequest): Promise<v1.PutReply> {
+  async put(bucket: string, key: string, body: Uint8Array): Promise<boolean> {
+    const request = new PutRequest();
+    request.setBucketname(bucket);
+    request.setKey(key);
+    request.setBody(body);
+
     return new Promise((resolve, reject) => {
       this.grpcClient.put(request, (error, response) => {
         if (error) {
           reject(error); 
         } else {
-          resolve(response);
+          resolve(response.getSuccess());
         }
       });
     });
   }
 
-  async get(request: v1.GetRequest): Promise<v1.GetReply> {
+  async get(bucket: string, key: string): Promise<Uint8Array> {
+    const request = new GetRequest();
+    request.setBucketname(bucket);
+    request.setKey(key);
+
     return new Promise((resolve, reject) => {
       this.grpcClient.get(request, (error, response) => {
         if (error) {
           reject(error); 
         } else {
-          resolve(response);
+          resolve(response.getBody_asU8());
         }
       });
     });
