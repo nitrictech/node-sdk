@@ -24,21 +24,25 @@ export class DocumentsClient<T extends {[key:string]: any}> {
     );
   }
 
-  async createDocument(key: string, document: T): Promise<Empty> {
+  async createDocument(key: string, document: T): Promise<void> {
     const request = new CreateDocumentRequest();
     request.setCollection(this.collection);
     request.setKey(key);
     request.setDocument(Struct.fromJavaScript(document));
 
-    return new Promise<Empty>((resolve, reject) => {
-      this.grpcClient.createDocument(request, (error, response) => {
-        if (error) {
-          reject(error);
-        } else {
-          resolve(response);
-        }
+    try {
+      return await new Promise<void>((resolve, reject) => {
+        this.grpcClient.createDocument(request, (error, _) => {
+          if (error) {
+            reject(error);
+          } else {
+            resolve();
+          }
+        });
       });
-    });
+    } catch (error) {
+      throw error;
+    }
   }
 
   async getDocument(key: string): Promise<T> {
@@ -59,34 +63,34 @@ export class DocumentsClient<T extends {[key:string]: any}> {
     });
   }
 
-  async updateDocument(key: string, document: T): Promise<Empty> {
+  async updateDocument(key: string, document: T): Promise<void> {
     const request = new UpdateDocumentRequest();
     request.setCollection(this.collection);
     request.setKey(key);
     request.setDocument(Struct.fromJavaScript(document));
 
-    return new Promise<Empty>((resolve, reject) => {
-      this.grpcClient.updateDocument(request, (error, response) => {
+    return new Promise<void>((resolve, reject) => {
+      this.grpcClient.updateDocument(request, (error, _) => {
         if (error) {
           reject(error);
         }
 
-        resolve(response);
+        resolve();
       })
     });
   }
 
-  async deleteDocument(key: string): Promise<Empty> {
+  async deleteDocument(key: string): Promise<void> {
     const request = new DeleteDocumentRequest();
     request.setCollection(this.collection);
     request.setKey(key);
 
-    return new Promise<Empty>((resolve, reject) => {
-      this.grpcClient.deleteDocument(request, (error, response) => {
+    return new Promise<void>((resolve, reject) => {
+      this.grpcClient.deleteDocument(request, (error, _) => {
         if (error) {
           reject(error);
         } else {
-          resolve(response);
+          resolve();
         }
       })
     });
