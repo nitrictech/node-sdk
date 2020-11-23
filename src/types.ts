@@ -13,7 +13,7 @@ export interface NitricContext {
  */
 export interface NitricRequest<T> {
   context: NitricContext;
-  payload: T;
+  payload: T | Uint8Array;
 }
 
 /**
