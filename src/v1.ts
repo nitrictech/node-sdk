@@ -131,7 +131,7 @@ export class EventingClient {
   async publish(
     topic: string, 
     { requestId = uuid(), payloadType = "none", payload }: NitricEvent
-  ): Promise<Empty> {
+  ): Promise<string> {
     const request = new PublishRequest();
     const evt = new v1.NitricEvent();
 
@@ -142,12 +142,12 @@ export class EventingClient {
     request.setTopicname(topic);
     request.setEvent(evt);
     
-    return new Promise<Empty>((resolve, reject) => {
+    return new Promise<string>((resolve, reject) => {
       this.grpcClient.publish(request, (error, response) => {
         if (error) {
           reject(error); 
         } else {
-          resolve(response);
+          resolve(requestId);
         }
       });
     });
