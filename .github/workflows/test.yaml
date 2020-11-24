@@ -1,0 +1,21 @@
+name: Tests
+
+on: pull_request
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Cache Yarn Cache
+      uses: actions/cache@v2
+      with:
+        path: '.yarn/cache'
+        key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+    - name: Install modules
+      run: yarn --frozen-lockfile
+    - name: Build Common
+      run: yarn build:common
+    - name: Run tests
+      run: yarn test
