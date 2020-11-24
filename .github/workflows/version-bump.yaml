@@ -1,0 +1,58 @@
+name: Bump Package Versions, Tag and Draft Release
+
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - 'master'
+      - 'main'
+
+jobs:
+  version:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+    - name: Cache Yarn Cache
+      uses: actions/cache@v2
+      with:
+        path: 'node_modules'
+        key: ${{ runner.os }}-modules-${{ hashFiles('yarn.lock') }}
+    - name: Use Node 14
+      uses: actions/setup-node@v1
+      with:
+        node-version: 14
+    - name: Git Identity
+      run: |
+        git config --global user.name 'github-actions[bot]'
+        git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+        git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/$GITHUB_REPOSITORY
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Install Dependencies
+      run: yarn --frozen-lockfile
+    - name: Bump and Tag
+      run: |
+        yarn bump
+        echo "::set-output name=TAG_REF::`git describe --abbrev=0`"
+      id: bump_tag
+    - name: Merge Master -> Develop
+      run: |
+        git fetch
+        git checkout develop
+        git merge --no-ff master -m "Merge version bump into develop"
+        git push origin master develop --follow-tags
+    - name: Create Draft Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ steps.bump_tag.outputs.TAG_REF }}
+        release_name: Release ${{ steps.bump_tag.outputs.TAG_REF }}
+        body: See CHANGELOG.md for changes
+        draft: true
+        prerelease: false
