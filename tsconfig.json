@@ -5,7 +5,8 @@
       "module": "commonjs",
       "rootDir": "src",
       "outDir": "lib",
-      "allowJs": true
+      "allowJs": true,
+      "types": ["node", "jest"]
   },
   "include": [
       "src/**/*"

@@ -6,7 +6,10 @@
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
+    "bump": "standard-version",
     "build": "yarn run gen-services && yarn run gen-types && yarn run fix-type-deps && yarn run fix-js-deps && tsc && yarn run copy-types",
+    "test": "jest",
+    "test:coverage": "jest --coverage",
     "gen-services": "grpc_tools_node_protoc --js_out=import_style=commonjs,binary:./src/interfaces --grpc_out=./src/interfaces --plugin=protoc-gen-grpc=`which grpc_tools_node_protoc_plugin` -I ./contracts ./contracts/proto/**/*.proto",
     "gen-types": "grpc_tools_node_protoc --plugin=protoc-gen-ts=`which grpc_tools_node_protoc_ts_plugin` --ts_out=./src/interfaces -I ./contracts ./contracts/proto/**/*.proto",
     "fix-type-deps": "replace-in-files --string='from \"grpc\"' --replacement='from \"@grpc/grpc-js\"' ./src/**/*.d.ts",
@@ -14,17 +17,24 @@
     "copy-types": "cp src/interfaces/proto/**/* lib/interfaces/proto"
   },
   "contributors": [
-    "Jye Cusch <jye.cusch@gmail.com>",
-    "Tim Holm <timothy.j.holm@gmail.com>"
+    "Jye Cusch <jye.cusch@nitric.io>",
+    "Tim Holm <tim.holm@nitric.io>"
   ],
   "dependencies": {
-    "@grpc/grpc-js": "^1.1.7"
+    "@grpc/grpc-js": "^1.1.7",
+    "google-protobuf": "3.14.0",
+    "uuidv4": "6.2.3"
   },
   "license": "UNLICENSED",
   "devDependencies": {
-    "typescript": "^3.3",
+    "@types/jest": "^26.0.15",
+    "jest": "^26.6.1",
+    "ts-jest": "^26.4.3",
     "grpc-tools": "^1.9.1",
     "grpc-tools-ts": "^2.3.0",
-    "replace-in-files-cli": "latest"
+    "replace-in-files-cli": "latest",
+    "standard-version": "^9.0.0",
+    "typescript": "^3.3",
+    "@types/google-protobuf": "3.2.7"
   }
 }
