@@ -17,8 +17,8 @@ jobs:
     - name: Cache Yarn Cache
       uses: actions/cache@v2
       with:
-        path: '.yarn/cache'
-        key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+        path: 'node_modules'
+        key: ${{ runner.os }}-modules-${{ hashFiles('yarn.lock') }}
     - name: Use Node 14
       uses: actions/setup-node@v1
       with:
@@ -31,7 +31,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: Install Dependencies
-      run: yarn --immutable
+      run: yarn --frozen-lockfile
     - name: Bump and Tag
       run: |
         yarn bump
