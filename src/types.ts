@@ -19,4 +19,4 @@ export interface NitricRequest<T> {
 /**
  * 
  */
-export type NitricFunction<P,T> = (request: NitricRequest<P>) => T;
+export type NitricFunction<P,T> = (request: NitricRequest<P>) => Promise<T>;

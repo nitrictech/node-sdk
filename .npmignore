@@ -1,6 +1,10 @@
 src/
 contracts/
 .github/
+.gitmodules
+tests/
+coverage/
 node_modules/
+jest.config.json
 tsconfig.json
 yarn.lock
