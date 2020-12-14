@@ -7,14 +7,14 @@ interface RequestParameters {
   query: Record<string, string | string[] | undefined>
 }
 
-export class NitricRequest<T extends Record<string, any>> {
+export class NitricRequest<T> {
   private payload: Uint8Array;
   private path: string;
   // private headers: Record<string, string>;
   // private method: "GET" | "POST" | "PUT" | "DELETE";
   private context: NitricContext;
 
-  constructor(headers: Record<string, string>, payload: Uint8Array, path?: string) {
+  constructor(headers: Record<string, string>, payload?: Uint8Array, path?: string) {
     this.context = NitricContext.fromHeaders(headers)
     // this.headers = headers;
     this.payload = payload;
@@ -32,7 +32,7 @@ export class NitricRequest<T extends Record<string, any>> {
   // }
 
   // TODO: Extract context from headers
-  getContext(): NitricContext {
+  public getContext = (): NitricContext => {
     return this.context;
   } 
 
@@ -40,14 +40,16 @@ export class NitricRequest<T extends Record<string, any>> {
    * Will attempt to get parameters for a given request
    * @param paramContext E.g. /customers/:customerId
    */
-  getParams(paramContext?: string): RequestParameters {
+  public getParams = (paramContext?: string): RequestParameters => {
+    const [ pathString, queryString ] = this.path.split("?");
+
     const pathParser = new Path(paramContext);
     // parse the context path
     const path = paramContext 
-      ? pathParser.test(this.path)
+      ? pathParser.test(pathString)
       : {}
 
-    const query = querystring.parse(this.path);
+    const query = querystring.parse(queryString);
 
     // parse query parameters
     return {
@@ -59,22 +61,29 @@ export class NitricRequest<T extends Record<string, any>> {
   /**
    * Does the request contain a body at all?
    */
-  hasBody(): boolean {
+  public hasBody = (): boolean => {
     return !!this.payload;
   }
 
   /**
    * Return the raw body as bytes
    */
-  getBody(): Uint8Array {
+  public getBody = (): Uint8Array => {
     return this.payload;
+  }
+
+  /**
+   * Return the payload as a string
+   */
+  public getString = (): string => {
+    return new TextDecoder("utf-8").decode(this.payload)
   }
 
   /**
    * Return the typed object, this assumes that the body is JSON
    * Will throw in the case where the object cannot be correctly serialized...
    */
-  getObject(): T {
+  public getObject = (): T => {
     return JSON.parse(
       new TextDecoder("utf-8").decode(this.payload)
     );
