@@ -1,31 +1,39 @@
 import { Path } from "path-parser";
+import querystring from "querystring"
+import { NitricContext } from "./context"
 
 interface RequestParameters {
   path: Record<string, string>;
-  query: Record<string, string>
+  query: Record<string, string | string[] | undefined>
 }
 
-import { NitricContext } from "./context"
-
 export class NitricRequest<T extends Record<string, any>> {
-  private body: Uint8Array;
-  private contextPath: string;
-  private headers: Record<string, string>;
-  private method: "GET" | "POST" | "PUT" | "DELETE";
+  private payload: Uint8Array;
+  private path: string;
+  // private headers: Record<string, string>;
+  // private method: "GET" | "POST" | "PUT" | "DELETE";
+  private context: NitricContext;
 
-  constructor() {}
-
-  getHeaders(): Record<string, string> {
-    return this.headers;
+  constructor(headers: Record<string, string>, payload: Uint8Array, path?: string) {
+    this.context = NitricContext.fromHeaders(headers)
+    // this.headers = headers;
+    this.payload = payload;
+    // Default path to index, if one is not provided
+    this.path = path || "/";
+    // this.method = method;
   }
 
-  getMethod(): "GET" | "POST" | "PUT" | "DELETE" {
-    return this.method;
-  }
+  // getHeaders(): Record<string, string> {
+  //   return this.headers;
+  // }
+
+  // getMethod(): "GET" | "POST" | "PUT" | "DELETE" {
+  //   return this.method;
+  // }
 
   // TODO: Extract context from headers
   getContext(): NitricContext {
-    return null as any;
+    return this.context;
   } 
 
   /**
@@ -36,14 +44,15 @@ export class NitricRequest<T extends Record<string, any>> {
     const pathParser = new Path(paramContext);
     // parse the context path
     const path = paramContext 
-      ? pathParser.test(this.contextPath)
+      ? pathParser.test(this.path)
       : {}
 
-    // parse query parameters
+    const query = querystring.parse(this.path);
 
+    // parse query parameters
     return {
       path,
-      query: {}
+      query
     };
   }
 
@@ -51,14 +60,14 @@ export class NitricRequest<T extends Record<string, any>> {
    * Does the request contain a body at all?
    */
   hasBody(): boolean {
-    return !!this.body;
+    return !!this.payload;
   }
 
   /**
    * Return the raw body as bytes
    */
   getBody(): Uint8Array {
-    return this.body;
+    return this.payload;
   }
 
   /**
@@ -67,7 +76,7 @@ export class NitricRequest<T extends Record<string, any>> {
    */
   getObject(): T {
     return JSON.parse(
-      new TextDecoder("utf-8").decode(this.body)
+      new TextDecoder("utf-8").decode(this.payload)
     );
   }
 }
