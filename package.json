@@ -23,18 +23,19 @@
   "dependencies": {
     "@grpc/grpc-js": "^1.1.7",
     "google-protobuf": "3.14.0",
+    "path-parser": "^6.1.0",
     "uuidv4": "6.2.3"
   },
   "license": "UNLICENSED",
   "devDependencies": {
+    "@types/google-protobuf": "3.2.7",
     "@types/jest": "^26.0.15",
-    "jest": "^26.6.1",
-    "ts-jest": "^26.4.3",
     "grpc-tools": "^1.9.1",
     "grpc-tools-ts": "^2.3.0",
+    "jest": "^26.6.1",
     "replace-in-files-cli": "latest",
     "standard-version": "^9.0.0",
-    "typescript": "^3.3",
-    "@types/google-protobuf": "3.2.7"
+    "ts-jest": "^26.4.3",
+    "typescript": "^3.3"
   }
 }
