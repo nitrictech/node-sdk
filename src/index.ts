@@ -5,4 +5,7 @@ export * as v1 from './v1';
 export * as grpc from './interfaces';
 
 // Nitric typings
-export * from "./types";
+export * from "./function";
+export * from "./request";
+export * from "./response";
+export * from "./context";
