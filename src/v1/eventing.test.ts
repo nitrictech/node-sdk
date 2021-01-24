@@ -1,12 +1,11 @@
 import { Empty } from "google-protobuf/google/protobuf/empty_pb";
-import { v1, grpc } from "../src/";
-import { GetTopicsReply } from "../src/interfaces/v1";
+import { EventingClient } from "./eventing";
+import { eventing } from "../interfaces/v1";
 
 // Extract the DocumentsClient
-const { EventingClient } = v1;
-const { EventingClient: GrpcEventingClient } = grpc.v1;
+const { EventingClient: GrpcEventingClient } = eventing;
 
-describe("Eventing Client Tests;", () => {
+describe("Eventing Client Tests", () => {
   describe("Given nitric.v1.eventing.Publish throws an error", () => {
     const MOCK_ERROR = {
       code: 2,
@@ -144,7 +143,7 @@ describe("Eventing Client Tests;", () => {
 
   describe("Given nitric.v1.eventing.GetTopics succeeds", () => {
     const MOCK_TOPICS = ["topic1"];
-    const MOCK_TOPICS_REPLY = new GetTopicsReply();
+    const MOCK_TOPICS_REPLY = new eventing.GetTopicsReply();
     MOCK_TOPICS_REPLY.setTopicsList(MOCK_TOPICS);
 
     let getTopicsMock;

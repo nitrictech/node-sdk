@@ -1,4 +1,4 @@
-import { NitricRequest } from "../src/"
+import { NitricRequest } from "."
 
 describe("Nitric Request Tests", () => {
   describe("Given an empty HTTP request", () => {

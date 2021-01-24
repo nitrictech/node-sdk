@@ -1,10 +1,10 @@
 import { Empty } from "google-protobuf/google/protobuf/empty_pb";
 import { Struct } from "google-protobuf/google/protobuf/struct_pb";
-import { v1, grpc } from "../src/";
+import { documents } from "../interfaces/v1";
+import { DocumentsClient } from "./documents";
 
 // Extract the DocumentsClient
-const { DocumentsClient } = v1;
-const { DocumentsClient: GrpcDocumentsClient, GetDocumentReply } = grpc.v1;
+const { DocumentsClient: GrpcDocumentsClient, GetDocumentReply } = documents;
 
 describe("Documents Client Tests", () => {
   describe("Given nitric.v1.documents.CreateDocument throws an error", () => {
