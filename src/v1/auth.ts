@@ -22,7 +22,7 @@ export class AuthClient {
     request.setTenant(this.tenant);
 
     return new Promise<void>((resolve, reject) => {
-      this.grpcClient.createUser(request, (error, resp) => {
+      this.grpcClient.createUser(request, (error, _) => {
         if (error) {
           reject(error)
         } else {
