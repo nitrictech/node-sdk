@@ -1,7 +1,7 @@
 import { QueueClient } from "./queue";
 
-import { queue } from "../interfaces/v1";
-import { FailedMessage, NitricEvent, PushResponse } from "../interfaces/v1/queue";
+import { queue, common } from "../interfaces/v1";
+import { FailedMessage, PushResponse } from "../interfaces/v1/queue";
 import { Struct } from "google-protobuf/google/protobuf/struct_pb";
 const { QueueClient: GrpcQueueClient } = queue;
 
@@ -78,7 +78,7 @@ describe("Queue Client Tests", () => {
         const mockResponse = new PushResponse()
         mockResponse.setFailedmessagesList(mockEvents.map(e => {
           const msg = new FailedMessage()
-          const evt = new NitricEvent()
+          const evt = new common.NitricEvent()
           evt.setRequestid(e.requestId);
           evt.setPayloadtype(e.payloadType);
           evt.setPayload(Struct.fromJavaScript(e.payload))

@@ -1,5 +1,5 @@
 import { AMBASSADOR_BIND } from "../constants"
-import { eventing } from '../interfaces/v1';
+import { eventing, common } from '../interfaces/v1';
 import { Struct } from 'google-protobuf/google/protobuf/struct_pb';
 import * as grpc from '@grpc/grpc-js';
 import { uuid } from "uuidv4"
@@ -36,7 +36,7 @@ export class EventingClient {
     { requestId = uuid(), payloadType = "none", payload }: NitricEvent
   ): Promise<string> {
     const request = new eventing.PublishRequest();
-    const evt = new eventing.NitricEvent();
+    const evt = new common.NitricEvent();
 
     evt.setRequestid(requestId);
     evt.setPayload(Struct.fromJavaScript(payload));

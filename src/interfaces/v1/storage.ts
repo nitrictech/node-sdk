@@ -1,2 +1,2 @@
-export * from '../proto/v1/storage_grpc_pb';
-export * from '../proto/v1/storage_pb';
+export * from './storage_grpc_pb';
+export * from './storage_pb';

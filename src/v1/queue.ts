@@ -1,4 +1,4 @@
-import { queue } from '../interfaces/v1';
+import { queue, common } from '../interfaces/v1';
 import { AMBASSADOR_BIND } from "../constants"
 import * as grpc from '@grpc/grpc-js';
 import { NitricEvent } from './types';
@@ -24,11 +24,10 @@ export class QueueClient {
 
   async push(queueName: string, events: NitricEvent[]): Promise<FailedMessage[]> {
     return new Promise((resolve, reject) => {
-      const request = new queue.PushRequest()
-      const event = new queue.NitricEvent()
+      const request = new queue.PushRequest();
 
       const wireEvents = events.map(e => {
-        const wireEvent = new queue.NitricEvent();
+        const wireEvent = new common.NitricEvent();
         wireEvent.setRequestid(e.requestId);
         wireEvent.setPayloadtype(e.payloadType);
         wireEvent.setPayload(Struct.fromJavaScript(e.payload))

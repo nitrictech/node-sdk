@@ -89,4 +89,4 @@ typings/
 
 lib/
 
-src/interfaces/proto
+*_pb.*
