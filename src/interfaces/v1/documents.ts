@@ -1,2 +1,2 @@
-export * from '../proto/v1/documents_grpc_pb';
-export * from '../proto/v1/documents_pb';
+export * from './documents_grpc_pb';
+export * from './documents_pb';
