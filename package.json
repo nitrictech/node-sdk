@@ -7,7 +7,7 @@
   "types": "lib/index.d.ts",
   "scripts": {
     "bump": "standard-version",
-    "build": "yarn run gen-services && yarn run gen-types && yarn run fix-type-deps && yarn run fix-js-deps && tsc && yarn run copy-types",
+    "build": "yarn run gen-services && yarn run gen-types && yarn run fix-type-deps && yarn run fix-js-deps && tsc --project tsconfig.build.json && yarn run copy-types",
     "test": "jest",
     "test:coverage": "jest --coverage",
     "gen-services": "grpc_tools_node_protoc --js_out=import_style=commonjs,binary:./src/interfaces --grpc_out=./src/interfaces --plugin=protoc-gen-grpc=`which grpc_tools_node_protoc_plugin` -I ./contracts/proto ./contracts/proto/**/*.proto",
