@@ -25,9 +25,10 @@ describe("Queue Client Tests", () => {
       jest.resetAllMocks();
     });
 
-    test("Then Queue.push should reject", () => {
+    it("Then Queue.push should reject", async () => {
       const client = new QueueClient();
-      expect(client.push("test", [{
+      // expect.assertions(1);
+      await expect(client.push("test", [{
         requestId: "test",
         payloadType: "Test Payload",
         payload: {
@@ -52,9 +53,9 @@ describe("Queue Client Tests", () => {
       jest.resetAllMocks();
     });
 
-    test("Then EventingClient.publish should resolve with no failed messages", () => {
+    it("Then EventingClient.publish should resolve with no failed messages", async () => {
       const client = new QueueClient();
-      expect(client.push("test", [{
+      await expect(client.push("test", [{
         requestId: "test",
         payloadType: "Test Payload",
         payload: {
@@ -97,9 +98,9 @@ describe("Queue Client Tests", () => {
       jest.resetAllMocks();
     });
 
-    test("Then EventingClient.publish should resolve with no failed messages", () => {
+    it("Then EventingClient.publish should resolve with no failed messages", async () => {
       const client = new QueueClient();
-      expect(client.push("test", [{
+      await expect(client.push("test", [{
         requestId: "test",
         payloadType: "Test Payload",
         payload: {

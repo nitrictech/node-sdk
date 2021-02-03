@@ -35,25 +35,23 @@ export class QueueClient {
         return wireEvent;
       })
 
-      request.setEventsList(wireEvents)
-      request.setQueue(queueName)
-    
-      return new Promise<FailedMessage[]>((resolve,reject) => {
-        this.grpcClient.push(request, (error, response) => {
-          if (error) {
-            reject(error)
-          } else {
-            resolve(response.getFailedmessagesList().map(m => ({
-              event: {
-                requestId: m.getEvent().getRequestid(),
-                payload: m.getEvent().getPayload().toJavaScript(),
-                payloadType: m.getEvent().getPayloadtype(),
-              },
-              message: m.getMessage(),
-            })))
-          }
-        });
-      })
+      request.setEventsList(wireEvents);
+      request.setQueue(queueName);
+
+      this.grpcClient.push(request, (error, response) => {
+        if (error) {
+          reject(error)
+        } else {
+          resolve(response.getFailedmessagesList().map(m => ({
+            event: {
+              requestId: m.getEvent().getRequestid(),
+              payload: m.getEvent().getPayload().toJavaScript(),
+              payloadType: m.getEvent().getPayloadtype(),
+            },
+            message: m.getMessage(),
+          })))
+        }
+      });
     });
   }
 }
