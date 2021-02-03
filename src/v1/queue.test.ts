@@ -1,115 +1,255 @@
 import { QueueClient } from "./queue";
 
 import { queue, common } from "../interfaces/v1";
-import { FailedMessage, PushResponse } from "../interfaces/v1/queue";
+import {
+  FailedMessage,
+  NitricQueueItem,
+  PopResponse,
+  PushResponse,
+} from "../interfaces/v1/queue";
 import { Struct } from "google-protobuf/google/protobuf/struct_pb";
 const { QueueClient: GrpcQueueClient } = queue;
 
 describe("Queue Client Tests", () => {
-  describe("Given nitric.v1.queue.Push throws an error", () => {
-    const MOCK_ERROR = {
-      code: 2,
-      message: "UNIMPLEMENTED"
-    };
-    let publishMock;
+  describe("Push", () => {
+    describe("Given nitric.v1.queue.Push throws an error", () => {
+      const MOCK_ERROR = {
+        code: 12,
+        message: "UNIMPLEMENTED",
+      };
+      let pushMock;
 
-    beforeAll(() => {
-      publishMock = jest.spyOn(GrpcQueueClient.prototype, "push").mockImplementation((request, callback: any) => {
-        callback(MOCK_ERROR, null);
+      beforeAll(() => {
+        pushMock = jest
+          .spyOn(GrpcQueueClient.prototype, "push")
+          .mockImplementation((request, callback: any) => {
+            callback(MOCK_ERROR, null);
 
-        return null as any;
+            return null as any;
+          });
+      });
+
+      afterAll(() => {
+        jest.resetAllMocks();
+      });
+
+      it("Then Queue.push should reject", async () => {
+        const client = new QueueClient();
+        // expect.assertions(1);
+        await expect(
+          client.push("test", [
+            {
+              requestId: "test",
+              payloadType: "Test Payload",
+              payload: {
+                test: "test",
+              },
+            },
+          ])
+        ).rejects.toBe(MOCK_ERROR);
       });
     });
 
-    afterAll(() => {
-      jest.resetAllMocks();
+    describe("Given nitric.v1.queue.Push succeeds", () => {
+      beforeAll(() => {
+        jest
+          .spyOn(GrpcQueueClient.prototype, "push")
+          .mockImplementation((request, callback: any) => {
+            const mockResponse = new PushResponse();
+            mockResponse.setFailedmessagesList([]);
+            callback(null, mockResponse);
+
+            return null as any;
+          });
+      });
+
+      afterAll(() => {
+        jest.resetAllMocks();
+      });
+
+      it("Then Queue.push should resolve with no failed messages", async () => {
+        const client = new QueueClient();
+        await expect(
+          client.push("test", [
+            {
+              requestId: "test",
+              payloadType: "Test Payload",
+              payload: {
+                test: "test",
+              },
+            },
+          ])
+        ).resolves.toEqual([]);
+      });
     });
 
-    it("Then Queue.push should reject", async () => {
-      const client = new QueueClient();
-      // expect.assertions(1);
-      await expect(client.push("test", [{
-        requestId: "test",
-        payloadType: "Test Payload",
-        payload: {
-          test: "test"
-        }
-      }])).rejects.toBe(MOCK_ERROR);
+    describe("Given nitric.v1.queue.Push partially succeeds", () => {
+      const mockEvents = [
+        {
+          requestId: "test",
+          payloadType: "Test Payload",
+          payload: {
+            test: "test",
+          },
+        },
+      ];
+
+      beforeAll(() => {
+        jest
+          .spyOn(GrpcQueueClient.prototype, "push")
+          .mockImplementation((request, callback: any) => {
+            const mockResponse = new PushResponse();
+            mockResponse.setFailedmessagesList(
+              mockEvents.map((e) => {
+                const msg = new FailedMessage();
+                const evt = new common.NitricEvent();
+                evt.setRequestid(e.requestId);
+                evt.setPayloadtype(e.payloadType);
+                evt.setPayload(Struct.fromJavaScript(e.payload));
+                msg.setEvent(evt);
+                msg.setMessage("Failed to Push event");
+
+                return msg;
+              })
+            );
+            callback(null, mockResponse);
+
+            return null as any;
+          });
+      });
+
+      afterAll(() => {
+        jest.resetAllMocks();
+      });
+
+      it("Then EventingClient.publish should resolve with no failed messages", async () => {
+        const client = new QueueClient();
+        await expect(
+          client.push("test", [
+            {
+              requestId: "test",
+              payloadType: "Test Payload",
+              payload: {
+                test: "test",
+              },
+            },
+          ])
+        ).resolves.toEqual([
+          {
+            event: mockEvents[0],
+            message: "Failed to Push event",
+          },
+        ]);
+      });
     });
   });
 
-  describe("Given nitric.v1.queue.Push succeeds", () => {
-    beforeAll(() => {
-      jest.spyOn(GrpcQueueClient.prototype, "push").mockImplementation((request, callback: any) => {
-        const mockResponse = new PushResponse()
-        mockResponse.setFailedmessagesList([])
-        callback(null, mockResponse);
+  describe("Pop", () => {
+    describe("Given nitric.v1.queue.Pop throws an error", () => {
+      const MOCK_ERROR = {
+        code: 12,
+        message: "UNIMPLEMENTED",
+      };
+      let popMock;
 
-        return null as any;
+      beforeAll(() => {
+        popMock = jest
+          .spyOn(GrpcQueueClient.prototype, "pop")
+          .mockImplementation((request, callback: any) => {
+            callback(MOCK_ERROR, null);
+
+            return null as any;
+          });
+      });
+
+      afterAll(() => {
+        jest.resetAllMocks();
+      });
+
+      it("Then Queue.pop should reject", async () => {
+        const client = new QueueClient();
+
+        await expect(client.pop("test", 1)).rejects.toBe(MOCK_ERROR);
       });
     });
 
-    afterAll(() => {
-      jest.resetAllMocks();
-    });
+    describe("Given no queue items are returned", () => {
+      beforeAll(() => {
+        jest
+          .spyOn(GrpcQueueClient.prototype, "pop")
+          .mockImplementation((request, callback: any) => {
+            const mockResponse = new PopResponse();
+            mockResponse.setItemsList([]);
 
-    it("Then EventingClient.publish should resolve with no failed messages", async () => {
-      const client = new QueueClient();
-      await expect(client.push("test", [{
-        requestId: "test",
-        payloadType: "Test Payload",
-        payload: {
-          test: "test"
-        }
-      }])).resolves.toEqual([]);
-    });
-  })
+            // const mockResponse = new PushResponse()
+            // mockResponse.setFailedmessagesList([])
+            callback(null, mockResponse);
 
-  describe("Given nitric.v1.queue.Push partially succeeds", () => {
-    const mockEvents = [{
-      requestId: "test",
-      payloadType: "Test Payload",
-      payload: {
-        test: "test"
-      }
-    }]
+            return null as any;
+          });
+      });
 
-    beforeAll(() => {
-      jest.spyOn(GrpcQueueClient.prototype, "push").mockImplementation((request, callback: any) => {
-        const mockResponse = new PushResponse()
-        mockResponse.setFailedmessagesList(mockEvents.map(e => {
-          const msg = new FailedMessage()
-          const evt = new common.NitricEvent()
-          evt.setRequestid(e.requestId);
-          evt.setPayloadtype(e.payloadType);
-          evt.setPayload(Struct.fromJavaScript(e.payload))
-          msg.setEvent(evt);
-          msg.setMessage("Failed to Push event");
+      afterAll(() => {
+        jest.resetAllMocks();
+      });
 
-          return msg;
-        }))
-        callback(null, mockResponse);
-
-        return null as any;
+      it("Then Queue.pop should resolve with an empty array", async () => {
+        const client = new QueueClient();
+        await expect(client.pop("test", 1)).resolves.toEqual([]);
       });
     });
 
-    afterAll(() => {
-      jest.resetAllMocks();
-    });
+    describe("Given queue items are returned", () => {
+      const mockEvents = [
+        {
+          requestId: "test",
+          payloadType: "Test Payload",
+          payload: {
+            test: "test",
+          },
+        },
+      ];
 
-    it("Then EventingClient.publish should resolve with no failed messages", async () => {
-      const client = new QueueClient();
-      await expect(client.push("test", [{
-        requestId: "test",
-        payloadType: "Test Payload",
-        payload: {
-          test: "test"
-        }
-      }])).resolves.toEqual([{
-        event: mockEvents[0],
-        message: "Failed to Push event",
-      }]);
+      beforeAll(() => {
+        jest
+          .spyOn(GrpcQueueClient.prototype, "pop")
+          .mockImplementation((request, callback: any) => {
+            const mockResponse = new PopResponse();
+            mockResponse.setItemsList(
+              mockEvents.map((e) => {
+                const item = new NitricQueueItem();
+                const event = new common.NitricEvent();
+                event.setRequestid(e.requestId);
+                event.setPayloadtype(e.payloadType);
+                event.setPayload(Struct.fromJavaScript(e.payload));
+
+                item.setLeaseid(e.requestId);
+                item.setEvent(event);
+                return item;
+              })
+            );
+
+            callback(null, mockResponse);
+
+            return null as any;
+          });
+      });
+
+      afterAll(() => {
+        jest.resetAllMocks();
+      });
+
+      it("Then Queue.pop should resolve with an empty array", async () => {
+        const client = new QueueClient();
+        await expect(client.pop("test", 1)).resolves.toEqual(
+          mockEvents.map((e) => {
+            return {
+              leaseId: e.requestId,
+              event: e,
+            };
+          })
+        );
+      });
     });
-  })
+  });
 });
