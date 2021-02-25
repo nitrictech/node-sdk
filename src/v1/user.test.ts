@@ -1,7 +1,7 @@
 import { auth } from "../interfaces/v1";
-import { AuthClient } from "./auth";
+import { AuthClient } from "./user";
 
-const { AuthClient: GrpcAuthClient, CreateUserResponse } = auth;
+const { UserClient: GrpcUserClient, UserCreateResponse } = auth;
 describe("AuthClient", () => {
   describe("createUser", () => {
     describe("Given nitric.v1.auth.CreateUser throws an error", () => {
@@ -11,7 +11,7 @@ describe("AuthClient", () => {
       };
       let createUserMock: jest.SpyInstance;
       beforeAll(() => {
-        createUserMock = jest.spyOn(GrpcAuthClient.prototype, 'createUser').mockImplementation((_, callback: any) => {
+        createUserMock = jest.spyOn(GrpcUserClient.prototype, 'create').mockImplementation((_, callback: any) => {
           callback(MOCK_ERROR, null);
 
           return null as any;
@@ -30,9 +30,9 @@ describe("AuthClient", () => {
 
     describe("Given nitric.v1.auth.CreateUser succeeds", () => {
       let createUserMock: jest.SpyInstance;
-      const MOCK_RESPONSE = new CreateUserResponse();
+      const MOCK_RESPONSE = new UserCreateResponse();
       beforeAll(() => {
-        createUserMock = jest.spyOn(GrpcAuthClient.prototype, 'createUser').mockImplementation((_, callback: any) => {
+        createUserMock = jest.spyOn(GrpcUserClient.prototype, 'create').mockImplementation((_, callback: any) => {
           callback(null, MOCK_RESPONSE);
 
           return null as any;

@@ -16,7 +16,7 @@ export class StorageClient {
   }
 
   async put(bucket: string, key: string, body: Uint8Array): Promise<boolean> {
-    const request = new storage.PutRequest();
+    const request = new storage.StoragePutRequest();
     request.setBucketname(bucket);
     request.setKey(key);
     request.setBody(body);
@@ -26,14 +26,14 @@ export class StorageClient {
         if (error) {
           reject(error); 
         } else {
-          resolve(response.getSuccess());
+          resolve(true);
         }
       });
     });
   }
 
   async get(bucket: string, key: string): Promise<Uint8Array> {
-    const request = new storage.GetRequest();
+    const request = new storage.StorageGetRequest();
     request.setBucketname(bucket);
     request.setKey(key);
 

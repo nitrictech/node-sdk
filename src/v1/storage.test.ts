@@ -35,8 +35,7 @@ describe("Stroage Client Tests", () => {
 
   describe("Given nitric.v1.storage.Put succeeds", () => {
     let putMock;
-    const MOCK_REPLY = new storage.PutReply();
-    MOCK_REPLY.setSuccess(true);
+    const MOCK_REPLY = new storage.StoragePutResponse();
 
     beforeAll(() => {
       putMock = jest.spyOn(GrpcStorageClient.prototype, "put").mockImplementation((_, callback: any) => {
@@ -91,7 +90,7 @@ describe("Stroage Client Tests", () => {
 
   describe("Given nitric.v1.storage.Get succeeds", () => {
     const MOCK_BYTES = new Uint8Array();
-    const MOCK_REPLY = new storage.GetReply();
+    const MOCK_REPLY = new storage.StorageGetResponse();
     MOCK_REPLY.setBody(MOCK_BYTES);
 
     let getMock;
