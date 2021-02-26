@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.1.0](https://github.com/nitrictech/node-sdk/compare/v0.0.1...v0.1.0) (2021-02-26)
+
+
+### ⚠ BREAKING CHANGES
+
+* update to new grpc contracts
+
+### Features
+
+* update to new grpc contracts ([cd13ab6](https://github.com/nitrictech/node-sdk/commit/cd13ab682ba8508ddfbda4cf18da9f43effa5096))
+* **queue:** add queue pop method ([2e50995](https://github.com/nitrictech/node-sdk/commit/2e509956ea366abe9d350ac3bbd2bc1a358d54f4))
+* Add Queue capability and add some light structure refactoring ([9ad4109](https://github.com/nitrictech/node-sdk/commit/9ad41097b40ba492f4a5137e56817dec74c88def))
+* Implement request and context parsing. ([27dd7ec](https://github.com/nitrictech/node-sdk/commit/27dd7ec522756ec4953e444fedb978a0f6213c1f))
+* Initial AuthClient implementation. ([422317d](https://github.com/nitrictech/node-sdk/commit/422317d78558bf2470524a64ad286a1cb4c5ef3b))
+
+
+### Bug Fixes
+
+* Ensure nitric functions are async by default. ([161c4fd](https://github.com/nitrictech/node-sdk/commit/161c4fd5ec74dee419887b4cbae703d0bfb462e0))
+
 ### 0.0.1 (2020-11-24)
 
 
