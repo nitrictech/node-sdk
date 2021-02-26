@@ -1,10 +1,7 @@
-import { Empty } from "google-protobuf/google/protobuf/empty_pb";
-import { v1, grpc } from "../src/";
-import { GetReply, PutReply } from "../src/interfaces/v1";
+import { StorageClient } from "./storage";
+import { storage } from "../interfaces/v1";
 
-// Extract the DocumentsClient
-const { StorageClient } = v1;
-const { StorageClient: GrpcStorageClient } = grpc.v1;
+const { StorageClient: GrpcStorageClient } = storage
 
 describe("Stroage Client Tests", () => {
   describe("Given nitric.v1.storage.Put throws an error", () => {
@@ -38,8 +35,7 @@ describe("Stroage Client Tests", () => {
 
   describe("Given nitric.v1.storage.Put succeeds", () => {
     let putMock;
-    const MOCK_REPLY = new PutReply();
-    MOCK_REPLY.setSuccess(true);
+    const MOCK_REPLY = new storage.StoragePutResponse();
 
     beforeAll(() => {
       putMock = jest.spyOn(GrpcStorageClient.prototype, "put").mockImplementation((_, callback: any) => {
@@ -94,7 +90,7 @@ describe("Stroage Client Tests", () => {
 
   describe("Given nitric.v1.storage.Get succeeds", () => {
     const MOCK_BYTES = new Uint8Array();
-    const MOCK_REPLY = new GetReply();
+    const MOCK_REPLY = new storage.StorageGetResponse();
     MOCK_REPLY.setBody(MOCK_BYTES);
 
     let getMock;

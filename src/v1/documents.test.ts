@@ -1,10 +1,10 @@
 import { Empty } from "google-protobuf/google/protobuf/empty_pb";
 import { Struct } from "google-protobuf/google/protobuf/struct_pb";
-import { v1, grpc } from "../src/";
+import { documents } from "../interfaces/v1";
+import { DocumentsClient } from "./documents";
 
 // Extract the DocumentsClient
-const { DocumentsClient } = v1;
-const { DocumentsClient: GrpcDocumentsClient, GetDocumentReply } = grpc.v1;
+const { DocumentClient: GrpcDocumentsClient, DocumentGetResponse } = documents;
 
 describe("Documents Client Tests", () => {
   describe("Given nitric.v1.documents.CreateDocument throws an error", () => {
@@ -15,7 +15,7 @@ describe("Documents Client Tests", () => {
     let createDocumentMock;
 
     beforeAll(() => {
-      createDocumentMock = jest.spyOn(GrpcDocumentsClient.prototype, "createDocument").mockImplementation((request, callback: any) => {
+      createDocumentMock = jest.spyOn(GrpcDocumentsClient.prototype, "create").mockImplementation((request, callback: any) => {
         callback(MOCK_ERROR, null);
 
         return null as any;
@@ -39,7 +39,7 @@ describe("Documents Client Tests", () => {
   describe("Given nitric.v1.documents.CreateDocument succeeds", () => {
     let createDocumentMock;
     beforeAll(() => {
-      createDocumentMock = jest.spyOn(GrpcDocumentsClient.prototype, "createDocument").mockImplementation((request, callback: any) => {
+      createDocumentMock = jest.spyOn(GrpcDocumentsClient.prototype, "create").mockImplementation((request, callback: any) => {
         callback(null, new Empty());
 
         return null as any;
@@ -68,7 +68,7 @@ describe("Documents Client Tests", () => {
     let getDocumentMock;
 
     beforeAll(() => {
-      getDocumentMock = jest.spyOn(GrpcDocumentsClient.prototype, "getDocument").mockImplementation((request, callback: any) => {
+      getDocumentMock = jest.spyOn(GrpcDocumentsClient.prototype, "get").mockImplementation((request, callback: any) => {
         callback(MOCK_ERROR, null);
 
         return null as any;
@@ -93,11 +93,11 @@ describe("Documents Client Tests", () => {
     const MOCK_DOCUMENT = {
       test: "testing"
     };
-    const MOCK_DOCUMENT_REPLY = new GetDocumentReply();
+    const MOCK_DOCUMENT_REPLY = new DocumentGetResponse();
     MOCK_DOCUMENT_REPLY.setDocument(Struct.fromJavaScript(MOCK_DOCUMENT));
     let getDocumentMock;
     beforeAll(() => {
-      getDocumentMock = jest.spyOn(GrpcDocumentsClient.prototype, "getDocument").mockImplementation((request, callback: any) => {
+      getDocumentMock = jest.spyOn(GrpcDocumentsClient.prototype, "get").mockImplementation((request, callback: any) => {
         callback(null, MOCK_DOCUMENT_REPLY);
 
         return null as any;
@@ -126,7 +126,7 @@ describe("Documents Client Tests", () => {
     let deleteDocumentMock;
 
     beforeAll(() => {
-      deleteDocumentMock = jest.spyOn(GrpcDocumentsClient.prototype, "deleteDocument").mockImplementation((request, callback: any) => {
+      deleteDocumentMock = jest.spyOn(GrpcDocumentsClient.prototype, "delete").mockImplementation((request, callback: any) => {
         callback(MOCK_ERROR, null);
 
         return null as any;
@@ -150,7 +150,7 @@ describe("Documents Client Tests", () => {
   describe("Given nitric.v1.documents.DeleteDocument succeeds", () => {
     let deleteDocumentMock;
     beforeAll(() => {
-      deleteDocumentMock = jest.spyOn(GrpcDocumentsClient.prototype, "deleteDocument").mockImplementation((request, callback: any) => {
+      deleteDocumentMock = jest.spyOn(GrpcDocumentsClient.prototype, "delete").mockImplementation((request, callback: any) => {
         callback(null, new Empty());
 
         return null as any;
@@ -179,7 +179,7 @@ describe("Documents Client Tests", () => {
     let updateDocumentMock;
 
     beforeAll(() => {
-      updateDocumentMock = jest.spyOn(GrpcDocumentsClient.prototype, "updateDocument").mockImplementation((request, callback: any) => {
+      updateDocumentMock = jest.spyOn(GrpcDocumentsClient.prototype, "update").mockImplementation((request, callback: any) => {
         callback(MOCK_ERROR, null);
 
         return null as any;
@@ -203,7 +203,7 @@ describe("Documents Client Tests", () => {
   describe("Given nitric.v1.documents.updateDocument succeeds", () => {
     let updateDocumentMock;
     beforeAll(() => {
-      updateDocumentMock = jest.spyOn(GrpcDocumentsClient.prototype, "updateDocument").mockImplementation((request, callback: any) => {
+      updateDocumentMock = jest.spyOn(GrpcDocumentsClient.prototype, "update").mockImplementation((request, callback: any) => {
         callback(null, new Empty());
 
         return null as any;
