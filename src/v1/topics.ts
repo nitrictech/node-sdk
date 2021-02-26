@@ -1,9 +1,6 @@
-import { AMBASSADOR_BIND } from "../constants"
-import { events, common } from '../interfaces/v1';
-import { Struct } from 'google-protobuf/google/protobuf/struct_pb';
+import { SERVICE_BIND } from "../constants"
+import { events } from '../interfaces/v1';
 import * as grpc from '@grpc/grpc-js';
-import { uuid } from "uuidv4"
-import { NitricEvent } from './types';
 
 
 /**
@@ -14,7 +11,7 @@ export class TopicClient {
 
   constructor() {
     this.grpcClient = new events.TopicClient(
-      AMBASSADOR_BIND, 
+      SERVICE_BIND, 
       grpc.ChannelCredentials.createInsecure()
     );
   }

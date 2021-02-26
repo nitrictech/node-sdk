@@ -1,4 +1,4 @@
-import { AMBASSADOR_BIND } from "../constants"
+import { SERVICE_BIND } from "../constants"
 import { events, common } from '../interfaces/v1';
 import { Struct } from 'google-protobuf/google/protobuf/struct_pb';
 import * as grpc from '@grpc/grpc-js';
@@ -14,7 +14,7 @@ export class EventClient {
 
   constructor() {
     this.grpcClient = new events.EventClient(
-      AMBASSADOR_BIND, 
+      SERVICE_BIND, 
       grpc.ChannelCredentials.createInsecure()
     );
   }

@@ -1,4 +1,4 @@
-import { AMBASSADOR_BIND } from "../constants"
+import { SERVICE_BIND } from "../constants"
 import { storage } from "../interfaces/v1";
 import * as grpc from '@grpc/grpc-js';
 
@@ -10,7 +10,7 @@ export class StorageClient {
 
   constructor() {
     this.grpcClient = new storage.StorageClient(
-      AMBASSADOR_BIND, 
+      SERVICE_BIND, 
       grpc.ChannelCredentials.createInsecure()
     );
   }
