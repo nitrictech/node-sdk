@@ -2,10 +2,10 @@ import { QueueClient } from "./queue";
 
 import { queue, common } from "../interfaces/v1";
 import {
-  FailedMessage,
+  FailedEvent,
   NitricQueueItem,
-  PopResponse,
-  PushResponse,
+  QueuePopResponse,
+  QueueBatchPushResponse,
 } from "../interfaces/v1/queue";
 import { Struct } from "google-protobuf/google/protobuf/struct_pb";
 const { QueueClient: GrpcQueueClient } = queue;
@@ -21,7 +21,7 @@ describe("Queue Client Tests", () => {
 
       beforeAll(() => {
         pushMock = jest
-          .spyOn(GrpcQueueClient.prototype, "push")
+          .spyOn(GrpcQueueClient.prototype, "batchPush")
           .mockImplementation((request, callback: any) => {
             callback(MOCK_ERROR, null);
 
@@ -53,10 +53,10 @@ describe("Queue Client Tests", () => {
     describe("Given nitric.v1.queue.Push succeeds", () => {
       beforeAll(() => {
         jest
-          .spyOn(GrpcQueueClient.prototype, "push")
+          .spyOn(GrpcQueueClient.prototype, "batchPush")
           .mockImplementation((request, callback: any) => {
-            const mockResponse = new PushResponse();
-            mockResponse.setFailedmessagesList([]);
+            const mockResponse = new QueueBatchPushResponse();
+            mockResponse.setFailedeventsList([]);
             callback(null, mockResponse);
 
             return null as any;
@@ -96,12 +96,12 @@ describe("Queue Client Tests", () => {
 
       beforeAll(() => {
         jest
-          .spyOn(GrpcQueueClient.prototype, "push")
+          .spyOn(GrpcQueueClient.prototype, "batchPush")
           .mockImplementation((request, callback: any) => {
-            const mockResponse = new PushResponse();
-            mockResponse.setFailedmessagesList(
+            const mockResponse = new QueueBatchPushResponse();
+            mockResponse.setFailedeventsList(
               mockEvents.map((e) => {
-                const msg = new FailedMessage();
+                const msg = new FailedEvent();
                 const evt = new common.NitricEvent();
                 evt.setRequestid(e.requestId);
                 evt.setPayloadtype(e.payloadType);
@@ -178,7 +178,7 @@ describe("Queue Client Tests", () => {
         jest
           .spyOn(GrpcQueueClient.prototype, "pop")
           .mockImplementation((request, callback: any) => {
-            const mockResponse = new PopResponse();
+            const mockResponse = new QueuePopResponse();
             mockResponse.setItemsList([]);
 
             // const mockResponse = new PushResponse()
@@ -214,7 +214,7 @@ describe("Queue Client Tests", () => {
         jest
           .spyOn(GrpcQueueClient.prototype, "pop")
           .mockImplementation((request, callback: any) => {
-            const mockResponse = new PopResponse();
+            const mockResponse = new QueuePopResponse();
             mockResponse.setItemsList(
               mockEvents.map((e) => {
                 const item = new NitricQueueItem();

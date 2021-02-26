@@ -39,7 +39,7 @@ export class QueueClient {
     events: NitricEvent[]
   ): Promise<FailedMessage[]> {
     return new Promise((resolve, reject) => {
-      const request = new queue.PushRequest();
+      const request = new queue.QueueBatchPushRequest();
 
       const wireEvents = events.map((e) => {
         const wireEvent = new common.NitricEvent();
@@ -53,12 +53,12 @@ export class QueueClient {
       request.setEventsList(wireEvents);
       request.setQueue(queueName);
 
-      this.grpcClient.push(request, (error, response) => {
+      this.grpcClient.batchPush(request, (error, response) => {
         if (error) {
           reject(error);
         } else {
           resolve(
-            response.getFailedmessagesList().map((m) => ({
+            response.getFailedeventsList().map((m) => ({
               event: {
                 requestId: m.getEvent().getRequestid(),
                 payload: m.getEvent().getPayload().toJavaScript(),
@@ -85,7 +85,7 @@ export class QueueClient {
    */
   async pop(queueName: string, depth: number): Promise<QueueItem[]> {
     return new Promise((resolve, reject) => {
-      const request = new queue.PopRequest();
+      const request = new queue.QueuePopRequest();
 
       // Set the default and min depth to 1.
       if (Number.isNaN(depth) || depth < 1) {

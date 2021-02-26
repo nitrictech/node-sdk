@@ -1,5 +1,5 @@
 export * from './documents';
-export * from './eventing';
+export * from './events';
 export * from './queue';
 export * from './storage';
-export * from './auth';
+export * from './user';

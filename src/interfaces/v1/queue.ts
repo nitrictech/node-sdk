@@ -1,2 +1,2 @@
-export * from './queue_pb'
-export * from './queue_grpc_pb'
+export * from './queues_pb'
+export * from './queues_grpc_pb'
