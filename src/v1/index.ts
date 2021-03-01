@@ -3,3 +3,4 @@ export * from './events';
 export * from './queue';
 export * from './storage';
 export * from './user';
+export * from './topics';
