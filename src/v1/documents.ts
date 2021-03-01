@@ -1,4 +1,4 @@
-import { AMBASSADOR_BIND } from "../constants"
+import { SERVICE_BIND } from "../constants"
 import { documents } from '../interfaces/v1';
 import { Struct } from 'google-protobuf/google/protobuf/struct_pb';
 import * as grpc from '@grpc/grpc-js';
@@ -10,7 +10,7 @@ export class DocumentsClient<T extends {[key:string]: any}> {
   constructor(collection: string) {
     this.collection = collection;
     this.grpcClient = new documents.DocumentClient(
-      AMBASSADOR_BIND, 
+      SERVICE_BIND, 
       grpc.ChannelCredentials.createInsecure()
     );
   }

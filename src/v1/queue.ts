@@ -1,5 +1,5 @@
 import { queue, common } from "../interfaces/v1";
-import { AMBASSADOR_BIND } from "../constants";
+import { SERVICE_BIND } from "../constants";
 import * as grpc from "@grpc/grpc-js";
 import { NitricEvent } from "./types";
 import { Struct } from "google-protobuf/google/protobuf/struct_pb";
@@ -22,7 +22,7 @@ export class QueueClient {
 
   constructor() {
     this.grpcClient = new queue.QueueClient(
-      AMBASSADOR_BIND,
+      SERVICE_BIND,
       grpc.ChannelCredentials.createInsecure()
     );
   }

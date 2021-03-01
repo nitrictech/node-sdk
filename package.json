@@ -23,6 +23,7 @@
   "dependencies": {
     "@grpc/grpc-js": "^1.1.7",
     "google-protobuf": "3.14.0",
+    "micro": "^9.3.4",
     "path-parser": "^6.1.0",
     "uuidv4": "6.2.3"
   },
@@ -30,6 +31,7 @@
   "devDependencies": {
     "@types/google-protobuf": "3.2.7",
     "@types/jest": "^26.0.15",
+    "@types/micro": "^7.3.3",
     "grpc-tools": "^1.9.1",
     "grpc-tools-ts": "^2.3.0",
     "jest": "^26.6.1",

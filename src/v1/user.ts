@@ -1,5 +1,5 @@
 import { auth } from "../interfaces/v1";
-import { AMBASSADOR_BIND } from "../constants";
+import { SERVICE_BIND } from "../constants";
 import * as grpc from '@grpc/grpc-js';
 
 export class AuthClient {
@@ -9,7 +9,7 @@ export class AuthClient {
   constructor(tenant: string) {
     this.tenant = tenant;
     this.grpcClient = new auth.UserClient(
-      AMBASSADOR_BIND, 
+      SERVICE_BIND, 
       grpc.ChannelCredentials.createInsecure()
     );
   }
