@@ -33,23 +33,23 @@ Using NPM
 
 ```bash
 # Install the Nitric SDK
-npm install @nitric/sdk
+npm install @nitric/api
 ```
 
 or using Yarn
 
 ```bash
-yarn add @nitric/sdk
+yarn add @nitric/api
 ```
 
 Example import
 
 ```typescript
-# Import the nitric SDK v1
-import { v1 } from "@nitric/sdk";
+# Import the nitric API
+import { EventClient } from "@nitric/api";
 
-// Instasiate a new EventingClient
-const eventingClient = new v1.EventingClient();
+// Instasiate a new EventClient
+const eventClient = new EventClient();
 ```
 
 ### Building Locally
@@ -57,8 +57,4 @@ const eventingClient = new v1.EventingClient();
 ```bash
 yarn install
 yarn build
-
-# Or on Windows
-yarn install
-yarn build:win
 ```
