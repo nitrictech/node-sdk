@@ -10,15 +10,16 @@
     "build": "yarn run gen-services && yarn run gen-types && yarn run fix-type-deps && yarn run fix-js-deps && tsc --project tsconfig.build.json && yarn run copy-types",
     "test": "jest",
     "test:coverage": "jest --coverage",
-    "gen-services": "glob grpc_tools_node_protoc --js_out=import_style=commonjs,binary:./src/interfaces --grpc_out=./src/interfaces --plugin=protoc-gen-grpc=`which grpc_tools_node_protoc_plugin` -I ./contracts/proto './contracts/proto/*/**/*.proto'",
-    "gen-types": "glob grpc_tools_node_protoc --plugin=protoc-gen-ts=`which grpc_tools_node_protoc_ts_plugin` --ts_out=./src/interfaces -I ./contracts/proto './contracts/proto/*/**/*.proto'",
+    "gen-services": "glob-run grpc_tools_node_protoc --js_out=import_style=commonjs,binary:./src/interfaces --grpc_out=./src/interfaces --plugin=protoc-gen-grpc=./node_modules/grpc-tools/bin/grpc_node_plugin.exe -I ./contracts/proto \"./contracts/proto/*/**/*.proto\"",
+    "gen-types": "glob-run grpc_tools_node_protoc --plugin=protoc-gen-ts=./node_modules/grpc-tools/bin/grpc_node_plugin.exe --ts_out=./src/interfaces -I ./contracts/proto \"./contracts/proto/*/**/*.proto\"",
     "fix-type-deps": "replace-in-files --string='from \"grpc\"' --replacement='from \"@grpc/grpc-js\"' ./src/**/*.d.ts",
     "fix-js-deps": "replace-in-files --string=\"require('grpc')\" --replacement=\"require('@grpc/grpc-js')\" ./src/**/*.js",
     "copy-types": "cp src/interfaces/**/*.d.ts lib/interfaces/"
   },
   "contributors": [
     "Jye Cusch <jye.cusch@nitric.io>",
-    "Tim Holm <tim.holm@nitric.io>"
+    "Tim Holm <tim.holm@nitric.io>",
+    "David Moore <david.moore@nitric.io>"
   ],
   "dependencies": {
     "@grpc/grpc-js": "^1.1.7",
@@ -32,7 +33,7 @@
     "@types/google-protobuf": "3.2.7",
     "@types/jest": "^26.0.15",
     "@types/micro": "^7.3.3",
-    "glob-cli2": "^1.0.2",
+    "glob-run": "^0.1.7",
     "grpc-tools": "^1.9.1",
     "grpc-tools-ts": "^2.3.0",
     "jest": "^26.6.1",
