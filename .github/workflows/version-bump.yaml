@@ -39,12 +39,11 @@ jobs:
         yarn bump
         echo "::set-output name=TAG_REF::`git describe --abbrev=0`"
       id: bump_tag
-    - name: Merge Master -> Develop
+    - name: Commit Main Tag
       run: |
         git fetch
-        git checkout develop
-        git merge --no-ff master -m "Merge version bump into develop"
-        git push origin master develop --follow-tags
+        git checkout main
+        git push origin main --follow-tags
     - name: Create Draft Release
       id: create_release
       uses: actions/create-release@v1
