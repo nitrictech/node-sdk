@@ -7,7 +7,11 @@
     "outDir": "lib",
     "allowJs": true,
     "types": ["node", "jest"],
-    "importHelpers": true
+    "importHelpers": true,
+    "baseUrl": "./",
+    "paths": {
+      "@/*": ["src/*"]
+    }
   },
   "include": ["src/**/*"]
 }
