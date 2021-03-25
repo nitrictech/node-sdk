@@ -1,3 +1,7 @@
-export * as grpc from '@grpc/grpc-js';
-// Export the nitric v1 sdk
-export * as v1 from './v1';
+export * as grpc from "@grpc/grpc-js";
+
+// Export the nitric sdk
+export * as event from "./event";
+export * as kv from "./kv";
+export * as storage from "./storage";
+export * as queue from "./queue";

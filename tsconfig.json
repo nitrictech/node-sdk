@@ -1,14 +1,17 @@
 {
   "compilerOptions": {
-      "esModuleInterop": true,
-      "declaration": true,
-      "module": "commonjs",
-      "rootDir": "src",
-      "outDir": "lib",
-      "allowJs": true,
-      "types": ["node", "jest"]
+    "esModuleInterop": true,
+    "declaration": true,
+    "module": "commonjs",
+    "rootDir": "src",
+    "outDir": "lib",
+    "allowJs": true,
+    "types": ["node", "jest"],
+    "importHelpers": true,
+    "baseUrl": "./",
+    "paths": {
+      "@/*": ["src/*"]
+    }
   },
-  "include": [
-      "src/**/*"
-  ]
+  "include": ["src/**/*"]
 }
