@@ -7,10 +7,10 @@ export interface NitricEvent {
   payload: Record<string, any>;
 }
 
-export interface NitricTask {
+export interface Task {
   id?: string;
   leaseId?: string;
-  payloadType: string;
+  payloadType?: string;
   payload?: Record<string, any>;
 }
 

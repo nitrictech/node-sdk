@@ -1,21 +1,15 @@
 import { queue } from "@/interfaces";
 import { SERVICE_BIND } from "@/constants";
 import * as grpc from "@grpc/grpc-js";
-import type { NitricTask } from "../../types";
+import type { Task } from "../../types";
 import { Struct } from "google-protobuf/google/protobuf/struct_pb";
 
 interface FailedMessage {
-  task: NitricTask;
+  task: Task;
   message: string;
 }
 
-interface QueueItem {
-  task: NitricTask;
-  leaseId: string;
-  queue: string;
-}
-
-function taskToWire(task: NitricTask) {
+function taskToWire(task: Task) {
   const wireTask = new queue.NitricTask();
 
   wireTask.setId(task.id);
@@ -44,7 +38,7 @@ export class QueueClient {
    * @param queueName the of the queue to publish to
    * @param task the task to push to the queue
    */
-  async send(queueName: string, task: NitricTask): Promise<void> {
+  async send(queueName: string, task: Task): Promise<void> {
     return new Promise((resolve, reject) => {
       const request = new queue.QueueSendRequest();
 
@@ -70,7 +64,7 @@ export class QueueClient {
    */
   async sendBatch(
     queueName: string,
-    tasks: NitricTask[]
+    tasks: Task[]
   ): Promise<FailedMessage[]> {
     return new Promise((resolve, reject) => {
       const request = new queue.QueueSendBatchRequest();
@@ -102,7 +96,7 @@ export class QueueClient {
   /**
    * Pop 1 or more queue items from the specified queue up to the depth limit.
    *
-   * Queue items are Nitric Events that are leased for a limited period of time, where they may be worked on.
+   * Nitric Tasks are leased for a limited period of time, where they may be worked on.
    * Once complete or failed they must be acknowledged using request specified leaseId.
    *
    * If the lease on a queue item expires before it is acknowledged or the lease is extended the task will be returned to the queue for reprocessing.
@@ -110,7 +104,7 @@ export class QueueClient {
    * @param queueName the Nitric name for the queue. This will be automatically resolved to the provider specific queue identifier.
    * @param depth the maximum number of items to return. Default 1, Min 1.
    */
-  async receive(queueName: string, depth: number): Promise<QueueItem[]> {
+  async receive(queueName: string, depth: number): Promise<Task[]> {
     return new Promise((resolve, reject) => {
       const request = new queue.QueueReceiveRequest();
 
@@ -147,12 +141,13 @@ export class QueueClient {
    *
    * @param queueItem the queue item to complete
    */
-  async complete(queueItem: QueueItem): Promise<void> {
+  async complete(queueName: string, task: Task): Promise<void> {
     try {
       const request = new queue.QueueCompleteRequest();
 
-      request.setQueue(queueItem.queue);
-      request.setLeaseid(queueItem.leaseId);
+      request.setQueue(queueName);
+      request.setLeaseid(task.leaseId);
+      
       return await new Promise((resolve, reject) => {
         this.grpcClient.complete(request, (error, response) => {
           if (error) {
