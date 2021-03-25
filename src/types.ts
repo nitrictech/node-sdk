@@ -1,6 +1,3 @@
-/**
- * NitricEvent
- */
 export interface NitricEvent {
   id?: string;
   payloadType?: string;

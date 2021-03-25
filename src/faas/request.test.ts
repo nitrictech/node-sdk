@@ -116,8 +116,7 @@ describe("Nitric Request Tests", () => {
     };
 
     const testObject = "test";
-    const encoder = new TextEncoder();
-
+    
     const nitricRequest = new NitricRequest<typeof testObject>(
       headers,
       undefined,

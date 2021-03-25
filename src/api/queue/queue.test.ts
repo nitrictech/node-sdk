@@ -356,7 +356,12 @@ describe("Queue Client Tests", () => {
         const client = new QueueClient();
 
         expect(
-          client.complete({ queue: "test", leaseId: "test", task: null })
+          client.complete("test", {
+            id: "task",
+            payloadType: "test",
+            leaseId: "1",
+            payload: { test: 1 },
+          })
         ).rejects.toBe(MOCK_ERROR);
       });
 
@@ -387,14 +392,11 @@ describe("Queue Client Tests", () => {
       it("Then Queue.Complete should resolve with no failed messages", async () => {
         const client = new QueueClient();
         await expect(
-          client.complete({
-            leaseId: "test",
-            queue: "test",
-            task: {
-              id: "task",
-              payloadType: "test",
-              payload: { test: 1 },
-            },
+          client.complete("test", {
+            id: "task",
+            payloadType: "test",
+            leaseId: "1",
+            payload: { test: 1 },
           })
         ).resolves.toBeUndefined();
       });
