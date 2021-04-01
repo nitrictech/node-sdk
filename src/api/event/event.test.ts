@@ -1,6 +1,6 @@
 import { Empty } from "google-protobuf/google/protobuf/empty_pb";
 import { EventClient } from "./event";
-import { event } from "@/interfaces";
+import { event } from "../../interfaces";
 
 // Extract the EventClient
 const { EventClient: GrpcEventClient } = event;

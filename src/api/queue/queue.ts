@@ -1,5 +1,5 @@
-import { queue } from "@/interfaces";
-import { SERVICE_BIND } from "@/constants";
+import { queue } from "../../interfaces";
+import { SERVICE_BIND } from "../../constants";
 import * as grpc from "@grpc/grpc-js";
 import type { Task } from "../../types";
 import { Struct } from "google-protobuf/google/protobuf/struct_pb";
