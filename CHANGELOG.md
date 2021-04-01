@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.4](https://github.com/nitrictech/node-sdk/compare/v0.1.3...v0.1.4) (2021-04-01)
+
+
+### Bug Fixes
+
+* remove tsconfig paths ([dca4624](https://github.com/nitrictech/node-sdk/commit/dca462484acd378259bec111b84a9bfec5ae564c))
+
 ### [0.1.3](https://github.com/nitrictech/node-sdk/compare/v0.1.2...v0.1.3) (2021-04-01)
 
 ### [0.1.2](https://github.com/nitrictech/node-sdk/compare/v0.1.1...v0.1.2) (2021-03-25)
