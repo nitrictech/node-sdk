@@ -7,13 +7,13 @@
   "types": "lib/index.d.ts",
   "scripts": {
     "bump": "standard-version",
-    "build": "yarn run gen-services && yarn run gen-types && yarn run fix-type-deps && yarn run fix-js-deps && tsc --project tsconfig.build.json",
+    "build": "yarn run gen-services && yarn run gen-types && yarn run fix-type-deps && yarn run fix-js-deps && tsc --project tsconfig.build.json && tspath -f",
     "test": "jest",
     "test:coverage": "jest --coverage",
     "gen-services": "glob-run grpc_tools_node_protoc --js_out=import_style=commonjs,binary:./src/interfaces --grpc_out=./src/interfaces -I ./contracts/proto \"./contracts/proto/*/**/*.proto\"",
     "gen-types": "glob-run grpc_tools_node_protoc --ts_out=service=grpc-node:./src/interfaces -I ./contracts/proto \"./contracts/proto/*/**/*.proto\"",
-    "fix-type-deps": "replace-in-files --string=\"from \\\"grpc\\\"\" --replacement=\"from \\\"@grpc/grpc-js\\\"\" ./src/**/*/*.d.ts",
-    "fix-js-deps": "replace-in-files --string=\"require('grpc')\" --replacement=\"require('@grpc/grpc-js')\" ./src/**/*/*.js"
+    "fix-type-deps": "replace-in-files --string=\"from \\\"grpc\\\"\" --replacement=\"from \\\"@grpc/grpc-js\\\"\" ./src/**/*.d.ts",
+    "fix-js-deps": "replace-in-files --string=\"require('grpc')\" --replacement=\"require('@grpc/grpc-js')\" ./src/**/*.js"
   },
   "contributors": [
     "Jye Cusch <jye.cusch@nitric.io>",
@@ -40,6 +40,7 @@
     "standard-version": "^9.0.0",
     "ts-jest": "^26.4.3",
     "ts-protoc-gen": "^0.14.0",
+    "tspath": "^1.3.7",
     "typescript": "^3.3"
   }
 }
