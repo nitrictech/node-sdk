@@ -1,6 +1,6 @@
 import { Empty } from "google-protobuf/google/protobuf/empty_pb";
 import { Struct } from "google-protobuf/google/protobuf/struct_pb";
-import { kv } from "@/interfaces";
+import { kv } from "../../interfaces";
 import { KeyValueClient } from "./kv";
 
 // Extract the KeyValueClient

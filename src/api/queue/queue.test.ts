@@ -1,13 +1,13 @@
 import { QueueClient } from "./queue";
 
-import { queue } from "@/interfaces";
+import { queue } from "../../interfaces";
 import {
   FailedTask,
   QueueCompleteResponse,
   QueueReceiveResponse,
   QueueSendBatchResponse,
   QueueSendResponse,
-} from "@/interfaces/queue";
+} from "../../interfaces/queue";
 import { Struct } from "google-protobuf/google/protobuf/struct_pb";
 const { QueueClient: GrpcQueueClient } = queue;
 

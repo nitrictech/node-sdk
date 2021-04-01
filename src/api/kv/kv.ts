@@ -1,5 +1,5 @@
-import { SERVICE_BIND } from "@/constants";
-import { kv } from "@/interfaces";
+import { SERVICE_BIND } from "../../constants";
+import { kv } from "../../interfaces";
 import { Struct } from "google-protobuf/google/protobuf/struct_pb";
 import * as grpc from "@grpc/grpc-js";
 

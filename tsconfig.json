@@ -9,9 +9,6 @@
     "types": ["node", "jest"],
     "importHelpers": true,
     "baseUrl": "./",
-    "paths": {
-      "@/*": ["src/*"]
-    }
   },
   "include": ["src/**/*"]
 }

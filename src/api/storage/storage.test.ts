@@ -1,5 +1,5 @@
 import { StorageClient } from "./storage";
-import { storage } from "@/interfaces";
+import { storage } from "../../interfaces";
 
 const { StorageClient: GrpcStorageClient } = storage;
 

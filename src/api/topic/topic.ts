@@ -1,5 +1,5 @@
-import { SERVICE_BIND } from "@/constants";
-import { event } from "@/interfaces";
+import { SERVICE_BIND } from "../../constants";
+import { event } from "../../interfaces";
 import * as grpc from "@grpc/grpc-js";
 
 /**

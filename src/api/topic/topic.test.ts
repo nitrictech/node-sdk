@@ -1,6 +1,6 @@
 import { TopicClient } from "./topic";
-import { event } from "@/interfaces";
-import { NitricTopic } from "@/interfaces/event";
+import { event } from "../../interfaces";
+import { NitricTopic } from "../../interfaces/event";
 
 // Extract the DocumentsClient
 const { TopicClient: GrpcTopicClient } = event;
