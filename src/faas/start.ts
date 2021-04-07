@@ -11,10 +11,17 @@ export async function start<Request = any, Response = any>(func: NitricFunction<
 	const [_, port] = (process.env["CHILD_ADDRESS"] || "127.0.0.1:8080").split(":");
 	const server = micro(async (req, res) => {
 
-		const payload = await buffer(req) as Buffer;
-		
+		const payload = await buffer(req);
 
-		const nitricRequest = new NitricRequest<Request>(req.headers as Record<string, string>, payload, req.url)
+		let buff: Uint8Array = null;
+		if (typeof payload === "string") {
+			const enc = new TextEncoder();
+			buff = enc.encode(payload);
+		} else {
+			buff = payload;
+		}
+
+		const nitricRequest = new NitricRequest<Request>(req.headers as Record<string, string>, buff, req.url)
 		const nitricResponse = await func(nitricRequest);
 
 		// Return parsed http response...
