@@ -2,7 +2,6 @@ import { SERVICE_BIND } from "../../constants";
 import { event } from "../../interfaces";
 import { Struct } from "google-protobuf/google/protobuf/struct_pb";
 import * as grpc from "@grpc/grpc-js";
-import { uuid } from "uuidv4";
 import type { NitricEvent } from "../../types";
 
 /**
@@ -20,7 +19,7 @@ export class EventClient {
 
   async publish(
     topic: string,
-    { id = uuid(), payloadType = "none", payload }: NitricEvent
+    { id, payloadType = "none", payload }: NitricEvent
   ): Promise<string> {
     const request = new event.EventPublishRequest();
     const evt = new event.NitricEvent();
@@ -37,7 +36,7 @@ export class EventClient {
         if (error) {
           reject(error);
         } else {
-          resolve(id);
+          resolve(response.getId());
         }
       });
     });
