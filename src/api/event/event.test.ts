@@ -1,6 +1,6 @@
-import { Empty } from "google-protobuf/google/protobuf/empty_pb";
 import { EventClient } from "./event";
 import { event } from "../../interfaces";
+import { EventPublishResponse } from "../../interfaces/event";
 
 // Extract the EventClient
 const { EventClient: GrpcEventClient } = event;
@@ -57,7 +57,9 @@ describe("Event Client Tests", () => {
         publishMock = jest
           .spyOn(GrpcEventClient.prototype, "publish")
           .mockImplementation((request, callback: any) => {
-            callback(null, new Empty());
+            const response = new EventPublishResponse();
+            response.setId(request.getEvent().getId())
+            callback(null, response);
 
             return null as any;
           });
@@ -78,46 +80,6 @@ describe("Event Client Tests", () => {
             },
           })
         ).resolves.toBe("test");
-      });
-
-      test("The Grpc client for EventClient.publish should have been called exactly once", () => {
-        expect(publishMock).toBeCalledTimes(1);
-      });
-    });
-
-    describe("And a id is not provided", () => {
-      const MOCK_ERROR = {
-        code: 2,
-        message: "UNIMPLEMENTED",
-      };
-      let publishMock;
-
-      beforeAll(() => {
-        publishMock = jest
-          .spyOn(GrpcEventClient.prototype, "publish")
-          .mockImplementation((_, callback: any) => {
-            callback(null, new Empty());
-
-            return null as any;
-          });
-      });
-
-      afterAll(() => {
-        jest.resetAllMocks();
-      });
-
-      test("Then EventClient.publish should resolve with a generated UUID v4 requestID", () => {
-        const client = new EventClient();
-        expect(
-          client.publish("test", {
-            payloadType: "Test Payload",
-            payload: {
-              test: "test",
-            },
-          })
-        ).resolves.toMatch(
-          /^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$/i
-        );
       });
 
       test("The Grpc client for EventClient.publish should have been called exactly once", () => {

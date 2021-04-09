@@ -25,8 +25,7 @@
     "google-protobuf": "3.14.0",
     "micro": "^9.3.4",
     "path-parser": "^6.1.0",
-    "tslib": "^2.1.0",
-    "uuidv4": "6.2.3"
+    "tslib": "^2.1.0"
   },
   "license": "UNLICENSED",
   "devDependencies": {
