@@ -1,11 +1,15 @@
+<p align="center">
+  <img src="docs/assets/dot-matrix-logo.png" alt="Nitric Logo"/>
+</p>
+
+
 # @nitric/sdk
 
 The NodeJS SDK supports the use of the cloud-portable [Nitric](http://nitric.io) framework with NodeJS 12+.
 
-> The SDK is in early stage development and is currently only privately available on NPM.
+> The SDK is in early stage development and APIs and interfaces are still subject to breaking changes
 
 ## Prerequisites
-
 - NodeJS 12+
 
 ## Usage
@@ -33,7 +37,7 @@ Using NPM
 
 ```bash
 # Install the Nitric SDK
-npm install @nitric/api
+npm install @nitric/sdk
 ```
 
 or using Yarn
@@ -46,7 +50,7 @@ Example import
 
 ```typescript
 # Import the nitric API
-import { EventClient } from "@nitric/api";
+import { EventClient } from "@nitric/sdk";
 
 // Instasiate a new EventClient
 const eventClient = new EventClient();
