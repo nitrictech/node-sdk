@@ -1,62 +1,52 @@
 <p align="center">
-  <img src="docs/assets/dot-matrix-logo.png" alt="Nitric Logo"/>
+  <img src="./docs/assets/dot-matrix-logo-node.png" alt="Nitric Logo"/>
 </p>
 
 
 # @nitric/sdk
-
-The NodeJS SDK supports the use of the cloud-portable [Nitric](http://nitric.io) framework with NodeJS 12+.
-
+The NodeJS SDK supports the use of the cloud-portable [Nitric](https://nitric.io) framework with NodeJS 12+.
 > The SDK is in early stage development and APIs and interfaces are still subject to breaking changes
 
 ## Prerequisites
 - NodeJS 12+
 
-## Usage
+## Getting Started
 
-### Nitric Functions (FaaS):
-
-- Install the [Nitric CLI](#)
-- Create / Open a Nitric Project
-- Make a typescript or javascript function
+### Using the [Nitric CLI](https://github.com/nitric-tech/cli)
+> @nitric/sdk is included in all node related SDK projects by default
 
 ```bash
-# Create a new nitric project
-nitric make:project example-typescript
-cd example-typescript
-
-# Create a typescript Nitric Function
-nitric make:function typescript example-function
+nitric make:function <node-template> example
 ```
 
-> note: The SDK will be included in the package.json of a new typescript or javascript function by default.
+Some available node templates are:
 
-### Standalone NodeJS Project
+* faas/nodejs12
+* faas/nodets12
+* community/nextjs
 
-Using NPM
 
+### Adding to an existing project
+**NPM**
 ```bash
-# Install the Nitric SDK
 npm install @nitric/sdk
 ```
-
-or using Yarn
-
+**Yarn**
 ```bash
 yarn add @nitric/api
 ```
 
-Example import
+## Usage
+The nitric node SDK contains modules that cover (Usage examples and detailed API documentation included in the links):
+* [FaaS](./docs/typedoc/modules/faas.md)
+* [Events](./docs/typedoc/classes/eventclient.md)
+* [Queues](./docs/typedoc/classes/eventclient.md)
+* [Storage](./docs/typedoc/classes/storageclient.md)
+* [KV Store](./docs/typedoc/classes/keyvalueclient.md)
 
-```typescript
-# Import the nitric API
-import { EventClient } from "@nitric/sdk";
+Base gRPC clients are also made available from this package via the [grpc](./docs/typedoc/modules/grpc.md) module
 
-// Instasiate a new EventClient
-const eventClient = new EventClient();
-```
-
-### Building Locally
+## Local Development
 
 ```bash
 yarn install

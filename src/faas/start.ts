@@ -4,8 +4,28 @@ import { NitricResponse } from './response';
 import micro, { buffer, send } from "micro";
 
 /**
- * Start a nitric function
- * @param func 
+ * Starts a nitric function
+ * 
+ * Example:
+ * ```typescript
+ * import { faas } from "@nitric/sdk";
+ * 
+ * interface Greeting {
+ *   greeting?: string;
+ * 	 name: string;
+ * }
+ * 
+ * async function handler(request: faas.NitricRequest<Greeting>): Promise<faas.NitricResponse<string>> {
+ * 	 const { name, greeting = "hello" } = request.getObject();
+ * 
+ * 	 return `${greeting} ${name}!`;
+ * }
+ * 
+ * faas.start(handler);
+ * ```
+ * @param func The function handler see {@link NitricFunction}
+ * @typeParam Request The contents of the provided nitric request
+ * @typeParam Response The type the function handler returns
  */
 export async function start<Request = any, Response = any>(func: NitricFunction<Request, Response>) {
 	const [_, port] = (process.env["CHILD_ADDRESS"] || "127.0.0.1:8080").split(":");

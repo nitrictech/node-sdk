@@ -7,6 +7,9 @@ interface RequestParameters {
   query: Record<string, string | string[] | undefined>
 }
 
+/**
+ * The representation of a NitricRequest to be passed to a {@link NitricFunction}
+ */
 export class NitricRequest<T> {
   private payload: Uint8Array;
   private path: string;
@@ -59,7 +62,8 @@ export class NitricRequest<T> {
   }
 
   /**
-   * Does the request contain a body at all?
+   * Does the request contain a body
+   * @returns true when the body is defined and false if the body is undefined or null
    */
   public hasBody = (): boolean => {
     return !!this.payload;
@@ -84,8 +88,6 @@ export class NitricRequest<T> {
    * Will throw in the case where the object cannot be correctly serialized...
    */
   public getObject = (): T => {
-    return JSON.parse(
-      new TextDecoder("utf-8").decode(this.payload)
-    );
+    return JSON.parse(this.getString());
   }
 }

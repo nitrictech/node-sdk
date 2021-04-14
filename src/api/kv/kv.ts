@@ -3,6 +3,11 @@ import { kv } from "../../interfaces";
 import { Struct } from "google-protobuf/google/protobuf/struct_pb";
 import * as grpc from "@grpc/grpc-js";
 
+/**
+ * KeyValueClient
+ * 
+ * Provides a simple KeyValue store interface
+ */
 export class KeyValueClient<T extends { [key: string]: any }> {
   private grpcClient: kv.KeyValueClient;
   private collection: string;
@@ -15,6 +20,31 @@ export class KeyValueClient<T extends { [key: string]: any }> {
     );
   }
 
+  /**
+   * Puts a new keyvalue to the store
+   * @param key 
+   * @param value 
+   * 
+   * Example:
+   * ```typescript
+   * import { KeyValueClient } from "@nitric/sdk";
+   * 
+   * interface Product {
+   *   id: string;
+   *   name: string;
+   *   description: string;
+   * }
+   * 
+   * const client = new KeyValueClient<Product>("products");
+   * 
+   * await client.put("nitric", {
+   *   id: "nitric",
+   *   name: "nitric",
+   *   description: "An development framework!",
+   * });
+   * 
+   * ```
+   */
   async put(key: string, value: T): Promise<void> {
     const request = new kv.KeyValuePutRequest();
     request.setCollection(this.collection);
@@ -36,6 +66,24 @@ export class KeyValueClient<T extends { [key: string]: any }> {
     }
   }
 
+  /**
+   * Gets a keys value from the store
+   * @param key
+   * 
+   * ```typescript
+   * import { KeyValueClient } from "@nitric/sdk";
+   * 
+   * interface Product {
+   *   id: string;
+   *   name: string;
+   *   description: string;
+   * }
+   * 
+   * const client = new KeyValueClient<Product>("products");
+   * 
+   * const product = await client.get("nitric");
+   * ```
+   */
   async get(key: string): Promise<T> {
     const request = new kv.KeyValueGetRequest();
     request.setCollection(this.collection);
@@ -54,6 +102,18 @@ export class KeyValueClient<T extends { [key: string]: any }> {
     });
   }
 
+  /**
+   * Deletes a key from the store
+   * @param key
+   * 
+   * ```typescript
+   * import { KeyValueClient } from "@nitric/sdk";
+   * 
+   * const client = new KeyValueClient<any>("products"); 
+   * 
+   * await client.delete("nitric");
+   * ```
+   */
   async delete(key: string): Promise<void> {
     const request = new kv.KeyValueDeleteRequest();
     request.setCollection(this.collection);

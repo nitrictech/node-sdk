@@ -32,6 +32,8 @@ jobs:
         git config --global user.email 'github-actions[bot]@users.noreply.github.com'
     - name: Install Dependencies
       run: yarn --frozen-lockfile
+    - name: Generate Docs
+      run: yarn generate:docs
     - name: Bump and Tag
       run: |
         yarn bump
