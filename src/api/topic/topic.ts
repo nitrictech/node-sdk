@@ -18,6 +18,8 @@ export class TopicClient {
   /**
    * List available nitric topics
    * 
+   * @retuns A promise containing the list of available nitric topics
+   * 
    * Example:
    * ```typescript
    * import { TopicClient } from "@nitric/sdk";

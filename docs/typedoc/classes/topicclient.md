@@ -26,7 +26,7 @@ Nitric client for managing topics
 
 **Returns:** [*TopicClient*](topicclient.md)
 
-Defined in: [src/api/topic/topic.ts:9](https://github.com/nitrictech/node-sdk/blob/6836675/src/api/topic/topic.ts#L9)
+Defined in: [src/api/topic/topic.ts:9](https://github.com/nitrictech/node-sdk/blob/1154827/src/api/topic/topic.ts#L9)
 
 ## Properties
 
@@ -34,7 +34,7 @@ Defined in: [src/api/topic/topic.ts:9](https://github.com/nitrictech/node-sdk/bl
 
 • `Private` **grpcClient**: [*TopicClient*](grpc.event.topicclient.md)
 
-Defined in: [src/api/topic/topic.ts:9](https://github.com/nitrictech/node-sdk/blob/6836675/src/api/topic/topic.ts#L9)
+Defined in: [src/api/topic/topic.ts:9](https://github.com/nitrictech/node-sdk/blob/1154827/src/api/topic/topic.ts#L9)
 
 ## Methods
 
@@ -43,6 +43,8 @@ Defined in: [src/api/topic/topic.ts:9](https://github.com/nitrictech/node-sdk/bl
 ▸ **list**(): *Promise*<string[]\>
 
 List available nitric topics
+
+**`retuns`** A promise containing the list of available nitric topics
 
 Example:
 ```typescript
@@ -57,4 +59,4 @@ const topics = await client.list();
 
 **Returns:** *Promise*<string[]\>
 
-Defined in: [src/api/topic/topic.ts:32](https://github.com/nitrictech/node-sdk/blob/6836675/src/api/topic/topic.ts#L32)
+Defined in: [src/api/topic/topic.ts:34](https://github.com/nitrictech/node-sdk/blob/1154827/src/api/topic/topic.ts#L34)

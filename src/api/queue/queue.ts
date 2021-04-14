@@ -42,7 +42,9 @@ export class QueueClient {
    *
    * @param queueName the of the queue to publish to
    * @param task the task to push to the queue
+   * @returns A void promise
    * 
+   * Example:
    * ```typescript
    * import { QueueClient } from "@nitric/sdk";
    * 
@@ -81,6 +83,7 @@ export class QueueClient {
    * @param tasks the tasks to push to the queue
    * @returns a list containing details of any messages that failed to publish.
    * 
+   * Example:
    * ```typescript
    * import { QueueClient } from "@nitric/sdk"
    * 
@@ -138,6 +141,7 @@ export class QueueClient {
    *
    * @param queueName the Nitric name for the queue. This will be automatically resolved to the provider specific queue identifier.
    * @param depth the maximum number of items to return. Default 1, Min 1.
+   * @returns The list of recieved tasks
    * 
    * Example:
    * ```typescript
@@ -186,6 +190,7 @@ export class QueueClient {
    * Marks a queue item as successfully completed and removes it from the queue.
    *
    * @param queueItem the queue item to complete
+   * @returns A void promise
    * 
    * Example:
    * ```typescript

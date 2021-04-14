@@ -27,7 +27,7 @@ Nitric queue client, facilitates writing and reading from blob storate (buckets)
 
 **Returns:** [*StorageClient*](storageclient.md)
 
-Defined in: [src/api/storage/storage.ts:9](https://github.com/nitrictech/node-sdk/blob/6836675/src/api/storage/storage.ts#L9)
+Defined in: [src/api/storage/storage.ts:9](https://github.com/nitrictech/node-sdk/blob/1154827/src/api/storage/storage.ts#L9)
 
 ## Properties
 
@@ -35,7 +35,7 @@ Defined in: [src/api/storage/storage.ts:9](https://github.com/nitrictech/node-sd
 
 • `Private` **grpcClient**: [*StorageClient*](grpc.storage.storageclient.md)
 
-Defined in: [src/api/storage/storage.ts:9](https://github.com/nitrictech/node-sdk/blob/6836675/src/api/storage/storage.ts#L9)
+Defined in: [src/api/storage/storage.ts:9](https://github.com/nitrictech/node-sdk/blob/1154827/src/api/storage/storage.ts#L9)
 
 ## Methods
 
@@ -50,19 +50,41 @@ Read an array of bytes from a bucket
 Name | Type | Description |
 :------ | :------ | :------ |
 `bucket` | *string* | The bucket to read from   |
-`key` | *string* | The key of the blob item to read  Example: ```typescript import { StorageClient } from "@nitric/sdk";  const client = new StorageClient();  const bytes = await client.read("my-bucket", "my-item"); ```    |
+`key` | *string* | The key of the blob item to read   |
 
 **Returns:** *Promise*<Uint8Array\>
 
-Defined in: [src/api/storage/storage.ts:64](https://github.com/nitrictech/node-sdk/blob/6836675/src/api/storage/storage.ts#L64)
+A byte array of the contents of the read blob
+
+Example:
+```typescript
+import { StorageClient } from "@nitric/sdk";
+
+const client = new StorageClient();
+
+const bytes = await client.read("my-bucket", "my-item");
+```
+
+Defined in: [src/api/storage/storage.ts:66](https://github.com/nitrictech/node-sdk/blob/1154827/src/api/storage/storage.ts#L66)
 
 ___
 
 ### write
 
-▸ **write**(`bucket`: *string*, `key`: *string*, `body`: *Uint8Array*): *Promise*<boolean\>
+▸ **write**(`bucket`: *string*, `key`: *string*, `body`: *Uint8Array*): *Promise*<void\>
 
 Write a an array of bytes to a bucket
+
+**`retuns`** A void promise
+
+Example:
+```typescript
+import { StorageClient } from "@nitric/sdk";
+
+const client = new StorageClient();
+
+await client.write("my-bucket", "my-item", Buffer.from("My Test File..."));
+```
 
 #### Parameters:
 
@@ -70,8 +92,8 @@ Name | Type | Description |
 :------ | :------ | :------ |
 `bucket` | *string* | The bucket to write to   |
 `key` | *string* | The key/path of the item to write   |
-`body` | *Uint8Array* | The contents to write  Example: ```typescript import { StorageClient } from "@nitric/sdk";  const client = new StorageClient();  await client.write("my-bucket", "my-item", Buffer.from("My Test File...")); ```    |
+`body` | *Uint8Array* | The contents to write   |
 
-**Returns:** *Promise*<boolean\>
+**Returns:** *Promise*<void\>
 
-Defined in: [src/api/storage/storage.ts:33](https://github.com/nitrictech/node-sdk/blob/6836675/src/api/storage/storage.ts#L33)
+Defined in: [src/api/storage/storage.ts:34](https://github.com/nitrictech/node-sdk/blob/1154827/src/api/storage/storage.ts#L34)

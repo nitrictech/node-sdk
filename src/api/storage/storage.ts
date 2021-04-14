@@ -20,6 +20,7 @@ export class StorageClient {
    * @param bucket The bucket to write to
    * @param key The key/path of the item to write
    * @param body The contents to write
+   * @retuns A void promise
    * 
    * Example:
    * ```typescript
@@ -30,7 +31,7 @@ export class StorageClient {
    * await client.write("my-bucket", "my-item", Buffer.from("My Test File..."));
    * ```
    */
-  async write(bucket: string, key: string, body: Uint8Array): Promise<boolean> {
+  async write(bucket: string, key: string, body: Uint8Array): Promise<void> {
     const request = new storage.StorageWriteRequest();
     request.setBucketname(bucket);
     request.setKey(key);
@@ -41,7 +42,7 @@ export class StorageClient {
         if (error) {
           reject(error);
         } else {
-          resolve(true);
+          resolve();
         }
       });
     });
@@ -51,6 +52,7 @@ export class StorageClient {
    * Read an array of bytes from a bucket
    * @param bucket The bucket to read from
    * @param key The key of the blob item to read
+   * @returns A byte array of the contents of the read blob
    * 
    * Example:
    * ```typescript

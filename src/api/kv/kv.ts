@@ -22,8 +22,9 @@ export class KeyValueClient<T extends { [key: string]: any }> {
 
   /**
    * Puts a new keyvalue to the store
-   * @param key 
-   * @param value 
+   * @param key key to store the value under
+   * @param value the value to be stored
+   * @returns A void promise
    * 
    * Example:
    * ```typescript
@@ -42,7 +43,6 @@ export class KeyValueClient<T extends { [key: string]: any }> {
    *   name: "nitric",
    *   description: "An development framework!",
    * });
-   * 
    * ```
    */
   async put(key: string, value: T): Promise<void> {
@@ -67,9 +67,11 @@ export class KeyValueClient<T extends { [key: string]: any }> {
   }
 
   /**
-   * Gets a keys value from the store
-   * @param key
+   * Gets a key's value from the store
+   * @param key key to retrieve the value from
+   * @returns Promise containg the key's value
    * 
+   * Example:
    * ```typescript
    * import { KeyValueClient } from "@nitric/sdk";
    * 
@@ -104,8 +106,10 @@ export class KeyValueClient<T extends { [key: string]: any }> {
 
   /**
    * Deletes a key from the store
-   * @param key
+   * @param key key the be deleted
+   * @returns A void promise
    * 
+   * Example:
    * ```typescript
    * import { KeyValueClient } from "@nitric/sdk";
    * 

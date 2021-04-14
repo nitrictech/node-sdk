@@ -49,7 +49,7 @@ Name | Type |
 
 **Returns:** [*KeyValueClient*](keyvalueclient.md)<T\>
 
-Defined in: [src/api/kv/kv.ts:13](https://github.com/nitrictech/node-sdk/blob/6836675/src/api/kv/kv.ts#L13)
+Defined in: [src/api/kv/kv.ts:13](https://github.com/nitrictech/node-sdk/blob/1154827/src/api/kv/kv.ts#L13)
 
 ## Properties
 
@@ -57,7 +57,7 @@ Defined in: [src/api/kv/kv.ts:13](https://github.com/nitrictech/node-sdk/blob/68
 
 • `Private` **collection**: *string*
 
-Defined in: [src/api/kv/kv.ts:13](https://github.com/nitrictech/node-sdk/blob/6836675/src/api/kv/kv.ts#L13)
+Defined in: [src/api/kv/kv.ts:13](https://github.com/nitrictech/node-sdk/blob/1154827/src/api/kv/kv.ts#L13)
 
 ___
 
@@ -65,7 +65,7 @@ ___
 
 • `Private` **grpcClient**: [*KeyValueClient*](grpc.kv.keyvalueclient.md)
 
-Defined in: [src/api/kv/kv.ts:12](https://github.com/nitrictech/node-sdk/blob/6836675/src/api/kv/kv.ts#L12)
+Defined in: [src/api/kv/kv.ts:12](https://github.com/nitrictech/node-sdk/blob/1154827/src/api/kv/kv.ts#L12)
 
 ## Methods
 
@@ -79,11 +79,22 @@ Deletes a key from the store
 
 Name | Type | Description |
 :------ | :------ | :------ |
-`key` | *string* |   ```typescript import { KeyValueClient } from "@nitric/sdk";  const client = new KeyValueClient<any>("products");   await client.delete("nitric"); ```    |
+`key` | *string* | key the be deleted   |
 
 **Returns:** *Promise*<void\>
 
-Defined in: [src/api/kv/kv.ts:117](https://github.com/nitrictech/node-sdk/blob/6836675/src/api/kv/kv.ts#L117)
+A void promise
+
+Example:
+```typescript
+import { KeyValueClient } from "@nitric/sdk";
+
+const client = new KeyValueClient<any>("products"); 
+
+await client.delete("nitric");
+```
+
+Defined in: [src/api/kv/kv.ts:121](https://github.com/nitrictech/node-sdk/blob/1154827/src/api/kv/kv.ts#L121)
 
 ___
 
@@ -91,17 +102,34 @@ ___
 
 ▸ **get**(`key`: *string*): *Promise*<T\>
 
-Gets a keys value from the store
+Gets a key's value from the store
 
 #### Parameters:
 
 Name | Type | Description |
 :------ | :------ | :------ |
-`key` | *string* |   ```typescript import { KeyValueClient } from "@nitric/sdk";  interface Product {   id: string;   name: string;   description: string; }  const client = new KeyValueClient<Product>("products");  const product = await client.get("nitric"); ```    |
+`key` | *string* | key to retrieve the value from   |
 
 **Returns:** *Promise*<T\>
 
-Defined in: [src/api/kv/kv.ts:87](https://github.com/nitrictech/node-sdk/blob/6836675/src/api/kv/kv.ts#L87)
+Promise containg the key's value
+
+Example:
+```typescript
+import { KeyValueClient } from "@nitric/sdk";
+
+interface Product {
+  id: string;
+  name: string;
+  description: string;
+}
+
+const client = new KeyValueClient<Product>("products");
+
+const product = await client.get("nitric");
+```
+
+Defined in: [src/api/kv/kv.ts:89](https://github.com/nitrictech/node-sdk/blob/1154827/src/api/kv/kv.ts#L89)
 
 ___
 
@@ -115,9 +143,30 @@ Puts a new keyvalue to the store
 
 Name | Type | Description |
 :------ | :------ | :------ |
-`key` | *string* |  |
-`value` | T |   Example: ```typescript import { KeyValueClient } from "@nitric/sdk";  interface Product {   id: string;   name: string;   description: string; }  const client = new KeyValueClient<Product>("products");  await client.put("nitric", {   id: "nitric",   name: "nitric",   description: "An development framework!", });  ```    |
+`key` | *string* | key to store the value under   |
+`value` | T | the value to be stored   |
 
 **Returns:** *Promise*<void\>
 
-Defined in: [src/api/kv/kv.ts:48](https://github.com/nitrictech/node-sdk/blob/6836675/src/api/kv/kv.ts#L48)
+A void promise
+
+Example:
+```typescript
+import { KeyValueClient } from "@nitric/sdk";
+
+interface Product {
+  id: string;
+  name: string;
+  description: string;
+}
+
+const client = new KeyValueClient<Product>("products");
+
+await client.put("nitric", {
+  id: "nitric",
+  name: "nitric",
+  description: "An development framework!",
+});
+```
+
+Defined in: [src/api/kv/kv.ts:48](https://github.com/nitrictech/node-sdk/blob/1154827/src/api/kv/kv.ts#L48)

@@ -29,7 +29,7 @@ Nitric queue client, facilitates pushing and popping to distributed queues.
 
 **Returns:** [*QueueClient*](queueclient.md)
 
-Defined in: [src/api/queue/queue.ts:31](https://github.com/nitrictech/node-sdk/blob/6836675/src/api/queue/queue.ts#L31)
+Defined in: [src/api/queue/queue.ts:31](https://github.com/nitrictech/node-sdk/blob/1154827/src/api/queue/queue.ts#L31)
 
 ## Properties
 
@@ -37,7 +37,7 @@ Defined in: [src/api/queue/queue.ts:31](https://github.com/nitrictech/node-sdk/b
 
 • `Private` **grpcClient**: [*QueueClient*](grpc.queue.queueclient.md)
 
-Defined in: [src/api/queue/queue.ts:31](https://github.com/nitrictech/node-sdk/blob/6836675/src/api/queue/queue.ts#L31)
+Defined in: [src/api/queue/queue.ts:31](https://github.com/nitrictech/node-sdk/blob/1154827/src/api/queue/queue.ts#L31)
 
 ## Methods
 
@@ -56,7 +56,23 @@ Name | Type |
 
 **Returns:** *Promise*<void\>
 
-Defined in: [src/api/queue/queue.ts:204](https://github.com/nitrictech/node-sdk/blob/6836675/src/api/queue/queue.ts#L204)
+A void promise
+
+Example:
+```typescript
+import { QueueClient } from "@nitric/sdk"
+
+const client = new QueueClient();
+
+const [task] = await client.receive("my-queue");
+
+// do something with task
+
+// complete the task
+client.complete("my-queue", task); 
+```
+
+Defined in: [src/api/queue/queue.ts:209](https://github.com/nitrictech/node-sdk/blob/1154827/src/api/queue/queue.ts#L209)
 
 ___
 
@@ -76,11 +92,24 @@ If the lease on a queue item expires before it is acknowledged or the lease is e
 Name | Type | Description |
 :------ | :------ | :------ |
 `queueName` | *string* | the Nitric name for the queue. This will be automatically resolved to the provider specific queue identifier.   |
-`depth?` | *number* | the maximum number of items to return. Default 1, Min 1.  Example: ```typescript import { QueueClient } from "@nitric/sdk"  const client = new QueueClient();  const [task] = await client.receive("my-queue");  // do something with task ```    |
+`depth?` | *number* | the maximum number of items to return. Default 1, Min 1.   |
 
 **Returns:** *Promise*<Task[]\>
 
-Defined in: [src/api/queue/queue.ts:153](https://github.com/nitrictech/node-sdk/blob/6836675/src/api/queue/queue.ts#L153)
+The list of recieved tasks
+
+Example:
+```typescript
+import { QueueClient } from "@nitric/sdk"
+
+const client = new QueueClient();
+
+const [task] = await client.receive("my-queue");
+
+// do something with task
+```
+
+Defined in: [src/api/queue/queue.ts:157](https://github.com/nitrictech/node-sdk/blob/1154827/src/api/queue/queue.ts#L157)
 
 ___
 
@@ -95,11 +124,28 @@ Send an task to a queue, which can be retrieved by other services.
 Name | Type | Description |
 :------ | :------ | :------ |
 `queueName` | *string* | the of the queue to publish to   |
-`task` | Task | the task to push to the queue  ```typescript import { QueueClient } from "@nitric/sdk";  const client = new QueueClient();  await client.send("my-queue", {   id: "1234";   payloadType: "my-payload";   payload: {     value: "test"   }; }); ```    |
+`task` | Task | the task to push to the queue   |
 
 **Returns:** *Promise*<void\>
 
-Defined in: [src/api/queue/queue.ts:60](https://github.com/nitrictech/node-sdk/blob/6836675/src/api/queue/queue.ts#L60)
+A void promise
+
+Example:
+```typescript
+import { QueueClient } from "@nitric/sdk";
+
+const client = new QueueClient();
+
+await client.send("my-queue", {
+  id: "1234";
+  payloadType: "my-payload";
+  payload: {
+    value: "test"
+  };
+});
+```
+
+Defined in: [src/api/queue/queue.ts:62](https://github.com/nitrictech/node-sdk/blob/1154827/src/api/queue/queue.ts#L62)
 
 ___
 
@@ -120,6 +166,7 @@ Name | Type | Description |
 
 a list containing details of any messages that failed to publish.
 
+Example:
 ```typescript
 import { QueueClient } from "@nitric/sdk"
 
@@ -136,4 +183,4 @@ const failedTasks = await client.sendBatch("my-queue", [{
 // console.log(failedTasks);
 ```
 
-Defined in: [src/api/queue/queue.ts:100](https://github.com/nitrictech/node-sdk/blob/6836675/src/api/queue/queue.ts#L100)
+Defined in: [src/api/queue/queue.ts:103](https://github.com/nitrictech/node-sdk/blob/1154827/src/api/queue/queue.ts#L103)
