@@ -33,7 +33,7 @@ npm install @nitric/sdk
 ```
 **Yarn**
 ```bash
-yarn add @nitric/api
+yarn add @nitric/sdk
 ```
 
 ## Usage
