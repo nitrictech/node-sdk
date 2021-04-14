@@ -40,7 +40,7 @@ yarn add @nitric/sdk
 The nitric node SDK contains modules that cover (Usage examples and detailed API documentation included in the links):
 * [FaaS](./docs/typedoc/modules/faas.md)
 * [Events](./docs/typedoc/classes/eventclient.md)
-* [Queues](./docs/typedoc/classes/eventclient.md)
+* [Queues](./docs/typedoc/classes/queueclient.md)
 * [Storage](./docs/typedoc/classes/storageclient.md)
 * [KV Store](./docs/typedoc/classes/keyvalueclient.md)
 
