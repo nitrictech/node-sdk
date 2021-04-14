@@ -4,11 +4,16 @@ import * as grpc from "@grpc/grpc-js";
 import type { Task } from "../../types";
 import { Struct } from "google-protobuf/google/protobuf/struct_pb";
 
+/**
+ * A message that has failed to be enqueued
+ */
 interface FailedMessage {
   task: Task;
   message: string;
 }
 
+// Occlude from typedoc
+/** @internal */
 function taskToWire(task: Task) {
   const wireTask = new queue.NitricTask();
 
@@ -37,6 +42,22 @@ export class QueueClient {
    *
    * @param queueName the of the queue to publish to
    * @param task the task to push to the queue
+   * @returns A void promise
+   * 
+   * Example:
+   * ```typescript
+   * import { QueueClient } from "@nitric/sdk";
+   * 
+   * const client = new QueueClient();
+   * 
+   * await client.send("my-queue", {
+   *   id: "1234";
+   *   payloadType: "my-payload";
+   *   payload: {
+   *     value: "test"
+   *   };
+   * });
+   * ```
    */
   async send(queueName: string, task: Task): Promise<void> {
     return new Promise((resolve, reject) => {
@@ -61,6 +82,23 @@ export class QueueClient {
    * @param queueName the of the queue to publish to
    * @param tasks the tasks to push to the queue
    * @returns a list containing details of any messages that failed to publish.
+   * 
+   * Example:
+   * ```typescript
+   * import { QueueClient } from "@nitric/sdk"
+   * 
+   * const client = new QueueClient();
+   * 
+   * const failedTasks = await client.sendBatch("my-queue", [{
+   *   payloadType: "my-payload";
+   *   payload: {
+   *     value: "test"
+   *   };
+   * }]);
+   * 
+   * // do something with failedTasks
+   * // console.log(failedTasks);
+   * ```
    */
   async sendBatch(
     queueName: string,
@@ -103,8 +141,20 @@ export class QueueClient {
    *
    * @param queueName the Nitric name for the queue. This will be automatically resolved to the provider specific queue identifier.
    * @param depth the maximum number of items to return. Default 1, Min 1.
+   * @returns The list of recieved tasks
+   * 
+   * Example:
+   * ```typescript
+   * import { QueueClient } from "@nitric/sdk"
+   * 
+   * const client = new QueueClient();
+   * 
+   * const [task] = await client.receive("my-queue");
+   * 
+   * // do something with task
+   * ```
    */
-  async receive(queueName: string, depth: number): Promise<Task[]> {
+  async receive(queueName: string, depth?: number): Promise<Task[]> {
     return new Promise((resolve, reject) => {
       const request = new queue.QueueReceiveRequest();
 
@@ -140,6 +190,21 @@ export class QueueClient {
    * Marks a queue item as successfully completed and removes it from the queue.
    *
    * @param queueItem the queue item to complete
+   * @returns A void promise
+   * 
+   * Example:
+   * ```typescript
+   * import { QueueClient } from "@nitric/sdk"
+   * 
+   * const client = new QueueClient();
+   * 
+   * const [task] = await client.receive("my-queue");
+   * 
+   * // do something with task
+   * 
+   * // complete the task
+   * client.complete("my-queue", task); 
+   * ```
    */
   async complete(queueName: string, task: Task): Promise<void> {
     try {

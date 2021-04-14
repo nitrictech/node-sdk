@@ -1,58 +1,52 @@
+<p align="center">
+  <img src="./docs/assets/dot-matrix-logo-node.png" alt="Nitric Logo"/>
+</p>
+
+
 # @nitric/sdk
-
-The NodeJS SDK supports the use of the cloud-portable [Nitric](http://nitric.io) framework with NodeJS 12+.
-
-> The SDK is in early stage development and is currently only privately available on NPM.
+The NodeJS SDK supports the use of the cloud-portable [Nitric](https://nitric.io) framework with NodeJS 12+.
+> The SDK is in early stage development and APIs and interfaces are still subject to breaking changes
 
 ## Prerequisites
-
 - NodeJS 12+
 
+## Getting Started
+
+### Using the [Nitric CLI](https://github.com/nitric-tech/cli)
+> @nitric/sdk is included in all node related SDK projects by default
+
+```bash
+nitric make:function <node-template> example
+```
+
+Some available node templates are:
+
+* faas/nodejs12
+* faas/nodets12
+* community/nextjs
+
+
+### Adding to an existing project
+**NPM**
+```bash
+npm install @nitric/sdk
+```
+**Yarn**
+```bash
+yarn add @nitric/sdk
+```
+
 ## Usage
+The nitric node SDK contains modules that cover (Usage examples and detailed API documentation included in the links):
+* [FaaS](./docs/typedoc/modules/faas.md)
+* [Events](./docs/typedoc/classes/eventclient.md)
+* [Queues](./docs/typedoc/classes/queueclient.md)
+* [Storage](./docs/typedoc/classes/storageclient.md)
+* [KV Store](./docs/typedoc/classes/keyvalueclient.md)
 
-### Nitric Functions (FaaS):
+Base gRPC clients are also made available from this package via the [grpc](./docs/typedoc/modules/grpc.md) module
 
-- Install the [Nitric CLI](#)
-- Create / Open a Nitric Project
-- Make a typescript or javascript function
-
-```bash
-# Create a new nitric project
-nitric make:project example-typescript
-cd example-typescript
-
-# Create a typescript Nitric Function
-nitric make:function typescript example-function
-```
-
-> note: The SDK will be included in the package.json of a new typescript or javascript function by default.
-
-### Standalone NodeJS Project
-
-Using NPM
-
-```bash
-# Install the Nitric SDK
-npm install @nitric/api
-```
-
-or using Yarn
-
-```bash
-yarn add @nitric/api
-```
-
-Example import
-
-```typescript
-# Import the nitric API
-import { EventClient } from "@nitric/api";
-
-// Instasiate a new EventClient
-const eventClient = new EventClient();
-```
-
-### Building Locally
+## Local Development
 
 ```bash
 yarn install
