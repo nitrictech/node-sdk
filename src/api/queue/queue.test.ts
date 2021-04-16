@@ -1,28 +1,28 @@
-import { QueueClient } from "./queue";
+import { QueueClient } from './queue';
 
-import { queue } from "../../interfaces";
+import { queue } from '../../interfaces';
 import {
   FailedTask,
   QueueCompleteResponse,
   QueueReceiveResponse,
   QueueSendBatchResponse,
   QueueSendResponse,
-} from "../../interfaces/queue";
-import { Struct } from "google-protobuf/google/protobuf/struct_pb";
+} from '../../interfaces/queue';
+import { Struct } from 'google-protobuf/google/protobuf/struct_pb';
 const { QueueClient: GrpcQueueClient } = queue;
 
-describe("Queue Client Tests", () => {
-  describe("Send", () => {
-    describe("Given nitric.api.queue.QueueClient.Send throws an error", () => {
+describe('Queue Client Tests', () => {
+  describe('Send', () => {
+    describe('Given nitric.api.queue.QueueClient.Send throws an error', () => {
       const MOCK_ERROR = {
         code: 12,
-        message: "UNIMPLEMENTED",
+        message: 'UNIMPLEMENTED',
       };
       let sendMock;
 
       beforeAll(() => {
         sendMock = jest
-          .spyOn(GrpcQueueClient.prototype, "send")
+          .spyOn(GrpcQueueClient.prototype, 'send')
           .mockImplementation((request, callback: any) => {
             callback(MOCK_ERROR, null);
 
@@ -34,29 +34,29 @@ describe("Queue Client Tests", () => {
         jest.resetAllMocks();
       });
 
-      it("Then Queue.send should reject", async () => {
+      it('Then Queue.send should reject', async () => {
         const client = new QueueClient();
 
         expect(
-          client.send("test", {
-            id: "task",
-            payloadType: "test",
+          client.send('test', {
+            id: 'task',
+            payloadType: 'test',
             payload: { test: 1 },
           })
         ).rejects.toBe(MOCK_ERROR);
       });
 
-      it("Then Queue.send should be called once", async () => {
+      it('Then Queue.send should be called once', async () => {
         expect(sendMock).toBeCalledTimes(1);
       });
     });
 
-    describe("Given nitric.api.queue.QueueClient.Send succeeds", () => {
+    describe('Given nitric.api.queue.QueueClient.Send succeeds', () => {
       let sendMock;
 
       beforeAll(() => {
         sendMock = jest
-          .spyOn(GrpcQueueClient.prototype, "send")
+          .spyOn(GrpcQueueClient.prototype, 'send')
           .mockImplementation((request, callback: any) => {
             const mockResponse = new QueueSendResponse();
 
@@ -70,34 +70,34 @@ describe("Queue Client Tests", () => {
         jest.resetAllMocks();
       });
 
-      it("Then Queue.Send should resolve with no failed messages", async () => {
+      it('Then Queue.Send should resolve with no failed messages', async () => {
         const client = new QueueClient();
         await expect(
-          client.send("test", {
-            id: "task",
-            payloadType: "test",
+          client.send('test', {
+            id: 'task',
+            payloadType: 'test',
             payload: { test: 1 },
           })
         ).resolves.toBeUndefined();
       });
 
-      it("Then Queue.Send should be called once", async () => {
+      it('Then Queue.Send should be called once', async () => {
         expect(sendMock).toBeCalledTimes(1);
       });
     });
   });
 
-  describe("SendBatch", () => {
-    describe("Given nitric.api.queue.QueueClient.SendBatch throws an error", () => {
+  describe('SendBatch', () => {
+    describe('Given nitric.api.queue.QueueClient.SendBatch throws an error', () => {
       const MOCK_ERROR = {
         code: 12,
-        message: "UNIMPLEMENTED",
+        message: 'UNIMPLEMENTED',
       };
       let sendBatchMock;
 
       beforeAll(() => {
         sendBatchMock = jest
-          .spyOn(GrpcQueueClient.prototype, "sendBatch")
+          .spyOn(GrpcQueueClient.prototype, 'sendBatch')
           .mockImplementation((request, callback: any) => {
             callback(MOCK_ERROR, null);
 
@@ -109,16 +109,16 @@ describe("Queue Client Tests", () => {
         jest.resetAllMocks();
       });
 
-      it("Then Queue.sendBatch should reject", async () => {
+      it('Then Queue.sendBatch should reject', async () => {
         const client = new QueueClient();
         // expect.assertions(1);
         await expect(
-          client.sendBatch("test", [
+          client.sendBatch('test', [
             {
-              id: "test",
-              payloadType: "Test Payload",
+              id: 'test',
+              payloadType: 'Test Payload',
               payload: {
-                test: "test",
+                test: 'test',
               },
             },
           ])
@@ -126,10 +126,10 @@ describe("Queue Client Tests", () => {
       });
     });
 
-    describe("Given nitric.api.queue.QueueClient.SendBatch succeeds", () => {
+    describe('Given nitric.api.queue.QueueClient.SendBatch succeeds', () => {
       beforeAll(() => {
         jest
-          .spyOn(GrpcQueueClient.prototype, "sendBatch")
+          .spyOn(GrpcQueueClient.prototype, 'sendBatch')
           .mockImplementation((request, callback: any) => {
             const mockResponse = new QueueSendBatchResponse();
             mockResponse.setFailedtasksList([]);
@@ -143,15 +143,15 @@ describe("Queue Client Tests", () => {
         jest.resetAllMocks();
       });
 
-      it("Then Queue.sendBatch should resolve with no failed messages", async () => {
+      it('Then Queue.sendBatch should resolve with no failed messages', async () => {
         const client = new QueueClient();
         await expect(
-          client.sendBatch("test", [
+          client.sendBatch('test', [
             {
-              id: "test",
-              payloadType: "Test Payload",
+              id: 'test',
+              payloadType: 'Test Payload',
               payload: {
-                test: "test",
+                test: 'test',
               },
             },
           ])
@@ -159,20 +159,20 @@ describe("Queue Client Tests", () => {
       });
     });
 
-    describe("Given nitric.api.queue.QueueClient.SendBatch partially succeeds", () => {
+    describe('Given nitric.api.queue.QueueClient.SendBatch partially succeeds', () => {
       const mockEvents = [
         {
-          id: "test",
-          payloadType: "Test Payload",
+          id: 'test',
+          payloadType: 'Test Payload',
           payload: {
-            test: "test",
+            test: 'test',
           },
         },
       ];
 
       beforeAll(() => {
         jest
-          .spyOn(GrpcQueueClient.prototype, "sendBatch")
+          .spyOn(GrpcQueueClient.prototype, 'sendBatch')
           .mockImplementation((request, callback: any) => {
             const mockResponse = new QueueSendBatchResponse();
             mockResponse.setFailedtasksList(
@@ -183,7 +183,7 @@ describe("Queue Client Tests", () => {
                 evt.setPayloadtype(e.payloadType);
                 evt.setPayload(Struct.fromJavaScript(e.payload));
                 msg.setTask(evt);
-                msg.setMessage("Failed to Push task");
+                msg.setMessage('Failed to Push task');
 
                 return msg;
               })
@@ -198,39 +198,39 @@ describe("Queue Client Tests", () => {
         jest.resetAllMocks();
       });
 
-      it("Then EventingClient.publish should resolve with no failed messages", async () => {
+      it('Then EventingClient.publish should resolve with no failed messages', async () => {
         const client = new QueueClient();
         await expect(
-          client.sendBatch("test", [
+          client.sendBatch('test', [
             {
-              id: "test",
-              payloadType: "Test Payload",
+              id: 'test',
+              payloadType: 'Test Payload',
               payload: {
-                test: "test",
+                test: 'test',
               },
             },
           ])
         ).resolves.toEqual([
           {
             task: mockEvents[0],
-            message: "Failed to Push task",
+            message: 'Failed to Push task',
           },
         ]);
       });
     });
   });
 
-  describe("Receive", () => {
-    describe("Given nitric.api.queue.QueueClient.Receive throws an error", () => {
+  describe('Receive', () => {
+    describe('Given nitric.api.queue.QueueClient.Receive throws an error', () => {
       const MOCK_ERROR = {
         code: 12,
-        message: "UNIMPLEMENTED",
+        message: 'UNIMPLEMENTED',
       };
       let receiveMock;
 
       beforeAll(() => {
         receiveMock = jest
-          .spyOn(GrpcQueueClient.prototype, "receive")
+          .spyOn(GrpcQueueClient.prototype, 'receive')
           .mockImplementation((request, callback: any) => {
             callback(MOCK_ERROR, null);
 
@@ -242,17 +242,17 @@ describe("Queue Client Tests", () => {
         jest.resetAllMocks();
       });
 
-      it("Then Queue.receive should reject", async () => {
+      it('Then Queue.receive should reject', async () => {
         const client = new QueueClient();
 
-        await expect(client.receive("test", 1)).rejects.toBe(MOCK_ERROR);
+        await expect(client.receive('test', 1)).rejects.toBe(MOCK_ERROR);
       });
     });
 
-    describe("Given no queue items are returned", () => {
+    describe('Given no queue items are returned', () => {
       beforeAll(() => {
         jest
-          .spyOn(GrpcQueueClient.prototype, "receive")
+          .spyOn(GrpcQueueClient.prototype, 'receive')
           .mockImplementation((request, callback: any) => {
             const mockResponse = new QueueReceiveResponse();
             mockResponse.setTasksList([]);
@@ -269,27 +269,27 @@ describe("Queue Client Tests", () => {
         jest.resetAllMocks();
       });
 
-      it("Then Queue.receive should resolve with an empty array", async () => {
+      it('Then Queue.receive should resolve with an empty array', async () => {
         const client = new QueueClient();
-        await expect(client.receive("test", 1)).resolves.toEqual([]);
+        await expect(client.receive('test', 1)).resolves.toEqual([]);
       });
     });
 
-    describe("Given queue items are returned", () => {
-      const queueName = "test";
+    describe('Given queue items are returned', () => {
+      const queueName = 'test';
       const mockEvents = [
         {
-          id: "test",
-          payloadType: "Test Payload",
+          id: 'test',
+          payloadType: 'Test Payload',
           payload: {
-            test: "test",
+            test: 'test',
           },
         },
       ];
 
       beforeAll(() => {
         jest
-          .spyOn(GrpcQueueClient.prototype, "receive")
+          .spyOn(GrpcQueueClient.prototype, 'receive')
           .mockImplementation((request, callback: any) => {
             const mockResponse = new QueueReceiveResponse();
             mockResponse.setTasksList(
@@ -315,9 +315,9 @@ describe("Queue Client Tests", () => {
         jest.resetAllMocks();
       });
 
-      it("Then Queue.receive should resolve with an empty array", async () => {
+      it('Then Queue.receive should resolve with an empty array', async () => {
         const client = new QueueClient();
-        await expect(client.receive("test", 1)).resolves.toEqual(
+        await expect(client.receive('test', 1)).resolves.toEqual(
           mockEvents.map((e) => {
             return {
               leaseId: e.id,
@@ -330,17 +330,17 @@ describe("Queue Client Tests", () => {
     });
   });
 
-  describe("Complete", () => {
-    describe("Given nitric.api.queue.QueueClient.Complete throws an error", () => {
+  describe('Complete', () => {
+    describe('Given nitric.api.queue.QueueClient.Complete throws an error', () => {
       const MOCK_ERROR = {
         code: 12,
-        message: "UNIMPLEMENTED",
+        message: 'UNIMPLEMENTED',
       };
       let completeMock;
 
       beforeAll(() => {
         completeMock = jest
-          .spyOn(GrpcQueueClient.prototype, "complete")
+          .spyOn(GrpcQueueClient.prototype, 'complete')
           .mockImplementation((request, callback: any) => {
             callback(MOCK_ERROR, null);
 
@@ -352,30 +352,30 @@ describe("Queue Client Tests", () => {
         jest.resetAllMocks();
       });
 
-      it("Then Queue.complete should reject", async () => {
+      it('Then Queue.complete should reject', async () => {
         const client = new QueueClient();
 
         expect(
-          client.complete("test", {
-            id: "task",
-            payloadType: "test",
-            leaseId: "1",
+          client.complete('test', {
+            id: 'task',
+            payloadType: 'test',
+            leaseId: '1',
             payload: { test: 1 },
           })
         ).rejects.toBe(MOCK_ERROR);
       });
 
-      it("Then Queue.complete should be called once", async () => {
+      it('Then Queue.complete should be called once', async () => {
         expect(completeMock).toBeCalledTimes(1);
       });
     });
 
-    describe("Given nitric.api.queue.QueueClient.Complete succeeds", () => {
+    describe('Given nitric.api.queue.QueueClient.Complete succeeds', () => {
       let completeMock;
 
       beforeAll(() => {
         completeMock = jest
-          .spyOn(GrpcQueueClient.prototype, "complete")
+          .spyOn(GrpcQueueClient.prototype, 'complete')
           .mockImplementation((request, callback: any) => {
             const mockResponse = new QueueCompleteResponse();
 
@@ -389,19 +389,19 @@ describe("Queue Client Tests", () => {
         jest.resetAllMocks();
       });
 
-      it("Then Queue.Complete should resolve with no failed messages", async () => {
+      it('Then Queue.Complete should resolve with no failed messages', async () => {
         const client = new QueueClient();
         await expect(
-          client.complete("test", {
-            id: "task",
-            payloadType: "test",
-            leaseId: "1",
+          client.complete('test', {
+            id: 'task',
+            payloadType: 'test',
+            leaseId: '1',
             payload: { test: 1 },
           })
         ).resolves.toBeUndefined();
       });
 
-      it("Then Queue.complete should be called once", async () => {
+      it('Then Queue.complete should be called once', async () => {
         expect(completeMock).toBeCalledTimes(1);
       });
     });

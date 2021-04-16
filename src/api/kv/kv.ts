@@ -1,11 +1,11 @@
-import { SERVICE_BIND } from "../../constants";
-import { kv } from "../../interfaces";
-import { Struct } from "google-protobuf/google/protobuf/struct_pb";
-import * as grpc from "@grpc/grpc-js";
+import { SERVICE_BIND } from '../../constants';
+import { kv } from '../../interfaces';
+import { Struct } from 'google-protobuf/google/protobuf/struct_pb';
+import * as grpc from '@grpc/grpc-js';
 
 /**
  * KeyValueClient
- * 
+ *
  * Provides a simple KeyValue store interface
  */
 export class KeyValueClient<T extends { [key: string]: any }> {
@@ -25,19 +25,19 @@ export class KeyValueClient<T extends { [key: string]: any }> {
    * @param key key to store the value under
    * @param value the value to be stored
    * @returns A void promise
-   * 
+   *
    * Example:
    * ```typescript
    * import { KeyValueClient } from "@nitric/sdk";
-   * 
+   *
    * interface Product {
    *   id: string;
    *   name: string;
    *   description: string;
    * }
-   * 
+   *
    * const client = new KeyValueClient<Product>("products");
-   * 
+   *
    * await client.put("nitric", {
    *   id: "nitric",
    *   name: "nitric",
@@ -70,19 +70,19 @@ export class KeyValueClient<T extends { [key: string]: any }> {
    * Gets a key's value from the store
    * @param key key to retrieve the value from
    * @returns Promise containg the key's value
-   * 
+   *
    * Example:
    * ```typescript
    * import { KeyValueClient } from "@nitric/sdk";
-   * 
+   *
    * interface Product {
    *   id: string;
    *   name: string;
    *   description: string;
    * }
-   * 
+   *
    * const client = new KeyValueClient<Product>("products");
-   * 
+   *
    * const product = await client.get("nitric");
    * ```
    */
@@ -108,13 +108,13 @@ export class KeyValueClient<T extends { [key: string]: any }> {
    * Deletes a key from the store
    * @param key key the be deleted
    * @returns A void promise
-   * 
+   *
    * Example:
    * ```typescript
    * import { KeyValueClient } from "@nitric/sdk";
-   * 
-   * const client = new KeyValueClient<any>("products"); 
-   * 
+   *
+   * const client = new KeyValueClient<any>("products");
+   *
    * await client.delete("nitric");
    * ```
    */

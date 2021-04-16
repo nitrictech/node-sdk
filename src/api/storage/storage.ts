@@ -1,6 +1,6 @@
-import { SERVICE_BIND } from "../../constants";
-import { storage } from "../../interfaces";
-import * as grpc from "@grpc/grpc-js";
+import { SERVICE_BIND } from '../../constants';
+import { storage } from '../../interfaces';
+import * as grpc from '@grpc/grpc-js';
 
 /**
  * Nitric queue client, facilitates writing and reading from blob storate (buckets).
@@ -21,13 +21,13 @@ export class StorageClient {
    * @param key The key/path of the item to write
    * @param body The contents to write
    * @retuns A void promise
-   * 
+   *
    * Example:
    * ```typescript
    * import { StorageClient } from "@nitric/sdk";
-   * 
+   *
    * const client = new StorageClient();
-   * 
+   *
    * await client.write("my-bucket", "my-item", Buffer.from("My Test File..."));
    * ```
    */
@@ -53,13 +53,13 @@ export class StorageClient {
    * @param bucket The bucket to read from
    * @param key The key of the blob item to read
    * @returns A byte array of the contents of the read blob
-   * 
+   *
    * Example:
    * ```typescript
    * import { StorageClient } from "@nitric/sdk";
-   * 
+   *
    * const client = new StorageClient();
-   * 
+   *
    * const bytes = await client.read("my-bucket", "my-item");
    * ```
    */
