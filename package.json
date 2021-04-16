@@ -14,7 +14,11 @@
     "gen-types": "glob-run grpc_tools_node_protoc --ts_out=service=grpc-node:./src/interfaces -I ./contracts/proto \"./contracts/proto/*/**/*.proto\"",
     "fix-type-deps": "replace-in-files --string=\"from \\\"grpc\\\"\" --replacement=\"from \\\"@grpc/grpc-js\\\"\" ./src/**/*.d.ts",
     "fix-js-deps": "replace-in-files --string=\"require('grpc')\" --replacement=\"require('@grpc/grpc-js')\" ./src/**/*.js",
-    "generate:docs": "typedoc"
+    "generate:docs": "typedoc",
+    "prettier:check": "prettier --check src",
+    "prettier:fix": "prettier --write src",
+    "lint": "eslint \"src/!(interfaces)/*.ts\"",
+    "lint:fix": "yarn lint --fix"
   },
   "contributors": [
     "Jye Cusch <jye.cusch@nitric.io>",
@@ -29,13 +33,27 @@
     "tslib": "^2.1.0"
   },
   "license": "UNLICENSED",
+  "lint-staged": {
+    "src/**/*.{ts}": "yarn lint:fix"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
   "devDependencies": {
     "@types/google-protobuf": "3.2.7",
     "@types/jest": "^26.0.15",
     "@types/micro": "^7.3.3",
+    "@typescript-eslint/eslint-plugin": "^4.22.0",
+    "@typescript-eslint/parser": "^4.22.0",
+    "eslint": "^7.24.0",
     "glob-run": "^0.1.7",
     "grpc-tools": "^1.9.1",
+    "husky": "^6.0.0",
     "jest": "^26.6.1",
+    "lint-staged": "^10.5.4",
+    "prettier": "^2.2.1",
     "replace-in-files-cli": "latest",
     "standard-version": "^9.0.0",
     "ts-jest": "^26.4.3",

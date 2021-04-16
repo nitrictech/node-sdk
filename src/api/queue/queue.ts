@@ -1,8 +1,8 @@
-import { queue } from "../../interfaces";
-import { SERVICE_BIND } from "../../constants";
-import * as grpc from "@grpc/grpc-js";
-import type { Task } from "../../types";
-import { Struct } from "google-protobuf/google/protobuf/struct_pb";
+import { queue } from '../../interfaces';
+import { SERVICE_BIND } from '../../constants';
+import * as grpc from '@grpc/grpc-js';
+import type { Task } from '../../types';
+import { Struct } from 'google-protobuf/google/protobuf/struct_pb';
 
 /**
  * A message that has failed to be enqueued
@@ -43,13 +43,13 @@ export class QueueClient {
    * @param queueName the of the queue to publish to
    * @param task the task to push to the queue
    * @returns A void promise
-   * 
+   *
    * Example:
    * ```typescript
    * import { QueueClient } from "@nitric/sdk";
-   * 
+   *
    * const client = new QueueClient();
-   * 
+   *
    * await client.send("my-queue", {
    *   id: "1234";
    *   payloadType: "my-payload";
@@ -82,28 +82,25 @@ export class QueueClient {
    * @param queueName the of the queue to publish to
    * @param tasks the tasks to push to the queue
    * @returns a list containing details of any messages that failed to publish.
-   * 
+   *
    * Example:
    * ```typescript
    * import { QueueClient } from "@nitric/sdk"
-   * 
+   *
    * const client = new QueueClient();
-   * 
+   *
    * const failedTasks = await client.sendBatch("my-queue", [{
    *   payloadType: "my-payload";
    *   payload: {
    *     value: "test"
    *   };
    * }]);
-   * 
+   *
    * // do something with failedTasks
    * // console.log(failedTasks);
    * ```
    */
-  async sendBatch(
-    queueName: string,
-    tasks: Task[]
-  ): Promise<FailedMessage[]> {
+  async sendBatch(queueName: string, tasks: Task[]): Promise<FailedMessage[]> {
     return new Promise((resolve, reject) => {
       const request = new queue.QueueSendBatchRequest();
 
@@ -142,15 +139,15 @@ export class QueueClient {
    * @param queueName the Nitric name for the queue. This will be automatically resolved to the provider specific queue identifier.
    * @param depth the maximum number of items to return. Default 1, Min 1.
    * @returns The list of recieved tasks
-   * 
+   *
    * Example:
    * ```typescript
    * import { QueueClient } from "@nitric/sdk"
-   * 
+   *
    * const client = new QueueClient();
-   * 
+   *
    * const [task] = await client.receive("my-queue");
-   * 
+   *
    * // do something with task
    * ```
    */
@@ -191,19 +188,19 @@ export class QueueClient {
    *
    * @param queueItem the queue item to complete
    * @returns A void promise
-   * 
+   *
    * Example:
    * ```typescript
    * import { QueueClient } from "@nitric/sdk"
-   * 
+   *
    * const client = new QueueClient();
-   * 
+   *
    * const [task] = await client.receive("my-queue");
-   * 
+   *
    * // do something with task
-   * 
+   *
    * // complete the task
-   * client.complete("my-queue", task); 
+   * client.complete("my-queue", task);
    * ```
    */
   async complete(queueName: string, task: Task): Promise<void> {
@@ -212,7 +209,7 @@ export class QueueClient {
 
       request.setQueue(queueName);
       request.setLeaseid(task.leaseId);
-      
+
       return await new Promise((resolve, reject) => {
         this.grpcClient.complete(request, (error, response) => {
           if (error) {

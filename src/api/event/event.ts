@@ -1,12 +1,12 @@
-import { SERVICE_BIND } from "../../constants";
-import { event } from "../../interfaces";
-import { Struct } from "google-protobuf/google/protobuf/struct_pb";
-import * as grpc from "@grpc/grpc-js";
-import type { NitricEvent } from "../../types";
+import { SERVICE_BIND } from '../../constants';
+import { event } from '../../interfaces';
+import { Struct } from 'google-protobuf/google/protobuf/struct_pb';
+import * as grpc from '@grpc/grpc-js';
+import type { NitricEvent } from '../../types';
 
 /**
  * EventClient
- * 
+ *
  * Used to publish events to nitric topics
  */
 export class EventClient {
@@ -24,11 +24,11 @@ export class EventClient {
    * @param topic The topic to publish to
    * @param event The event to publish
    * @returns The unique id of the event (if one was not provided it will be generated)
-   * 
+   *
    * Example:
    * ```typescript
    * import { EventClient } from "@nitric/sdk";
-   * 
+   *
    * async function publishEvent(): string {
    *   const client = new EventClient("my-topic", {
    *     payloadType: "my-payload",
@@ -36,16 +36,16 @@ export class EventClient {
    *       value: "Hello World!"
    *     }
    *   });
-   * 
+   *
    *   const requestId = await client.publish();
-   * 
+   *
    *   return requestId;
    * }
    * ```
    */
   async publish(
     topic: string,
-    { id, payloadType = "none", payload }: NitricEvent
+    { id, payloadType = 'none', payload }: NitricEvent
   ): Promise<string> {
     const request = new event.EventPublishRequest();
     const evt = new event.NitricEvent();

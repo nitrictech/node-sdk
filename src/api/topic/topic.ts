@@ -1,6 +1,6 @@
-import { SERVICE_BIND } from "../../constants";
-import { event } from "../../interfaces";
-import * as grpc from "@grpc/grpc-js";
+import { SERVICE_BIND } from '../../constants';
+import { event } from '../../interfaces';
+import * as grpc from '@grpc/grpc-js';
 
 /**
  * Nitric client for managing topics
@@ -17,17 +17,17 @@ export class TopicClient {
 
   /**
    * List available nitric topics
-   * 
+   *
    * @retuns A promise containing the list of available nitric topics
-   * 
+   *
    * Example:
    * ```typescript
    * import { TopicClient } from "@nitric/sdk";
-   * 
+   *
    * const client = new TopicClient();
-   * 
+   *
    * const topics = await client.list();
-   * 
+   *
    * // TODO: Do something with topics
    * ```
    */
