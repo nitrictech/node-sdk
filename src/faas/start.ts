@@ -4,7 +4,7 @@ import { NitricResponse } from './response';
 import micro, { buffer, send } from 'micro';
 import process from 'process';
 import { NITRIC_DEBUG } from '../constants';
-import { safeHtml } from 'common-tags';
+import { html } from 'common-tags';
 
 /**
  * Starts a nitric function
@@ -37,24 +37,24 @@ export async function start<Request = any, Response = any>(
     ':'
   );
   const server = micro(async (req, res) => {
-    const payload = await buffer(req);
-
-    let buff: Uint8Array = null;
-    if (typeof payload === 'string') {
-      const enc = new TextEncoder();
-      buff = enc.encode(payload);
-    } else {
-      buff = payload;
-    }
-
-    const nitricRequest = new NitricRequest<Request>(
-      req.headers as Record<string, string>,
-      buff,
-      req.url
-    );
-    const nitricResponse = await func(nitricRequest);
-
     try {
+      const payload = await buffer(req);
+
+      let buff: Uint8Array = null;
+      if (typeof payload === 'string') {
+        const enc = new TextEncoder();
+        buff = enc.encode(payload);
+      } else {
+        buff = payload;
+      }
+
+      const nitricRequest = new NitricRequest<Request>(
+        req.headers as Record<string, string>,
+        buff,
+        req.url
+      );
+      const nitricResponse = await func(nitricRequest);
+
       // Return parsed http response...
       if (
         nitricResponse &&
@@ -81,13 +81,15 @@ export async function start<Request = any, Response = any>(
     } catch(e) {
       if (NITRIC_DEBUG) {
         send(res, 500,
-          safeHtml`
+          html`
             <html>
               <head>
-                ⚠️ Error
+                <title>
+                  Error
+                </title>
               </head>
               <body>
-                <h2>⚠️ An error occurred!</h2>
+                <h2>An error occurred!</h2>
                 <pre>
                   ${e.stack}
                 </pre>
