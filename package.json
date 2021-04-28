@@ -27,6 +27,7 @@
   ],
   "dependencies": {
     "@grpc/grpc-js": "^1.1.7",
+    "common-tags": "^1.8.0",
     "google-protobuf": "3.14.0",
     "micro": "^9.3.4",
     "path-parser": "^6.1.0",
