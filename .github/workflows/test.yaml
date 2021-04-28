@@ -18,6 +18,8 @@ jobs:
         key: ${{ runner.os }}-modules-${{ hashFiles('yarn.lock') }}
     - name: Install modules
       run: yarn --frozen-lockfile
+    - name: License Header Check
+      run: yarn license-check
     - name: Build
       run: yarn build
     - name: Run tests
