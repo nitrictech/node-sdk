@@ -2,6 +2,9 @@ import { NitricFunction } from './function';
 import { NitricRequest } from './request';
 import { NitricResponse } from './response';
 import micro, { buffer, send } from 'micro';
+import process from 'process';
+import { NITRIC_DEBUG } from '../constants';
+import { safeHtml } from 'common-tags';
 
 /**
  * Starts a nitric function
@@ -51,24 +54,53 @@ export async function start<Request = any, Response = any>(
     );
     const nitricResponse = await func(nitricRequest);
 
-    // Return parsed http response...
-    if (
-      nitricResponse['status'] &&
-      nitricResponse['headers'] &&
-      nitricResponse['body']
-    ) {
-      const typedResponse = nitricResponse as NitricResponse<Response>;
+    try {
+      // Return parsed http response...
+      if (
+        nitricResponse &&
+        nitricResponse['status'] &&
+        nitricResponse['headers'] &&
+        nitricResponse['body']
+      ) {
+        const typedResponse = nitricResponse as NitricResponse<Response>;
 
-      res.writeHead(typedResponse.status);
+        res.writeHead(typedResponse.status);
 
-      Object.keys(typedResponse.headers).forEach((k) => {
-        res.setHeader(k, typedResponse.headers[k]);
-      });
-      send(res, typedResponse.status, typedResponse.body);
-      return;
+        Object.keys(typedResponse.headers).forEach((k) => {
+          res.setHeader(k, typedResponse.headers[k]);
+        });
+        send(res, typedResponse.status, typedResponse.body);
+        return;
+      } else if (!nitricResponse) {
+        // Empty 200 response
+        send(res, 200);
+        return;
+      }
+
+      return nitricResponse;
+    } catch(e) {
+      if (NITRIC_DEBUG) {
+        send(res, 500,
+          safeHtml`
+            <html>
+              <head>
+                ⚠️ Error
+              </head>
+              <body>
+                <h2>⚠️ An error occurred!</h2>
+                <pre>
+                  ${e.stack}
+                </pre>
+              </body>
+            </html>
+          `
+        );
+      } else {
+        console.log(e.stack);
+        // TODO: Firm up error handling design
+        send(res, 500, 'Internal Server Error');
+      }
     }
-
-    return nitricResponse;
   });
 
   await server.listen(port);
