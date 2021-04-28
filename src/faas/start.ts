@@ -5,6 +5,7 @@ import micro, { buffer, send } from 'micro';
 import process from 'process';
 import { NITRIC_DEBUG } from '../constants';
 import { html } from 'common-tags';
+import { Server } from 'net';
 
 /**
  * Starts a nitric function
@@ -32,7 +33,7 @@ import { html } from 'common-tags';
  */
 export async function start<Request = any, Response = any>(
   func: NitricFunction<Request, Response>
-) {
+): Promise<Server> {
   const [_, port] = (process.env['CHILD_ADDRESS'] || '127.0.0.1:8080').split(
     ':'
   );
@@ -107,4 +108,5 @@ export async function start<Request = any, Response = any>(
 
   await server.listen(port);
   console.log(`Function listening on ${port}`);
+  return server;
 }
