@@ -7,7 +7,6 @@
   "types": "lib/index.d.ts",
   "scripts": {
     "bump": "standard-version",
-    "licensecheck": "license-check",
     "build": "yarn run gen-services && yarn run gen-types && yarn run fix-type-deps && yarn run fix-js-deps && tsc --project tsconfig.build.json",
     "test": "jest",
     "test:coverage": "jest --coverage",
@@ -19,7 +18,11 @@
     "prettier:check": "prettier --check src",
     "prettier:fix": "prettier --write src",
     "lint": "eslint \"src/!(interfaces)/*.ts\"",
-    "lint:fix": "yarn lint --fix"
+    "lint:fix": "yarn lint --fix",
+    "license:header:remove": "license-check-and-add remove -f ./licenseconfig.json",
+    "license:header:add": "license-check-and-add add -f ./licenseconfig.json",
+    "license:header:check": "license-check-and-add check -f ./licenseconfig.json",
+    "license:check": "licensee --production"
   },
   "contributors": [
     "Jye Cusch <jye.cusch@nitric.io>",
@@ -54,7 +57,8 @@
     "grpc-tools": "^1.9.1",
     "husky": "^6.0.0",
     "jest": "^26.6.1",
-    "license-check": "^1.1.5",
+    "license-check-and-add": "^4.0.2",
+    "licensee": "^8.2.0",
     "lint-staged": "^10.5.4",
     "prettier": "^2.2.1",
     "replace-in-files-cli": "latest",
