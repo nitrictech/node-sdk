@@ -37,7 +37,7 @@
     "path-parser": "^6.1.0",
     "tslib": "^2.1.0"
   },
-  "license": "UNLICENSED",
+  "license": "Apache-2.0",
   "lint-staged": {
     "src/**/*.{ts}": "yarn lint:fix"
   },
