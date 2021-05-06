@@ -14,7 +14,7 @@
     "gen-types": "glob-run grpc_tools_node_protoc --ts_out=service=grpc-node:./src/interfaces -I ./contracts/proto \"./contracts/proto/*/**/*.proto\"",
     "fix-type-deps": "replace-in-files --string=\"from \\\"grpc\\\"\" --replacement=\"from \\\"@grpc/grpc-js\\\"\" ./src/**/*.d.ts",
     "fix-js-deps": "replace-in-files --string=\"require('grpc')\" --replacement=\"require('@grpc/grpc-js')\" ./src/**/*.js",
-    "generate:docs": "typedoc",
+    "generate:docs": "yarn run gen-services && typedoc",
     "prettier:check": "prettier --check src",
     "prettier:fix": "prettier --write src",
     "lint": "eslint \"src/!(interfaces)/*.ts\"",
