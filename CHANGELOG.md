@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.7](https://github.com/nitrictech/node-sdk/compare/v0.1.6...v0.1.7) (2021-05-06)
+
+
+### Features
+
+* Add license header checks for source files. ([2b1dc88](https://github.com/nitrictech/node-sdk/commit/2b1dc88646f653dbcb0245197aad034df9247954))
+* Enhance error handling and enable a debug mode. ([78f6fdc](https://github.com/nitrictech/node-sdk/commit/78f6fdc87876ce06afbf4752c7de9e6eb5ca2130))
+
+
+### Bug Fixes
+
+* Allow undefined responses, and add better debugging when debug env is enabled.  ([5ecf1e1](https://github.com/nitrictech/node-sdk/commit/5ecf1e17829bfde80acda3134f76c74e49334b38))
+
 ### [0.1.6](https://github.com/nitrictech/node-sdk/compare/v0.1.5...v0.1.6) (2021-04-09)
 
 
