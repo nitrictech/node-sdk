@@ -29,7 +29,7 @@ Nitric queue client, facilitates pushing and popping to distributed queues.
 
 **Returns:** [*QueueClient*](queueclient.md)
 
-Defined in: [src/api/queue/queue.ts:43](https://github.com/nitrictech/node-sdk/blob/7bd7506/src/api/queue/queue.ts#L43)
+Defined in: [src/api/queue/queue.ts:43](https://github.com/nitrictech/node-sdk/blob/3e510a5/src/api/queue/queue.ts#L43)
 
 ## Properties
 
@@ -37,7 +37,7 @@ Defined in: [src/api/queue/queue.ts:43](https://github.com/nitrictech/node-sdk/b
 
 • `Private` **grpcClient**: [*QueueClient*](grpc.queue.queueclient.md)
 
-Defined in: [src/api/queue/queue.ts:43](https://github.com/nitrictech/node-sdk/blob/7bd7506/src/api/queue/queue.ts#L43)
+Defined in: [src/api/queue/queue.ts:43](https://github.com/nitrictech/node-sdk/blob/3e510a5/src/api/queue/queue.ts#L43)
 
 ## Methods
 
@@ -72,7 +72,7 @@ const [task] = await client.receive("my-queue");
 client.complete("my-queue", task);
 ```
 
-Defined in: [src/api/queue/queue.ts:218](https://github.com/nitrictech/node-sdk/blob/7bd7506/src/api/queue/queue.ts#L218)
+Defined in: [src/api/queue/queue.ts:218](https://github.com/nitrictech/node-sdk/blob/3e510a5/src/api/queue/queue.ts#L218)
 
 ___
 
@@ -109,7 +109,7 @@ const [task] = await client.receive("my-queue");
 // do something with task
 ```
 
-Defined in: [src/api/queue/queue.ts:166](https://github.com/nitrictech/node-sdk/blob/7bd7506/src/api/queue/queue.ts#L166)
+Defined in: [src/api/queue/queue.ts:166](https://github.com/nitrictech/node-sdk/blob/3e510a5/src/api/queue/queue.ts#L166)
 
 ___
 
@@ -145,7 +145,7 @@ await client.send("my-queue", {
 });
 ```
 
-Defined in: [src/api/queue/queue.ts:74](https://github.com/nitrictech/node-sdk/blob/7bd7506/src/api/queue/queue.ts#L74)
+Defined in: [src/api/queue/queue.ts:74](https://github.com/nitrictech/node-sdk/blob/3e510a5/src/api/queue/queue.ts#L74)
 
 ___
 
@@ -183,4 +183,4 @@ const failedTasks = await client.sendBatch("my-queue", [{
 // console.log(failedTasks);
 ```
 
-Defined in: [src/api/queue/queue.ts:115](https://github.com/nitrictech/node-sdk/blob/7bd7506/src/api/queue/queue.ts#L115)
+Defined in: [src/api/queue/queue.ts:115](https://github.com/nitrictech/node-sdk/blob/3e510a5/src/api/queue/queue.ts#L115)
