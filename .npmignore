@@ -1,5 +1,6 @@
 src/
 contracts/
+.git/
 .github/
 .gitmodules
 tests/
