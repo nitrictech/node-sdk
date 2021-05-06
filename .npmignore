@@ -5,6 +5,7 @@ contracts/
 tests/
 coverage/
 node_modules/
+docs/
 jest.config.json
 tsconfig.json
 yarn.lock
