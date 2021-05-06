@@ -24,7 +24,7 @@ Name |
 
 • **body**: *Uint8Array* \| P
 
-Defined in: [src/faas/response.ts:4](https://github.com/nitrictech/node-sdk/blob/1154827/src/faas/response.ts#L4)
+Defined in: [src/faas/response.ts:17](https://github.com/nitrictech/node-sdk/blob/7bd7506/src/faas/response.ts#L17)
 
 ___
 
@@ -32,7 +32,7 @@ ___
 
 • **headers**: *Record*<string, string\>
 
-Defined in: [src/faas/response.ts:2](https://github.com/nitrictech/node-sdk/blob/1154827/src/faas/response.ts#L2)
+Defined in: [src/faas/response.ts:15](https://github.com/nitrictech/node-sdk/blob/7bd7506/src/faas/response.ts#L15)
 
 ___
 
@@ -40,4 +40,4 @@ ___
 
 • **status**: *number*
 
-Defined in: [src/faas/response.ts:3](https://github.com/nitrictech/node-sdk/blob/1154827/src/faas/response.ts#L3)
+Defined in: [src/faas/response.ts:16](https://github.com/nitrictech/node-sdk/blob/7bd7506/src/faas/response.ts#L16)

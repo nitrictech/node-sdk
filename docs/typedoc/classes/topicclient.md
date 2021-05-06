@@ -26,7 +26,7 @@ Nitric client for managing topics
 
 **Returns:** [*TopicClient*](topicclient.md)
 
-Defined in: [src/api/topic/topic.ts:9](https://github.com/nitrictech/node-sdk/blob/1154827/src/api/topic/topic.ts#L9)
+Defined in: [src/api/topic/topic.ts:22](https://github.com/nitrictech/node-sdk/blob/7bd7506/src/api/topic/topic.ts#L22)
 
 ## Properties
 
@@ -34,7 +34,7 @@ Defined in: [src/api/topic/topic.ts:9](https://github.com/nitrictech/node-sdk/bl
 
 • `Private` **grpcClient**: [*TopicClient*](grpc.event.topicclient.md)
 
-Defined in: [src/api/topic/topic.ts:9](https://github.com/nitrictech/node-sdk/blob/1154827/src/api/topic/topic.ts#L9)
+Defined in: [src/api/topic/topic.ts:22](https://github.com/nitrictech/node-sdk/blob/7bd7506/src/api/topic/topic.ts#L22)
 
 ## Methods
 
@@ -59,4 +59,4 @@ const topics = await client.list();
 
 **Returns:** *Promise*<string[]\>
 
-Defined in: [src/api/topic/topic.ts:34](https://github.com/nitrictech/node-sdk/blob/1154827/src/api/topic/topic.ts#L34)
+Defined in: [src/api/topic/topic.ts:47](https://github.com/nitrictech/node-sdk/blob/7bd7506/src/api/topic/topic.ts#L47)

@@ -49,7 +49,7 @@ Name | Type |
 
 **Returns:** [*KeyValueClient*](keyvalueclient.md)<T\>
 
-Defined in: [src/api/kv/kv.ts:13](https://github.com/nitrictech/node-sdk/blob/1154827/src/api/kv/kv.ts#L13)
+Defined in: [src/api/kv/kv.ts:26](https://github.com/nitrictech/node-sdk/blob/7bd7506/src/api/kv/kv.ts#L26)
 
 ## Properties
 
@@ -57,7 +57,7 @@ Defined in: [src/api/kv/kv.ts:13](https://github.com/nitrictech/node-sdk/blob/11
 
 • `Private` **collection**: *string*
 
-Defined in: [src/api/kv/kv.ts:13](https://github.com/nitrictech/node-sdk/blob/1154827/src/api/kv/kv.ts#L13)
+Defined in: [src/api/kv/kv.ts:26](https://github.com/nitrictech/node-sdk/blob/7bd7506/src/api/kv/kv.ts#L26)
 
 ___
 
@@ -65,7 +65,7 @@ ___
 
 • `Private` **grpcClient**: [*KeyValueClient*](grpc.kv.keyvalueclient.md)
 
-Defined in: [src/api/kv/kv.ts:12](https://github.com/nitrictech/node-sdk/blob/1154827/src/api/kv/kv.ts#L12)
+Defined in: [src/api/kv/kv.ts:25](https://github.com/nitrictech/node-sdk/blob/7bd7506/src/api/kv/kv.ts#L25)
 
 ## Methods
 
@@ -89,12 +89,12 @@ Example:
 ```typescript
 import { KeyValueClient } from "@nitric/sdk";
 
-const client = new KeyValueClient<any>("products"); 
+const client = new KeyValueClient<any>("products");
 
 await client.delete("nitric");
 ```
 
-Defined in: [src/api/kv/kv.ts:121](https://github.com/nitrictech/node-sdk/blob/1154827/src/api/kv/kv.ts#L121)
+Defined in: [src/api/kv/kv.ts:134](https://github.com/nitrictech/node-sdk/blob/7bd7506/src/api/kv/kv.ts#L134)
 
 ___
 
@@ -129,7 +129,7 @@ const client = new KeyValueClient<Product>("products");
 const product = await client.get("nitric");
 ```
 
-Defined in: [src/api/kv/kv.ts:89](https://github.com/nitrictech/node-sdk/blob/1154827/src/api/kv/kv.ts#L89)
+Defined in: [src/api/kv/kv.ts:102](https://github.com/nitrictech/node-sdk/blob/7bd7506/src/api/kv/kv.ts#L102)
 
 ___
 
@@ -169,4 +169,4 @@ await client.put("nitric", {
 });
 ```
 
-Defined in: [src/api/kv/kv.ts:48](https://github.com/nitrictech/node-sdk/blob/1154827/src/api/kv/kv.ts#L48)
+Defined in: [src/api/kv/kv.ts:61](https://github.com/nitrictech/node-sdk/blob/7bd7506/src/api/kv/kv.ts#L61)

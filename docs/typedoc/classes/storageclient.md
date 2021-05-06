@@ -27,7 +27,7 @@ Nitric queue client, facilitates writing and reading from blob storate (buckets)
 
 **Returns:** [*StorageClient*](storageclient.md)
 
-Defined in: [src/api/storage/storage.ts:9](https://github.com/nitrictech/node-sdk/blob/1154827/src/api/storage/storage.ts#L9)
+Defined in: [src/api/storage/storage.ts:22](https://github.com/nitrictech/node-sdk/blob/7bd7506/src/api/storage/storage.ts#L22)
 
 ## Properties
 
@@ -35,7 +35,7 @@ Defined in: [src/api/storage/storage.ts:9](https://github.com/nitrictech/node-sd
 
 • `Private` **grpcClient**: [*StorageClient*](grpc.storage.storageclient.md)
 
-Defined in: [src/api/storage/storage.ts:9](https://github.com/nitrictech/node-sdk/blob/1154827/src/api/storage/storage.ts#L9)
+Defined in: [src/api/storage/storage.ts:22](https://github.com/nitrictech/node-sdk/blob/7bd7506/src/api/storage/storage.ts#L22)
 
 ## Methods
 
@@ -65,7 +65,7 @@ const client = new StorageClient();
 const bytes = await client.read("my-bucket", "my-item");
 ```
 
-Defined in: [src/api/storage/storage.ts:66](https://github.com/nitrictech/node-sdk/blob/1154827/src/api/storage/storage.ts#L66)
+Defined in: [src/api/storage/storage.ts:79](https://github.com/nitrictech/node-sdk/blob/7bd7506/src/api/storage/storage.ts#L79)
 
 ___
 
@@ -96,4 +96,4 @@ Name | Type | Description |
 
 **Returns:** *Promise*<void\>
 
-Defined in: [src/api/storage/storage.ts:34](https://github.com/nitrictech/node-sdk/blob/1154827/src/api/storage/storage.ts#L34)
+Defined in: [src/api/storage/storage.ts:47](https://github.com/nitrictech/node-sdk/blob/7bd7506/src/api/storage/storage.ts#L47)

@@ -38,7 +38,7 @@ Name | Type |
 
 **Returns:** [*NitricContext*](faas.nitriccontext.md)
 
-Defined in: [src/faas/context.ts:7](https://github.com/nitrictech/node-sdk/blob/1154827/src/faas/context.ts#L7)
+Defined in: [src/faas/context.ts:20](https://github.com/nitrictech/node-sdk/blob/7bd7506/src/faas/context.ts#L20)
 
 ## Properties
 
@@ -46,7 +46,7 @@ Defined in: [src/faas/context.ts:7](https://github.com/nitrictech/node-sdk/blob/
 
 • `Readonly` **payloadType**: *string*
 
-Defined in: [src/faas/context.ts:7](https://github.com/nitrictech/node-sdk/blob/1154827/src/faas/context.ts#L7)
+Defined in: [src/faas/context.ts:20](https://github.com/nitrictech/node-sdk/blob/7bd7506/src/faas/context.ts#L20)
 
 ___
 
@@ -54,7 +54,7 @@ ___
 
 • `Readonly` **requestId**: *string*
 
-Defined in: [src/faas/context.ts:4](https://github.com/nitrictech/node-sdk/blob/1154827/src/faas/context.ts#L4)
+Defined in: [src/faas/context.ts:17](https://github.com/nitrictech/node-sdk/blob/7bd7506/src/faas/context.ts#L17)
 
 ___
 
@@ -62,7 +62,7 @@ ___
 
 • `Readonly` **source**: *string*
 
-Defined in: [src/faas/context.ts:5](https://github.com/nitrictech/node-sdk/blob/1154827/src/faas/context.ts#L5)
+Defined in: [src/faas/context.ts:18](https://github.com/nitrictech/node-sdk/blob/7bd7506/src/faas/context.ts#L18)
 
 ___
 
@@ -70,7 +70,7 @@ ___
 
 • `Readonly` **sourceType**: [*NitricSourceType*](../modules/faas.md#nitricsourcetype)
 
-Defined in: [src/faas/context.ts:6](https://github.com/nitrictech/node-sdk/blob/1154827/src/faas/context.ts#L6)
+Defined in: [src/faas/context.ts:19](https://github.com/nitrictech/node-sdk/blob/7bd7506/src/faas/context.ts#L19)
 
 ## Methods
 
@@ -86,4 +86,4 @@ Name | Type |
 
 **Returns:** [*NitricContext*](faas.nitriccontext.md)
 
-Defined in: [src/faas/context.ts:16](https://github.com/nitrictech/node-sdk/blob/1154827/src/faas/context.ts#L16)
+Defined in: [src/faas/context.ts:33](https://github.com/nitrictech/node-sdk/blob/7bd7506/src/faas/context.ts#L33)
