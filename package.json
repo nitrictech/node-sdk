@@ -2,7 +2,8 @@
   "name": "@nitric/sdk",
   "version": "0.1.8",
   "description": "Nitric NodeJS client sdk",
-  "author": "Nitric <https://github.com/nitric-dev>",
+  "author": "Nitric <https://github.com/nitrictech>",
+  "repository": "https://github.com/nitrictech/node-sdk",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {

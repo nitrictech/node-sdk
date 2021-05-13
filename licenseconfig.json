@@ -1,6 +1,7 @@
 {
     "ignoreFile": ".gitignore",
     "ignore": [
+        "README",
         ".*",
         "**/*.config.*",
         "**/.gitignore",

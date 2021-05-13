@@ -10,3 +10,4 @@ docs/
 jest.config.json
 tsconfig.json
 yarn.lock
+README.md
