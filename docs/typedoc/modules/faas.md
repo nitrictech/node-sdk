@@ -52,7 +52,7 @@ Name | Type |
 
 **Returns:** *Promise*<[*NitricResponse*](../interfaces/faas.nitricresponse.md)<T\>\> \| *Promise*<T\> \| [*NitricResponse*](../interfaces/faas.nitricresponse.md)<T\> \| T
 
-Defined in: [src/faas/function.ts:25](https://github.com/nitrictech/node-sdk/blob/3e510a5/src/faas/function.ts#L25)
+Defined in: [src/faas/function.ts:25](https://github.com/nitrictech/node-sdk/blob/0bd29fc/src/faas/function.ts#L25)
 
 ___
 
@@ -60,7 +60,7 @@ ___
 
 Ƭ **NitricSourceType**: *REQUEST* \| *SUBSCRIPTION* \| *UNKNOWN*
 
-Defined in: [src/faas/context.ts:14](https://github.com/nitrictech/node-sdk/blob/3e510a5/src/faas/context.ts#L14)
+Defined in: [src/faas/context.ts:14](https://github.com/nitrictech/node-sdk/blob/0bd29fc/src/faas/context.ts#L14)
 
 ## Functions
 
@@ -103,4 +103,4 @@ Name | Type | Description |
 
 **Returns:** *Promise*<Server\>
 
-Defined in: [src/faas/start.ts:47](https://github.com/nitrictech/node-sdk/blob/3e510a5/src/faas/start.ts#L47)
+Defined in: [src/faas/start.ts:47](https://github.com/nitrictech/node-sdk/blob/0bd29fc/src/faas/start.ts#L47)

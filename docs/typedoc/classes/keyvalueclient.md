@@ -49,7 +49,7 @@ Name | Type |
 
 **Returns:** [*KeyValueClient*](keyvalueclient.md)<T\>
 
-Defined in: [src/api/kv/kv.ts:26](https://github.com/nitrictech/node-sdk/blob/3e510a5/src/api/kv/kv.ts#L26)
+Defined in: [src/api/kv/kv.ts:26](https://github.com/nitrictech/node-sdk/blob/0bd29fc/src/api/kv/kv.ts#L26)
 
 ## Properties
 
@@ -57,7 +57,7 @@ Defined in: [src/api/kv/kv.ts:26](https://github.com/nitrictech/node-sdk/blob/3e
 
 • `Private` **collection**: *string*
 
-Defined in: [src/api/kv/kv.ts:26](https://github.com/nitrictech/node-sdk/blob/3e510a5/src/api/kv/kv.ts#L26)
+Defined in: [src/api/kv/kv.ts:26](https://github.com/nitrictech/node-sdk/blob/0bd29fc/src/api/kv/kv.ts#L26)
 
 ___
 
@@ -65,7 +65,7 @@ ___
 
 • `Private` **grpcClient**: [*KeyValueClient*](grpc.kv.keyvalueclient.md)
 
-Defined in: [src/api/kv/kv.ts:25](https://github.com/nitrictech/node-sdk/blob/3e510a5/src/api/kv/kv.ts#L25)
+Defined in: [src/api/kv/kv.ts:25](https://github.com/nitrictech/node-sdk/blob/0bd29fc/src/api/kv/kv.ts#L25)
 
 ## Methods
 
@@ -94,7 +94,7 @@ const client = new KeyValueClient<any>("products");
 await client.delete("nitric");
 ```
 
-Defined in: [src/api/kv/kv.ts:134](https://github.com/nitrictech/node-sdk/blob/3e510a5/src/api/kv/kv.ts#L134)
+Defined in: [src/api/kv/kv.ts:134](https://github.com/nitrictech/node-sdk/blob/0bd29fc/src/api/kv/kv.ts#L134)
 
 ___
 
@@ -129,7 +129,7 @@ const client = new KeyValueClient<Product>("products");
 const product = await client.get("nitric");
 ```
 
-Defined in: [src/api/kv/kv.ts:102](https://github.com/nitrictech/node-sdk/blob/3e510a5/src/api/kv/kv.ts#L102)
+Defined in: [src/api/kv/kv.ts:102](https://github.com/nitrictech/node-sdk/blob/0bd29fc/src/api/kv/kv.ts#L102)
 
 ___
 
@@ -169,4 +169,4 @@ await client.put("nitric", {
 });
 ```
 
-Defined in: [src/api/kv/kv.ts:61](https://github.com/nitrictech/node-sdk/blob/3e510a5/src/api/kv/kv.ts#L61)
+Defined in: [src/api/kv/kv.ts:61](https://github.com/nitrictech/node-sdk/blob/0bd29fc/src/api/kv/kv.ts#L61)
