@@ -70,19 +70,13 @@ export async function start<Request = any, Response = any>(
       const nitricResponse = await func(nitricRequest);
 
       // Return parsed http response...
-      if (
-        nitricResponse &&
-        nitricResponse['status'] &&
-        nitricResponse['headers'] &&
-        nitricResponse['body']
-      ) {
+      if (nitricResponse instanceof NitricResponse) {
         const typedResponse = nitricResponse as NitricResponse<Response>;
-
-        res.writeHead(typedResponse.status);
 
         Object.keys(typedResponse.headers).forEach((k) => {
           res.setHeader(k, typedResponse.headers[k]);
         });
+
         send(res, typedResponse.status, typedResponse.body);
         return;
       } else if (!nitricResponse) {
