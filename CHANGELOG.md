@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.10](https://github.com/nitrictech/node-sdk/compare/v0.1.9...v0.1.10) (2021-05-25)
+
+
+### Features
+
+* Add new NitricResponse class for returns. Add new tests and fix broken tests. ([2c6e371](https://github.com/nitrictech/node-sdk/commit/2c6e3719b88b44632afbd7b733edf62a868ed178))
+* Add NitricResponse class, and update start method. ([c9dfe28](https://github.com/nitrictech/node-sdk/commit/c9dfe2872b842c5731f23e1355d3718c70686de2))
+
 ### [0.1.9](https://github.com/nitrictech/node-sdk/compare/v0.1.8...v0.1.9) (2021-05-13)
 
 ### [0.1.8](https://github.com/nitrictech/node-sdk/compare/v0.1.7...v0.1.8) (2021-05-06)
