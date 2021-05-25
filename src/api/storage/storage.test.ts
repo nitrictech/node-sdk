@@ -68,11 +68,11 @@ describe('Storage Client Tests', () => {
       jest.resetAllMocks();
     });
 
-    test('Then StorageClient.write should resolve with success status', () => {
+    test('Then StorageClient.write should resolve with success status', async () => {
       const client = new StorageClient();
-      expect(
+      await expect(
         client.write('test_bucket', 'test/item', new Uint8Array())
-      ).resolves.toBe(true);
+      ).resolves.toBe(undefined);
     });
 
     test('The Grpc client for Storage.write should have been called exactly once', () => {

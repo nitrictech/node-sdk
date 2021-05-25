@@ -40,9 +40,9 @@ describe('KeyValue Client Tests', () => {
       jest.resetAllMocks();
     });
 
-    test('Then KeyValueClient.put should reject', () => {
+    test('Then KeyValueClient.put should reject', async () => {
       const client = new KeyValueClient<any>('test');
-      expect(client.put('test', { test: 'test' })).rejects.toBe(MOCK_ERROR);
+      await expect(client.put('test', { test: 'test' })).rejects.toBe(MOCK_ERROR);
     });
 
     test('The Grpc client for KeyValueClient.Put should have been called exactly once', () => {
@@ -66,9 +66,9 @@ describe('KeyValue Client Tests', () => {
       jest.resetAllMocks();
     });
 
-    test('Then KeyValueClient.put should resolve with void', () => {
+    test('Then KeyValueClient.put should resolve with void', async () => {
       const client = new KeyValueClient<any>('test');
-      expect(client.put('test', { test: 'test' })).resolves.toBeUndefined();
+      await expect(client.put('test', { test: 'test' })).resolves.toBeUndefined();
     });
 
     test('The Grpc client for KeyValueClient.put should have been called exactly once', () => {
@@ -97,9 +97,9 @@ describe('KeyValue Client Tests', () => {
       jest.resetAllMocks();
     });
 
-    test('Then KeyValueClient.put should reject', () => {
+    test('Then KeyValueClient.put should reject', async () => {
       const client = new KeyValueClient<any>('test');
-      expect(client.get('test')).rejects.toBe(MOCK_ERROR);
+      await expect(client.get('test')).rejects.toBe(MOCK_ERROR);
     });
 
     test('The Grpc client for KeyValueClient.put should have been called exactly once', () => {
@@ -128,9 +128,9 @@ describe('KeyValue Client Tests', () => {
       jest.resetAllMocks();
     });
 
-    test('Then KeyValueClient.Get should resolve with the requested document', () => {
+    test('Then KeyValueClient.Get should resolve with the requested document', async () => {
       const client = new KeyValueClient<any>('test');
-      expect(client.get('test')).resolves.toEqual(MOCK_DOCUMENT);
+      await expect(client.get('test')).resolves.toEqual(MOCK_DOCUMENT);
     });
 
     test('The Grpc client for KeyValueClient.Get should have been called exactly once', () => {
@@ -159,9 +159,9 @@ describe('KeyValue Client Tests', () => {
       jest.resetAllMocks();
     });
 
-    test('Then KeyValueClient.delete should reject', () => {
+    test('Then KeyValueClient.delete should reject', async () => {
       const client = new KeyValueClient<any>('test');
-      expect(client.delete('test')).rejects.toBe(MOCK_ERROR);
+      await expect(client.delete('test')).rejects.toBe(MOCK_ERROR);
     });
 
     test('The Grpc client for Documents.delete should have been called exactly once', () => {
@@ -185,9 +185,9 @@ describe('KeyValue Client Tests', () => {
       jest.resetAllMocks();
     });
 
-    test('Then KeyValueClient.get should resolve with the requested document', () => {
+    test('Then KeyValueClient.get should resolve with the requested document', async () => {
       const client = new KeyValueClient<any>('test');
-      expect(client.delete('test')).resolves.toBeUndefined();
+      await expect(client.delete('test')).resolves.toBeUndefined();
     });
 
     test('The Grpc client for KeyValueClient.get should have been called exactly once', () => {
