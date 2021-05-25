@@ -81,9 +81,9 @@ describe('Event Client Tests', () => {
         jest.resetAllMocks();
       });
 
-      test('Then EventClient.publish should resolve with the provided id', () => {
+      test('Then EventClient.publish should resolve with the provided id', async () => {
         const client = new EventClient();
-        expect(
+        await expect(
           client.publish('test', {
             id: 'test',
             payloadType: 'Test Payload',

@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-export class NitricResponse<P extends Record<string, any>> {
+export class NitricResponse<P> {
   private _status: number;
   private _body?: P;
   private _headers: Record<string, string>;

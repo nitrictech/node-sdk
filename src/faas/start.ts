@@ -14,7 +14,7 @@
 import { NitricFunction } from './function';
 import { NitricRequest } from './request';
 import { NitricResponse } from './response';
-import micro, { buffer, send } from 'micro';
+import micro, { send, buffer } from 'micro';
 import process from 'process';
 import { NITRIC_DEBUG } from '../constants';
 import { html } from 'common-tags';
