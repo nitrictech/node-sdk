@@ -55,7 +55,7 @@ Name | Type |
 
 **Returns:** [*NitricRequest*](faas.nitricrequest.md)<T\>
 
-Defined in: [src/faas/request.ts:31](https://github.com/nitrictech/node-sdk/blob/c7411df/src/faas/request.ts#L31)
+Defined in: [src/faas/request.ts:31](https://github.com/nitrictech/node-sdk/blob/0f12f43/src/faas/request.ts#L31)
 
 ## Properties
 
@@ -63,7 +63,7 @@ Defined in: [src/faas/request.ts:31](https://github.com/nitrictech/node-sdk/blob
 
 • `Private` **context**: [*NitricContext*](faas.nitriccontext.md)
 
-Defined in: [src/faas/request.ts:31](https://github.com/nitrictech/node-sdk/blob/c7411df/src/faas/request.ts#L31)
+Defined in: [src/faas/request.ts:31](https://github.com/nitrictech/node-sdk/blob/0f12f43/src/faas/request.ts#L31)
 
 ___
 
@@ -71,7 +71,7 @@ ___
 
 • `Private` **path**: *string*
 
-Defined in: [src/faas/request.ts:28](https://github.com/nitrictech/node-sdk/blob/c7411df/src/faas/request.ts#L28)
+Defined in: [src/faas/request.ts:28](https://github.com/nitrictech/node-sdk/blob/0f12f43/src/faas/request.ts#L28)
 
 ___
 
@@ -79,7 +79,7 @@ ___
 
 • `Private` **payload**: *Uint8Array*
 
-Defined in: [src/faas/request.ts:27](https://github.com/nitrictech/node-sdk/blob/c7411df/src/faas/request.ts#L27)
+Defined in: [src/faas/request.ts:27](https://github.com/nitrictech/node-sdk/blob/0f12f43/src/faas/request.ts#L27)
 
 ## Methods
 
@@ -91,7 +91,7 @@ Return the raw body as bytes
 
 **Returns:** *Uint8Array*
 
-Defined in: [src/faas/request.ts:90](https://github.com/nitrictech/node-sdk/blob/c7411df/src/faas/request.ts#L90)
+Defined in: [src/faas/request.ts:90](https://github.com/nitrictech/node-sdk/blob/0f12f43/src/faas/request.ts#L90)
 
 ___
 
@@ -101,7 +101,7 @@ ___
 
 **Returns:** [*NitricContext*](faas.nitriccontext.md)
 
-Defined in: [src/faas/request.ts:55](https://github.com/nitrictech/node-sdk/blob/c7411df/src/faas/request.ts#L55)
+Defined in: [src/faas/request.ts:55](https://github.com/nitrictech/node-sdk/blob/0f12f43/src/faas/request.ts#L55)
 
 ___
 
@@ -114,7 +114,7 @@ Will throw in the case where the object cannot be correctly serialized...
 
 **Returns:** T
 
-Defined in: [src/faas/request.ts:105](https://github.com/nitrictech/node-sdk/blob/c7411df/src/faas/request.ts#L105)
+Defined in: [src/faas/request.ts:105](https://github.com/nitrictech/node-sdk/blob/0f12f43/src/faas/request.ts#L105)
 
 ___
 
@@ -132,7 +132,7 @@ Name | Type | Description |
 
 **Returns:** RequestParameters
 
-Defined in: [src/faas/request.ts:63](https://github.com/nitrictech/node-sdk/blob/c7411df/src/faas/request.ts#L63)
+Defined in: [src/faas/request.ts:63](https://github.com/nitrictech/node-sdk/blob/0f12f43/src/faas/request.ts#L63)
 
 ___
 
@@ -144,7 +144,7 @@ Return the payload as a string
 
 **Returns:** *string*
 
-Defined in: [src/faas/request.ts:97](https://github.com/nitrictech/node-sdk/blob/c7411df/src/faas/request.ts#L97)
+Defined in: [src/faas/request.ts:97](https://github.com/nitrictech/node-sdk/blob/0f12f43/src/faas/request.ts#L97)
 
 ___
 
@@ -158,4 +158,4 @@ Does the request contain a body
 
 true when the body is defined and false if the body is undefined or null
 
-Defined in: [src/faas/request.ts:83](https://github.com/nitrictech/node-sdk/blob/c7411df/src/faas/request.ts#L83)
+Defined in: [src/faas/request.ts:83](https://github.com/nitrictech/node-sdk/blob/0f12f43/src/faas/request.ts#L83)
