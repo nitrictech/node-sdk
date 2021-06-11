@@ -4,6 +4,8 @@
   "description": "Nitric NodeJS client sdk",
   "author": "Nitric <https://github.com/nitrictech>",
   "repository": "https://github.com/nitrictech/node-sdk",
+  "bugs": "https://github.com/nitrictech/node-sdk/issues",
+  "homepage": "https://nitric.io",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
