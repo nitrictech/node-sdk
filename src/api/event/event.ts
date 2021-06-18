@@ -43,14 +43,14 @@ export class EventClient {
    * import { EventClient } from "@nitric/sdk";
    *
    * async function publishEvent(): string {
-   *   const client = new EventClient();
-   *
-   *   const requestId = await client.publish("my-topic", {
+   *   const client = new EventClient("my-topic", {
    *     payloadType: "my-payload",
    *     payload: {
    *       value: "Hello World!"
    *     }
-   *   );
+   *   });
+   *
+   *   const requestId = await client.publish();
    *
    *   return requestId;
    * }

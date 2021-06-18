@@ -11,19 +11,5 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { NitricTrigger } from './trigger';
-import { Response } from './response';
-
-type ResponseData = Uint8Array | Record<string, any> | string;
-
-/**
- * Function defintion for the Nitric FaaS framework
- * Can be either sync or async
- *
- * @param request
- * @typeParam P The type of the payload of the NitricRequest
- * @typeParam T The return type of the NitricFunction
- */
-export type NitricFunction<P, T extends ResponseData> = (
-  trigger: NitricTrigger<P>,
-) => Promise<T> | T | Promise<Response<T>> | Response<T>;
+export * from './faas/v1/faas_grpc_pb';
+export * from './faas/v1/faas_pb';
