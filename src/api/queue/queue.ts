@@ -78,7 +78,7 @@ export class QueueClient {
       request.setTask(taskToWire(task));
       request.setQueue(queueName);
 
-      this.grpcClient.send(request, (error, response) => {
+      this.grpcClient.send(request, (error) => {
         if (error) {
           reject(error);
         } else {
@@ -186,7 +186,7 @@ export class QueueClient {
                 payload: m.getPayload().toJavaScript(),
                 payloadType: m.getPayloadtype(),
               },
-              leaseId: m.getLeaseid(),
+              leaseId: m.getLeaseId(),
               queue: queueName,
             }))
           );
@@ -220,10 +220,10 @@ export class QueueClient {
       const request = new queue.QueueCompleteRequest();
 
       request.setQueue(queueName);
-      request.setLeaseid(task.leaseId);
+      request.setLeaseId(task.leaseId);
 
       return await new Promise((resolve, reject) => {
-        this.grpcClient.complete(request, (error, response) => {
+        this.grpcClient.complete(request, (error) => {
           if (error) {
             reject(error);
           } else {

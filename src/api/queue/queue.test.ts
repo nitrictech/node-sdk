@@ -312,7 +312,7 @@ describe('Queue Client Tests', () => {
                 task.setId(e.id);
                 task.setPayloadtype(e.payloadType);
                 task.setPayload(Struct.fromJavaScript(e.payload));
-                task.setLeaseid(e.id);
+                task.setLeaseId(e.id);
 
                 return task;
               })

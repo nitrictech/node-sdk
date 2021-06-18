@@ -122,15 +122,14 @@ describe("NitricTrigger.defaultResponse", () => {
   });
 
   describe("Given a trigger with no context", () => {
-    let response: Response<any>;
+    let trigger: NitricTrigger<any>;
 
     beforeAll(() => {
-      const trigger = new NitricTrigger<string>("testing", null);
-      response = trigger.defaultResponse();
+      trigger = new NitricTrigger<string>("testing", null);
     });
 
-    it("The default response should have undefined Context", () => {
-      expect(response.context).toBe(undefined);
+    it("Should throw", () => {
+      expect(trigger.defaultResponse).toThrow();
     });
   });
 });

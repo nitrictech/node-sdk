@@ -65,7 +65,7 @@ export class EventClient {
 
     evt.setId(id);
     evt.setPayload(Struct.fromJavaScript(payload));
-    evt.setPayloadtype(payloadType);
+    evt.setPayloadType(payloadType);
 
     request.setTopic(topic);
     request.setEvent(evt);
