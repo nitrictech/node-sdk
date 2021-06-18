@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { start } from './start';
-import * as micro from "micro";
 import { faas } from '../interfaces';
 
 // We only need to handle half of the duplex stream
@@ -45,9 +44,6 @@ afterAll(() => {
 	jest.restoreAllMocks();
 });
 
-const mockSend = micro.send as jest.Mock;
-const mockBuffer = micro.buffer as jest.Mock;
-
 describe('faas.start', () => {
 	let mockStream: MockClientStream<faas.ClientMessage, faas.ServerMessage>;
 	describe('when starting the stream', () => {
@@ -61,11 +57,6 @@ describe('faas.start', () => {
 			mockStream.emit('end', "EOF");
 			
 			await startPromise;
-		});
-
-		afterAll(() => {
-			mockBuffer.mockClear();
-			mockSend.mockClear();
 		});
 
 		it("The first sent message should be an InitRequest", () => {
