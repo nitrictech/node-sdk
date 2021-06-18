@@ -30,7 +30,7 @@ function taskToWire(task: Task) {
   const wireTask = new queue.NitricTask();
 
   wireTask.setId(task.id);
-  wireTask.setPayloadtype(task.payloadType);
+  wireTask.setPayloadType(task.payloadType);
   wireTask.setPayload(Struct.fromJavaScript(task.payload));
 
   return wireTask;
@@ -130,7 +130,7 @@ export class QueueClient {
               task: {
                 id: m.getTask().getId(),
                 payload: m.getTask().getPayload().toJavaScript(),
-                payloadType: m.getTask().getPayloadtype(),
+                payloadType: m.getTask().getPayloadType(),
               },
               message: m.getMessage(),
             }))
@@ -184,7 +184,7 @@ export class QueueClient {
               task: {
                 id: m.getId(),
                 payload: m.getPayload().toJavaScript(),
-                payloadType: m.getPayloadtype(),
+                payloadType: m.getPayloadType(),
               },
               leaseId: m.getLeaseId(),
               queue: queueName,
