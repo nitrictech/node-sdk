@@ -38,7 +38,7 @@ export class NitricTrigger<T> {
   }
 
   /**
-   * Return the payload as a string
+   * Return the trigger data as a string
    */
   public getString = (): string => {
     if (typeof this.data !== "string") {
@@ -71,7 +71,7 @@ export class NitricTrigger<T> {
     return new Response<R>(ctx);
   }
 
-  // Instansiate a NitricRequest from the gRPC trigger model
+  // Instantiate a NitricRequest from the gRPC trigger model
   static fromGrpcTriggerRequest<T>(trigger: faas.TriggerRequest): NitricTrigger<T> {
     // create context
     let context: NitricTriggerContext;

@@ -14,14 +14,27 @@
 import { faas } from '../interfaces';
 
 export abstract class NitricTriggerContext {
+
+  /**
+   * Determine if the trigger source was HTTP
+   * @returns true if the trigger source was an HTTP Request
+   */
   public isHttp(): boolean {
     return this instanceof HttpTriggerContext;
   }
 
+  /**
+   * Determine if the trigger source was a Topic
+   * @returns true if the trigger is an Event from a Topic
+   */
   public isTopic(): boolean {
     return this instanceof TopicTriggerContext;
   }
 
+  /**
+   * Retrieve HTTP specific trigger context
+   * @returns the HTTP trigger context data
+   */
   public asHttp(): HttpTriggerContext {
     if (this instanceof HttpTriggerContext) {
       return this;
@@ -30,6 +43,10 @@ export abstract class NitricTriggerContext {
     throw new Error("Context is not topic context");
   }
 
+  /**
+   * Retrieve the Topic/Event specific trigger context
+   * @returns the Topic trigger context data
+   */
   public asTopic(): TopicTriggerContext {
     if (this instanceof TopicTriggerContext) {
       return this;
@@ -39,6 +56,9 @@ export abstract class NitricTriggerContext {
   }
 }
 
+/**
+ * Represents data specific to triggers from HTTP Requests, such as headers, path, etc.
+ */
 export class HttpTriggerContext extends NitricTriggerContext {
   public readonly method: string;
   public readonly path: string;
@@ -69,6 +89,9 @@ export class HttpTriggerContext extends NitricTriggerContext {
   }
 }
 
+/**
+ * Represents data specific to triggers from Events via a Topic, such as the topic name.
+ */
 export class TopicTriggerContext extends NitricTriggerContext {
   public readonly topic: string;
 
