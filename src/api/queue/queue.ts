@@ -30,7 +30,7 @@ function taskToWire(task: Task) {
   const wireTask = new queue.NitricTask();
 
   wireTask.setId(task.id);
-  wireTask.setPayloadtype(task.payloadType);
+  wireTask.setPayloadType(task.payloadType);
   wireTask.setPayload(Struct.fromJavaScript(task.payload));
 
   return wireTask;
@@ -78,7 +78,7 @@ export class QueueClient {
       request.setTask(taskToWire(task));
       request.setQueue(queueName);
 
-      this.grpcClient.send(request, (error, response) => {
+      this.grpcClient.send(request, (error) => {
         if (error) {
           reject(error);
         } else {
@@ -130,7 +130,7 @@ export class QueueClient {
               task: {
                 id: m.getTask().getId(),
                 payload: m.getTask().getPayload().toJavaScript(),
-                payloadType: m.getTask().getPayloadtype(),
+                payloadType: m.getTask().getPayloadType(),
               },
               message: m.getMessage(),
             }))
@@ -184,9 +184,9 @@ export class QueueClient {
               task: {
                 id: m.getId(),
                 payload: m.getPayload().toJavaScript(),
-                payloadType: m.getPayloadtype(),
+                payloadType: m.getPayloadType(),
               },
-              leaseId: m.getLeaseid(),
+              leaseId: m.getLeaseId(),
               queue: queueName,
             }))
           );
@@ -220,10 +220,10 @@ export class QueueClient {
       const request = new queue.QueueCompleteRequest();
 
       request.setQueue(queueName);
-      request.setLeaseid(task.leaseId);
+      request.setLeaseId(task.leaseId);
 
       return await new Promise((resolve, reject) => {
-        this.grpcClient.complete(request, (error, response) => {
+        this.grpcClient.complete(request, (error) => {
           if (error) {
             reject(error);
           } else {

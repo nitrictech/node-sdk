@@ -43,14 +43,14 @@ export class EventClient {
    * import { EventClient } from "@nitric/sdk";
    *
    * async function publishEvent(): string {
-   *   const client = new EventClient();
-   *
-   *   const requestId = await client.publish("my-topic", {
+   *   const client = new EventClient("my-topic", {
    *     payloadType: "my-payload",
    *     payload: {
    *       value: "Hello World!"
    *     }
-   *   );
+   *   });
+   *
+   *   const requestId = await client.publish();
    *
    *   return requestId;
    * }
@@ -65,7 +65,7 @@ export class EventClient {
 
     evt.setId(id);
     evt.setPayload(Struct.fromJavaScript(payload));
-    evt.setPayloadtype(payloadType);
+    evt.setPayloadType(payloadType);
 
     request.setTopic(topic);
     request.setEvent(evt);

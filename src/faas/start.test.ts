@@ -12,127 +12,74 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { start } from './start';
-import * as micro from "micro";
-import { NitricResponse } from "./response";
+import { faas } from '../interfaces';
 
+// We only need to handle half of the duplex stream
+class MockClientStream<Req, Resp> {
+	public recievedMessages: Req[] = [];
 
+	private listeners: {
+		[event: string]: ((req: Resp | string) => void)[];
+	} = {};
 
-interface MockIncomingMessage {
-	body: string;
-	headers: Record<string, string>;
-	url?: string,
-}
-
-class MockServerResponse {
-	public readonly headers: Record<string, string>;
-
-	constructor() {
-		this.headers = {};
+	public write(req: Req) {
+		this.recievedMessages.push(req);
 	}
 
-	public setHeader(key: string, val: string) {
-		this.headers[key] = val;
+	public on(event: string, cback: ((req: Resp) => void)) {
+		if (!this.listeners[event]) {
+			this.listeners[event] = [];
+		}
+		this.listeners[event].push(cback);
+	}
+
+	public emit(event: string, req: Resp | string) {
+		if (this.listeners[event]) {
+			this.listeners[event].forEach((l) => l(req));
+		}
 	}
 }
-
-// Mock micro, and have it return a default handler
-jest.mock("micro", () => ({
-	__esModule: true,
-	default: (handler: any) => {
-		// Return a mock server instance...
-		// we just need a listen method here to confirm that
-		// the returned server is started
-
-		return {
-			// Invoke the function provided to the micro
-			// server, this is just a test hook to
-			// save sending real request responses
-			invoke: (...args) => {
-				return handler(...args);
-			},
-			listen: jest.fn(),
-		};
-	},
-	send: jest.fn(),
-	buffer: jest.fn(),
-}));
 
 afterAll(() => {
 	jest.restoreAllMocks();
 });
 
-const mockSend = micro.send as jest.Mock;
-const mockBuffer = micro.buffer as jest.Mock;
-
-describe('faas.start return handling', () => {
-	describe('when returning a plain object', () => {
-		let server;
-		const mockServerResponse = new MockServerResponse();
-		const f = () => {
-			return {
-				test: "test",
-			};
-		};
+describe('faas.start', () => {
+	let mockStream: MockClientStream<faas.ClientMessage, faas.ServerMessage>;
+	describe('when starting the stream', () => {
+		mockStream = new MockClientStream() as any;
+		let streamSpy: jest.SpyInstance;
+		const f = jest.fn();
 
 		beforeAll(async () => {
-			server = await start(f);
-			server.invoke({
-				body: "Testing",
-				headers: {},
-			} as MockIncomingMessage, mockServerResponse);
-			mockBuffer.mockReturnValueOnce("Testing");
+			streamSpy = jest.spyOn(faas.FaasClient.prototype, 'triggerStream').mockReturnValueOnce(mockStream as any);
+			const startPromise = start(f);
+			mockStream.emit('end', "EOF");
+			
+			await startPromise;
 		});
 
-		afterAll(() => {
-			mockBuffer.mockClear();
-			mockSend.mockClear();
+		it("The first sent message should be an InitRequest", () => {
+			// TODO: Add test
+			expect(mockStream.recievedMessages[0].hasInitRequest()).toBe(true);
 		});
 
 		it("Should start the server", () => {
-			expect(server.listen).toBeCalled();
+			expect(streamSpy).toBeCalled();
 		});
 
-		it("Should not call mock send", () => {
-			expect(mockSend).not.toBeCalled();
+		it("Should not call the function", () => {
+			expect(f).toBeCalledTimes(0);
 		});
 	});
 
-	describe('when returning a Nitric Response', () => {
-		let server;
-		const f = () => {
-			return new NitricResponse()
-				.setStatus(201)
-				.setBody("Testing")
-				.addHeader("test-header", "test");
-		};
-
-		beforeAll(async () => {
-			server = await start(f);
-			server.invoke({
-				body: "Testing",
-				headers: {},
-			} as MockIncomingMessage, new MockServerResponse());
-			mockBuffer.mockReturnValueOnce("Testing");
+	describe.skip('when returning a plain object', () => {
+		describe('when triggered by a http request', () => {
+			// TODO: Add tests
 		});
-
-		afterAll(() => {
-			mockSend.mockReset();
-			mockBuffer.mockReset();
-		});
-
-		it("Should call micro send with 201 status", () => {
-			expect(mockSend).toBeCalledWith(expect.anything(), 201, expect.anything());
-		});
-
-		it("Should call micro send provided response", () => {
-			expect(mockSend).toBeCalledWith(expect.anything(), expect.anything(), "Testing");
-		});
-
-		it("Should call micro send with the returned headers", () => {
-			const [response] = mockSend.mock.calls[0];
-			expect(response.headers).toEqual({
-				'test-header': 'test'
-			});
+	
+		describe('when triggered by a topic', () => {
+			// TODO: Add tests
 		});
 	});
 });

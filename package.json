@@ -4,8 +4,6 @@
   "description": "Nitric NodeJS client sdk",
   "author": "Nitric <https://github.com/nitrictech>",
   "repository": "https://github.com/nitrictech/node-sdk",
-  "bugs": "https://github.com/nitrictech/node-sdk/issues",
-  "homepage": "https://nitric.io",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
@@ -36,7 +34,6 @@
     "@grpc/grpc-js": "^1.1.7",
     "common-tags": "^1.8.0",
     "google-protobuf": "3.14.0",
-    "micro": "^9.3.4",
     "path-parser": "^6.1.0",
     "tslib": "^2.1.0"
   },
@@ -52,7 +49,6 @@
   "devDependencies": {
     "@types/google-protobuf": "3.2.7",
     "@types/jest": "^26.0.15",
-    "@types/micro": "^7.3.3",
     "@typescript-eslint/eslint-plugin": "^4.22.0",
     "@typescript-eslint/parser": "^4.22.0",
     "eslint": "^7.24.0",
