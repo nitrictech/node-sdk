@@ -20,6 +20,8 @@ Client
 
   ↳ [*QueueClient*](grpc.queue.queueclient.md)
 
+  ↳ [*FaasClient*](grpc.faas.faasclient.md)
+
 ## Table of contents
 
 ### Constructors

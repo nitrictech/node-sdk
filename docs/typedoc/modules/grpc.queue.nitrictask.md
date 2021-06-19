@@ -21,8 +21,8 @@
 Name | Type |
 :------ | :------ |
 `id` | *string* |
-`leaseid` | *string* |
+`leaseId` | *string* |
 `payload`? | google\_protobuf\_struct\_pb.Struct.AsObject |
-`payloadtype` | *string* |
+`payloadType` | *string* |
 
 Defined in: src/interfaces/queue/v1/queue_pb.d.ts:235

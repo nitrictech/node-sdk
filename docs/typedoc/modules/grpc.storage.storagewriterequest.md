@@ -21,7 +21,7 @@
 Name | Type |
 :------ | :------ |
 `body` | Uint8Array \| *string* |
-`bucketname` | *string* |
+`bucketName` | *string* |
 `key` | *string* |
 
 Defined in: src/interfaces/storage/v1/storage_pb.d.ts:29

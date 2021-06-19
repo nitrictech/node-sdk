@@ -29,18 +29,18 @@
 - [getExtension](grpc.queue.nitrictask-1.md#getextension)
 - [getId](grpc.queue.nitrictask-1.md#getid)
 - [getJsPbMessageId](grpc.queue.nitrictask-1.md#getjspbmessageid)
-- [getLeaseid](grpc.queue.nitrictask-1.md#getleaseid)
+- [getLeaseId](grpc.queue.nitrictask-1.md#getleaseid)
 - [getPayload](grpc.queue.nitrictask-1.md#getpayload)
-- [getPayloadtype](grpc.queue.nitrictask-1.md#getpayloadtype)
+- [getPayloadType](grpc.queue.nitrictask-1.md#getpayloadtype)
 - [hasPayload](grpc.queue.nitrictask-1.md#haspayload)
 - [readBinaryExtension](grpc.queue.nitrictask-1.md#readbinaryextension)
 - [serializeBinary](grpc.queue.nitrictask-1.md#serializebinary)
 - [serializeBinaryExtensions](grpc.queue.nitrictask-1.md#serializebinaryextensions)
 - [setExtension](grpc.queue.nitrictask-1.md#setextension)
 - [setId](grpc.queue.nitrictask-1.md#setid)
-- [setLeaseid](grpc.queue.nitrictask-1.md#setleaseid)
+- [setLeaseId](grpc.queue.nitrictask-1.md#setleaseid)
 - [setPayload](grpc.queue.nitrictask-1.md#setpayload)
-- [setPayloadtype](grpc.queue.nitrictask-1.md#setpayloadtype)
+- [setPayloadType](grpc.queue.nitrictask-1.md#setpayloadtype)
 - [toArray](grpc.queue.nitrictask-1.md#toarray)
 - [toObject](grpc.queue.nitrictask-1.md#toobject)
 - [toString](grpc.queue.nitrictask-1.md#tostring)
@@ -196,9 +196,9 @@ Defined in: node_modules/@types/google-protobuf/index.d.ts:14
 
 ___
 
-### getLeaseid
+### getLeaseId
 
-▸ **getLeaseid**(): *string*
+▸ **getLeaseId**(): *string*
 
 **Returns:** *string*
 
@@ -216,9 +216,9 @@ Defined in: src/interfaces/queue/v1/queue_pb.d.ts:221
 
 ___
 
-### getPayloadtype
+### getPayloadType
 
-▸ **getPayloadtype**(): *string*
+▸ **getPayloadType**(): *string*
 
 **Returns:** *string*
 
@@ -331,9 +331,9 @@ Defined in: src/interfaces/queue/v1/queue_pb.d.ts:211
 
 ___
 
-### setLeaseid
+### setLeaseId
 
-▸ **setLeaseid**(`value`: *string*): *void*
+▸ **setLeaseId**(`value`: *string*): *void*
 
 #### Parameters:
 
@@ -363,9 +363,9 @@ Defined in: src/interfaces/queue/v1/queue_pb.d.ts:222
 
 ___
 
-### setPayloadtype
+### setPayloadType
 
-▸ **setPayloadtype**(`value`: *string*): *void*
+▸ **setPayloadType**(`value`: *string*): *void*
 
 #### Parameters:
 

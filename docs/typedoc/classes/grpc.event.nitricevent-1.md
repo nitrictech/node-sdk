@@ -30,7 +30,7 @@
 - [getId](grpc.event.nitricevent-1.md#getid)
 - [getJsPbMessageId](grpc.event.nitricevent-1.md#getjspbmessageid)
 - [getPayload](grpc.event.nitricevent-1.md#getpayload)
-- [getPayloadtype](grpc.event.nitricevent-1.md#getpayloadtype)
+- [getPayloadType](grpc.event.nitricevent-1.md#getpayloadtype)
 - [hasPayload](grpc.event.nitricevent-1.md#haspayload)
 - [readBinaryExtension](grpc.event.nitricevent-1.md#readbinaryextension)
 - [serializeBinary](grpc.event.nitricevent-1.md#serializebinary)
@@ -38,7 +38,7 @@
 - [setExtension](grpc.event.nitricevent-1.md#setextension)
 - [setId](grpc.event.nitricevent-1.md#setid)
 - [setPayload](grpc.event.nitricevent-1.md#setpayload)
-- [setPayloadtype](grpc.event.nitricevent-1.md#setpayloadtype)
+- [setPayloadType](grpc.event.nitricevent-1.md#setpayloadtype)
 - [toArray](grpc.event.nitricevent-1.md#toarray)
 - [toObject](grpc.event.nitricevent-1.md#toobject)
 - [toString](grpc.event.nitricevent-1.md#tostring)
@@ -204,9 +204,9 @@ Defined in: src/interfaces/event/v1/event_pb.d.ts:120
 
 ___
 
-### getPayloadtype
+### getPayloadType
 
-▸ **getPayloadtype**(): *string*
+▸ **getPayloadType**(): *string*
 
 **Returns:** *string*
 
@@ -335,9 +335,9 @@ Defined in: src/interfaces/event/v1/event_pb.d.ts:121
 
 ___
 
-### setPayloadtype
+### setPayloadType
 
-▸ **setPayloadtype**(`value`: *string*): *void*
+▸ **setPayloadType**(`value`: *string*): *void*
 
 #### Parameters:
 

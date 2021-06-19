@@ -6,14 +6,15 @@
 
 ### Classes
 
-- [NitricContext](../classes/faas.nitriccontext.md)
-- [NitricRequest](../classes/faas.nitricrequest.md)
-- [NitricResponse](../classes/faas.nitricresponse.md)
+- [HttpTriggerContext](../classes/faas.httptriggercontext.md)
+- [NitricTrigger](../classes/faas.nitrictrigger.md)
+- [NitricTriggerContext](../classes/faas.nitrictriggercontext.md)
+- [Response](../classes/faas.response.md)
+- [TopicTriggerContext](../classes/faas.topictriggercontext.md)
 
 ### Type aliases
 
 - [NitricFunction](faas.md#nitricfunction)
-- [NitricSourceType](faas.md#nitricsourcetype)
 
 ### Functions
 
@@ -23,7 +24,7 @@
 
 ### NitricFunction
 
-Ƭ **NitricFunction**<P, T\>: (`request`: [*NitricRequest*](../classes/faas.nitricrequest.md)<P\>) => *Promise*<[*NitricResponse*](../classes/faas.nitricresponse.md)<T\>\> \| *Promise*<T\> \| [*NitricResponse*](../classes/faas.nitricresponse.md)<T\> \| T
+Ƭ **NitricFunction**<P, T\>: (`trigger`: [*NitricTrigger*](../classes/faas.nitrictrigger.md)<P\>) => *Promise*<T\> \| T \| *Promise*<[*Response*](../classes/faas.response.md)<T\>\> \| [*Response*](../classes/faas.response.md)<T\>
 
 Function defintion for the Nitric FaaS framework
 Can be either sync or async
@@ -32,38 +33,30 @@ Can be either sync or async
 
 #### Type parameters:
 
-Name | Description |
-:------ | :------ |
-`P` | The type of the payload of the NitricRequest   |
-`T` | The return type of the NitricFunction    |
+Name | Type | Description |
+:------ | :------ | :------ |
+`P` | - | The type of the payload of the NitricRequest   |
+`T` | ResponseData | The return type of the NitricFunction    |
 
 #### Type declaration:
 
-▸ (`request`: [*NitricRequest*](../classes/faas.nitricrequest.md)<P\>): *Promise*<[*NitricResponse*](../classes/faas.nitricresponse.md)<T\>\> \| *Promise*<T\> \| [*NitricResponse*](../classes/faas.nitricresponse.md)<T\> \| T
+▸ (`trigger`: [*NitricTrigger*](../classes/faas.nitrictrigger.md)<P\>): *Promise*<T\> \| T \| *Promise*<[*Response*](../classes/faas.response.md)<T\>\> \| [*Response*](../classes/faas.response.md)<T\>
 
 #### Parameters:
 
 Name | Type |
 :------ | :------ |
-`request` | [*NitricRequest*](../classes/faas.nitricrequest.md)<P\> |
+`trigger` | [*NitricTrigger*](../classes/faas.nitrictrigger.md)<P\> |
 
-**Returns:** *Promise*<[*NitricResponse*](../classes/faas.nitricresponse.md)<T\>\> \| *Promise*<T\> \| [*NitricResponse*](../classes/faas.nitricresponse.md)<T\> \| T
+**Returns:** *Promise*<T\> \| T \| *Promise*<[*Response*](../classes/faas.response.md)<T\>\> \| [*Response*](../classes/faas.response.md)<T\>
 
-Defined in: [src/faas/function.ts:25](https://github.com/nitrictech/node-sdk/blob/0f12f43/src/faas/function.ts#L25)
-
-___
-
-### NitricSourceType
-
-Ƭ **NitricSourceType**: *REQUEST* \| *SUBSCRIPTION* \| *UNKNOWN*
-
-Defined in: [src/faas/context.ts:14](https://github.com/nitrictech/node-sdk/blob/0f12f43/src/faas/context.ts#L14)
+Defined in: [src/faas/function.ts:27](https://github.com/nitrictech/node-sdk/blob/ba26202/src/faas/function.ts#L27)
 
 ## Functions
 
 ### start
 
-▸ **start**<Request, Response\>(`func`: [*NitricFunction*](faas.md#nitricfunction)<Request, Response\>): *Promise*<Server\>
+▸ **start**<Req, Resp\>(`func`: [*NitricFunction*](faas.md#nitricfunction)<Req, Resp\>): *Promise*<void\>
 
 Starts a nitric function
 
@@ -76,8 +69,8 @@ interface Greeting {
 	 name: string;
 }
 
-async function handler(request: faas.NitricRequest<Greeting>): Promise<faas.NitricResponse<string>> {
-	 const { name, greeting = "hello" } = request.getObject();
+async function handler(request: faas.NitricRequest<Greeting>): Promise<string> {
+	 const { name, greeting = "hello" } = request.dataAsObject();
 
 	 return `${greeting} ${name}!`;
 }
@@ -85,19 +78,23 @@ async function handler(request: faas.NitricRequest<Greeting>): Promise<faas.Nitr
 faas.start(handler);
 ```
 
+**`typeparam`** The contents of the provided nitric request
+
+**`typeparam`** The type the function handler returns
+
 #### Type parameters:
 
-Name | Default | Description |
-:------ | :------ | :------ |
-`Request` | *any* | The contents of the provided nitric request   |
-`Response` | *any* | The type the function handler returns    |
+Name | Default |
+:------ | :------ |
+`Req` | *any* |
+`Resp` | *any* |
 
 #### Parameters:
 
 Name | Type | Description |
 :------ | :------ | :------ |
-`func` | [*NitricFunction*](faas.md#nitricfunction)<Request, Response\> | The function handler see [NitricFunction](faas.md#nitricfunction)   |
+`func` | [*NitricFunction*](faas.md#nitricfunction)<Req, Resp\> | The function handler see [NitricFunction](faas.md#nitricfunction)   |
 
-**Returns:** *Promise*<Server\>
+**Returns:** *Promise*<void\>
 
-Defined in: [src/faas/start.ts:47](https://github.com/nitrictech/node-sdk/blob/0f12f43/src/faas/start.ts#L47)
+Defined in: [src/faas/start.ts:48](https://github.com/nitrictech/node-sdk/blob/ba26202/src/faas/start.ts#L48)

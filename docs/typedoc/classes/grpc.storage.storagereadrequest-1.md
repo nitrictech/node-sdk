@@ -25,14 +25,14 @@
 
 - [clone](grpc.storage.storagereadrequest-1.md#clone)
 - [cloneMessage](grpc.storage.storagereadrequest-1.md#clonemessage)
-- [getBucketname](grpc.storage.storagereadrequest-1.md#getbucketname)
+- [getBucketName](grpc.storage.storagereadrequest-1.md#getbucketname)
 - [getExtension](grpc.storage.storagereadrequest-1.md#getextension)
 - [getJsPbMessageId](grpc.storage.storagereadrequest-1.md#getjspbmessageid)
 - [getKey](grpc.storage.storagereadrequest-1.md#getkey)
 - [readBinaryExtension](grpc.storage.storagereadrequest-1.md#readbinaryextension)
 - [serializeBinary](grpc.storage.storagereadrequest-1.md#serializebinary)
 - [serializeBinaryExtensions](grpc.storage.storagereadrequest-1.md#serializebinaryextensions)
-- [setBucketname](grpc.storage.storagereadrequest-1.md#setbucketname)
+- [setBucketName](grpc.storage.storagereadrequest-1.md#setbucketname)
 - [setExtension](grpc.storage.storagereadrequest-1.md#setextension)
 - [setKey](grpc.storage.storagereadrequest-1.md#setkey)
 - [toArray](grpc.storage.storagereadrequest-1.md#toarray)
@@ -134,9 +134,9 @@ Defined in: node_modules/@types/google-protobuf/index.d.ts:112
 
 ___
 
-### getBucketname
+### getBucketName
 
-▸ **getBucketname**(): *string*
+▸ **getBucketName**(): *string*
 
 **Returns:** *string*
 
@@ -244,9 +244,9 @@ Defined in: node_modules/@types/google-protobuf/index.d.ts:32
 
 ___
 
-### setBucketname
+### setBucketName
 
-▸ **setBucketname**(`value`: *string*): *void*
+▸ **setBucketName**(`value`: *string*): *void*
 
 #### Parameters:
 

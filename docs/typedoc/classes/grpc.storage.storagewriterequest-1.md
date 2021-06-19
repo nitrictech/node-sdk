@@ -28,7 +28,7 @@
 - [getBody](grpc.storage.storagewriterequest-1.md#getbody)
 - [getBody\_asB64](grpc.storage.storagewriterequest-1.md#getbody_asb64)
 - [getBody\_asU8](grpc.storage.storagewriterequest-1.md#getbody_asu8)
-- [getBucketname](grpc.storage.storagewriterequest-1.md#getbucketname)
+- [getBucketName](grpc.storage.storagewriterequest-1.md#getbucketname)
 - [getExtension](grpc.storage.storagewriterequest-1.md#getextension)
 - [getJsPbMessageId](grpc.storage.storagewriterequest-1.md#getjspbmessageid)
 - [getKey](grpc.storage.storagewriterequest-1.md#getkey)
@@ -36,7 +36,7 @@
 - [serializeBinary](grpc.storage.storagewriterequest-1.md#serializebinary)
 - [serializeBinaryExtensions](grpc.storage.storagewriterequest-1.md#serializebinaryextensions)
 - [setBody](grpc.storage.storagewriterequest-1.md#setbody)
-- [setBucketname](grpc.storage.storagewriterequest-1.md#setbucketname)
+- [setBucketName](grpc.storage.storagewriterequest-1.md#setbucketname)
 - [setExtension](grpc.storage.storagewriterequest-1.md#setextension)
 - [setKey](grpc.storage.storagewriterequest-1.md#setkey)
 - [toArray](grpc.storage.storagewriterequest-1.md#toarray)
@@ -168,9 +168,9 @@ Defined in: src/interfaces/storage/v1/storage_pb.d.ts:14
 
 ___
 
-### getBucketname
+### getBucketName
 
-▸ **getBucketname**(): *string*
+▸ **getBucketName**(): *string*
 
 **Returns:** *string*
 
@@ -294,9 +294,9 @@ Defined in: src/interfaces/storage/v1/storage_pb.d.ts:16
 
 ___
 
-### setBucketname
+### setBucketName
 
-▸ **setBucketname**(`value`: *string*): *void*
+▸ **setBucketName**(`value`: *string*): *void*
 
 #### Parameters:
 

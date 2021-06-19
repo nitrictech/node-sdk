@@ -27,13 +27,13 @@
 - [cloneMessage](grpc.queue.queuecompleterequest-1.md#clonemessage)
 - [getExtension](grpc.queue.queuecompleterequest-1.md#getextension)
 - [getJsPbMessageId](grpc.queue.queuecompleterequest-1.md#getjspbmessageid)
-- [getLeaseid](grpc.queue.queuecompleterequest-1.md#getleaseid)
+- [getLeaseId](grpc.queue.queuecompleterequest-1.md#getleaseid)
 - [getQueue](grpc.queue.queuecompleterequest-1.md#getqueue)
 - [readBinaryExtension](grpc.queue.queuecompleterequest-1.md#readbinaryextension)
 - [serializeBinary](grpc.queue.queuecompleterequest-1.md#serializebinary)
 - [serializeBinaryExtensions](grpc.queue.queuecompleterequest-1.md#serializebinaryextensions)
 - [setExtension](grpc.queue.queuecompleterequest-1.md#setextension)
-- [setLeaseid](grpc.queue.queuecompleterequest-1.md#setleaseid)
+- [setLeaseId](grpc.queue.queuecompleterequest-1.md#setleaseid)
 - [setQueue](grpc.queue.queuecompleterequest-1.md#setqueue)
 - [toArray](grpc.queue.queuecompleterequest-1.md#toarray)
 - [toObject](grpc.queue.queuecompleterequest-1.md#toobject)
@@ -170,9 +170,9 @@ Defined in: node_modules/@types/google-protobuf/index.d.ts:14
 
 ___
 
-### getLeaseid
+### getLeaseId
 
-▸ **getLeaseid**(): *string*
+▸ **getLeaseId**(): *string*
 
 **Returns:** *string*
 
@@ -269,9 +269,9 @@ Defined in: node_modules/@types/google-protobuf/index.d.ts:107
 
 ___
 
-### setLeaseid
+### setLeaseId
 
-▸ **setLeaseid**(`value`: *string*): *void*
+▸ **setLeaseId**(`value`: *string*): *void*
 
 #### Parameters:
 

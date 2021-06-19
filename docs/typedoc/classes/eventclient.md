@@ -28,7 +28,7 @@ Used to publish events to nitric topics
 
 **Returns:** [*EventClient*](eventclient.md)
 
-Defined in: [src/api/event/event.ts:26](https://github.com/nitrictech/node-sdk/blob/0f12f43/src/api/event/event.ts#L26)
+Defined in: [src/api/event/event.ts:26](https://github.com/nitrictech/node-sdk/blob/ba26202/src/api/event/event.ts#L26)
 
 ## Properties
 
@@ -36,7 +36,7 @@ Defined in: [src/api/event/event.ts:26](https://github.com/nitrictech/node-sdk/b
 
 • `Private` **grpcClient**: [*EventClient*](grpc.event.eventclient.md)
 
-Defined in: [src/api/event/event.ts:26](https://github.com/nitrictech/node-sdk/blob/0f12f43/src/api/event/event.ts#L26)
+Defined in: [src/api/event/event.ts:26](https://github.com/nitrictech/node-sdk/blob/ba26202/src/api/event/event.ts#L26)
 
 ## Methods
 
@@ -75,4 +75,4 @@ async function publishEvent(): string {
 }
 ```
 
-Defined in: [src/api/event/event.ts:59](https://github.com/nitrictech/node-sdk/blob/0f12f43/src/api/event/event.ts#L59)
+Defined in: [src/api/event/event.ts:59](https://github.com/nitrictech/node-sdk/blob/ba26202/src/api/event/event.ts#L59)

@@ -22,6 +22,6 @@ Name | Type |
 :------ | :------ |
 `id` | *string* |
 `payload`? | google\_protobuf\_struct\_pb.Struct.AsObject |
-`payloadtype` | *string* |
+`payloadType` | *string* |
 
 Defined in: src/interfaces/event/v1/event_pb.d.ts:134

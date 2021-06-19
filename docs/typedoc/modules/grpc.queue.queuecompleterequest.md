@@ -20,7 +20,7 @@
 
 Name | Type |
 :------ | :------ |
-`leaseid` | *string* |
+`leaseId` | *string* |
 `queue` | *string* |
 
 Defined in: src/interfaces/queue/v1/queue_pb.d.ts:161

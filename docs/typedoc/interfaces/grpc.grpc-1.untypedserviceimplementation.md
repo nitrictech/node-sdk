@@ -18,6 +18,8 @@
 
   ↳ [*IQueueServer*](grpc.queue.iqueueserver.md)
 
+  ↳ [*IFaasServer*](grpc.faas.ifaasserver.md)
+
 ## Indexable
 
 ▪ [name: *string*]: [*UntypedHandleCall*](../modules/grpc.grpc-1.md#untypedhandlecall)
