@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.14](https://github.com/nitrictech/node-sdk/compare/v0.1.13...v0.1.14) (2021-06-19)
+
+
+### Features
+
+* **faas:** Update FaaS to use gRPC interface with memrbane. ([df23235](https://github.com/nitrictech/node-sdk/commit/df23235a9475150486b36ebe25c686f05f0e9458))
+
 ### [0.1.11](https://github.com/nitrictech/node-sdk/compare/v0.1.10...v0.1.11) (2021-05-26)
 
 ### [0.1.10](https://github.com/nitrictech/node-sdk/compare/v0.1.9...v0.1.10) (2021-05-25)
