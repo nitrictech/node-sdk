@@ -46,12 +46,12 @@ export class StorageClient {
    */
   async write(bucket: string, key: string, body: Uint8Array): Promise<void> {
     const request = new storage.StorageWriteRequest();
-    request.setBucketname(bucket);
+    request.setBucketName(bucket);
     request.setKey(key);
     request.setBody(body);
 
     return new Promise((resolve, reject) => {
-      this.grpcClient.write(request, (error, response) => {
+      this.grpcClient.write(request, (error) => {
         if (error) {
           reject(error);
         } else {
@@ -78,7 +78,7 @@ export class StorageClient {
    */
   async read(bucket: string, key: string): Promise<Uint8Array> {
     const request = new storage.StorageReadRequest();
-    request.setBucketname(bucket);
+    request.setBucketName(bucket);
     request.setKey(key);
 
     return new Promise((resolve, reject) => {

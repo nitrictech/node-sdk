@@ -193,7 +193,7 @@ describe('Queue Client Tests', () => {
                 const msg = new FailedTask();
                 const evt = new queue.NitricTask();
                 evt.setId(e.id);
-                evt.setPayloadtype(e.payloadType);
+                evt.setPayloadType(e.payloadType);
                 evt.setPayload(Struct.fromJavaScript(e.payload));
                 msg.setTask(evt);
                 msg.setMessage('Failed to Push task');
@@ -310,9 +310,9 @@ describe('Queue Client Tests', () => {
                 const task = new queue.NitricTask();
 
                 task.setId(e.id);
-                task.setPayloadtype(e.payloadType);
+                task.setPayloadType(e.payloadType);
                 task.setPayload(Struct.fromJavaScript(e.payload));
-                task.setLeaseid(e.id);
+                task.setLeaseId(e.id);
 
                 return task;
               })

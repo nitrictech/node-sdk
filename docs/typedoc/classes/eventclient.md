@@ -28,7 +28,7 @@ Used to publish events to nitric topics
 
 **Returns:** [*EventClient*](eventclient.md)
 
-Defined in: [src/api/event/event.ts:26](https://github.com/nitrictech/node-sdk/blob/ca4895b/src/api/event/event.ts#L26)
+Defined in: [src/api/event/event.ts:26](https://github.com/nitrictech/node-sdk/blob/0f12f43/src/api/event/event.ts#L26)
 
 ## Properties
 
@@ -36,7 +36,7 @@ Defined in: [src/api/event/event.ts:26](https://github.com/nitrictech/node-sdk/b
 
 • `Private` **grpcClient**: [*EventClient*](grpc.event.eventclient.md)
 
-Defined in: [src/api/event/event.ts:26](https://github.com/nitrictech/node-sdk/blob/ca4895b/src/api/event/event.ts#L26)
+Defined in: [src/api/event/event.ts:26](https://github.com/nitrictech/node-sdk/blob/0f12f43/src/api/event/event.ts#L26)
 
 ## Methods
 
@@ -62,17 +62,17 @@ Example:
 import { EventClient } from "@nitric/sdk";
 
 async function publishEvent(): string {
-  const client = new EventClient();
-
-  const requestId = await client.publish("my-topic", {
+  const client = new EventClient("my-topic", {
     payloadType: "my-payload",
     payload: {
       value: "Hello World!"
     }
-  );
+  });
+
+  const requestId = await client.publish();
 
   return requestId;
 }
 ```
 
-Defined in: [src/api/event/event.ts:59](https://github.com/nitrictech/node-sdk/blob/ca4895b/src/api/event/event.ts#L59)
+Defined in: [src/api/event/event.ts:59](https://github.com/nitrictech/node-sdk/blob/0f12f43/src/api/event/event.ts#L59)

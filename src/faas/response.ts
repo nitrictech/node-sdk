@@ -12,49 +12,53 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-export class NitricResponse<P> {
-  private _status: number;
-  private _body?: P;
-  private _headers: Record<string, string>;
+import { HttpResponseContext, TopicResponseContext, TriggerResponse } from "../interfaces/faas";
+import { ResponseContext } from "./response-context";
 
-  constructor() {
-    this._status = 200;
-    this._headers = {};
+type ResponseData = string | Record<string, any> | Uint8Array;
+
+const ENCODER = new TextEncoder();
+
+export class Response<T extends ResponseData = string> {
+  public readonly context: ResponseContext;
+  public data: T = "" as T;
+
+  constructor(ctx: ResponseContext) {
+    this.context = ctx;
   }
 
-  public get status() {
-    return this._status;
-  }
+  public toGrpcTriggerResponse(): TriggerResponse {
+    const triggerResponse = new TriggerResponse();
 
-  public get body() {
-    return this._body;
-  }
+    if (typeof this.data === "string") {
+      triggerResponse.setData(ENCODER.encode(this.data));
+    } else if (this.data instanceof Uint8Array) {
+      triggerResponse.setData(this.data);
+    } else {
+      const jsonString = JSON.stringify(this.data);
+      triggerResponse.setData(ENCODER.encode(jsonString));
+    }
+    
 
-  public get headers() {
-    return this._headers
-  }
+    if (this.context.isHttp()) {
+      const origCtx = this.context.asHttp();
+      const ctx = new HttpResponseContext();
 
-  public setStatus(status: number): NitricResponse<P> {
-    this._status = status;
-    return this;
-  }
+      ctx.setStatus(origCtx.status);
 
-  public setBody(body: P): NitricResponse<P> {
-    this._body = body;
-    return this;
-  }
+      Object.entries(origCtx.headers).forEach(([key, val]) => {
+        ctx.getHeadersMap().set(key, val);
+      });
 
-  public setHeaders(headers: Record<string, string>): NitricResponse<P> {
-    this._headers = headers;
-    return this;
-  }
+      triggerResponse.setHttp(ctx);
+    } else if (this.context.isTopic()) {
+      const ctx = new TopicResponseContext();
 
-  public addHeader(key: string, value: string): NitricResponse<P> {
-    this._headers[key] = value;
-    return this;
-  }
+      ctx.setSuccess(this.context.asTopic().success);
 
-  public static newResponse<P>(): NitricResponse<P> {
-    return new NitricResponse<P>();
+      triggerResponse.setTopic(ctx);
+    }
+
+    return triggerResponse;
   }
 }
