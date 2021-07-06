@@ -141,4 +141,66 @@ describe('Storage Client Tests', () => {
       expect(readMock).toBeCalledTimes(1);
     });
   });
+  describe('Given nitric.api.storage.StorageClient.Delete throws an error', () => {
+    const MOCK_ERROR = {
+      code: 2,
+      message: 'UNIMPLEMENTED',
+    };
+    let deleteMock;
+
+    beforeAll(() => {
+      deleteMock = jest
+        .spyOn(GrpcStorageClient.prototype, 'delete')
+        .mockImplementation((_, callback: any) => {
+          callback(MOCK_ERROR, null);
+
+          return null as any;
+        });
+    });
+
+    afterAll(() => {
+      jest.resetAllMocks();
+    });
+
+    test('Then StorageClient.delete should reject', () => {
+      const client = new StorageClient();
+      expect(client.delete('test_bucket', 'test/item')).rejects.toBe(MOCK_ERROR);
+    });
+
+    test('The Grpc client for Storage.delete should have been called exactly once', () => {
+      expect(deleteMock).toBeCalledTimes(1);
+    });
+  });
+
+  describe('Given nitric.api.storage.StorageClient.Delete succeeds', () => {
+    const MOCK_BYTES = new Uint8Array();
+    const MOCK_REPLY = new storage.StorageReadResponse();
+    MOCK_REPLY.setBody(MOCK_BYTES);
+
+    let deleteMock;
+
+    beforeAll(() => {
+      deleteMock = jest
+        .spyOn(GrpcStorageClient.prototype, 'delete')
+        .mockImplementation((_, callback: any) => {
+          callback(null, MOCK_REPLY);
+
+          return null as any;
+        });
+    });
+
+    afterAll(() => {
+      jest.resetAllMocks();
+    });
+
+    test('Then StorageClient.delete should delete the bytes from the bucket', () => {
+      const client = new StorageClient();
+      client.write('test_bucket', 'test/item', MOCK_BYTES);
+      expect(client.delete('test_bucket', 'test/item')).resolves;
+    });
+
+    test('The Grpc client for Storage.read should have been called exactly once', () => {
+      expect(deleteMock).toBeCalledTimes(1);
+    });
+  });
 });
