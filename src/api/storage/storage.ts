@@ -16,42 +16,84 @@ import { storage } from '../../interfaces';
 import * as grpc from '@grpc/grpc-js';
 
 /**
- * Nitric queue client, facilitates writing and reading from blob storate (buckets).
+ * Nitric storage client, facilitates writing and reading from blob storage (buckets).
  */
-export class StorageClient {
-  private grpcClient: storage.StorageClient;
+export class Storage {
+  storageClient: storage.StorageClient;
 
   constructor() {
-    this.grpcClient = new storage.StorageClient(
+    this.storageClient = new storage.StorageClient(
       SERVICE_BIND,
       grpc.ChannelCredentials.createInsecure()
     );
   }
 
+  bucket(name: string): Bucket {
+    if(!name) {
+      throw new Error("A bucket name is required to use a Bucket.")
+    }
+    return new Bucket(this, name);
+  }
+}
+
+/**
+ * A reference to a storage bucket.
+ */
+class Bucket {
+  storage: Storage;
+  name: string;
+
+  constructor(storage: Storage, name: string) {
+    this.storage = storage;
+    this.name = name;
+  }
+
+  file(name: string) {
+    if(!name) {
+      throw new Error("A file name/path is required to use a File.")
+    }
+    return new File(this.storage, this, name);
+  }
+
+}
+
+/**
+ * A reference to a file in a bucket.
+ */
+class File {
+  storage: Storage;
+  bucket: Bucket
+  name: string;
+
+  constructor(storage: Storage, bucket: Bucket, name: string) {
+    this.storage = storage;
+    this.bucket = bucket;
+    this.name = name;
+  }
+
   /**
-   * Write a an array of bytes to a bucket
-   * @param bucket The bucket to write to
-   * @param key The key/path of the item to write
-   * @param body The contents to write
+   * Write a an array of bytes to this file
+   * @param body The file contents to write
    * @retuns A void promise
    *
    * Example:
    * ```typescript
-   * import { StorageClient } from "@nitric/sdk";
+   * import { Storage } from "@nitric/sdk";
    *
-   * const client = new StorageClient();
+   * const storage = new Storage();
    *
-   * await client.write("my-bucket", "my-item", Buffer.from("My Test File..."));
+   * const buf = Buffer.from("My Test File...");
+   * await storage.bucket("my-bucket").file("my-item").write(buf);
    * ```
    */
-  async write(bucket: string, key: string, body: Uint8Array): Promise<void> {
+  async write(body: Uint8Array): Promise<void> {
     const request = new storage.StorageWriteRequest();
-    request.setBucketName(bucket);
-    request.setKey(key);
+    request.setBucketName(this.bucket.name);
+    request.setKey(this.name);
     request.setBody(body);
 
     return new Promise((resolve, reject) => {
-      this.grpcClient.write(request, (error) => {
+      this.storage.storageClient.write(request, (error) => {
         if (error) {
           reject(error);
         } else {
@@ -62,31 +104,58 @@ export class StorageClient {
   }
 
   /**
-   * Read an array of bytes from a bucket
-   * @param bucket The bucket to read from
-   * @param key The key of the blob item to read
+   * Read the contents of this file as an array of bytes
    * @returns A byte array of the contents of the read blob
    *
    * Example:
    * ```typescript
-   * import { StorageClient } from "@nitric/sdk";
+   * import { Storage } from "@nitric/sdk";
    *
-   * const client = new StorageClient();
+   * const storage = new Storage();
    *
-   * const bytes = await client.read("my-bucket", "my-item");
+   * const bytes = await storage.bucket("my-bucket").file("my-item").read();
    * ```
    */
-  async read(bucket: string, key: string): Promise<Uint8Array> {
+  async read(): Promise<Uint8Array> {
     const request = new storage.StorageReadRequest();
-    request.setBucketName(bucket);
-    request.setKey(key);
+    request.setBucketName(this.bucket.name);
+    request.setKey(this.name);
 
     return new Promise((resolve, reject) => {
-      this.grpcClient.read(request, (error, response) => {
+      this.storage.storageClient.read(request, (error, response) => {
         if (error) {
           reject(error);
         } else {
           resolve(response.getBody_asU8());
+        }
+      });
+    });
+  }
+
+  /**
+   * Delete this file from the bucket
+   * @returns A void promise
+   *
+   * Example:
+   * ```typescript
+   * import { Storage } from "@nitric/sdk";
+   *
+   * const storage = new Storage();
+   *
+   * const bytes = await storage.bucket("my-bucket").file("my-item").delete();
+   * ```
+   */
+   async delete(): Promise<void> {
+    const request = new storage.StorageDeleteRequest();
+    request.setBucketName(this.bucket.name);
+    request.setKey(this.name);
+
+    return new Promise((resolve, reject) => {
+      this.storage.storageClient.delete(request, (error) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve();
         }
       });
     });
