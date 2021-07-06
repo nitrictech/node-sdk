@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.15](https://github.com/nitrictech/node-sdk/compare/v0.1.14...v0.1.15) (2021-07-06)
+
+
+### Features
+
+* Add delete method to storage client ([7e124d8](https://github.com/nitrictech/node-sdk/commit/7e124d8c8e62a1a1918ce70d88f80c294af9a010))
+
 ### [0.1.14](https://github.com/nitrictech/node-sdk/compare/v0.1.13...v0.1.14) (2021-06-19)
 
 
