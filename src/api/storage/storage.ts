@@ -91,4 +91,33 @@ export class StorageClient {
       });
     });
   }
+
+  /**
+   * Delete an array of bytes from a bucket
+   * @param bucket the bucket to delete from
+   * @param key the key of the blob item to delete
+   * Example:
+   * ```typescript
+   * import { StorageClient } from "@nitric/sdk";
+   *
+   * const client = new StorageClient();
+   *
+   * await client.delete("my-bucket", "my-item");  
+   * ```
+   *  */
+  async delete(bucket: string, key:string): Promise<void> {
+    const request = new storage.StorageDeleteRequest();
+    request.setBucketName(bucket);
+    request.setKey(key);
+
+    return new Promise((resolve, reject) => {
+      this.grpcClient.delete(request, (error) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve();
+        }
+      });
+    });  
+  }
 }
