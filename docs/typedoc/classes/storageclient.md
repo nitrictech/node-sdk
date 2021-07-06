@@ -16,6 +16,7 @@ Nitric queue client, facilitates writing and reading from blob storate (buckets)
 
 ### Methods
 
+- [delete](storageclient.md#delete)
 - [read](storageclient.md#read)
 - [write](storageclient.md#write)
 
@@ -27,7 +28,7 @@ Nitric queue client, facilitates writing and reading from blob storate (buckets)
 
 **Returns:** [*StorageClient*](storageclient.md)
 
-Defined in: [src/api/storage/storage.ts:22](https://github.com/nitrictech/node-sdk/blob/ba26202/src/api/storage/storage.ts#L22)
+Defined in: [src/api/storage/storage.ts:22](https://github.com/nitrictech/node-sdk/blob/537936d/src/api/storage/storage.ts#L22)
 
 ## Properties
 
@@ -35,9 +36,28 @@ Defined in: [src/api/storage/storage.ts:22](https://github.com/nitrictech/node-s
 
 • `Private` **grpcClient**: [*StorageClient*](grpc.storage.storageclient.md)
 
-Defined in: [src/api/storage/storage.ts:22](https://github.com/nitrictech/node-sdk/blob/ba26202/src/api/storage/storage.ts#L22)
+Defined in: [src/api/storage/storage.ts:22](https://github.com/nitrictech/node-sdk/blob/537936d/src/api/storage/storage.ts#L22)
 
 ## Methods
+
+### delete
+
+▸ **delete**(`bucket`: *string*, `key`: *string*): *Promise*<void\>
+
+Delete an array of bytes from a bucket
+
+#### Parameters:
+
+Name | Type | Description |
+:------ | :------ | :------ |
+`bucket` | *string* | the bucket to delete from   |
+`key` | *string* | the key of the blob item to delete Example: ```typescript import { StorageClient } from "@nitric/sdk";  const client = new StorageClient();  await client.delete("my-bucket", "my-item");   ```    |
+
+**Returns:** *Promise*<void\>
+
+Defined in: [src/api/storage/storage.ts:108](https://github.com/nitrictech/node-sdk/blob/537936d/src/api/storage/storage.ts#L108)
+
+___
 
 ### read
 
@@ -65,7 +85,7 @@ const client = new StorageClient();
 const bytes = await client.read("my-bucket", "my-item");
 ```
 
-Defined in: [src/api/storage/storage.ts:79](https://github.com/nitrictech/node-sdk/blob/ba26202/src/api/storage/storage.ts#L79)
+Defined in: [src/api/storage/storage.ts:79](https://github.com/nitrictech/node-sdk/blob/537936d/src/api/storage/storage.ts#L79)
 
 ___
 
@@ -96,4 +116,4 @@ Name | Type | Description |
 
 **Returns:** *Promise*<void\>
 
-Defined in: [src/api/storage/storage.ts:47](https://github.com/nitrictech/node-sdk/blob/ba26202/src/api/storage/storage.ts#L47)
+Defined in: [src/api/storage/storage.ts:47](https://github.com/nitrictech/node-sdk/blob/537936d/src/api/storage/storage.ts#L47)
