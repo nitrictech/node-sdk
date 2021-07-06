@@ -11,14 +11,14 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { EventClient } from './event';
+import { Eventing } from './event';
 import { event } from '../../interfaces';
 import { EventPublishResponse } from '../../interfaces/event';
 
 const { EventClient: GrpcEventClient } = event;
 
 describe('Event Client Tests', () => {
-  describe('Given nitric.api.event.EventClient.Publish throws an error', () => {
+  describe('Given nitric.interfaces.event.EventClient.publish throws an error', () => {
     const MOCK_ERROR = {
       code: 2,
       message: 'UNIMPLEMENTED',
@@ -30,7 +30,6 @@ describe('Event Client Tests', () => {
         .spyOn(GrpcEventClient.prototype, 'publish')
         .mockImplementation((request, callback: any) => {
           callback(MOCK_ERROR, null);
-
           return null as any;
         });
     });
@@ -39,10 +38,10 @@ describe('Event Client Tests', () => {
       jest.resetAllMocks();
     });
 
-    test('Then EventClient.publish should reject', () => {
-      const client = new EventClient();
+    test('Then Eventing.Topic.publish should reject', () => {
+      const topic = new Eventing().topic('test');
       expect(
-        client.publish('test', {
+        topic.publish({
           id: 'test',
           payloadType: 'Test Payload',
           payload: {
@@ -52,12 +51,12 @@ describe('Event Client Tests', () => {
       ).rejects.toBe(MOCK_ERROR);
     });
 
-    test('The Grpc client for EventClient.publish should have been called exactly once', () => {
+    test('The Grpc client for Eventing.publish should have been called exactly once', () => {
       expect(publishMock).toBeCalledTimes(1);
     });
   });
 
-  describe('Given nitric.api.event.EventClient.Publish succeeds', () => {
+  describe('Given nitric.api.event.Eventing.Publish succeeds', () => {
     describe('And a id is provided', () => {
       const MOCK_ERROR = {
         code: 2,
@@ -81,20 +80,20 @@ describe('Event Client Tests', () => {
         jest.resetAllMocks();
       });
 
-      test('Then EventClient.publish should resolve with the provided id', async () => {
-        const client = new EventClient();
+      test('Then Eventing.publish should resolve with the provided id', async () => {
+        const client = new Eventing();
         await expect(
-          client.publish('test', {
+          client.topic('test').publish({
             id: 'test',
             payloadType: 'Test Payload',
             payload: {
               test: 'test',
             },
           })
-        ).resolves.toBe('test');
+        ).resolves.toStrictEqual({"id": "test", "payload": {"test": "test"}, "payloadType": "Test Payload"});
       });
 
-      test('The Grpc client for EventClient.publish should have been called exactly once', () => {
+      test('The Grpc client for Eventing.publish should have been called exactly once', () => {
         expect(publishMock).toBeCalledTimes(1);
       });
     });

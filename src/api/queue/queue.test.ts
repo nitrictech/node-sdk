@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { QueueClient } from './queue';
+import { Queueing, ReceivedTask } from './queue';
 
 import { queue } from '../../interfaces';
 import {
@@ -48,10 +48,10 @@ describe('Queue Client Tests', () => {
       });
 
       it('Then Queue.send should reject', async () => {
-        const client = new QueueClient();
+        const queueing = new Queueing();
 
         expect(
-          client.send('test', {
+          queueing.queue('test').send({
             id: 'task',
             payloadType: 'test',
             payload: { test: 1 },
@@ -84,9 +84,9 @@ describe('Queue Client Tests', () => {
       });
 
       it('Then Queue.Send should resolve with no failed messages', async () => {
-        const client = new QueueClient();
+        const queueing = new Queueing();
         await expect(
-          client.send('test', {
+          queueing.queue('test').send({
             id: 'task',
             payloadType: 'test',
             payload: { test: 1 },
@@ -123,10 +123,10 @@ describe('Queue Client Tests', () => {
       });
 
       it('Then Queue.sendBatch should reject', async () => {
-        const client = new QueueClient();
+        const queueing = new Queueing();
         // expect.assertions(1);
         await expect(
-          client.sendBatch('test', [
+          queueing.queue('test').send([
             {
               id: 'test',
               payloadType: 'Test Payload',
@@ -157,9 +157,9 @@ describe('Queue Client Tests', () => {
       });
 
       it('Then Queue.sendBatch should resolve with no failed messages', async () => {
-        const client = new QueueClient();
+        const queueing = new Queueing();
         await expect(
-          client.sendBatch('test', [
+          queueing.queue('test').send([
             {
               id: 'test',
               payloadType: 'Test Payload',
@@ -212,9 +212,9 @@ describe('Queue Client Tests', () => {
       });
 
       it('Then EventingClient.publish should resolve with no failed messages', async () => {
-        const client = new QueueClient();
+        const queueing = new Queueing();
         await expect(
-          client.sendBatch('test', [
+          queueing.queue('test').send([
             {
               id: 'test',
               payloadType: 'Test Payload',
@@ -256,9 +256,9 @@ describe('Queue Client Tests', () => {
       });
 
       it('Then Queue.receive should reject', async () => {
-        const client = new QueueClient();
+        const queueing = new Queueing();
 
-        await expect(client.receive('test', 1)).rejects.toBe(MOCK_ERROR);
+        await expect(queueing.queue('test').receive(1)).rejects.toBe(MOCK_ERROR);
       });
     });
 
@@ -283,14 +283,14 @@ describe('Queue Client Tests', () => {
       });
 
       it('Then Queue.receive should resolve with an empty array', async () => {
-        const client = new QueueClient();
-        await expect(client.receive('test', 1)).resolves.toEqual([]);
+        const queueing = new Queueing();
+        await expect(queueing.queue('test').receive(1)).resolves.toEqual([]);
       });
     });
 
     describe('Given queue items are returned', () => {
       const queueName = 'test';
-      const mockEvents = [
+      const mockTasks = [
         {
           id: 'test',
           payloadType: 'Test Payload',
@@ -306,7 +306,7 @@ describe('Queue Client Tests', () => {
           .mockImplementation((request, callback: any) => {
             const mockResponse = new QueueReceiveResponse();
             mockResponse.setTasksList(
-              mockEvents.map((e) => {
+              mockTasks.map((e) => {
                 const task = new queue.NitricTask();
 
                 task.setId(e.id);
@@ -328,14 +328,15 @@ describe('Queue Client Tests', () => {
         jest.resetAllMocks();
       });
 
-      it('Then Queue.receive should resolve with an empty array', async () => {
-        const client = new QueueClient();
-        await expect(client.receive('test', 1)).resolves.toEqual(
-          mockEvents.map((e) => {
+      it('Then Queue.receive should resolve with an array of tasks', async () => {
+        const queueing = new Queueing();
+        const queue = queueing.queue('test');
+        await expect(queue.receive(1)).resolves.toEqual(
+          mockTasks.map((e) => {
             return {
               leaseId: e.id,
-              task: e,
-              queue: queueName,
+              queue: queue,
+              ...e,
             };
           })
         );
@@ -366,15 +367,17 @@ describe('Queue Client Tests', () => {
       });
 
       it('Then Queue.complete should reject', async () => {
-        const client = new QueueClient();
+        const queueing = new Queueing();
+        const task = new ReceivedTask({
+          id: 'task',
+          payloadType: 'test',
+          leaseId: '1',
+          payload: { test: 1 },
+          queue: queueing.queue('test')
+        });
 
         expect(
-          client.complete('test', {
-            id: 'task',
-            payloadType: 'test',
-            leaseId: '1',
-            payload: { test: 1 },
-          })
+          task.complete()
         ).rejects.toBe(MOCK_ERROR);
       });
 
@@ -403,14 +406,17 @@ describe('Queue Client Tests', () => {
       });
 
       it('Then Queue.Complete should resolve with no failed messages', async () => {
-        const client = new QueueClient();
+        const queueing = new Queueing();
+        const task = new ReceivedTask({
+          id: 'task',
+          payloadType: 'test',
+          leaseId: '1',
+          payload: { test: 1 },
+          queue: queueing.queue('test')
+        });
+
         await expect(
-          client.complete('test', {
-            id: 'task',
-            payloadType: 'test',
-            leaseId: '1',
-            payload: { test: 1 },
-          })
+          task.complete()
         ).resolves.toBeUndefined();
       });
 

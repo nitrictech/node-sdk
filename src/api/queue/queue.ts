@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { queue } from '../../interfaces';
+import { queue as queueService } from '../../interfaces';
 import { SERVICE_BIND } from '../../constants';
 import * as grpc from '@grpc/grpc-js';
 import type { Task } from '../../types';
@@ -27,7 +27,7 @@ interface FailedMessage {
 
 /** @internal */
 function taskToWire(task: Task) {
-  const wireTask = new queue.NitricTask();
+  const wireTask = new queueService.NitricTask();
 
   wireTask.setId(task.id);
   wireTask.setPayloadType(task.payloadType);
@@ -36,33 +36,61 @@ function taskToWire(task: Task) {
   return wireTask;
 }
 
+function newQueueClient(): queueService.QueueClient {
+  return new queueService.QueueClient(
+    SERVICE_BIND,
+    grpc.ChannelCredentials.createInsecure()
+  );
+}
+
 /**
  * Nitric queue client, facilitates pushing and popping to distributed queues.
  */
-export class QueueClient {
-  private grpcClient: queue.QueueClient;
+export class Queueing {
+  queueClient: queueService.QueueClient;
 
   constructor() {
-    this.grpcClient = new queue.QueueClient(
-      SERVICE_BIND,
-      grpc.ChannelCredentials.createInsecure()
-    );
+    this.queueClient = newQueueClient();
   }
+
+  queue(name: string): Queue {
+    if(!name) {
+      throw new Error('A queue name is needed to use a Queue.');
+    }
+
+    return new Queue(this, name);
+  }
+}
+
+export class Queue {
+  queueing: Queueing;
+  name: string;
+
+  constructor(queueing: Queueing, name: string) {
+    this.queueing = queueing;
+    this.name = name;
+  }
+
 
   /**
    * Send an task to a queue, which can be retrieved by other services.
+   * 
+   * If an array of tasks is provided the returns promise will resolve to an array containing
+   * any tasks that failed to be sent to the queue.
+   * 
+   * When a single task is provided a void promise will be returned, which rejects if the
+   * task fails to be sent to the queue.
    *
-   * @param queueName the of the queue to publish to
-   * @param task the task to push to the queue
-   * @returns A void promise
+   * @param tasks one or more tasks to push to the queue
+   * @returns A void promise for a single task or a list of failed tasks when sending an array of tasks.
    *
    * Example:
    * ```typescript
-   * import { QueueClient } from "@nitric/sdk";
+   * import { Queueing } from "@nitric/sdk";
    *
-   * const client = new QueueClient();
-   *
-   * await client.send("my-queue", {
+   * const queueing = new Queueing();
+   * const queue = queueing.queue("my-queue")
+   * await queue.send({
    *   id: "1234";
    *   payloadType: "my-payload";
    *   payload: {
@@ -71,14 +99,18 @@ export class QueueClient {
    * });
    * ```
    */
-  async send(queueName: string, task: Task): Promise<void> {
+  async send(tasks: Task | Task[]): Promise<void|FailedMessage[]> {
+    if(Array.isArray(tasks)) {
+      return this.sendBatch(tasks)
+    }
+
     return new Promise((resolve, reject) => {
-      const request = new queue.QueueSendRequest();
+      const request = new queueService.QueueSendRequest();
 
-      request.setTask(taskToWire(task));
-      request.setQueue(queueName);
+      request.setTask(taskToWire(tasks));
+      request.setQueue(this.name);
 
-      this.grpcClient.send(request, (error) => {
+      this.queueing.queueClient.send(request, (error) => {
         if (error) {
           reject(error);
         } else {
@@ -91,17 +123,16 @@ export class QueueClient {
   /**
    * Send a collection of tasks to a queue, which can be retrieved by other services.
    *
-   * @param queueName the of the queue to publish to
    * @param tasks the tasks to push to the queue
-   * @returns a list containing details of any messages that failed to publish.
+   * @returns a list containing details of any tasks that failed to publish.
    *
    * Example:
    * ```typescript
-   * import { QueueClient } from "@nitric/sdk"
+   * import { Queueing } from "@nitric/sdk"
    *
-   * const client = new QueueClient();
+   * const queueing = new Queueing();
    *
-   * const failedTasks = await client.sendBatch("my-queue", [{
+   * const failedTasks = await queueing.queue("my-queue").sendBatch([{
    *   payloadType: "my-payload";
    *   payload: {
    *     value: "test"
@@ -112,16 +143,16 @@ export class QueueClient {
    * // console.log(failedTasks);
    * ```
    */
-  async sendBatch(queueName: string, tasks: Task[]): Promise<FailedMessage[]> {
+  private async sendBatch(tasks: Task[]): Promise<FailedMessage[]> {
     return new Promise((resolve, reject) => {
-      const request = new queue.QueueSendBatchRequest();
+      const request = new queueService.QueueSendBatchRequest();
 
       const wireTasks = tasks.map(taskToWire);
 
       request.setTasksList(wireTasks);
-      request.setQueue(queueName);
+      request.setQueue(this.name);
 
-      this.grpcClient.sendBatch(request, (error, response) => {
+      this.queueing.queueClient.sendBatch(request, (error, response) => {
         if (error) {
           reject(error);
         } else {
@@ -148,82 +179,97 @@ export class QueueClient {
    *
    * If the lease on a queue item expires before it is acknowledged or the lease is extended the task will be returned to the queue for reprocessing.
    *
-   * @param queueName the Nitric name for the queue. This will be automatically resolved to the provider specific queue identifier.
    * @param depth the maximum number of items to return. Default 1, Min 1.
-   * @returns The list of recieved tasks
+   * @returns The list of received tasks
    *
    * Example:
    * ```typescript
-   * import { QueueClient } from "@nitric/sdk"
+   * import { Queueing } from "@nitric/sdk"
    *
-   * const client = new QueueClient();
+   * const queueing = new Queueing();
    *
-   * const [task] = await client.receive("my-queue");
+   * const [task] = await queueing.queue("my-queue").receive();
    *
    * // do something with task
    * ```
    */
-  async receive(queueName: string, depth?: number): Promise<Task[]> {
+  async receive(depth?: number): Promise<ReceivedTask[]> {
     return new Promise((resolve, reject) => {
-      const request = new queue.QueueReceiveRequest();
+      const request = new queueService.QueueReceiveRequest();
 
       // Set the default and min depth to 1.
       if (Number.isNaN(depth) || depth < 1) {
         depth = 1;
       }
 
-      request.setQueue(queueName);
+      request.setQueue(this.name);
       request.setDepth(depth);
 
-      this.grpcClient.receive(request, (error, response) => {
+      this.queueing.queueClient.receive(request, (error, response) => {
         if (error) {
           reject(error);
         } else {
           resolve(
-            response.getTasksList().map((m) => ({
-              task: {
+            response.getTasksList().map((m) => {
+              return new ReceivedTask({
                 id: m.getId(),
                 payload: m.getPayload().toJavaScript(),
                 payloadType: m.getPayloadType(),
-              },
-              leaseId: m.getLeaseId(),
-              queue: queueName,
-            }))
+                leaseId: m.getLeaseId(),
+                queue: this,
+              });
+            })
           );
         }
       });
     });
   }
+}
+
+export class ReceivedTask implements Task {
+  id: string;
+  leaseId: string;
+  payloadType?: string;
+  payload?: Record<string, any>;
+  queue: Queue;
+
+  constructor({id, leaseId, payload, payloadType, queue}: Task & {id: string, leaseId: string, queue: Queue}) {
+    this.id = id;
+    this.leaseId = leaseId;
+    this.payloadType = payloadType;
+    this.payload = payload;
+    this.queue = queue;
+  }
+
 
   /**
    * Marks a queue item as successfully completed and removes it from the queue.
    *
-   * @param queueItem the queue item to complete
    * @returns A void promise
    *
    * Example:
    * ```typescript
-   * import { QueueClient } from "@nitric/sdk"
+   * import { Queueing } from "@nitric/sdk"
    *
-   * const client = new QueueClient();
+   * const queueing = new Queueing();
    *
-   * const [task] = await client.receive("my-queue");
+   * const [task] = await queueing.queue("my-queue").receive();
    *
    * // do something with task
    *
    * // complete the task
-   * client.complete("my-queue", task);
+   * await task.complete();
    * ```
    */
-  async complete(queueName: string, task: Task): Promise<void> {
+  async complete(): Promise<void> {
     try {
-      const request = new queue.QueueCompleteRequest();
+      const request = new queueService.QueueCompleteRequest();
 
-      request.setQueue(queueName);
-      request.setLeaseId(task.leaseId);
+      request.setQueue(this.queue.name);
+      request.setLeaseId(this.leaseId);
 
       return await new Promise((resolve, reject) => {
-        this.grpcClient.complete(request, (error) => {
+        this.queue.queueing.queueClient.complete(request, (error) => {
           if (error) {
             reject(error);
           } else {
