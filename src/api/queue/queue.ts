@@ -53,7 +53,7 @@ export class Queueing {
     this.queueClient = newQueueClient();
   }
 
-  queue(name: string): Queue {
+  queue = (name: string): Queue => {
     if(!name) {
       throw new Error('A queue name is needed to use a Queue.');
     }
@@ -99,7 +99,7 @@ export class Queue {
    * });
    * ```
    */
-  async send(tasks: Task | Task[]): Promise<void|FailedMessage[]> {
+  send = async (tasks: Task | Task[]): Promise<void|FailedMessage[]> => {
     if(Array.isArray(tasks)) {
       return this.sendBatch(tasks)
     }
@@ -143,7 +143,7 @@ export class Queue {
    * // console.log(failedTasks);
    * ```
    */
-  private async sendBatch(tasks: Task[]): Promise<FailedMessage[]> {
+  private sendBatch = async (tasks: Task[]): Promise<FailedMessage[]> => {
     return new Promise((resolve, reject) => {
       const request = new queueService.QueueSendBatchRequest();
 
@@ -193,7 +193,7 @@ export class Queue {
    * // do something with task
    * ```
    */
-  async receive(depth?: number): Promise<ReceivedTask[]> {
+  receive = async (depth?: number): Promise<ReceivedTask[]> => {
     return new Promise((resolve, reject) => {
       const request = new queueService.QueueReceiveRequest();
 
@@ -261,7 +261,7 @@ export class ReceivedTask implements Task {
    * await task.complete();
    * ```
    */
-  async complete(): Promise<void> {
+  complete = async (): Promise<void> => {
     try {
       const request = new queueService.QueueCompleteRequest();
 

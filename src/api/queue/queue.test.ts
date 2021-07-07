@@ -333,11 +333,11 @@ describe('Queue Client Tests', () => {
         const queue = queueing.queue('test');
         await expect(queue.receive(1)).resolves.toEqual(
           mockTasks.map((e) => {
-            return {
+            return expect.objectContaining({
               leaseId: e.id,
               queue: queue,
               ...e,
-            };
+            });
           })
         );
       });
