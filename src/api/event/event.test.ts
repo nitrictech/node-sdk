@@ -12,10 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { Eventing } from './event';
+import { NitricTopic } from '../../interfaces/event';
 import { event } from '../../interfaces';
 import { EventPublishResponse } from '../../interfaces/event';
 
-const { EventClient: GrpcEventClient } = event;
+const { EventClient: GrpcEventClient, TopicClient: GrpcTopicClient } = event;
 
 describe('Event Client Tests', () => {
   describe('Given nitric.interfaces.event.EventClient.publish throws an error', () => {
@@ -96,6 +97,70 @@ describe('Event Client Tests', () => {
       test('The Grpc client for Eventing.publish should have been called exactly once', () => {
         expect(publishMock).toBeCalledTimes(1);
       });
+    });
+  });
+
+  describe('Given nitric.api.event.TopicClient.List throws an error', () => {
+    const MOCK_ERROR = {
+      code: 2,
+      message: 'UNIMPLEMENTED',
+    };
+    let listMock;
+
+    beforeAll(() => {
+      listMock = jest
+        .spyOn(GrpcTopicClient.prototype, 'list')
+        .mockImplementation((_, callback: any) => {
+          callback(MOCK_ERROR, null);
+
+          return null as any;
+        });
+    });
+
+    afterAll(() => {
+      jest.resetAllMocks();
+    });
+
+    test('Then TopicClient.publish should reject', () => {
+      const eventing = new Eventing();
+      expect(eventing.topics()).rejects.toBe(MOCK_ERROR);
+    });
+
+    test('The Grpc client for TopicClient.publish should have been called exactly once', () => {
+      expect(listMock).toBeCalledTimes(1);
+    });
+  });
+
+  describe('Given nitric.api.event.TopicClient.List succeeds', () => {
+    const MOCK_TOPIC = new NitricTopic();
+    MOCK_TOPIC.setName('test-topic');
+    const MOCK_TOPICS: NitricTopic[] = [MOCK_TOPIC];
+    const MOCK_TOPICS_REPLY = new event.TopicListResponse();
+    MOCK_TOPICS_REPLY.setTopicsList(MOCK_TOPICS);
+
+    let listMock;
+
+    beforeAll(() => {
+      listMock = jest
+        .spyOn(GrpcTopicClient.prototype, 'list')
+        .mockImplementation((_, callback: any) => {
+          callback(null, MOCK_TOPICS_REPLY);
+
+          return null as any;
+        });
+    });
+
+    afterAll(() => {
+      jest.resetAllMocks();
+    });
+
+    test('Then TopicClient.publish should resolve with available topics', () => {
+      const eventing = new Eventing();
+      expect(eventing.topics()).resolves.toEqual(['test-topic'].map(eventing.topic));
+    });
+
+    test('The Grpc client for TopicClient.publish should have been called exactly once', () => {
+      expect(listMock).toBeCalledTimes(1);
     });
   });
 });

@@ -12,23 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { SERVICE_BIND } from '../../constants';
-import { storage } from '../../interfaces';
+import { storage as storageService } from '../../interfaces';
 import * as grpc from '@grpc/grpc-js';
 
 /**
  * Nitric storage client, facilitates writing and reading from blob storage (buckets).
  */
 export class Storage {
-  storageClient: storage.StorageClient;
+  storageClient: storageService.StorageClient;
 
   constructor() {
-    this.storageClient = new storage.StorageClient(
+    this.storageClient = new storageService.StorageClient(
       SERVICE_BIND,
       grpc.ChannelCredentials.createInsecure()
     );
   }
 
-  bucket(name: string): Bucket {
+  bucket = (name: string): Bucket => {
     if(!name) {
       throw new Error("A bucket name is required to use a Bucket.")
     }
@@ -48,7 +48,7 @@ class Bucket {
     this.name = name;
   }
 
-  file(name: string) {
+  file = (name: string) => {
     if(!name) {
       throw new Error("A file name/path is required to use a File.")
     }
@@ -86,8 +86,8 @@ class File {
    * await storage.bucket("my-bucket").file("my-item").write(buf);
    * ```
    */
-  async write(body: Uint8Array): Promise<void> {
-    const request = new storage.StorageWriteRequest();
+  write = async (body: Uint8Array): Promise<void> => {
+    const request = new storageService.StorageWriteRequest();
     request.setBucketName(this.bucket.name);
     request.setKey(this.name);
     request.setBody(body);
@@ -116,8 +116,8 @@ class File {
    * const bytes = await storage.bucket("my-bucket").file("my-item").read();
    * ```
    */
-  async read(): Promise<Uint8Array> {
-    const request = new storage.StorageReadRequest();
+  read = async (): Promise<Uint8Array> => {
+    const request = new storageService.StorageReadRequest();
     request.setBucketName(this.bucket.name);
     request.setKey(this.name);
 
@@ -145,8 +145,8 @@ class File {
    * const bytes = await storage.bucket("my-bucket").file("my-item").delete();
    * ```
    */
-   async delete(): Promise<void> {
-    const request = new storage.StorageDeleteRequest();
+   delete = async (): Promise<void> => {
+    const request = new storageService.StorageDeleteRequest();
     request.setBucketName(this.bucket.name);
     request.setKey(this.name);
 

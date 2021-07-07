@@ -17,11 +17,18 @@ import { Struct } from 'google-protobuf/google/protobuf/struct_pb';
 import * as grpc from '@grpc/grpc-js';
 import type { NitricEvent } from '../../types';
 
-function newEventClient(): eventService.EventClient {
-  return new eventService.EventClient(
+function newEventClients(): { event: eventService.EventClient, topic: eventService.TopicClient } {
+  const channel = grpc.ChannelCredentials.createInsecure();
+  return {
+    event: new eventService.EventClient(
+        SERVICE_BIND,
+        channel,
+    ),
+    topic: new eventService.TopicClient(
       SERVICE_BIND,
-      grpc.ChannelCredentials.createInsecure()
-  );
+      channel,
+    )
+  }
 }
 
 export class Topic {
@@ -57,9 +64,9 @@ export class Topic {
    * }
    * ```
    */
-  async publish(
+  publish = async (
       event: NitricEvent
-  ): Promise<NitricEvent> {
+  ): Promise<NitricEvent> => {
     const { id, payloadType = 'none', payload } = event;
     const request = new eventService.EventPublishRequest();
     const evt = new eventService.NitricEvent();
@@ -98,9 +105,12 @@ export class Topic {
  */
 export class Eventing {
   eventClient: eventService.EventClient
+  topicClient: eventService.TopicClient
 
   constructor() {
-    this.eventClient = newEventClient()
+    const clients = newEventClients()
+    this.eventClient = clients.event;
+    this.topicClient = clients.topic;
   }
 
   /**
@@ -115,12 +125,38 @@ export class Eventing {
    * const topic = eventing.topic('notifications');
    * ```
    */
-  topic(name: string): Topic {
+  topic = (name: string): Topic => {
     if (!name) {
       throw new Error('A topic name is needed to use a Topic.');
     }
 
     return new Topic(this, name);
+  }
+
+  /**
+   * Retrieve all available topic references by querying for available topics.
+   *
+   * @retuns A promise containing the list of available nitric topics
+   *
+   * Example:
+   * ```typescript
+   * import { Eventing } from "@nitric/sdk";
+   *
+   * const eventing = new Eventing();
+   *
+   * const topics = await eventing.topics();
+   * ```
+   */
+   topics = async (): Promise<Topic[]> => {
+    return new Promise((resolve, reject) => {
+      this.topicClient.list(null, (error, response) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(response.getTopicsList().map((topic) => this.topic(topic.getName())));
+        }
+      });
+    });
   }
 
 
