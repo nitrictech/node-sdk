@@ -59,10 +59,6 @@ describe('Event Client Tests', () => {
 
   describe('Given nitric.api.event.Eventing.Publish succeeds', () => {
     describe('And a id is provided', () => {
-      const MOCK_ERROR = {
-        code: 2,
-        message: 'UNIMPLEMENTED',
-      };
       let publishMock;
 
       beforeAll(() => {
@@ -154,12 +150,15 @@ describe('Event Client Tests', () => {
       jest.resetAllMocks();
     });
 
-    test('Then TopicClient.publish should resolve with available topics', () => {
+    test('Then TopicClient.publish should resolve with available topics', async () => {
       const eventing = new Eventing();
-      expect(eventing.topics()).resolves.toEqual(['test-topic'].map(eventing.topic));
+      (await eventing.topics()).forEach(topic => {
+        expect(topic.eventing).toBe(eventing);
+        expect(topic.name).toEqual('test-topic');
+      })
     });
 
-    test('The Grpc client for TopicClient.publish should have been called exactly once', () => {
+    test('The Grpc client for TopicClient.list should have been called exactly once', () => {
       expect(listMock).toBeCalledTimes(1);
     });
   });
