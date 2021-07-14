@@ -19,21 +19,21 @@ import * as grpc from '@grpc/grpc-js';
  * Nitric storage client, facilitates writing and reading from blob storage (buckets).
  */
 export class Storage {
-  storageClient: storageService.StorageClient;
+  StorageServiceClient: storageService.StorageServiceClient;
 
   constructor() {
-    this.storageClient = new storageService.StorageClient(
+    this.StorageServiceClient = new storageService.StorageServiceClient(
       SERVICE_BIND,
       grpc.ChannelCredentials.createInsecure()
     );
   }
 
   bucket = (name: string): Bucket => {
-    if(!name) {
-      throw new Error("A bucket name is required to use a Bucket.")
+    if (!name) {
+      throw new Error('A bucket name is required to use a Bucket.');
     }
     return new Bucket(this, name);
-  }
+  };
 }
 
 /**
@@ -49,12 +49,11 @@ class Bucket {
   }
 
   file = (name: string) => {
-    if(!name) {
-      throw new Error("A file name/path is required to use a File.")
+    if (!name) {
+      throw new Error('A file name/path is required to use a File.');
     }
     return new File(this.storage, this, name);
-  }
-
+  };
 }
 
 /**
@@ -62,7 +61,7 @@ class Bucket {
  */
 class File {
   storage: Storage;
-  bucket: Bucket
+  bucket: Bucket;
   name: string;
 
   constructor(storage: Storage, bucket: Bucket, name: string) {
@@ -93,7 +92,7 @@ class File {
     request.setBody(body);
 
     return new Promise((resolve, reject) => {
-      this.storage.storageClient.write(request, (error) => {
+      this.storage.StorageServiceClient.write(request, (error) => {
         if (error) {
           reject(error);
         } else {
@@ -101,7 +100,7 @@ class File {
         }
       });
     });
-  }
+  };
 
   /**
    * Read the contents of this file as an array of bytes
@@ -122,7 +121,7 @@ class File {
     request.setKey(this.name);
 
     return new Promise((resolve, reject) => {
-      this.storage.storageClient.read(request, (error, response) => {
+      this.storage.StorageServiceClient.read(request, (error, response) => {
         if (error) {
           reject(error);
         } else {
@@ -130,7 +129,7 @@ class File {
         }
       });
     });
-  }
+  };
 
   /**
    * Delete this file from the bucket
@@ -145,13 +144,13 @@ class File {
    * const bytes = await storage.bucket("my-bucket").file("my-item").delete();
    * ```
    */
-   delete = async (): Promise<void> => {
+  delete = async (): Promise<void> => {
     const request = new storageService.StorageDeleteRequest();
     request.setBucketName(this.bucket.name);
     request.setKey(this.name);
 
     return new Promise((resolve, reject) => {
-      this.storage.storageClient.delete(request, (error) => {
+      this.storage.StorageServiceClient.delete(request, (error) => {
         if (error) {
           reject(error);
         } else {
@@ -159,5 +158,5 @@ class File {
         }
       });
     });
-  }
+  };
 }

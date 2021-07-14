@@ -36,8 +36,8 @@ function taskToWire(task: Task) {
   return wireTask;
 }
 
-function newQueueClient(): queueService.QueueClient {
-  return new queueService.QueueClient(
+function newQueueServiceClient(): queueService.QueueServiceClient {
+  return new queueService.QueueServiceClient(
     SERVICE_BIND,
     grpc.ChannelCredentials.createInsecure()
   );
@@ -47,19 +47,19 @@ function newQueueClient(): queueService.QueueClient {
  * Nitric queue client, facilitates pushing and popping to distributed queues.
  */
 export class Queueing {
-  queueClient: queueService.QueueClient;
+  QueueServiceClient: queueService.QueueServiceClient;
 
   constructor() {
-    this.queueClient = newQueueClient();
+    this.QueueServiceClient = newQueueServiceClient();
   }
 
   queue = (name: string): Queue => {
-    if(!name) {
+    if (!name) {
       throw new Error('A queue name is needed to use a Queue.');
     }
 
     return new Queue(this, name);
-  }
+  };
 }
 
 export class Queue {
@@ -71,13 +71,12 @@ export class Queue {
     this.name = name;
   }
 
-
   /**
    * Send an task to a queue, which can be retrieved by other services.
-   * 
+   *
    * If an array of tasks is provided the returns promise will resolve to an array containing
    * any tasks that failed to be sent to the queue.
-   * 
+   *
    * When a single task is provided a void promise will be returned, which rejects if the
    * task fails to be sent to the queue.
    *
@@ -99,9 +98,9 @@ export class Queue {
    * });
    * ```
    */
-  send = async (tasks: Task | Task[]): Promise<void|FailedMessage[]> => {
-    if(Array.isArray(tasks)) {
-      return this.sendBatch(tasks)
+  send = async (tasks: Task | Task[]): Promise<void | FailedMessage[]> => {
+    if (Array.isArray(tasks)) {
+      return this.sendBatch(tasks);
     }
 
     return new Promise((resolve, reject) => {
@@ -110,7 +109,7 @@ export class Queue {
       request.setTask(taskToWire(tasks));
       request.setQueue(this.name);
 
-      this.queueing.queueClient.send(request, (error) => {
+      this.queueing.QueueServiceClient.send(request, (error) => {
         if (error) {
           reject(error);
         } else {
@@ -118,7 +117,7 @@ export class Queue {
         }
       });
     });
-  }
+  };
 
   /**
    * Send a collection of tasks to a queue, which can be retrieved by other services.
@@ -152,7 +151,7 @@ export class Queue {
       request.setTasksList(wireTasks);
       request.setQueue(this.name);
 
-      this.queueing.queueClient.sendBatch(request, (error, response) => {
+      this.queueing.QueueServiceClient.sendBatch(request, (error, response) => {
         if (error) {
           reject(error);
         } else {
@@ -169,7 +168,7 @@ export class Queue {
         }
       });
     });
-  }
+  };
 
   /**
    * Pop 1 or more queue items from the specified queue up to the depth limit.
@@ -205,7 +204,7 @@ export class Queue {
       request.setQueue(this.name);
       request.setDepth(depth);
 
-      this.queueing.queueClient.receive(request, (error, response) => {
+      this.queueing.QueueServiceClient.receive(request, (error, response) => {
         if (error) {
           reject(error);
         } else {
@@ -223,7 +222,7 @@ export class Queue {
         }
       });
     });
-  }
+  };
 }
 
 export class ReceivedTask implements Task {
@@ -233,14 +232,19 @@ export class ReceivedTask implements Task {
   payload?: Record<string, any>;
   queue: Queue;
 
-  constructor({id, leaseId, payload, payloadType, queue}: Task & {id: string, leaseId: string, queue: Queue}) {
+  constructor({
+    id,
+    leaseId,
+    payload,
+    payloadType,
+    queue,
+  }: Task & { id: string; leaseId: string; queue: Queue }) {
     this.id = id;
     this.leaseId = leaseId;
     this.payloadType = payloadType;
     this.payload = payload;
     this.queue = queue;
   }
-
 
   /**
    * Marks a queue item as successfully completed and removes it from the queue.
@@ -269,7 +273,7 @@ export class ReceivedTask implements Task {
       request.setLeaseId(this.leaseId);
 
       return await new Promise((resolve, reject) => {
-        this.queue.queueing.queueClient.complete(request, (error) => {
+        this.queue.queueing.QueueServiceClient.complete(request, (error) => {
           if (error) {
             reject(error);
           } else {
@@ -280,5 +284,5 @@ export class ReceivedTask implements Task {
     } catch (error) {
       throw error;
     }
-  }
+  };
 }

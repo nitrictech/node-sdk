@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Queueing, ReceivedTask } from './queue';
+import { Queueing, ReceivedTask } from './queues';
 
 import { queue } from '../../interfaces';
 import {
@@ -22,11 +22,11 @@ import {
   QueueSendResponse,
 } from '../../interfaces/queue';
 import { Struct } from 'google-protobuf/google/protobuf/struct_pb';
-const { QueueClient: GrpcQueueClient } = queue;
+const { QueueServiceClient: GrpcQueueServiceClient } = queue;
 
 describe('Queue Client Tests', () => {
   describe('Send', () => {
-    describe('Given nitric.api.queue.QueueClient.Send throws an error', () => {
+    describe('Given nitric.api.queue.QueueServiceClient.Send throws an error', () => {
       const MOCK_ERROR = {
         code: 12,
         message: 'UNIMPLEMENTED',
@@ -35,7 +35,7 @@ describe('Queue Client Tests', () => {
 
       beforeAll(() => {
         sendMock = jest
-          .spyOn(GrpcQueueClient.prototype, 'send')
+          .spyOn(GrpcQueueServiceClient.prototype, 'send')
           .mockImplementation((request, callback: any) => {
             callback(MOCK_ERROR, null);
 
@@ -64,12 +64,12 @@ describe('Queue Client Tests', () => {
       });
     });
 
-    describe('Given nitric.api.queue.QueueClient.Send succeeds', () => {
+    describe('Given nitric.api.queue.QueueServiceClient.Send succeeds', () => {
       let sendMock;
 
       beforeAll(() => {
         sendMock = jest
-          .spyOn(GrpcQueueClient.prototype, 'send')
+          .spyOn(GrpcQueueServiceClient.prototype, 'send')
           .mockImplementation((request, callback: any) => {
             const mockResponse = new QueueSendResponse();
 
@@ -101,7 +101,7 @@ describe('Queue Client Tests', () => {
   });
 
   describe('SendBatch', () => {
-    describe('Given nitric.api.queue.QueueClient.SendBatch throws an error', () => {
+    describe('Given nitric.api.queue.QueueServiceClient.SendBatch throws an error', () => {
       const MOCK_ERROR = {
         code: 12,
         message: 'UNIMPLEMENTED',
@@ -110,7 +110,7 @@ describe('Queue Client Tests', () => {
 
       beforeAll(() => {
         sendBatchMock = jest
-          .spyOn(GrpcQueueClient.prototype, 'sendBatch')
+          .spyOn(GrpcQueueServiceClient.prototype, 'sendBatch')
           .mockImplementation((request, callback: any) => {
             callback(MOCK_ERROR, null);
 
@@ -139,10 +139,10 @@ describe('Queue Client Tests', () => {
       });
     });
 
-    describe('Given nitric.api.queue.QueueClient.SendBatch succeeds', () => {
+    describe('Given nitric.api.queue.QueueServiceClient.SendBatch succeeds', () => {
       beforeAll(() => {
         jest
-          .spyOn(GrpcQueueClient.prototype, 'sendBatch')
+          .spyOn(GrpcQueueServiceClient.prototype, 'sendBatch')
           .mockImplementation((request, callback: any) => {
             const mockResponse = new QueueSendBatchResponse();
             mockResponse.setFailedtasksList([]);
@@ -172,7 +172,7 @@ describe('Queue Client Tests', () => {
       });
     });
 
-    describe('Given nitric.api.queue.QueueClient.SendBatch partially succeeds', () => {
+    describe('Given nitric.api.queue.QueueServiceClient.SendBatch partially succeeds', () => {
       const mockEvents = [
         {
           id: 'test',
@@ -185,7 +185,7 @@ describe('Queue Client Tests', () => {
 
       beforeAll(() => {
         jest
-          .spyOn(GrpcQueueClient.prototype, 'sendBatch')
+          .spyOn(GrpcQueueServiceClient.prototype, 'sendBatch')
           .mockImplementation((request, callback: any) => {
             const mockResponse = new QueueSendBatchResponse();
             mockResponse.setFailedtasksList(
@@ -234,7 +234,7 @@ describe('Queue Client Tests', () => {
   });
 
   describe('Receive', () => {
-    describe('Given nitric.api.queue.QueueClient.Receive throws an error', () => {
+    describe('Given nitric.api.queue.QueueServiceClient.Receive throws an error', () => {
       const MOCK_ERROR = {
         code: 12,
         message: 'UNIMPLEMENTED',
@@ -243,7 +243,7 @@ describe('Queue Client Tests', () => {
 
       beforeAll(() => {
         receiveMock = jest
-          .spyOn(GrpcQueueClient.prototype, 'receive')
+          .spyOn(GrpcQueueServiceClient.prototype, 'receive')
           .mockImplementation((request, callback: any) => {
             callback(MOCK_ERROR, null);
 
@@ -258,14 +258,16 @@ describe('Queue Client Tests', () => {
       it('Then Queue.receive should reject', async () => {
         const queueing = new Queueing();
 
-        await expect(queueing.queue('test').receive(1)).rejects.toBe(MOCK_ERROR);
+        await expect(queueing.queue('test').receive(1)).rejects.toBe(
+          MOCK_ERROR
+        );
       });
     });
 
     describe('Given no queue items are returned', () => {
       beforeAll(() => {
         jest
-          .spyOn(GrpcQueueClient.prototype, 'receive')
+          .spyOn(GrpcQueueServiceClient.prototype, 'receive')
           .mockImplementation((request, callback: any) => {
             const mockResponse = new QueueReceiveResponse();
             mockResponse.setTasksList([]);
@@ -302,7 +304,7 @@ describe('Queue Client Tests', () => {
 
       beforeAll(() => {
         jest
-          .spyOn(GrpcQueueClient.prototype, 'receive')
+          .spyOn(GrpcQueueServiceClient.prototype, 'receive')
           .mockImplementation((request, callback: any) => {
             const mockResponse = new QueueReceiveResponse();
             mockResponse.setTasksList(
@@ -345,7 +347,7 @@ describe('Queue Client Tests', () => {
   });
 
   describe('Complete', () => {
-    describe('Given nitric.api.queue.QueueClient.Complete throws an error', () => {
+    describe('Given nitric.api.queue.QueueServiceClient.Complete throws an error', () => {
       const MOCK_ERROR = {
         code: 12,
         message: 'UNIMPLEMENTED',
@@ -354,7 +356,7 @@ describe('Queue Client Tests', () => {
 
       beforeAll(() => {
         completeMock = jest
-          .spyOn(GrpcQueueClient.prototype, 'complete')
+          .spyOn(GrpcQueueServiceClient.prototype, 'complete')
           .mockImplementation((request, callback: any) => {
             callback(MOCK_ERROR, null);
 
@@ -373,12 +375,10 @@ describe('Queue Client Tests', () => {
           payloadType: 'test',
           leaseId: '1',
           payload: { test: 1 },
-          queue: queueing.queue('test')
+          queue: queueing.queue('test'),
         });
 
-        expect(
-          task.complete()
-        ).rejects.toBe(MOCK_ERROR);
+        expect(task.complete()).rejects.toBe(MOCK_ERROR);
       });
 
       it('Then Queue.complete should be called once', async () => {
@@ -386,12 +386,12 @@ describe('Queue Client Tests', () => {
       });
     });
 
-    describe('Given nitric.api.queue.QueueClient.Complete succeeds', () => {
+    describe('Given nitric.api.queue.QueueServiceClient.Complete succeeds', () => {
       let completeMock;
 
       beforeAll(() => {
         completeMock = jest
-          .spyOn(GrpcQueueClient.prototype, 'complete')
+          .spyOn(GrpcQueueServiceClient.prototype, 'complete')
           .mockImplementation((request, callback: any) => {
             const mockResponse = new QueueCompleteResponse();
 
@@ -412,12 +412,10 @@ describe('Queue Client Tests', () => {
           payloadType: 'test',
           leaseId: '1',
           payload: { test: 1 },
-          queue: queueing.queue('test')
+          queue: queueing.queue('test'),
         });
 
-        await expect(
-          task.complete()
-        ).resolves.toBeUndefined();
+        await expect(task.complete()).resolves.toBeUndefined();
       });
 
       it('Then Queue.complete should be called once', async () => {

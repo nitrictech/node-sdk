@@ -17,18 +17,15 @@ import { Struct } from 'google-protobuf/google/protobuf/struct_pb';
 import * as grpc from '@grpc/grpc-js';
 import type { NitricEvent } from '../../types';
 
-function newEventClients(): { event: eventService.EventClient, topic: eventService.TopicClient } {
+function newEventServiceClients(): {
+  event: eventService.EventServiceClient;
+  topic: eventService.TopicServiceClient;
+} {
   const channel = grpc.ChannelCredentials.createInsecure();
   return {
-    event: new eventService.EventClient(
-        SERVICE_BIND,
-        channel,
-    ),
-    topic: new eventService.TopicClient(
-      SERVICE_BIND,
-      channel,
-    )
-  }
+    event: new eventService.EventServiceClient(SERVICE_BIND, channel),
+    topic: new eventService.TopicServiceClient(SERVICE_BIND, channel),
+  };
 }
 
 export class Topic {
@@ -64,9 +61,7 @@ export class Topic {
    * }
    * ```
    */
-  publish = async (
-      event: NitricEvent
-  ): Promise<NitricEvent> => {
+  publish = async (event: NitricEvent): Promise<NitricEvent> => {
     const { id, payloadType = 'none', payload } = event;
     const request = new eventService.EventPublishRequest();
     const evt = new eventService.NitricEvent();
@@ -79,16 +74,15 @@ export class Topic {
     request.setEvent(evt);
 
     return new Promise<NitricEvent>((resolve, reject) => {
-      this.eventing.eventClient.publish(request, (error, response) => {
+      this.eventing.EventServiceClient.publish(request, (error, response) => {
         if (error) {
           reject(error);
         } else {
-          resolve({...event, id: response.getId()});
+          resolve({ ...event, id: response.getId() });
         }
       });
     });
-  }
-
+  };
 }
 
 /**
@@ -104,13 +98,13 @@ export class Topic {
  * ```
  */
 export class Eventing {
-  eventClient: eventService.EventClient
-  topicClient: eventService.TopicClient
+  EventServiceClient: eventService.EventServiceClient;
+  TopicServiceClient: eventService.TopicServiceClient;
 
   constructor() {
-    const clients = newEventClients()
-    this.eventClient = clients.event;
-    this.topicClient = clients.topic;
+    const clients = newEventServiceClients();
+    this.EventServiceClient = clients.event;
+    this.TopicServiceClient = clients.topic;
   }
 
   /**
@@ -131,7 +125,7 @@ export class Eventing {
     }
 
     return new Topic(this, name);
-  }
+  };
 
   /**
    * Retrieve all available topic references by querying for available topics.
@@ -147,17 +141,17 @@ export class Eventing {
    * const topics = await eventing.topics();
    * ```
    */
-   topics = async (): Promise<Topic[]> => {
+  topics = async (): Promise<Topic[]> => {
     return new Promise((resolve, reject) => {
-      this.topicClient.list(null, (error, response) => {
+      this.TopicServiceClient.list(null, (error, response) => {
         if (error) {
           reject(error);
         } else {
-          resolve(response.getTopicsList().map((topic) => this.topic(topic.getName())));
+          resolve(
+            response.getTopicsList().map((topic) => this.topic(topic.getName()))
+          );
         }
       });
     });
-  }
-
-
+  };
 }

@@ -14,10 +14,10 @@
 import { Storage } from './storage';
 import { storage } from '../../interfaces';
 
-const { StorageClient: GrpcStorageClient } = storage;
+const { StorageServiceClient: GrpcStorageServiceClient } = storage;
 
 describe('Storage Client Tests', () => {
-  describe('Given nitric.api.storage.StorageClient.Write throws an error', () => {
+  describe('Given nitric.api.storage.StorageServiceClient.Write throws an error', () => {
     const MOCK_ERROR = {
       code: 2,
       message: 'UNIMPLEMENTED',
@@ -26,7 +26,7 @@ describe('Storage Client Tests', () => {
 
     beforeAll(() => {
       writeMock = jest
-        .spyOn(GrpcStorageClient.prototype, 'write')
+        .spyOn(GrpcStorageServiceClient.prototype, 'write')
         .mockImplementation((_, callback: any) => {
           callback(MOCK_ERROR, null);
 
@@ -38,7 +38,7 @@ describe('Storage Client Tests', () => {
       jest.resetAllMocks();
     });
 
-    test('Then StorageClient.write should reject', () => {
+    test('Then StorageServiceClient.write should reject', () => {
       const storage = new Storage();
       expect(
         storage.bucket('test_bucket').file('test/item').write(new Uint8Array())
@@ -50,13 +50,13 @@ describe('Storage Client Tests', () => {
     });
   });
 
-  describe('Given nitric.api.storage.StorageClient.Write succeeds', () => {
+  describe('Given nitric.api.storage.StorageServiceClient.Write succeeds', () => {
     let writeMock;
     const MOCK_REPLY = new storage.StorageWriteResponse();
 
     beforeAll(() => {
       writeMock = jest
-        .spyOn(GrpcStorageClient.prototype, 'write')
+        .spyOn(GrpcStorageServiceClient.prototype, 'write')
         .mockImplementation((_, callback: any) => {
           callback(null, MOCK_REPLY);
 
@@ -68,7 +68,7 @@ describe('Storage Client Tests', () => {
       jest.resetAllMocks();
     });
 
-    test('Then StorageClient.write should resolve with success status', async () => {
+    test('Then StorageServiceClient.write should resolve with success status', async () => {
       const storage = new Storage();
       await expect(
         storage.bucket('test_bucket').file('test/item').write(new Uint8Array())
@@ -80,7 +80,7 @@ describe('Storage Client Tests', () => {
     });
   });
 
-  describe('Given nitric.api.storage.StorageClient.Read throws an error', () => {
+  describe('Given nitric.api.storage.StorageServiceClient.Read throws an error', () => {
     const MOCK_ERROR = {
       code: 2,
       message: 'UNIMPLEMENTED',
@@ -89,7 +89,7 @@ describe('Storage Client Tests', () => {
 
     beforeAll(() => {
       readMock = jest
-        .spyOn(GrpcStorageClient.prototype, 'read')
+        .spyOn(GrpcStorageServiceClient.prototype, 'read')
         .mockImplementation((_, callback: any) => {
           callback(MOCK_ERROR, null);
 
@@ -101,9 +101,11 @@ describe('Storage Client Tests', () => {
       jest.resetAllMocks();
     });
 
-    test('Then StorageClient.read should reject', () => {
+    test('Then StorageServiceClient.read should reject', () => {
       const storage = new Storage();
-      expect(storage.bucket('test_bucket').file('test/item').read()).rejects.toBe(MOCK_ERROR);
+      expect(
+        storage.bucket('test_bucket').file('test/item').read()
+      ).rejects.toBe(MOCK_ERROR);
     });
 
     test('The Grpc client for Storage.read should have been called exactly once', () => {
@@ -111,7 +113,7 @@ describe('Storage Client Tests', () => {
     });
   });
 
-  describe('Given nitric.api.storage.StorageClient.Read succeeds', () => {
+  describe('Given nitric.api.storage.StorageServiceClient.Read succeeds', () => {
     const MOCK_BYTES = new Uint8Array();
     const MOCK_REPLY = new storage.StorageReadResponse();
     MOCK_REPLY.setBody(MOCK_BYTES);
@@ -120,7 +122,7 @@ describe('Storage Client Tests', () => {
 
     beforeAll(() => {
       readMock = jest
-        .spyOn(GrpcStorageClient.prototype, 'read')
+        .spyOn(GrpcStorageServiceClient.prototype, 'read')
         .mockImplementation((_, callback: any) => {
           callback(null, MOCK_REPLY);
 
@@ -132,9 +134,11 @@ describe('Storage Client Tests', () => {
       jest.resetAllMocks();
     });
 
-    test('Then StorageClient.read should return the bytes of the retrieved item', () => {
+    test('Then StorageServiceClient.read should return the bytes of the retrieved item', () => {
       const storage = new Storage();
-      expect(storage.bucket('test_bucket').file('test/item').read()).resolves.toBe(MOCK_BYTES);
+      expect(
+        storage.bucket('test_bucket').file('test/item').read()
+      ).resolves.toBe(MOCK_BYTES);
     });
 
     test('The Grpc client for Storage.read should have been called exactly once', () => {

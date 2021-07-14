@@ -1,9 +1,0 @@
-# @nitric/sdk
-The NodeJS SDK supports the use of the cloud-portable [Nitric](https://nitric.io) framework with NodeJS 12+.
-> The SDK is in early stage development and APIs and interfaces are still subject to breaking changes
-
-```sh
-yarn add @nitric/sdk
-```
-
-# [READ DOCUMENTATION ON GITHUB](https://github.com/nitrictech/node-sdk)
