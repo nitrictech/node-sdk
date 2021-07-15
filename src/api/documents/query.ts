@@ -12,11 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { Transform } from 'stream';
-import { Struct } from 'google-protobuf/google/protobuf/struct_pb';
 import {
   Expression,
   ExpressionValue,
-  Document,
   DocumentQueryRequest,
   DocumentQueryResponse,
   DocumentQueryStreamRequest,
@@ -24,7 +22,7 @@ import {
   DocumentServiceClient,
   Collection,
 } from '../../interfaces/document';
-import { WhereQueryOperator, WhereValueExpression } from 'src/types';
+import { WhereQueryOperator, WhereValueExpression } from '../../types';
 import type { Map as ProtobufMap } from 'google-protobuf';
 
 type PagingToken = Map<string, string>;
