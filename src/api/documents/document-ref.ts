@@ -76,7 +76,7 @@ export class DocumentRef<T extends { [key: string]: any }> {
    * existing document will be update with the new value.
    * @param value content the document content to store (required)
    */
-  public async set(value: Partial<T>) {
+  public async set(value: T) {
     const request = new DocumentSetRequest();
     request.setKey(this.key);
     request.setContent(Struct.fromJavaScript(value));
