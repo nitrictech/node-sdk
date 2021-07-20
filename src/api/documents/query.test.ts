@@ -22,6 +22,8 @@ const {
   DocumentQueryStreamResponse,
   Document,
   ExpressionValue,
+  Collection,
+  Key,
 } = document;
 
 describe('Query Tests', () => {
@@ -133,6 +135,7 @@ describe('Query Tests', () => {
 
   describe('Given DocumentServiceClient.Query succeeds', () => {
     let queryMock;
+    let mockKey;
 
     beforeAll(() => {
       queryMock = jest
@@ -145,6 +148,14 @@ describe('Query Tests', () => {
               id: 'test',
             })
           );
+
+          const collection = new Collection();
+          collection.setName('test');
+
+          mockKey = new Key();
+          mockKey.setCollection(collection);
+
+          mockDocument.setKey(mockKey);
           response.setDocumentsList([mockDocument]);
           callback(null, response);
 
@@ -161,7 +172,10 @@ describe('Query Tests', () => {
 
       await expect(q.fetch()).resolves.toStrictEqual([
         {
-          id: 'test',
+          content: {
+            id: 'test',
+          },
+          ref: mockKey,
         },
       ]);
     });
@@ -228,6 +242,7 @@ describe('Query Tests', () => {
     let documentsClient: Documents;
     let mockStream = new PassThrough();
     let queryStreamMock;
+    let mockKey;
 
     beforeAll(() => {
       queryStreamMock = jest
@@ -243,7 +258,8 @@ describe('Query Tests', () => {
 
     test('Then DocumentRef.QueryStream should return correct response and support readable asyncIterator', async () => {
       const chunks = [];
-      const query = documentsClient.collection('test').query();
+      const col = documentsClient.collection('test');
+      const query = col.query();
 
       const stream = query.stream();
 
@@ -251,9 +267,15 @@ describe('Query Tests', () => {
       const doc = new Document();
       doc.setContent(
         Struct.fromJavaScript({
-          test: 'test',
+          id: 'test',
         })
       );
+
+      mockKey = new Key();
+
+      mockKey.setCollection(col['_collection']);
+
+      doc.setKey(mockKey);
 
       response.setDocument(doc);
 
@@ -265,7 +287,14 @@ describe('Query Tests', () => {
         chunks.push(chunk);
       }
 
-      expect(chunks).toStrictEqual([{ test: 'test' }]);
+      expect(chunks).toStrictEqual([
+        {
+          content: {
+            id: 'test',
+          },
+          ref: mockKey,
+        },
+      ]);
     });
 
     test('The Grpc client for DocumentServiceClient.QueryStream should have been called exactly once', () => {

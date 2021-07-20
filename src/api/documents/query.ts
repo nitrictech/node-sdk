@@ -21,6 +21,7 @@ import {
   DocumentQueryStreamResponse,
   DocumentServiceClient,
   Collection,
+  Key,
 } from '../../interfaces/document';
 import { WhereQueryOperator, WhereValueExpression } from '../../types';
 import type { Map as ProtobufMap } from 'google-protobuf';
@@ -29,6 +30,11 @@ type PagingToken = Map<string, string>;
 
 interface ReadableStream<T> extends NodeJS.ReadableStream {
   on(event: string | symbol, listener: (...args: T[]) => void): this;
+}
+
+export interface DocumentResponse<T> {
+  ref: Key;
+  content: T;
 }
 
 /**
@@ -139,7 +145,7 @@ export class Query<T extends { [key: string]: any }> {
       });
     }
 
-    return new Promise<T[]>((resolve, reject) => {
+    return new Promise<DocumentResponse<T>[]>((resolve, reject) => {
       this.documentClient.query(
         request,
         (error, response: DocumentQueryResponse) => {
@@ -151,9 +157,10 @@ export class Query<T extends { [key: string]: any }> {
             // clear paging token map
             request.clearPagingTokenMap();
 
-            const documents = response
-              .getDocumentsList()
-              .map((doc) => doc.getContent().toJavaScript() as T);
+            const documents = response.getDocumentsList().map((doc) => ({
+              ref: doc.getKey(),
+              content: doc.getContent().toJavaScript() as T,
+            }));
 
             resolve(documents);
           }
@@ -198,7 +205,7 @@ export class Query<T extends { [key: string]: any }> {
    * ```
    *
    */
-  public stream(): ReadableStream<T> {
+  public stream(): ReadableStream<DocumentResponse<T>> {
     const responseStream = this.documentClient.queryStream(
       this.getStreamRequest()
     );
@@ -206,7 +213,12 @@ export class Query<T extends { [key: string]: any }> {
     const transform = new Transform({
       objectMode: true,
       transform(result: DocumentQueryStreamResponse, encoding, callback) {
-        callback(undefined, result.getDocument().getContent().toJavaScript());
+        const doc = result.getDocument();
+
+        callback(undefined, {
+          ref: doc.getKey(),
+          content: doc.getContent().toJavaScript() as T,
+        });
       },
     });
 
