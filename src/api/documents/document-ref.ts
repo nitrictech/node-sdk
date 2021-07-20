@@ -24,6 +24,18 @@ import {
 import { CollectionRef } from './collection-ref';
 import { getKey } from './key';
 
+const MAX_COLLECTION_DEPTH = 1;
+
+const getSubCollectionDepth = (key: Key, depth = 0) => {
+  const parent = key.getCollection().getParent();
+
+  if (parent) {
+    depth = getSubCollectionDepth(parent, depth + 1);
+  }
+
+  return depth;
+};
+
 /**
  * Document Ref
  *
@@ -116,6 +128,12 @@ export class DocumentRef<T extends { [key: string]: any }> {
    * @returns The Collection instance
    */
   public collection<T extends { [key: string]: any }>(name: string) {
+    if (getSubCollectionDepth(this.key) >= MAX_COLLECTION_DEPTH) {
+      throw new Error(
+        `Maximum collection depth ${MAX_COLLECTION_DEPTH} exceeded`
+      );
+    }
+
     return new CollectionRef<T>(this.documentClient, name, this.key);
   }
 }

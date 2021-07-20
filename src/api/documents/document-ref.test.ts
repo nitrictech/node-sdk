@@ -163,4 +163,17 @@ describe('Document Ref Tests', () => {
       expect(deleteMock).toBeCalledTimes(1);
     });
   });
+
+  describe('Given Collection Depth Limit is exceeded', () => {
+    test('Then DocumentRef.Collection should throw correct error', () => {
+      const docRoot = documents().collection('test').doc('id');
+      const nestedCollection = docRoot.collection('nested').doc('id');
+
+      const testNestedAgain = () => nestedCollection.collection('nested-again');
+
+      expect(testNestedAgain).toThrow(
+        new Error('Maximum collection depth 1 exceeded')
+      );
+    });
+  });
 });
