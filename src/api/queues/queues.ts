@@ -286,3 +286,23 @@ export class ReceivedTask implements Task {
     }
   };
 }
+
+/**
+ * Queues
+ * @returns a Queues API client.
+ * @example
+ * ```typescript
+ * import { queues } from "@nitric/sdk";
+ *
+ * async function publishToQueue() {
+ *  await queues()
+ *  .queue('my-queue')
+ *  .send({
+ *    payload: {
+ *      example: 'payload',
+ *    },
+ *  });
+ * }
+ * ```
+ */
+export const queues = () => new Queueing();
