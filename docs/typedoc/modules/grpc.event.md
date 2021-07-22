@@ -17,39 +17,39 @@
 
 ### Classes
 
-- [EventClient](../classes/grpc.event.eventclient.md)
 - [EventPublishRequest](../classes/grpc.event.eventpublishrequest-1.md)
 - [EventPublishResponse](../classes/grpc.event.eventpublishresponse-1.md)
+- [EventServiceClient](../classes/grpc.event.eventserviceclient.md)
 - [NitricEvent](../classes/grpc.event.nitricevent-1.md)
 - [NitricTopic](../classes/grpc.event.nitrictopic-1.md)
-- [TopicClient](../classes/grpc.event.topicclient.md)
 - [TopicListRequest](../classes/grpc.event.topiclistrequest-1.md)
 - [TopicListResponse](../classes/grpc.event.topiclistresponse-1.md)
+- [TopicServiceClient](../classes/grpc.event.topicserviceclient.md)
 
 ### Interfaces
 
-- [IEventServer](../interfaces/grpc.event.ieventserver.md)
-- [IEventService](../interfaces/grpc.event.ieventservice.md)
-- [ITopicServer](../interfaces/grpc.event.itopicserver.md)
-- [ITopicService](../interfaces/grpc.event.itopicservice.md)
+- [IEventServiceServer](../interfaces/grpc.event.ieventserviceserver.md)
+- [IEventServiceService](../interfaces/grpc.event.ieventserviceservice.md)
+- [ITopicServiceServer](../interfaces/grpc.event.itopicserviceserver.md)
+- [ITopicServiceService](../interfaces/grpc.event.itopicserviceservice.md)
 
 ### Variables
 
-- [EventService](grpc.event.md#eventservice)
-- [TopicService](grpc.event.md#topicservice)
+- [EventServiceService](grpc.event.md#eventserviceservice)
+- [TopicServiceService](grpc.event.md#topicserviceservice)
 
 ## Variables
 
-### EventService
+### EventServiceService
 
-• `Const` **EventService**: [*IEventService*](../interfaces/grpc.event.ieventservice.md)
+• `Const` **EventServiceService**: [*IEventServiceService*](../interfaces/grpc.event.ieventserviceservice.md)
 
 Defined in: src/interfaces/event/v1/event_grpc_pb.d.ts:13
 
 ___
 
-### TopicService
+### TopicServiceService
 
-• `Const` **TopicService**: [*ITopicService*](../interfaces/grpc.event.itopicservice.md)
+• `Const` **TopicServiceService**: [*ITopicServiceService*](../interfaces/grpc.event.itopicserviceservice.md)
 
 Defined in: src/interfaces/event/v1/event_grpc_pb.d.ts:30

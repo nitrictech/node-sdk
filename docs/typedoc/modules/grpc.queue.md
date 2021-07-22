@@ -23,7 +23,6 @@
 
 - [FailedTask](../classes/grpc.queue.failedtask-1.md)
 - [NitricTask](../classes/grpc.queue.nitrictask-1.md)
-- [QueueClient](../classes/grpc.queue.queueclient.md)
 - [QueueCompleteRequest](../classes/grpc.queue.queuecompleterequest-1.md)
 - [QueueCompleteResponse](../classes/grpc.queue.queuecompleteresponse-1.md)
 - [QueueReceiveRequest](../classes/grpc.queue.queuereceiverequest-1.md)
@@ -32,20 +31,21 @@
 - [QueueSendBatchResponse](../classes/grpc.queue.queuesendbatchresponse-1.md)
 - [QueueSendRequest](../classes/grpc.queue.queuesendrequest-1.md)
 - [QueueSendResponse](../classes/grpc.queue.queuesendresponse-1.md)
+- [QueueServiceClient](../classes/grpc.queue.queueserviceclient.md)
 
 ### Interfaces
 
-- [IQueueServer](../interfaces/grpc.queue.iqueueserver.md)
-- [IQueueService](../interfaces/grpc.queue.iqueueservice.md)
+- [IQueueServiceServer](../interfaces/grpc.queue.iqueueserviceserver.md)
+- [IQueueServiceService](../interfaces/grpc.queue.iqueueserviceservice.md)
 
 ### Variables
 
-- [QueueService](grpc.queue.md#queueservice)
+- [QueueServiceService](grpc.queue.md#queueserviceservice)
 
 ## Variables
 
-### QueueService
+### QueueServiceService
 
-• `Const` **QueueService**: [*IQueueService*](../interfaces/grpc.queue.iqueueservice.md)
+• `Const` **QueueServiceService**: [*IQueueServiceService*](../interfaces/grpc.queue.iqueueserviceservice.md)
 
 Defined in: src/interfaces/queue/v1/queue_grpc_pb.d.ts:16

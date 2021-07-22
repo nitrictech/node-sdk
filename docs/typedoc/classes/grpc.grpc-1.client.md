@@ -10,17 +10,17 @@ Client
 
 * **Client**
 
-  ↳ [*EventClient*](grpc.event.eventclient.md)
+  ↳ [*DocumentServiceClient*](grpc.document.documentserviceclient.md)
 
-  ↳ [*TopicClient*](grpc.event.topicclient.md)
+  ↳ [*EventServiceClient*](grpc.event.eventserviceclient.md)
 
-  ↳ [*KeyValueClient*](grpc.kv.keyvalueclient.md)
+  ↳ [*TopicServiceClient*](grpc.event.topicserviceclient.md)
 
-  ↳ [*StorageClient*](grpc.storage.storageclient.md)
+  ↳ [*StorageServiceClient*](grpc.storage.storageserviceclient.md)
 
-  ↳ [*QueueClient*](grpc.queue.queueclient.md)
+  ↳ [*QueueServiceClient*](grpc.queue.queueserviceclient.md)
 
-  ↳ [*FaasClient*](grpc.faas.faasclient.md)
+  ↳ [*FaasServiceClient*](grpc.faas.faasserviceclient.md)
 
 ## Table of contents
 

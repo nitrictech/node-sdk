@@ -8,17 +8,17 @@
 
 * **UntypedServiceImplementation**
 
-  ↳ [*IEventServer*](grpc.event.ieventserver.md)
+  ↳ [*IDocumentServiceServer*](grpc.document.idocumentserviceserver.md)
 
-  ↳ [*ITopicServer*](grpc.event.itopicserver.md)
+  ↳ [*IEventServiceServer*](grpc.event.ieventserviceserver.md)
 
-  ↳ [*IKeyValueServer*](grpc.kv.ikeyvalueserver.md)
+  ↳ [*ITopicServiceServer*](grpc.event.itopicserviceserver.md)
 
-  ↳ [*IStorageServer*](grpc.storage.istorageserver.md)
+  ↳ [*IStorageServiceServer*](grpc.storage.istorageserviceserver.md)
 
-  ↳ [*IQueueServer*](grpc.queue.iqueueserver.md)
+  ↳ [*IQueueServiceServer*](grpc.queue.iqueueserviceserver.md)
 
-  ↳ [*IFaasServer*](grpc.faas.ifaasserver.md)
+  ↳ [*IFaasServiceServer*](grpc.faas.ifaasserviceserver.md)
 
 ## Indexable
 
