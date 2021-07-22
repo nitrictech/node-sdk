@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.16](https://github.com/nitrictech/node-sdk/compare/v0.1.15...v0.1.16) (2021-07-22)
+
+
+### Features
+
+* **apis/documents:** document service ([da917ef](https://github.com/nitrictech/node-sdk/commit/da917ef6600b2ded395f8315e4175c223a1d5049))
+
+
+### Bug Fixes
+
+* full doc responses ([146abeb](https://github.com/nitrictech/node-sdk/commit/146abebf18c6cbdbe8de0f646d4a81c15cfb42c4))
+
 ### [0.1.15](https://github.com/nitrictech/node-sdk/compare/v0.1.14...v0.1.15) (2021-07-06)
 
 
