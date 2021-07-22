@@ -15,7 +15,7 @@ import { NitricFunction } from './function';
 import { NitricTrigger } from './trigger';
 import { NITRIC_DEBUG } from '../constants';
 import { html } from 'common-tags';
-import * as grpc from "@grpc/grpc-js";
+import * as grpc from '@grpc/grpc-js';
 import { SERVICE_BIND } from '../constants';
 import { faas } from '../interfaces';
 import { Response } from './response';
@@ -48,7 +48,7 @@ import { TriggerResponse } from '../interfaces/faas';
 export async function start<Req = any, Resp = any>(
   func: NitricFunction<Req, Resp>
 ): Promise<void> {
-  const faasClient = new faas.FaasClient(
+  const faasClient = new faas.FaasServiceClient(
     SERVICE_BIND,
     grpc.ChannelCredentials.createInsecure()
   );
@@ -59,19 +59,23 @@ export async function start<Req = any, Resp = any>(
   faasStream.on('data', async (message: faas.ServerMessage) => {
     // We have an init response from the membrane
     if (message.hasInitResponse()) {
-      console.log("Function connected with membrane");
+      console.log('Function connected with membrane');
       // We got an init response from the membrane
       // The client can configure itself with any information provided by the membrane..
     } else if (message.hasTriggerRequest()) {
       // We want to handle a function here...
       const triggerRequest = message.getTriggerRequest();
       const responseMessage = new faas.ClientMessage();
-      
+
       responseMessage.setId(message.getId());
 
       try {
-        const nitricTrigger = NitricTrigger.fromGrpcTriggerRequest<any>(triggerRequest);
-        const data: string | Uint8Array | Record<string, any> = await func(nitricTrigger);
+        const nitricTrigger = NitricTrigger.fromGrpcTriggerRequest<any>(
+          triggerRequest
+        );
+        const data: string | Uint8Array | Record<string, any> = await func(
+          nitricTrigger
+        );
         let response: Response<any>;
 
         if (data instanceof Response) {
@@ -99,29 +103,28 @@ export async function start<Req = any, Resp = any>(
             triggerResponse.setData(html`
               <html>
                 <head>
-                  <title>
-                    Error
-                  </title>
+                  <title>Error</title>
                 </head>
                 <body>
                   <h2>An error occurred!</h2>
                   <pre>
                     ${e.stack}
-                  </pre>
+                  </pre
+                  >
                 </body>
               </html>
             `);
-            headers.set("Content-Type", "text/html")
+            headers.set('Content-Type', 'text/html');
           } else {
-            headers.set("Content-Type", "text/plain");
-            triggerResponse.setData("An unknown error ocurred");
+            headers.set('Content-Type', 'text/plain');
+            triggerResponse.setData('An unknown error ocurred');
           }
         } else if (triggerRequest.hasTopic()) {
           const topicResponse = new faas.TopicResponseContext();
 
           topicResponse.setSuccess(false);
           triggerResponse.setTopic(topicResponse);
-          triggerResponse.setData("An unknown error ocurred");
+          triggerResponse.setData('An unknown error ocurred');
         }
       }
       // Send the response back to the membrane
@@ -136,11 +139,11 @@ export async function start<Req = any, Resp = any>(
   faasStream.write(initMessage);
 
   // Block until the stream has closed...
-  await new Promise<void>(res => {
+  await new Promise<void>((res) => {
     // The server has determined this stream must close
     faasStream.on('end', () => {
       console.log('Membrane has terminated the trigger stream');
       res();
-    }); 
+    });
   });
 }

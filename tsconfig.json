@@ -9,7 +9,7 @@
     "allowJs": true,
     "types": ["node", "jest"],
     "importHelpers": true,
-    "baseUrl": "./",
+    "baseUrl": "./"
   },
   "include": ["src/**/*"]
 }

@@ -28,3 +28,14 @@ export interface PublishOptions {
   topicName: string;
   event: NitricEvent;
 }
+
+export type WhereQueryOperator =
+  | '<'
+  | '<='
+  | '=='
+  | '!='
+  | '>='
+  | '>'
+  | 'startsWith';
+
+export type WhereValueExpression = string | number | boolean;

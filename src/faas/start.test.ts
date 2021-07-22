@@ -16,70 +16,72 @@ import { faas } from '../interfaces';
 
 // We only need to handle half of the duplex stream
 class MockClientStream<Req, Resp> {
-	public recievedMessages: Req[] = [];
+  public recievedMessages: Req[] = [];
 
-	private listeners: {
-		[event: string]: ((req: Resp | string) => void)[];
-	} = {};
+  private listeners: {
+    [event: string]: ((req: Resp | string) => void)[];
+  } = {};
 
-	public write(req: Req) {
-		this.recievedMessages.push(req);
-	}
+  public write(req: Req) {
+    this.recievedMessages.push(req);
+  }
 
-	public on(event: string, cback: ((req: Resp) => void)) {
-		if (!this.listeners[event]) {
-			this.listeners[event] = [];
-		}
-		this.listeners[event].push(cback);
-	}
+  public on(event: string, cback: (req: Resp) => void) {
+    if (!this.listeners[event]) {
+      this.listeners[event] = [];
+    }
+    this.listeners[event].push(cback);
+  }
 
-	public emit(event: string, req: Resp | string) {
-		if (this.listeners[event]) {
-			this.listeners[event].forEach((l) => l(req));
-		}
-	}
+  public emit(event: string, req: Resp | string) {
+    if (this.listeners[event]) {
+      this.listeners[event].forEach((l) => l(req));
+    }
+  }
 }
 
 afterAll(() => {
-	jest.restoreAllMocks();
+  jest.restoreAllMocks();
 });
 
 describe('faas.start', () => {
-	let mockStream: MockClientStream<faas.ClientMessage, faas.ServerMessage>;
-	describe('when starting the stream', () => {
-		mockStream = new MockClientStream() as any;
-		let streamSpy: jest.SpyInstance;
-		const f = jest.fn();
+  let mockStream: MockClientStream<faas.ClientMessage, faas.ServerMessage>;
+  describe('when starting the stream', () => {
+    mockStream = new MockClientStream() as any;
+    let streamSpy: jest.SpyInstance;
+    const f = jest.fn();
 
-		beforeAll(async () => {
-			streamSpy = jest.spyOn(faas.FaasClient.prototype, 'triggerStream').mockReturnValueOnce(mockStream as any);
-			const startPromise = start(f);
-			mockStream.emit('end', "EOF");
-			
-			await startPromise;
-		});
+    beforeAll(async () => {
+      streamSpy = jest
+        .spyOn(faas.FaasServiceClient.prototype, 'triggerStream')
+        .mockReturnValueOnce(mockStream as any);
+      const startPromise = start(f);
+      mockStream.emit('end', 'EOF');
 
-		it("The first sent message should be an InitRequest", () => {
-			// TODO: Add test
-			expect(mockStream.recievedMessages[0].hasInitRequest()).toBe(true);
-		});
+      await startPromise;
+    });
 
-		it("Should start the server", () => {
-			expect(streamSpy).toBeCalled();
-		});
+    it('The first sent message should be an InitRequest', () => {
+      // TODO: Add test
+      expect(mockStream.recievedMessages[0].hasInitRequest()).toBe(true);
+    });
 
-		it("Should not call the function", () => {
-			expect(f).toBeCalledTimes(0);
-		});
-	});
+    it('Should start the server', () => {
+      expect(streamSpy).toBeCalled();
+    });
 
-	describe.skip('when returning a plain object', () => {
-		describe('when triggered by a http request', () => {
-			// TODO: Add tests
-		});
-	
-		describe('when triggered by a topic', () => {
-			// TODO: Add tests
-		});
-	});
+    it('Should not call the function', () => {
+      expect(f).toBeCalledTimes(0);
+    });
+  });
+
+  describe.skip('when returning a plain object', () => {
+    describe('when triggered by a http request', () => {
+      // TODO: Add tests
+    });
+
+    describe('when triggered by a topic', () => {
+      // TODO: Add tests
+    });
+  });
 });

@@ -11,10 +11,10 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { StorageClient } from './storage';
+import { Storage } from './storage';
 import { storage } from '../../interfaces';
 
-const { StorageClient: GrpcStorageClient } = storage;
+const { StorageServiceClient: GrpcStorageClient } = storage;
 
 describe('Storage Client Tests', () => {
   describe('Given nitric.api.storage.StorageClient.Write throws an error', () => {
@@ -39,9 +39,9 @@ describe('Storage Client Tests', () => {
     });
 
     test('Then StorageClient.write should reject', () => {
-      const client = new StorageClient();
+      const storage = new Storage();
       expect(
-        client.write('test_bucket', 'test/item', new Uint8Array())
+        storage.bucket('test_bucket').file('test/item').write(new Uint8Array())
       ).rejects.toBe(MOCK_ERROR);
     });
 
@@ -69,9 +69,9 @@ describe('Storage Client Tests', () => {
     });
 
     test('Then StorageClient.write should resolve with success status', async () => {
-      const client = new StorageClient();
+      const storage = new Storage();
       await expect(
-        client.write('test_bucket', 'test/item', new Uint8Array())
+        storage.bucket('test_bucket').file('test/item').write(new Uint8Array())
       ).resolves.toBe(undefined);
     });
 
@@ -102,8 +102,10 @@ describe('Storage Client Tests', () => {
     });
 
     test('Then StorageClient.read should reject', () => {
-      const client = new StorageClient();
-      expect(client.read('test_bucket', 'test/item')).rejects.toBe(MOCK_ERROR);
+      const storage = new Storage();
+      expect(
+        storage.bucket('test_bucket').file('test/item').read()
+      ).rejects.toBe(MOCK_ERROR);
     });
 
     test('The Grpc client for Storage.read should have been called exactly once', () => {
@@ -133,8 +135,10 @@ describe('Storage Client Tests', () => {
     });
 
     test('Then StorageClient.read should return the bytes of the retrieved item', () => {
-      const client = new StorageClient();
-      expect(client.read('test_bucket', 'test/item')).resolves.toBe(MOCK_BYTES);
+      const storage = new Storage();
+      expect(
+        storage.bucket('test_bucket').file('test/item').read()
+      ).resolves.toBe(MOCK_BYTES);
     });
 
     test('The Grpc client for Storage.read should have been called exactly once', () => {
@@ -163,8 +167,10 @@ describe('Storage Client Tests', () => {
     });
 
     test('Then StorageClient.delete should reject', () => {
-      const client = new StorageClient();
-      expect(client.delete('test_bucket', 'test/item')).rejects.toBe(MOCK_ERROR);
+      const client = new Storage();
+      expect(client.bucket('test').file('test').delete()).rejects.toBe(
+        MOCK_ERROR
+      );
     });
 
     test('The Grpc client for Storage.delete should have been called exactly once', () => {
@@ -194,12 +200,11 @@ describe('Storage Client Tests', () => {
     });
 
     test('Then StorageClient.delete should delete the bytes from the bucket', () => {
-      const client = new StorageClient();
-      client.write('test_bucket', 'test/item', MOCK_BYTES);
-      expect(client.delete('test_bucket', 'test/item')).resolves;
+      const client = new Storage().bucket('test_bucket').file('test/item');
+      expect(client.delete()).resolves;
     });
 
-    test('The Grpc client for Storage.read should have been called exactly once', () => {
+    test('The Grpc client for Storage.delete should have been called exactly once', () => {
       expect(deleteMock).toBeCalledTimes(1);
     });
   });
