@@ -155,3 +155,25 @@ export class Eventing {
     });
   };
 }
+
+/**
+ * Events
+ * @returns an Events API client.
+ * @example
+ * ```typescript
+ * import { events } from "@nitric/sdk";
+ *
+ * async function publishEvent() {
+ *  const topic = events().topic('notifications');
+ *
+ *  await topic.publish({
+ *    payload: {
+ *     amazing: 'thing happened!',
+ *    },
+ *  });
+ *
+ *  return 'Successfully published notification';
+ * }
+ * ```
+ */
+export const events = () => new Eventing();

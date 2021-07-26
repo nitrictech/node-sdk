@@ -45,5 +45,17 @@ export class Documents {
 /**
  * Documents
  * @returns a Documents API client.
+ * @example
+ * ```typescript
+ * import { documents } from "@nitric/sdk";
+ *
+ * async function setCustomer() {
+ *  const collection = documents().collection('customers');
+ *
+ *  collection.doc('id').set({
+ *    name: 'David',
+ *  });
+ * }
+ * ```
  */
 export const documents = () => new Documents();

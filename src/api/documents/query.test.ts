@@ -170,7 +170,7 @@ describe('Query Tests', () => {
     test('Then DocumentServiceClient.Query should resolve with the correct documents', async () => {
       const q = documents().collection('test').query();
 
-      await expect(q.fetch()).resolves.toStrictEqual([
+      expect((await q.fetch()).documents).toStrictEqual([
         {
           content: {
             id: 'test',

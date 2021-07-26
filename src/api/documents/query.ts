@@ -37,6 +37,11 @@ export interface DocumentResponse<T> {
   content: T;
 }
 
+export interface FetchResponse<T> {
+  documents: DocumentResponse<T>[];
+  pagingToken: Map<string, string>;
+}
+
 /**
  * Documents
  *
@@ -145,14 +150,14 @@ export class Query<T extends { [key: string]: any }> {
       });
     }
 
-    return new Promise<DocumentResponse<T>[]>((resolve, reject) => {
+    return new Promise<FetchResponse<T>>((resolve, reject) => {
       this.documentClient.query(
         request,
         (error, response: DocumentQueryResponse) => {
           if (error) {
             reject(error);
           } else {
-            this.pagingToken = response.getPagingTokenMap();
+            const pagingToken = response.getPagingTokenMap();
 
             // clear paging token map
             request.clearPagingTokenMap();
@@ -162,7 +167,10 @@ export class Query<T extends { [key: string]: any }> {
               content: doc.getContent().toJavaScript() as T,
             }));
 
-            resolve(documents);
+            resolve({
+              documents,
+              pagingToken: (pagingToken as unknown) as Map<string, string>,
+            });
           }
         }
       );

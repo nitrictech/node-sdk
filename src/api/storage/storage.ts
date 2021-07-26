@@ -160,3 +160,19 @@ class File {
     });
   };
 }
+
+/**
+ * Storage
+ * @returns a Storage API client.
+ * @example
+ * ```typescript
+ * import { storage } from "@nitric/sdk";
+ *
+ * async function writeToStorage() {
+ *  const bucket = storage().bucket('bucket');
+ *  const file = bucket.file('test-file');
+ *  await file.write(contents)
+ * }
+ * ```
+ */
+export const storage = () => new Storage();
