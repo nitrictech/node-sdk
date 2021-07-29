@@ -287,6 +287,9 @@ export class ReceivedTask implements Task {
   };
 }
 
+// Queues client singleton
+let QUEUES = undefined;
+
 /**
  * Queues
  * @returns a Queues API client.
@@ -305,4 +308,10 @@ export class ReceivedTask implements Task {
  * }
  * ```
  */
-export const queues = () => new Queueing();
+export const queues = () => {
+  if (!QUEUES) {
+    QUEUES = new Queueing();
+  }
+
+  return QUEUES;
+};
