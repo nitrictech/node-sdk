@@ -11,8 +11,5 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-export * from './events';
-export * from './documents';
-export * from './queues';
-export * from './storage';
-export * from './secrets';
+export * from './secret/v1/secret_pb';
+export * from './secret/v1/secret_grpc_pb';
