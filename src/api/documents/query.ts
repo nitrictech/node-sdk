@@ -25,6 +25,7 @@ import {
 } from '../../interfaces/document';
 import { WhereQueryOperator, WhereValueExpression } from '../../types';
 import type { Map as ProtobufMap } from 'google-protobuf';
+import { DocumentRef } from './document-ref';
 
 type PagingToken = Map<string, string>;
 
@@ -33,7 +34,7 @@ interface ReadableStream<T> extends NodeJS.ReadableStream {
 }
 
 export interface DocumentResponse<T> {
-  ref: Key;
+  ref: DocumentRef<T>;
   content: T;
 }
 
@@ -163,7 +164,7 @@ export class Query<T extends { [key: string]: any }> {
             request.clearPagingTokenMap();
 
             const documents = response.getDocumentsList().map((doc) => ({
-              ref: doc.getKey(),
+              ref: new DocumentRef<T>(this.documentClient, this._collection, doc.getKey().getId()),
               content: doc.getContent().toJavaScript() as T,
             }));
 
