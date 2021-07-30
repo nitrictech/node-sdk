@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.21](https://github.com/nitrictech/node-sdk/compare/v0.1.20...v0.1.21) (2021-07-30)
+
+
+### Bug Fixes
+
+* enable id retrieval from DocumentRefs and DocumentResponses ([f33cedf](https://github.com/nitrictech/node-sdk/commit/f33cedf44d4c929aca68f6952a3daa9f893605fa))
+* include service func return types ([01f55b5](https://github.com/nitrictech/node-sdk/commit/01f55b5bd5c3065237924b7d9d4835469d51c531))
+* return paging tokens as actual Map objects or null if empty ([e99ef48](https://github.com/nitrictech/node-sdk/commit/e99ef4836b2f2318bf6d082447ec39688cace8ed))
+
 ### [0.1.20](https://github.com/nitrictech/node-sdk/compare/v0.1.19...v0.1.20) (2021-07-30)
 
 
