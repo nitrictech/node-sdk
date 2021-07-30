@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.20](https://github.com/nitrictech/node-sdk/compare/v0.1.19...v0.1.20) (2021-07-30)
+
+
+### Features
+
+* **api/secrets:** Secrets client implementation. ([17b75ff](https://github.com/nitrictech/node-sdk/commit/17b75ffe6ed0e7975e61747c438bf09331bd88c7))
+
 ### [0.1.19](https://github.com/nitrictech/node-sdk/compare/v0.1.18...v0.1.19) (2021-07-30)
 
 
