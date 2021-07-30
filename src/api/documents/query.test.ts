@@ -16,6 +16,7 @@ import { PassThrough } from 'stream';
 import { document } from '../../interfaces';
 import { DocumentRef } from './document-ref';
 import { documents, Documents } from './documents';
+import { DocumentResponse } from './query';
 
 const {
   DocumentServiceClient: GrpcKeyDocumentsClient,
@@ -175,12 +176,12 @@ describe('Query Tests', () => {
       const q = testCollection.query();
 
       expect((await q.fetch()).documents).toStrictEqual([
-        {
-          content: {
+        new DocumentResponse(
+          testCollection.doc("test"),
+          {
             id: 'test',
-          },
-          ref: testCollection.doc("test"),
-        },
+          }
+        ),
       ]);
     });
 

@@ -33,9 +33,26 @@ interface ReadableStream<T> extends NodeJS.ReadableStream {
   on(event: string | symbol, listener: (...args: T[]) => void): this;
 }
 
-export interface DocumentResponse<T> {
-  ref: DocumentRef<T>;
-  content: T;
+export class DocumentResponse<T> {
+  private _ref: DocumentRef<T>;
+  private _content: T;
+
+  constructor(ref: DocumentRef<T>, content: T) {
+    this._ref = ref;
+    this._content = content;
+  }
+
+  get ref(): DocumentRef<T>{
+    return this._ref;
+  }
+
+  get id(): string {
+    return this._ref.getId();
+  }
+
+  get content(): T {
+    return this._content;
+  }
 }
 
 export interface FetchResponse<T> {
@@ -163,10 +180,10 @@ export class Query<T extends { [key: string]: any }> {
             // clear paging token map
             request.clearPagingTokenMap();
 
-            const documents = response.getDocumentsList().map((doc) => ({
-              ref: new DocumentRef<T>(this.documentClient, this._collection, doc.getKey().getId()),
-              content: doc.getContent().toJavaScript() as T,
-            }));
+            const documents = response.getDocumentsList().map((doc) => (new DocumentResponse<T> (
+              new DocumentRef<T>(this.documentClient, this._collection, doc.getKey().getId()),
+              doc.getContent().toJavaScript() as T,
+            )));
 
             resolve({
               documents,

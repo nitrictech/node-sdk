@@ -56,6 +56,14 @@ export class DocumentRef<T extends { [key: string]: any }> {
   }
 
   /**
+   * Return the ID of the document for this reference.
+   * @returns the document id.
+   */
+  public getId(): string {
+    return this.key.getId();
+  }
+
+  /**
    * Return the collection document reference value.
    * @returns the collection document reference value, or null if not found
    */
