@@ -156,6 +156,9 @@ export class Eventing {
   };
 }
 
+// Events client singleton
+let EVENTS = undefined;
+
 /**
  * Events
  * @returns an Events API client.
@@ -176,4 +179,10 @@ export class Eventing {
  * }
  * ```
  */
-export const events = () => new Eventing();
+export const events = () => {
+  if (!EVENTS) {
+    EVENTS = new Eventing();
+  }
+
+  return EVENTS;
+};

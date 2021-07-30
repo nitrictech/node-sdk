@@ -42,6 +42,9 @@ export class Documents {
   }
 }
 
+// Documents client singleton
+let DOCUMENTS = undefined;
+
 /**
  * Documents
  * @returns a Documents API client.
@@ -58,4 +61,10 @@ export class Documents {
  * }
  * ```
  */
-export const documents = () => new Documents();
+export const documents = () => {
+  if (!DOCUMENTS) {
+    DOCUMENTS = new Documents();
+  }
+
+  return DOCUMENTS;
+};

@@ -161,6 +161,9 @@ class File {
   };
 }
 
+// Storage client singleton
+let STORAGE = undefined;
+
 /**
  * Storage
  * @returns a Storage API client.
@@ -175,4 +178,10 @@ class File {
  * }
  * ```
  */
-export const storage = () => new Storage();
+export const storage = () => {
+  if (!STORAGE) {
+    STORAGE = new Storage();
+  }
+
+  return STORAGE;
+};
