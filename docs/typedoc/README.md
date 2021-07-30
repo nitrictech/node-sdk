@@ -30,7 +30,7 @@
 
 ### documents
 
-▸ `Const`**documents**(): [*Documents*](classes/documents.md)
+▸ `Const`**documents**(): *any*
 
 Documents
 
@@ -47,17 +47,17 @@ async function setCustomer() {
 }
 ```
 
-**Returns:** [*Documents*](classes/documents.md)
+**Returns:** *any*
 
 a Documents API client.
 
-Defined in: [src/api/documents/documents.ts:61](https://github.com/nitrictech/node-sdk/blob/9b51ad4/src/api/documents/documents.ts#L61)
+Defined in: [src/api/documents/documents.ts:64](https://github.com/nitrictech/node-sdk/blob/b6b885f/src/api/documents/documents.ts#L64)
 
 ___
 
 ### events
 
-▸ `Const`**events**(): [*Eventing*](classes/eventing.md)
+▸ `Const`**events**(): *any*
 
 Events
 
@@ -78,17 +78,17 @@ async function publishEvent() {
 }
 ```
 
-**Returns:** [*Eventing*](classes/eventing.md)
+**Returns:** *any*
 
 an Events API client.
 
-Defined in: [src/api/events/events.ts:179](https://github.com/nitrictech/node-sdk/blob/9b51ad4/src/api/events/events.ts#L179)
+Defined in: [src/api/events/events.ts:182](https://github.com/nitrictech/node-sdk/blob/b6b885f/src/api/events/events.ts#L182)
 
 ___
 
 ### queues
 
-▸ `Const`**queues**(): [*Queueing*](classes/queueing.md)
+▸ `Const`**queues**(): *any*
 
 Queues
 
@@ -107,17 +107,17 @@ async function publishToQueue() {
 }
 ```
 
-**Returns:** [*Queueing*](classes/queueing.md)
+**Returns:** *any*
 
 a Queues API client.
 
-Defined in: [src/api/queues/queues.ts:308](https://github.com/nitrictech/node-sdk/blob/9b51ad4/src/api/queues/queues.ts#L308)
+Defined in: [src/api/queues/queues.ts:311](https://github.com/nitrictech/node-sdk/blob/b6b885f/src/api/queues/queues.ts#L311)
 
 ___
 
 ### storage
 
-▸ `Const`**storage**(): [*Storage*](classes/storage.md)
+▸ `Const`**storage**(): *any*
 
 Storage
 
@@ -132,8 +132,8 @@ async function writeToStorage() {
 }
 ```
 
-**Returns:** [*Storage*](classes/storage.md)
+**Returns:** *any*
 
 a Storage API client.
 
-Defined in: [src/api/storage/storage.ts:178](https://github.com/nitrictech/node-sdk/blob/9b51ad4/src/api/storage/storage.ts#L178)
+Defined in: [src/api/storage/storage.ts:181](https://github.com/nitrictech/node-sdk/blob/b6b885f/src/api/storage/storage.ts#L181)
