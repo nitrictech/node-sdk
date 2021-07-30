@@ -14,8 +14,8 @@
 import { Struct } from 'google-protobuf/google/protobuf/struct_pb';
 import { PassThrough } from 'stream';
 import { document } from '../../interfaces';
-import { DocumentRef } from './document-ref';
 import { documents, Documents } from './documents';
+import { DocumentResponse } from './query';
 
 const {
   DocumentServiceClient: GrpcKeyDocumentsClient,
@@ -36,7 +36,7 @@ describe('Query Tests', () => {
       expect(w).toStrictEqual(query);
     });
 
-    test('Sould append the expression to expressions array', () => {
+    test('Should append the expression to expressions array', () => {
       expect(query['expressions']).toHaveLength(1);
       const exp = query['expressions'][0];
       expect(exp.getOperand()).toStrictEqual('test');
@@ -46,7 +46,7 @@ describe('Query Tests', () => {
       expect(exp.getValue()).toStrictEqual(testIntValue);
     });
 
-    test('Sould append double value to expression correctly', () => {
+    test('Should append double value to expression correctly', () => {
       query.where('test', '>=', 3.32);
       expect(query['expressions']).toHaveLength(2);
       const exp = query['expressions'][1];
@@ -55,7 +55,7 @@ describe('Query Tests', () => {
       expect(exp.getValue()).toStrictEqual(testDoubleValue);
     });
 
-    test('Sould append boolean value to expression correctly', () => {
+    test('Should append boolean value to expression correctly', () => {
       query.where('test', '==', true);
       expect(query['expressions']).toHaveLength(3);
       const exp = query['expressions'][2];
@@ -64,7 +64,7 @@ describe('Query Tests', () => {
       expect(exp.getValue()).toStrictEqual(testBoolValue);
     });
 
-    test('Sould append string value to expression correctly', () => {
+    test('Should append string value to expression correctly', () => {
       query.where('test', '==', 'sydney');
       expect(query['expressions']).toHaveLength(4);
       const exp = query['expressions'][3];
@@ -82,7 +82,7 @@ describe('Query Tests', () => {
       expect(w).toStrictEqual(query);
     });
 
-    test('Sould set the query limit', () => {
+    test('Should set the query limit', () => {
       expect(query['fetchLimit']).toStrictEqual(5);
     });
   });
@@ -96,7 +96,7 @@ describe('Query Tests', () => {
       expect(p).toStrictEqual(query);
     });
 
-    test('Sould set the paging token', () => {
+    test('Should set the paging token', () => {
       expect(query['pagingToken']).toStrictEqual(new Map([['test', 'test']]));
     });
   });
@@ -149,6 +149,8 @@ describe('Query Tests', () => {
               id: 'test',
             })
           );
+          const map = response.getPagingTokenMap();
+          map.set('test-key', 'test-value');
 
           const collection = new Collection();
           collection.setName('test');
@@ -174,14 +176,20 @@ describe('Query Tests', () => {
       const testCollection = docClient.collection('test');
       const q = testCollection.query();
 
-      expect((await q.fetch()).documents).toStrictEqual([
-        {
-          content: {
+      const results = await q.fetch();
+
+      expect(results.documents).toStrictEqual([
+        new DocumentResponse(
+          testCollection.doc("test"),
+          {
             id: 'test',
-          },
-          ref: testCollection.doc("test"),
-        },
+          }
+        ),
       ]);
+
+      expect(results.pagingToken).toStrictEqual(new Map([
+        ["test-key", "test-value"],
+      ]));
     });
 
     test('The Grpc client for DocumentServiceClient.Query should have been called exactly once', () => {

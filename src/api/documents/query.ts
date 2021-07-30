@@ -21,7 +21,6 @@ import {
   DocumentQueryStreamResponse,
   DocumentServiceClient,
   Collection,
-  Key,
 } from '../../interfaces/document';
 import { WhereQueryOperator, WhereValueExpression } from '../../types';
 import type { Map as ProtobufMap } from 'google-protobuf';
@@ -33,14 +32,44 @@ interface ReadableStream<T> extends NodeJS.ReadableStream {
   on(event: string | symbol, listener: (...args: T[]) => void): this;
 }
 
-export interface DocumentResponse<T> {
-  ref: DocumentRef<T>;
-  content: T;
+export class DocumentResponse<T> {
+  private _ref: DocumentRef<T>;
+  private _content: T;
+
+  constructor(ref: DocumentRef<T>, content: T) {
+    this._ref = ref;
+    this._content = content;
+  }
+
+  get ref(): DocumentRef<T>{
+    return this._ref;
+  }
+
+  get id(): string {
+    return this._ref.getId();
+  }
+
+  get content(): T {
+    return this._content;
+  }
 }
 
 export interface FetchResponse<T> {
   documents: DocumentResponse<T>[];
   pagingToken: Map<string, string>;
+}
+
+/**
+ * Convenience method to convert ProtobufMap objects to standard JavaScript Maps
+ * @param protoMap map to convert
+ * @returns the map
+ */
+function protoMapToMap(protoMap: ProtobufMap<string, string>): Map<string, string> {
+  const jsMap = new Map<string, string>();
+  protoMap.forEach((value, key) => {
+    jsMap.set(key, value);
+  });
+  return jsMap;
 }
 
 /**
@@ -158,19 +187,20 @@ export class Query<T extends { [key: string]: any }> {
           if (error) {
             reject(error);
           } else {
-            const pagingToken = response.getPagingTokenMap();
+            const pagingTokenMap = protoMapToMap(response.getPagingTokenMap());
+
 
             // clear paging token map
             request.clearPagingTokenMap();
 
-            const documents = response.getDocumentsList().map((doc) => ({
-              ref: new DocumentRef<T>(this.documentClient, this._collection, doc.getKey().getId()),
-              content: doc.getContent().toJavaScript() as T,
-            }));
+            const documents = response.getDocumentsList().map((doc) => (new DocumentResponse<T> (
+              new DocumentRef<T>(this.documentClient, this._collection, doc.getKey().getId()),
+              doc.getContent().toJavaScript() as T,
+            )));
 
             resolve({
               documents,
-              pagingToken: (pagingToken as unknown) as Map<string, string>,
+              pagingToken: pagingTokenMap.size > 0 ? pagingTokenMap : null,
             });
           }
         }
