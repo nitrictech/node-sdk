@@ -179,7 +179,7 @@ let EVENTS = undefined;
  * }
  * ```
  */
-export const events = () => {
+export const events = (): Eventing => {
   if (!EVENTS) {
     EVENTS = new Eventing();
   }

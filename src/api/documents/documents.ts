@@ -61,7 +61,7 @@ let DOCUMENTS = undefined;
  * }
  * ```
  */
-export const documents = () => {
+export const documents = (): Documents => {
   if (!DOCUMENTS) {
     DOCUMENTS = new Documents();
   }

@@ -308,7 +308,7 @@ let QUEUES = undefined;
  * }
  * ```
  */
-export const queues = () => {
+export const queues = (): Queueing => {
   if (!QUEUES) {
     QUEUES = new Queueing();
   }

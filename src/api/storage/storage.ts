@@ -178,7 +178,7 @@ let STORAGE = undefined;
  * }
  * ```
  */
-export const storage = () => {
+export const storage = (): Storage => {
   if (!STORAGE) {
     STORAGE = new Storage();
   }
