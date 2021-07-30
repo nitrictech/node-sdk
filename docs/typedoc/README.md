@@ -51,7 +51,7 @@ async function setCustomer() {
 
 a Documents API client.
 
-Defined in: [src/api/documents/documents.ts:64](https://github.com/nitrictech/node-sdk/blob/b6b885f/src/api/documents/documents.ts#L64)
+Defined in: [src/api/documents/documents.ts:64](https://github.com/nitrictech/node-sdk/blob/b72cf8c/src/api/documents/documents.ts#L64)
 
 ___
 
@@ -82,7 +82,7 @@ async function publishEvent() {
 
 an Events API client.
 
-Defined in: [src/api/events/events.ts:182](https://github.com/nitrictech/node-sdk/blob/b6b885f/src/api/events/events.ts#L182)
+Defined in: [src/api/events/events.ts:182](https://github.com/nitrictech/node-sdk/blob/b72cf8c/src/api/events/events.ts#L182)
 
 ___
 
@@ -111,7 +111,7 @@ async function publishToQueue() {
 
 a Queues API client.
 
-Defined in: [src/api/queues/queues.ts:311](https://github.com/nitrictech/node-sdk/blob/b6b885f/src/api/queues/queues.ts#L311)
+Defined in: [src/api/queues/queues.ts:311](https://github.com/nitrictech/node-sdk/blob/b72cf8c/src/api/queues/queues.ts#L311)
 
 ___
 
@@ -136,4 +136,4 @@ async function writeToStorage() {
 
 a Storage API client.
 
-Defined in: [src/api/storage/storage.ts:181](https://github.com/nitrictech/node-sdk/blob/b6b885f/src/api/storage/storage.ts#L181)
+Defined in: [src/api/storage/storage.ts:181](https://github.com/nitrictech/node-sdk/blob/b72cf8c/src/api/storage/storage.ts#L181)
