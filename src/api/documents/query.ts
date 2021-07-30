@@ -21,7 +21,6 @@ import {
   DocumentQueryStreamResponse,
   DocumentServiceClient,
   Collection,
-  Key,
 } from '../../interfaces/document';
 import { WhereQueryOperator, WhereValueExpression } from '../../types';
 import type { Map as ProtobufMap } from 'google-protobuf';
@@ -58,6 +57,19 @@ export class DocumentResponse<T> {
 export interface FetchResponse<T> {
   documents: DocumentResponse<T>[];
   pagingToken: Map<string, string>;
+}
+
+/**
+ * Convenience method to convert ProtobufMap objects to standard JavaScript Maps
+ * @param protoMap map to convert
+ * @returns the map
+ */
+function protoMapToMap(protoMap: ProtobufMap<string, string>): Map<string, string> {
+  const jsMap = new Map<string, string>();
+  protoMap.forEach((value, key) => {
+    jsMap.set(key, value);
+  });
+  return jsMap;
 }
 
 /**
@@ -175,7 +187,8 @@ export class Query<T extends { [key: string]: any }> {
           if (error) {
             reject(error);
           } else {
-            const pagingToken = response.getPagingTokenMap();
+            const pagingTokenMap = protoMapToMap(response.getPagingTokenMap());
+
 
             // clear paging token map
             request.clearPagingTokenMap();
@@ -187,7 +200,7 @@ export class Query<T extends { [key: string]: any }> {
 
             resolve({
               documents,
-              pagingToken: (pagingToken as unknown) as Map<string, string>,
+              pagingToken: pagingTokenMap.size > 0 ? pagingTokenMap : null,
             });
           }
         }
