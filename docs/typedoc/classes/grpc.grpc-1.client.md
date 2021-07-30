@@ -22,6 +22,8 @@ Client
 
   ↳ [*FaasServiceClient*](grpc.faas.faasserviceclient.md)
 
+  ↳ [*SecretServiceClient*](grpc.secret.secretserviceclient.md)
+
 ## Table of contents
 
 ### Constructors

@@ -20,6 +20,8 @@
 
   ↳ [*IFaasServiceServer*](grpc.faas.ifaasserviceserver.md)
 
+  ↳ [*ISecretServiceServer*](grpc.secret.isecretserviceserver.md)
+
 ## Indexable
 
 ▪ [name: *string*]: [*UntypedHandleCall*](../modules/grpc.grpc-1.md#untypedhandlecall)

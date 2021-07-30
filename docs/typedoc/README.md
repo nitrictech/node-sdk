@@ -16,6 +16,7 @@
 - [Queue](classes/queue.md)
 - [Queueing](classes/queueing.md)
 - [ReceivedTask](classes/receivedtask.md)
+- [Secrets](classes/secrets.md)
 - [Storage](classes/storage.md)
 - [Topic](classes/topic.md)
 
@@ -24,6 +25,7 @@
 - [documents](README.md#documents)
 - [events](README.md#events)
 - [queues](README.md#queues)
+- [secrets](README.md#secrets)
 - [storage](README.md#storage)
 
 ## Functions
@@ -51,7 +53,7 @@ async function setCustomer() {
 
 a Documents API client.
 
-Defined in: [src/api/documents/documents.ts:64](https://github.com/nitrictech/node-sdk/blob/b72cf8c/src/api/documents/documents.ts#L64)
+Defined in: [src/api/documents/documents.ts:64](https://github.com/nitrictech/node-sdk/blob/b8bfc08/src/api/documents/documents.ts#L64)
 
 ___
 
@@ -82,7 +84,7 @@ async function publishEvent() {
 
 an Events API client.
 
-Defined in: [src/api/events/events.ts:182](https://github.com/nitrictech/node-sdk/blob/b72cf8c/src/api/events/events.ts#L182)
+Defined in: [src/api/events/events.ts:182](https://github.com/nitrictech/node-sdk/blob/b8bfc08/src/api/events/events.ts#L182)
 
 ___
 
@@ -111,7 +113,32 @@ async function publishToQueue() {
 
 a Queues API client.
 
-Defined in: [src/api/queues/queues.ts:311](https://github.com/nitrictech/node-sdk/blob/b72cf8c/src/api/queues/queues.ts#L311)
+Defined in: [src/api/queues/queues.ts:311](https://github.com/nitrictech/node-sdk/blob/b8bfc08/src/api/queues/queues.ts#L311)
+
+___
+
+### secrets
+
+▸ `Const`**secrets**(): *any*
+
+Secrets
+
+**`example`** 
+```typescript
+import { secrets } from "@nitric/sdk";
+
+async function getSecret() {
+ const secret = secrets().secret('secret');
+ const version = secret.latest();
+ const content = await version.access();
+}
+```
+
+**Returns:** *any*
+
+a Secrets API client.
+
+Defined in: [src/api/secrets/secrets.ts:291](https://github.com/nitrictech/node-sdk/blob/b8bfc08/src/api/secrets/secrets.ts#L291)
 
 ___
 
@@ -136,4 +163,4 @@ async function writeToStorage() {
 
 a Storage API client.
 
-Defined in: [src/api/storage/storage.ts:181](https://github.com/nitrictech/node-sdk/blob/b72cf8c/src/api/storage/storage.ts#L181)
+Defined in: [src/api/storage/storage.ts:181](https://github.com/nitrictech/node-sdk/blob/b8bfc08/src/api/storage/storage.ts#L181)

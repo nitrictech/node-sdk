@@ -11,4 +11,5 @@
 - [faas](grpc.faas.md)
 - [grpc](grpc.grpc-1.md)
 - [queue](grpc.queue.md)
+- [secret](grpc.secret.md)
 - [storage](grpc.storage.md)
