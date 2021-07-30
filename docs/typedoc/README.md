@@ -32,7 +32,7 @@
 
 ### documents
 
-▸ `Const`**documents**(): *any*
+▸ `Const`**documents**(): [*Documents*](classes/documents.md)
 
 Documents
 
@@ -49,17 +49,17 @@ async function setCustomer() {
 }
 ```
 
-**Returns:** *any*
+**Returns:** [*Documents*](classes/documents.md)
 
 a Documents API client.
 
-Defined in: [src/api/documents/documents.ts:64](https://github.com/nitrictech/node-sdk/blob/b8bfc08/src/api/documents/documents.ts#L64)
+Defined in: [src/api/documents/documents.ts:64](https://github.com/nitrictech/node-sdk/blob/43f5f10/src/api/documents/documents.ts#L64)
 
 ___
 
 ### events
 
-▸ `Const`**events**(): *any*
+▸ `Const`**events**(): [*Eventing*](classes/eventing.md)
 
 Events
 
@@ -80,17 +80,17 @@ async function publishEvent() {
 }
 ```
 
-**Returns:** *any*
+**Returns:** [*Eventing*](classes/eventing.md)
 
 an Events API client.
 
-Defined in: [src/api/events/events.ts:182](https://github.com/nitrictech/node-sdk/blob/b8bfc08/src/api/events/events.ts#L182)
+Defined in: [src/api/events/events.ts:182](https://github.com/nitrictech/node-sdk/blob/43f5f10/src/api/events/events.ts#L182)
 
 ___
 
 ### queues
 
-▸ `Const`**queues**(): *any*
+▸ `Const`**queues**(): [*Queueing*](classes/queueing.md)
 
 Queues
 
@@ -109,11 +109,11 @@ async function publishToQueue() {
 }
 ```
 
-**Returns:** *any*
+**Returns:** [*Queueing*](classes/queueing.md)
 
 a Queues API client.
 
-Defined in: [src/api/queues/queues.ts:311](https://github.com/nitrictech/node-sdk/blob/b8bfc08/src/api/queues/queues.ts#L311)
+Defined in: [src/api/queues/queues.ts:311](https://github.com/nitrictech/node-sdk/blob/43f5f10/src/api/queues/queues.ts#L311)
 
 ___
 
@@ -138,13 +138,13 @@ async function getSecret() {
 
 a Secrets API client.
 
-Defined in: [src/api/secrets/secrets.ts:291](https://github.com/nitrictech/node-sdk/blob/b8bfc08/src/api/secrets/secrets.ts#L291)
+Defined in: [src/api/secrets/secrets.ts:291](https://github.com/nitrictech/node-sdk/blob/43f5f10/src/api/secrets/secrets.ts#L291)
 
 ___
 
 ### storage
 
-▸ `Const`**storage**(): *any*
+▸ `Const`**storage**(): [*Storage*](classes/storage.md)
 
 Storage
 
@@ -159,8 +159,8 @@ async function writeToStorage() {
 }
 ```
 
-**Returns:** *any*
+**Returns:** [*Storage*](classes/storage.md)
 
 a Storage API client.
 
-Defined in: [src/api/storage/storage.ts:181](https://github.com/nitrictech/node-sdk/blob/b8bfc08/src/api/storage/storage.ts#L181)
+Defined in: [src/api/storage/storage.ts:181](https://github.com/nitrictech/node-sdk/blob/43f5f10/src/api/storage/storage.ts#L181)
