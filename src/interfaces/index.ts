@@ -19,3 +19,4 @@ export * as event from './event';
 export * as storage from './storage';
 export * as queue from './queue';
 export * as faas from './faas';
+export * as secret from './secret';
