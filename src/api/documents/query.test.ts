@@ -14,7 +14,8 @@
 import { Struct } from 'google-protobuf/google/protobuf/struct_pb';
 import { PassThrough } from 'stream';
 import { document } from '../../interfaces';
-import { Documents, documents } from './documents';
+import { DocumentRef } from './document-ref';
+import { documents, Documents } from './documents';
 
 const {
   DocumentServiceClient: GrpcKeyDocumentsClient,
@@ -154,6 +155,7 @@ describe('Query Tests', () => {
 
           mockKey = new Key();
           mockKey.setCollection(collection);
+          mockKey.setId("test");
 
           mockDocument.setKey(mockKey);
           response.setDocumentsList([mockDocument]);
@@ -168,14 +170,16 @@ describe('Query Tests', () => {
     });
 
     test('Then DocumentServiceClient.Query should resolve with the correct documents', async () => {
-      const q = documents().collection('test').query();
+      const docClient = documents();
+      const testCollection = docClient.collection('test');
+      const q = testCollection.query();
 
       expect((await q.fetch()).documents).toStrictEqual([
         {
           content: {
             id: 'test',
           },
-          ref: mockKey,
+          ref: testCollection.doc("test"),
         },
       ]);
     });
