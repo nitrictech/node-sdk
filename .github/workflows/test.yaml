@@ -1,6 +1,10 @@
 name: Tests
 
-on: pull_request
+on:
+  push:
+    branches:
+      - main
+  pull_request:
 
 jobs:
   build:
@@ -25,4 +29,4 @@ jobs:
     - name: Build
       run: yarn build
     - name: Run tests
-      run: yarn test
+      run: yarn coverage:upload
