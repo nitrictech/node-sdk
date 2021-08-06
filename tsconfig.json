@@ -4,12 +4,14 @@
     "declaration": true,
     "module": "commonjs",
     "target": "ES5",
-    "rootDir": "src",
     "outDir": "lib",
     "allowJs": true,
     "types": ["node", "jest"],
     "importHelpers": true,
-    "baseUrl": "./"
+    "baseUrl": "./",
+    "paths": {
+      "@nitric/sdk": ["src"]
+    }
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*", "snippets/**/*"]
 }
