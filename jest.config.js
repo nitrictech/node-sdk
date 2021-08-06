@@ -1,9 +1,10 @@
 module.exports = {
-  preset: "ts-jest",
-  testEnvironment: "node",
+  preset: 'ts-jest',
+  testEnvironment: 'node',
   // Ignore the auto generated code for code coverage
-  coveragePathIgnorePatterns: ["/interfaces/"],
+  coveragePathIgnorePatterns: ['/interfaces/'],
   moduleNameMapper: {
-    "^@/(.*)$": "<rootDir>/src/$1",
+    '@nitric/sdk': '<rootDir>/src',
+    '^@/(.*)$': '<rootDir>/src/$1',
   },
 };
