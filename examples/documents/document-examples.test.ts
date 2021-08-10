@@ -20,6 +20,7 @@ import { queryFilterDocument } from './query-filter';
 import { queryLimitsDocument } from './query-limits';
 import { queryPaginatedDocument } from './query-paginated';
 import { queryStreamDocument } from './query-stream';
+import { getDocumentRef } from './refs';
 import { setDocument } from './set';
 
 const {
@@ -56,6 +57,7 @@ describe('test snippets', () => {
     });
 
     test('ensure all document snippets run', async () => {
+      expect(getDocumentRef()).toEqual(undefined);
       await expect(getDocument()).resolves.toEqual(null);
       await expect(setDocument()).resolves.toEqual(undefined);
       await expect(deleteDocument()).resolves.toEqual(undefined);
