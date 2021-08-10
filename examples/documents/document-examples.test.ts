@@ -22,6 +22,7 @@ import { queryPaginatedDocument } from './query-paginated';
 import { queryStreamDocument } from './query-stream';
 import { getDocumentRef } from './refs';
 import { setDocument } from './set';
+import { querySubColQuery } from './sub-col-query';
 import { querySubDocQuery } from './sub-doc-query';
 
 const {
@@ -67,5 +68,6 @@ describe('test document snippets', () => {
     await expect(queryPaginatedDocument()).resolves.toEqual(undefined);
     await expect(queryStreamDocument()).resolves.toEqual(undefined);
     await expect(querySubDocQuery()).resolves.toEqual(undefined);
+    await expect(querySubColQuery()).resolves.toEqual(undefined);
   });
 });
