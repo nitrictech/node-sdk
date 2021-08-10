@@ -11,5 +11,17 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-export * from './get-document';
-export * from './set-document';
+// [START import]
+import { queues } from '@nitric/sdk';
+// [END import]
+
+export async function queueSend() {
+  // [START snippet]
+  // Publish a task to the queue
+  const payload = {
+    example: 'payload',
+  };
+
+  await queues().queue('my-queue').send({ payload });
+  // [END snippet]
+}

@@ -12,26 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 // [START import]
-import { documents } from '@nitric/sdk';
+import { storage } from '@nitric/sdk';
 // [END import]
 
-export async function setDocument() {
+export async function storageRead() {
   // [START snippet]
-  interface Product {
-    id: string;
-    name: string;
-    description: string;
-  }
+  // Construct a new storage client with default settings
+  const storageClient = storage();
 
-  const docs = documents();
-
-  const document = docs.collection<Product>('products').doc('nitric');
-
-  await document.set({
-    id: 'nitric',
-    name: 'nitric',
-    description: 'A development framework!',
-  });
+  // Read a byte array from a bucket
+  const bytes = await storageClient
+    .bucket('my-bucket')
+    .file('path/to/item')
+    .read();
   // [END snippet]
-  return true;
 }

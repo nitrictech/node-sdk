@@ -13,5 +13,5 @@
       "@nitric/sdk": ["src"]
     }
   },
-  "include": ["src/**/*", "snippets/**/*"]
+  "include": ["src/**/*", "examples/**/*"]
 }
