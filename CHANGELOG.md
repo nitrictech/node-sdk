@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.25](https://github.com/nitrictech/node-sdk/compare/v0.1.24...v0.1.25) (2021-08-10)
+
+
+### Features
+
+* add sub collection query capability. ([ad8216d](https://github.com/nitrictech/node-sdk/commit/ad8216d40d347f1e49ad86eab8c276f1671ffc0f))
+
 ### [0.1.24](https://github.com/nitrictech/node-sdk/compare/v0.1.23...v0.1.24) (2021-08-10)
 
 
