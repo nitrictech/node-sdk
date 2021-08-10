@@ -35,37 +35,35 @@ const docProto = DocumentServiceClient.prototype;
 
 const CALLBACKFN = (response) => (_, cb: any) => cb(null, response);
 
-describe('test snippets', () => {
-  describe('test document snippets', () => {
-    beforeAll(() => {
-      jest
-        .spyOn(docProto, 'get')
-        .mockImplementation(CALLBACKFN(new DocumentGetResponse()));
-      jest
-        .spyOn(docProto, 'set')
-        .mockImplementation(CALLBACKFN(new DocumentSetResponse()));
-      jest
-        .spyOn(docProto, 'delete')
-        .mockImplementation(CALLBACKFN(new DocumentDeleteResponse()));
-      jest
-        .spyOn(docProto, 'query')
-        .mockImplementation(CALLBACKFN(new DocumentQueryResponse()));
-      jest
-        .spyOn(docProto, 'queryStream')
-        // @ts-ignore
-        .mockReturnValueOnce(new PassThrough().end());
-    });
+describe('test document snippets', () => {
+  beforeAll(() => {
+    jest
+      .spyOn(docProto, 'get')
+      .mockImplementation(CALLBACKFN(new DocumentGetResponse()));
+    jest
+      .spyOn(docProto, 'set')
+      .mockImplementation(CALLBACKFN(new DocumentSetResponse()));
+    jest
+      .spyOn(docProto, 'delete')
+      .mockImplementation(CALLBACKFN(new DocumentDeleteResponse()));
+    jest
+      .spyOn(docProto, 'query')
+      .mockImplementation(CALLBACKFN(new DocumentQueryResponse()));
+    jest
+      .spyOn(docProto, 'queryStream')
+      // @ts-ignore
+      .mockReturnValueOnce(new PassThrough().end());
+  });
 
-    test('ensure all document snippets run', async () => {
-      expect(getDocumentRef()).toEqual(undefined);
-      await expect(getDocument()).resolves.toEqual(null);
-      await expect(setDocument()).resolves.toEqual(undefined);
-      await expect(deleteDocument()).resolves.toEqual(undefined);
-      await expect(queryDocument()).resolves.toEqual(undefined);
-      await expect(queryFilterDocument()).resolves.toEqual(undefined);
-      await expect(queryLimitsDocument()).resolves.toEqual(undefined);
-      await expect(queryPaginatedDocument()).resolves.toEqual(undefined);
-      await expect(queryStreamDocument()).resolves.toEqual(undefined);
-    });
+  test('ensure all document snippets run', async () => {
+    expect(getDocumentRef()).toEqual(undefined);
+    await expect(getDocument()).resolves.toEqual(null);
+    await expect(setDocument()).resolves.toEqual(undefined);
+    await expect(deleteDocument()).resolves.toEqual(undefined);
+    await expect(queryDocument()).resolves.toEqual(undefined);
+    await expect(queryFilterDocument()).resolves.toEqual(undefined);
+    await expect(queryLimitsDocument()).resolves.toEqual(undefined);
+    await expect(queryPaginatedDocument()).resolves.toEqual(undefined);
+    await expect(queryStreamDocument()).resolves.toEqual(undefined);
   });
 });
