@@ -25,5 +25,5 @@ type ResponseData = Uint8Array | Record<string, any> | string;
  * @typeParam T The return type of the NitricFunction
  */
 export type NitricFunction<P, T extends ResponseData> = (
-  trigger: NitricTrigger<P>,
+  trigger: NitricTrigger<P>
 ) => Promise<T> | T | Promise<Response<T>> | Response<T>;

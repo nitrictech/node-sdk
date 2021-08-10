@@ -17,24 +17,11 @@ import {
   DocumentGetRequest,
   DocumentGetResponse,
   Key,
-  Collection as DocCollection,
   DocumentSetRequest,
   DocumentDeleteRequest,
 } from '../../interfaces/document';
 import { CollectionRef } from './collection-ref';
-import { getKey } from './key';
-
-const MAX_COLLECTION_DEPTH = 1;
-
-const getSubCollectionDepth = (key: Key, depth = 0) => {
-  const parent = key.getCollection().getParent();
-
-  if (parent) {
-    depth = getSubCollectionDepth(parent, depth + 1);
-  }
-
-  return depth;
-};
+import { MAX_COLLECTION_DEPTH } from './constants';
 
 /**
  * Document Ref
@@ -44,32 +31,26 @@ const getSubCollectionDepth = (key: Key, depth = 0) => {
  */
 export class DocumentRef<T extends { [key: string]: any }> {
   private documentClient: DocumentServiceClient;
-  private key: Key;
+  public readonly parent: CollectionRef<T>;
+  public readonly id: string;
 
   constructor(
     documentClient: DocumentServiceClient,
-    collection: DocCollection,
-    documentId: string
+    parent: CollectionRef<T>,
+    id: string
   ) {
     this.documentClient = documentClient;
-    this.key = getKey(collection, documentId);
-  }
-
-  /**
-   * Return the ID of the document for this reference.
-   * @returns the document id.
-   */
-  public getId(): string {
-    return this.key.getId();
+    this.parent = parent;
+    this.id = id;
   }
 
   /**
    * Return the collection document reference value.
    * @returns the collection document reference value, or null if not found
    */
-  public async get() {
+  public async get(): Promise<T> {
     const request = new DocumentGetRequest();
-    request.setKey(this.key);
+    request.setKey(this.toWire());
 
     return new Promise<T>((resolve, reject) => {
       this.documentClient.get(
@@ -96,9 +77,9 @@ export class DocumentRef<T extends { [key: string]: any }> {
    * existing document will be update with the new value.
    * @param value content the document content to store (required)
    */
-  public async set(value: T) {
+  public async set(value: T): Promise<void> {
     const request = new DocumentSetRequest();
-    request.setKey(this.key);
+    request.setKey(this.toWire());
     request.setContent(Struct.fromJavaScript(value));
 
     return new Promise<void>((resolve, reject) => {
@@ -115,9 +96,9 @@ export class DocumentRef<T extends { [key: string]: any }> {
   /**
    * Delete this document reference from the database if it exists.
    */
-  public async delete() {
+  public async delete(): Promise<void> {
     const request = new DocumentDeleteRequest();
-    request.setKey(this.key);
+    request.setKey(this.toWire());
 
     return new Promise<void>((resolve, reject) => {
       this.documentClient.delete(request, (error) => {
@@ -131,17 +112,40 @@ export class DocumentRef<T extends { [key: string]: any }> {
   }
 
   /**
+   *
+   */
+  private toWire(): Key {
+    const key = new Key();
+    key.setCollection(this.parent["toWire"]());
+    key.setId(this.id);
+
+    return key;
+  }
+
+  private depth(): number {
+    const parent = this.parent.parent;
+
+    if (parent) {
+      return parent.depth() + 1;
+    }
+
+    return 0;
+  }
+
+  /**
    * Gets a Collection instance that refers to the collection at the specified path.
    * @param name The name of the collection (required)
    * @returns The Collection instance
    */
-  public collection<T extends { [key: string]: any }>(name: string) {
-    if (getSubCollectionDepth(this.key) >= MAX_COLLECTION_DEPTH) {
+  public collection<T extends { [key: string]: any }>(
+    name: string
+  ): CollectionRef<T> {
+    if (this.depth() >= MAX_COLLECTION_DEPTH) {
       throw new Error(
         `Maximum collection depth ${MAX_COLLECTION_DEPTH} exceeded`
       );
     }
 
-    return new CollectionRef<T>(this.documentClient, name, this.key);
+    return new CollectionRef<T>(this.documentClient, name, this);
   }
 }

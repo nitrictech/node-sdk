@@ -18,20 +18,20 @@ describe('Document Client Tests', () => {
     test('Then collection should contain correct collection reference', () => {
       const collection = documents().collection('customers');
 
-      expect(collection['_collection'].getName()).toEqual('customers');
+      expect(collection.name).toEqual('customers');
     });
 
     test('Then collection.doc should return a document reference with correct collection and id', () => {
       const doc = documents().collection('customers').doc('id');
 
-      expect(doc['key'].getCollection().getName()).toEqual('customers');
-      expect(doc['key'].getId()).toEqual('id');
+      expect(doc.parent.name).toEqual('customers');
+      expect(doc.id).toEqual('id');
     });
 
     test('Then collection.query should return a query with the correct collection reference', () => {
       const query = documents().collection('customers').query();
 
-      expect(query['_collection'].getName()).toEqual('customers');
+      expect(query.collection.name).toEqual('customers');
     });
   });
 
@@ -40,34 +40,28 @@ describe('Document Client Tests', () => {
       const doc = documents().collection('customers').doc('id');
       const collection = doc.collection('orders');
 
-      expect(collection['_collection'].getName()).toEqual('orders');
-      expect(collection['_collection'].hasParent()).toEqual(true);
-      expect(
-        collection['_collection'].getParent().getCollection().getName()
-      ).toEqual('customers');
+      expect(collection.name).toEqual('orders');
+      expect(collection.parent).toBeDefined();
+      expect(collection.parent.parent.name).toEqual('customers');
     });
 
     test('Then collection.doc should return a document reference with correct collection and id', () => {
       const doc = documents().collection('customers').doc('id');
       const orderDoc = doc.collection('orders').doc('orderId');
 
-      expect(orderDoc['key'].getCollection().getName()).toEqual('orders');
-      expect(orderDoc['key'].getId()).toEqual('orderId');
-      expect(orderDoc['key'].getCollection().hasParent()).toEqual(true);
-      expect(
-        orderDoc['key'].getCollection().getParent().getCollection().getName()
-      ).toEqual('customers');
+      expect(orderDoc.parent.name).toEqual('orders');
+      expect(orderDoc.id).toEqual('orderId');
+      expect(orderDoc.parent.parent).toBeDefined();
+      expect(orderDoc.parent.parent.parent.name).toEqual('customers');
     });
 
     test('Then collection.query should return a query with the correct collection reference', () => {
       const doc = documents().collection('customers').doc('id');
       const query = doc.collection('orders').query();
 
-      expect(query['_collection'].getName()).toEqual('orders');
-      expect(query['_collection'].hasParent()).toEqual(true);
-      expect(
-        query['_collection'].getParent().getCollection().getName()
-      ).toEqual('customers');
+      expect(query.collection.name).toEqual('orders');
+      expect(query.collection.parent).toBeTruthy();
+      expect(query.collection.parent.parent.name).toEqual('customers');
     });
   });
 });

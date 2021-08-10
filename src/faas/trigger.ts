@@ -11,8 +11,12 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { HttpTriggerContext, NitricTriggerContext, TopicTriggerContext } from './trigger-context';
-import { faas } from '../interfaces'; 
+import {
+  HttpTriggerContext,
+  NitricTriggerContext,
+  TopicTriggerContext,
+} from './trigger-context';
+import { faas } from '../interfaces';
 import { HttpResponseContext, TopicResponseContext } from './response-context';
 import { Response } from './response';
 
@@ -29,10 +33,7 @@ export class NitricTrigger<T> {
    */
   public readonly context: NitricTriggerContext;
 
-  constructor(
-    data: string | Uint8Array,
-    context: NitricTriggerContext,
-  ) {
+  constructor(data: string | Uint8Array, context: NitricTriggerContext) {
     this.data = data;
     this.context = context;
   }
@@ -41,7 +42,7 @@ export class NitricTrigger<T> {
    * Return the trigger data as a string
    */
   public getString = (): string => {
-    if (typeof this.data !== "string") {
+    if (typeof this.data !== 'string') {
       return new TextDecoder('utf-8').decode(this.data);
     }
     return this.data;
@@ -72,14 +73,20 @@ export class NitricTrigger<T> {
   }
 
   // Instantiate a NitricRequest from the gRPC trigger model
-  static fromGrpcTriggerRequest<T>(trigger: faas.TriggerRequest): NitricTrigger<T> {
+  static fromGrpcTriggerRequest<T>(
+    trigger: faas.TriggerRequest
+  ): NitricTrigger<T> {
     // create context
     let context: NitricTriggerContext;
 
     if (trigger.hasHttp()) {
-      context = HttpTriggerContext.fromGrpcHttpTriggerContext(trigger.getHttp());
+      context = HttpTriggerContext.fromGrpcHttpTriggerContext(
+        trigger.getHttp()
+      );
     } else if (trigger.hasTopic()) {
-      context = TopicTriggerContext.fromGrpcTopicTriggerContext(trigger.getTopic());
+      context = TopicTriggerContext.fromGrpcTopicTriggerContext(
+        trigger.getTopic()
+      );
     } else {
       // Throw error here as we cannot identify the context of the request
       // Alternatively define NilContext and just give the data...

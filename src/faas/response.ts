@@ -12,8 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { HttpResponseContext, TopicResponseContext, TriggerResponse } from "../interfaces/faas";
-import { ResponseContext } from "./response-context";
+import {
+  HttpResponseContext,
+  TopicResponseContext,
+  TriggerResponse,
+} from '../interfaces/faas';
+import { ResponseContext } from './response-context';
 
 type ResponseData = string | Record<string, any> | Uint8Array;
 
@@ -21,7 +25,7 @@ const ENCODER = new TextEncoder();
 
 export class Response<T extends ResponseData = string> {
   public readonly context: ResponseContext;
-  public data: T = "" as T;
+  public data: T = '' as T;
 
   constructor(ctx: ResponseContext) {
     this.context = ctx;
@@ -30,7 +34,7 @@ export class Response<T extends ResponseData = string> {
   public toGrpcTriggerResponse(): TriggerResponse {
     const triggerResponse = new TriggerResponse();
 
-    if (typeof this.data === "string") {
+    if (typeof this.data === 'string') {
       triggerResponse.setData(ENCODER.encode(this.data));
     } else if (this.data instanceof Uint8Array) {
       triggerResponse.setData(this.data);
@@ -38,7 +42,6 @@ export class Response<T extends ResponseData = string> {
       const jsonString = JSON.stringify(this.data);
       triggerResponse.setData(ENCODER.encode(jsonString));
     }
-    
 
     if (this.context.isHttp()) {
       const origCtx = this.context.asHttp();

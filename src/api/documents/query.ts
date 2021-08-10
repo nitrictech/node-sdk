@@ -20,11 +20,12 @@ import {
   DocumentQueryStreamRequest,
   DocumentQueryStreamResponse,
   DocumentServiceClient,
-  Collection,
 } from '../../interfaces/document';
 import { WhereQueryOperator, WhereValueExpression } from '../../types';
 import type { Map as ProtobufMap } from 'google-protobuf';
 import { DocumentRef } from './document-ref';
+import { CollectionRef } from './collection-ref';
+import { DocumentSnapshot } from './document-snapshot';
 
 type PagingToken = Map<string, string>;
 
@@ -32,30 +33,8 @@ interface ReadableStream<T> extends NodeJS.ReadableStream {
   on(event: string | symbol, listener: (...args: T[]) => void): this;
 }
 
-export class DocumentResponse<T> {
-  private _ref: DocumentRef<T>;
-  private _content: T;
-
-  constructor(ref: DocumentRef<T>, content: T) {
-    this._ref = ref;
-    this._content = content;
-  }
-
-  get ref(): DocumentRef<T>{
-    return this._ref;
-  }
-
-  get id(): string {
-    return this._ref.getId();
-  }
-
-  get content(): T {
-    return this._content;
-  }
-}
-
 export interface FetchResponse<T> {
-  documents: DocumentResponse<T>[];
+  documents: DocumentSnapshot<T>[];
   pagingToken: Map<string, string>;
 }
 
@@ -64,7 +43,9 @@ export interface FetchResponse<T> {
  * @param protoMap map to convert
  * @returns the map
  */
-function protoMapToMap(protoMap: ProtobufMap<string, string>): Map<string, string> {
+function protoMapToMap(
+  protoMap: ProtobufMap<string, string>
+): Map<string, string> {
   const jsMap = new Map<string, string>();
   protoMap.forEach((value, key) => {
     jsMap.set(key, value);
@@ -80,14 +61,17 @@ function protoMapToMap(protoMap: ProtobufMap<string, string>): Map<string, strin
  */
 export class Query<T extends { [key: string]: any }> {
   private documentClient: DocumentServiceClient;
-  private _collection: Collection;
+  public readonly collection: CollectionRef<T>;
   private expressions: Expression[];
   private pagingToken: PagingToken | ProtobufMap<string, string>;
   private fetchLimit: number;
 
-  constructor(documentClient: DocumentServiceClient, collection: Collection) {
+  constructor(
+    documentClient: DocumentServiceClient,
+    collection: CollectionRef<T>
+  ) {
     this.documentClient = documentClient;
-    this._collection = collection;
+    this.collection = collection;
 
     this.expressions = [];
   }
@@ -162,7 +146,7 @@ export class Query<T extends { [key: string]: any }> {
   public async fetch() {
     const request = new DocumentQueryRequest();
 
-    request.setCollection(this._collection);
+    request.setCollection(this.collection["toWire"]());
     request.setLimit(this.fetchLimit);
 
     if (this.expressions.length) {
@@ -189,14 +173,22 @@ export class Query<T extends { [key: string]: any }> {
           } else {
             const pagingTokenMap = protoMapToMap(response.getPagingTokenMap());
 
-
             // clear paging token map
             request.clearPagingTokenMap();
 
-            const documents = response.getDocumentsList().map((doc) => (new DocumentResponse<T> (
-              new DocumentRef<T>(this.documentClient, this._collection, doc.getKey().getId()),
-              doc.getContent().toJavaScript() as T,
-            )));
+            const documents = response
+              .getDocumentsList()
+              .map(
+                (doc) =>
+                  new DocumentSnapshot<T>(
+                    new DocumentRef<T>(
+                      this.documentClient,
+                      this.collection,
+                      doc.getKey().getId()
+                    ),
+                    doc.getContent().toJavaScript() as T
+                  )
+              );
 
             resolve({
               documents,
@@ -211,7 +203,7 @@ export class Query<T extends { [key: string]: any }> {
   protected getStreamRequest() {
     const request = new DocumentQueryStreamRequest();
 
-    request.setCollection(this._collection);
+    request.setCollection(this.collection["toWire"]());
     request.setLimit(this.fetchLimit);
     request.setExpressionsList(this.expressions);
 
@@ -244,7 +236,7 @@ export class Query<T extends { [key: string]: any }> {
    * ```
    *
    */
-  public stream(): ReadableStream<DocumentResponse<T>> {
+  public stream(): ReadableStream<DocumentSnapshot<T>> {
     const responseStream = this.documentClient.queryStream(
       this.getStreamRequest()
     );

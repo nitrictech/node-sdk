@@ -18,156 +18,151 @@ import { Secret } from 'src/interfaces/secret';
 const { SecretServiceClient: GrpcSecretClient } = secret;
 
 describe('Secrets Client Tests', () => {
+  describe('Given nitric.api.secrets.SecretsClient.Put throws an error', () => {
+    const MOCK_ERROR = {
+      code: 12,
+      message: 'UNIMPLEMENTED',
+    };
+    let sendMock;
 
-	describe("Given nitric.api.secrets.SecretsClient.Put throws an error", () => {
-		const MOCK_ERROR = {
-			code: 12,
-			message: 'UNIMPLEMENTED',
-		};
-		let sendMock;
+    beforeAll(() => {
+      sendMock = jest
+        .spyOn(GrpcSecretClient.prototype, 'put')
+        .mockImplementation((request, callback: any) => {
+          callback(MOCK_ERROR, null);
 
-		beforeAll(() => {
-			sendMock = jest
-				.spyOn(GrpcSecretClient.prototype, 'put')
-				.mockImplementation((request, callback: any) => {
-					callback(MOCK_ERROR, null);
+          return null as any;
+        });
+    });
 
-					return null as any;
-				});
-		});
+    afterAll(() => {
+      jest.resetAllMocks();
+    });
 
-		afterAll(() => {
-			jest.resetAllMocks();
-		});
+    it('then Secret.put should reject', () => {
+      const secrets = new Secrets();
 
-		it("then Secret.put should reject", () => {
-			const secrets = new Secrets();
+      expect(secrets.secret('test').put('test-secret')).rejects.toBe(
+        MOCK_ERROR
+      );
+    });
 
-			expect(
-				secrets.secret('test').put('test-secret')
-			).rejects.toBe(MOCK_ERROR);
-		});
+    it('then Secret.put should be called once', () => {
+      expect(sendMock).toBeCalledTimes(1);
+    });
+  });
 
-		it("then Secret.put should be called once", () => {
-			expect(sendMock).toBeCalledTimes(1);
-		});
-	});
+  describe('Given nitric.api.secrets.SecretsClient.Put succeeds', () => {
+    let sendMock;
 
-	describe("Given nitric.api.secrets.SecretsClient.Put succeeds", () => {
-		let sendMock;
+    beforeAll(() => {
+      sendMock = jest
+        .spyOn(GrpcSecretClient.prototype, 'put')
+        .mockImplementation((request, callback: any) => {
+          const mockResponse = new secret.SecretPutResponse();
+          const s = new secret.Secret();
+          s.setName('test');
+          const sv = new secret.SecretVersion();
+          sv.setSecret(s);
+          sv.setVersion('1');
 
-		beforeAll(() => {
-			sendMock = jest
-				.spyOn(GrpcSecretClient.prototype, 'put')
-				.mockImplementation((request, callback: any) => {
-					const mockResponse = new secret.SecretPutResponse();
-					const s = new secret.Secret();
-					s.setName("test")
-					const sv = new secret.SecretVersion();
-					sv.setSecret(s);
-					sv.setVersion("1");
+          mockResponse.setSecretVersion(sv);
 
-					mockResponse.setSecretVersion(sv);
+          callback(null, mockResponse);
 
-					callback(null, mockResponse);
+          return null as any;
+        });
+    });
 
-					return null as any;
-				});
-		});
+    afterAll(() => {
+      jest.resetAllMocks();
+    });
 
-		afterAll(() => {
-			jest.resetAllMocks();
-		});
+    it('Then Secret.Put should resolve with the created secret version', async () => {
+      const secrets = new Secrets();
+      const secret = await secrets.secret('test').put('test-secret');
 
-		it('Then Secret.Put should resolve with the created secret version', async () => {
-			const secrets = new Secrets();
-			const secret = await secrets.secret('test').put("test-secret");
-			
-			expect(secret.version).toBe("1");
-			expect(secret.secret.name).toBe("test");
-		});
+      expect(secret.version).toBe('1');
+      expect(secret.secret.name).toBe('test');
+    });
 
-		it('Then Secret.Put should be called once', async () => {
-			expect(sendMock).toBeCalledTimes(1);
-		});
-	});
+    it('Then Secret.Put should be called once', async () => {
+      expect(sendMock).toBeCalledTimes(1);
+    });
+  });
 
-	describe("Given nitric.api.secrets.SecretsClient.Access throws an error", () => {
-		const MOCK_ERROR = {
-			code: 12,
-			message: 'UNIMPLEMENTED',
-		};
-		let sendMock;
+  describe('Given nitric.api.secrets.SecretsClient.Access throws an error', () => {
+    const MOCK_ERROR = {
+      code: 12,
+      message: 'UNIMPLEMENTED',
+    };
+    let sendMock;
 
-		beforeAll(() => {
-			sendMock = jest
-				.spyOn(GrpcSecretClient.prototype, 'access')
-				.mockImplementation((request, callback: any) => {
-					callback(MOCK_ERROR, null);
+    beforeAll(() => {
+      sendMock = jest
+        .spyOn(GrpcSecretClient.prototype, 'access')
+        .mockImplementation((request, callback: any) => {
+          callback(MOCK_ERROR, null);
 
-					return null as any;
-				});
-		});
+          return null as any;
+        });
+    });
 
-		afterAll(() => {
-			jest.resetAllMocks();
-		});
+    afterAll(() => {
+      jest.resetAllMocks();
+    });
 
-		it("then Secret.access should reject", () => {
-			const secrets = new Secrets();
+    it('then Secret.access should reject', () => {
+      const secrets = new Secrets();
 
-			expect(
-				secrets.secret('test').latest().access()
-			).rejects.toBe(MOCK_ERROR);
-		});
+      expect(secrets.secret('test').latest().access()).rejects.toBe(MOCK_ERROR);
+    });
 
-		it("then Secret.access should be called once", () => {
-			expect(sendMock).toBeCalledTimes(1);
-		});
-	});
+    it('then Secret.access should be called once', () => {
+      expect(sendMock).toBeCalledTimes(1);
+    });
+  });
 
+  describe('Given nitric.api.secrets.SecretsClient.Access succeeds', () => {
+    let sendMock;
 
-	describe("Given nitric.api.secrets.SecretsClient.Access succeeds", () => {
-		let sendMock;
+    beforeAll(() => {
+      sendMock = jest
+        .spyOn(GrpcSecretClient.prototype, 'access')
+        .mockImplementation((request, callback: any) => {
+          const mockResponse = new secret.SecretAccessResponse();
+          const s = new secret.Secret();
+          s.setName('test');
+          const sv = new secret.SecretVersion();
+          sv.setSecret(s);
+          sv.setVersion('1');
 
-		beforeAll(() => {
-			sendMock = jest
-				.spyOn(GrpcSecretClient.prototype, 'access')
-				.mockImplementation((request, callback: any) => {
-					const mockResponse = new secret.SecretAccessResponse();
-					const s = new secret.Secret();
-					s.setName("test")
-					const sv = new secret.SecretVersion();
-					sv.setSecret(s);
-					sv.setVersion("1");
+          mockResponse.setSecretVersion(sv);
+          const encoder = new TextEncoder();
 
-					mockResponse.setSecretVersion(sv);
-					const encoder = new TextEncoder()
+          mockResponse.setValue(encoder.encode('test-secret'));
 
+          callback(null, mockResponse);
 
-					mockResponse.setValue(encoder.encode("test-secret"));
+          return null as any;
+        });
+    });
 
-					callback(null, mockResponse);
+    afterAll(() => {
+      jest.resetAllMocks();
+    });
 
-					return null as any;
-				});
-		});
+    it('Then Secret.Access should resolve with the accessed secret version value', async () => {
+      const secrets = new Secrets();
+      const secretValue = await secrets.secret('test').latest().access();
 
-		afterAll(() => {
-			jest.resetAllMocks();
-		});
+      expect(secretValue.secretVersion.version).toBe('1');
+      expect(secretValue.secretVersion.secret.name).toBe('test');
+      expect(secretValue.asString()).toBe('test-secret');
+    });
 
-		it('Then Secret.Access should resolve with the accessed secret version value', async () => {
-			const secrets = new Secrets();
-			const secretValue = await secrets.secret('test').latest().access();
-			
-			expect(secretValue.secretVersion.version).toBe("1");
-			expect(secretValue.secretVersion.secret.name).toBe("test");
-			expect(secretValue.asString()).toBe("test-secret");
-		});
-
-		it('Then Secret.access should be called once', async () => {
-			expect(sendMock).toBeCalledTimes(1);
-		});
-	});
+    it('Then Secret.access should be called once', async () => {
+      expect(sendMock).toBeCalledTimes(1);
+    });
+  });
 });
