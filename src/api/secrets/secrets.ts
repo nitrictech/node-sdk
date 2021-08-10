@@ -64,7 +64,7 @@ class Secret {
 
   /**
    * Creates a new SecretVersion containing the given value
-   * 
+   *
    * @param secret - The secret value to store
    * @returns Promise<SecretVersion>
    * @example
@@ -117,7 +117,7 @@ class Secret {
    *  const latestVersion = secret.latest();
    * }
    * ```
-   * 
+   *
    */
   latest = () => {
     return this.version('latest');
@@ -135,7 +135,7 @@ class Secret {
    * // In most cases 'latest' should be used
    * const latestVersion = secret.version('1');
    * ```
-   * 
+   *
    */
   version = (version: string) => {
     if (!version) {
@@ -169,7 +169,7 @@ class SecretVersion {
 
   /**
    * Accesses the value stored in a secret version
-   * 
+   *
    * @param secret - The secret value to store
    * @returns Promise<Uint8Array>
    * @example
@@ -196,12 +196,12 @@ class SecretVersion {
             const secretVersion = new SecretVersion(
               this.secrets,
               this.secret,
-              response.getSecretVersion().getVersion(),
+              response.getSecretVersion().getVersion()
             );
 
             const val = new SecretValue(
               secretVersion,
-              response.getValue_asU8(),
+              response.getValue_asU8()
             );
 
             resolve(val);
@@ -243,14 +243,14 @@ class SecretValue {
    * async function accessSecret() {
    *  const secret = secrets().secret('secret').latest();
    *  const secretValue = await secret.access();
-   * 
-   *  const content = secretValue.asBytes(); 
+   *
+   *  const content = secretValue.asBytes();
    * }
    * ```
    */
   asBytes = () => {
     return this.val;
-  }
+  };
 
   /**
    * @returns string
@@ -261,14 +261,14 @@ class SecretValue {
    * async function accessSecret() {
    *  const secret = secrets().secret('secret').latest();
    *  const secretValue = await secret.access();
-   * 
-   *  const content = secretValue.asString(); 
+   *
+   *  const content = secretValue.asString();
    * }
-   * ``` 
+   * ```
    */
   asString = () => {
     return DECODER.decode(this.asBytes());
-  }
+  };
 }
 
 // Secrets client singleton
@@ -288,7 +288,7 @@ let SECRETS = undefined;
  * }
  * ```
  */
-export const secrets = () => {
+export const secrets = (): Secrets => {
   if (!SECRETS) {
     SECRETS = new Secrets();
   }
