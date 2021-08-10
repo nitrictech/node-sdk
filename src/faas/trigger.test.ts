@@ -11,10 +11,10 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { 
-  HttpTriggerContext as GrpcHttpTriggerRequest, 
-  TopicTriggerContext as GrpcTopicTriggerContext, 
-  TriggerRequest 
+import {
+  HttpTriggerContext as GrpcHttpTriggerRequest,
+  TopicTriggerContext as GrpcTopicTriggerContext,
+  TriggerRequest,
 } from '../interfaces/faas';
 import { NitricTrigger } from './trigger';
 import { HttpTriggerContext, TopicTriggerContext } from './trigger-context';
@@ -26,35 +26,35 @@ describe('NitricTrigger.fromGrpcTriggerRequest', () => {
 
     beforeAll(() => {
       const ctx = new GrpcHttpTriggerRequest();
-      ctx.setMethod("GET");
-      ctx.setPath("/test/");
-      ctx.getHeadersMap().set("test", "test");
-      ctx.getQueryParamsMap().set("test", "test");
+      ctx.setMethod('GET');
+      ctx.setPath('/test/');
+      ctx.getHeadersMap().set('test', 'test');
+      ctx.getQueryParamsMap().set('test', 'test');
       const request = new TriggerRequest();
-      request.setData("Hello World");
+      request.setData('Hello World');
       request.setHttp(ctx);
 
       trigger = NitricTrigger.fromGrpcTriggerRequest(request);
     });
 
-    it("should have the provided data", () => {
-      expect(trigger.data).toBe("Hello World");
+    it('should have the provided data', () => {
+      expect(trigger.data).toBe('Hello World');
     });
 
-    it("should have HTTP context", () => {
+    it('should have HTTP context', () => {
       expect(trigger.context.isHttp()).toBe(true);
-    })
-
-    it("should have the triggers HTTP Method", () => {
-      expect(trigger.context.asHttp().method).toBe("GET");
     });
 
-    it("should have to provided headers", () => {
-      expect(trigger.context.asHttp().headers["test"]).toBe("test");
+    it('should have the triggers HTTP Method', () => {
+      expect(trigger.context.asHttp().method).toBe('GET');
     });
 
-    it("should have to provided query params", () => {
-      expect(trigger.context.asHttp().query["test"]).toBe("test");
+    it('should have to provided headers', () => {
+      expect(trigger.context.asHttp().headers['test']).toBe('test');
+    });
+
+    it('should have to provided query params', () => {
+      expect(trigger.context.asHttp().query['test']).toBe('test');
     });
   });
 
@@ -63,72 +63,69 @@ describe('NitricTrigger.fromGrpcTriggerRequest', () => {
 
     beforeAll(() => {
       const ctx = new GrpcTopicTriggerContext();
-      ctx.setTopic("test");
-    
+      ctx.setTopic('test');
+
       const request = new TriggerRequest();
-      request.setData("Hello World");
+      request.setData('Hello World');
       request.setTopic(ctx);
 
       trigger = NitricTrigger.fromGrpcTriggerRequest(request);
     });
 
-    it("should have topic trigger context", () => {
+    it('should have topic trigger context', () => {
       expect(trigger.context.isTopic()).toBe(true);
     });
 
-    it("should have the topic name that raised the trigger", () => {
-      expect(trigger.context.asTopic().topic).toBe("test");
+    it('should have the topic name that raised the trigger', () => {
+      expect(trigger.context.asTopic().topic).toBe('test');
     });
   });
 });
 
-describe("NitricTrigger.defaultResponse", () => {
-
-  describe("Given a trigger with HttpContext", () => {
+describe('NitricTrigger.defaultResponse', () => {
+  describe('Given a trigger with HttpContext', () => {
     let response: Response<any>;
 
     beforeAll(() => {
       const ctx = new HttpTriggerContext(
-        "POST",
-        "/test/",
-        { "test": "test" },
-        { "test": "test" }
+        'POST',
+        '/test/',
+        { test: 'test' },
+        { test: 'test' }
       );
 
-      const trigger = new NitricTrigger<string>("testing", ctx);
+      const trigger = new NitricTrigger<string>('testing', ctx);
       response = trigger.defaultResponse();
     });
 
-    it("The default response should have HTTP Context", () => {
+    it('The default response should have HTTP Context', () => {
       expect(response.context.isHttp()).toBe(true);
     });
   });
 
-  describe("Given a trigger with TopicContext", () => {
+  describe('Given a trigger with TopicContext', () => {
     let response: Response<any>;
 
     beforeAll(() => {
-      const ctx = new TopicTriggerContext(
-        "test",
-      );
+      const ctx = new TopicTriggerContext('test');
 
-      const trigger = new NitricTrigger<string>("testing", ctx);
+      const trigger = new NitricTrigger<string>('testing', ctx);
       response = trigger.defaultResponse();
     });
 
-    it("The default response should have Topic Context", () => {
+    it('The default response should have Topic Context', () => {
       expect(response.context.isTopic()).toBe(true);
     });
   });
 
-  describe("Given a trigger with no context", () => {
+  describe('Given a trigger with no context', () => {
     let trigger: NitricTrigger<any>;
 
     beforeAll(() => {
-      trigger = new NitricTrigger<string>("testing", null);
+      trigger = new NitricTrigger<string>('testing', null);
     });
 
-    it("Should throw", () => {
+    it('Should throw', () => {
       expect(trigger.defaultResponse).toThrow();
     });
   });
@@ -143,9 +140,10 @@ describe('Nitric Trigger Tests', () => {
       'x-nitric-source-type': 'REQUEST',
     };
 
-    const trigger = new NitricTrigger<any>("", new HttpTriggerContext(
-      "GET", "/test/", headers, {}
-    ));
+    const trigger = new NitricTrigger<any>(
+      '',
+      new HttpTriggerContext('GET', '/test/', headers, {})
+    );
 
     test('NitricRequest.getObject, should throw', () => {
       expect(trigger.dataAsObject).toThrow('Unexpected end of JSON input');
@@ -178,9 +176,10 @@ describe('Nitric Trigger Tests', () => {
 
     const encoder = new TextEncoder();
 
-    const trigger = new NitricTrigger<typeof testObject>(encoder.encode(JSON.stringify(testObject)), new HttpTriggerContext(
-      "POST", "/test/", headers, {},
-    ));
+    const trigger = new NitricTrigger<typeof testObject>(
+      encoder.encode(JSON.stringify(testObject)),
+      new HttpTriggerContext('POST', '/test/', headers, {})
+    );
 
     test('NitricRequest.getObject should return the provided object', () => {
       expect(trigger.dataAsObject()).toEqual(testObject);
@@ -197,9 +196,10 @@ describe('Nitric Trigger Tests', () => {
 
     const testObject = 'test';
 
-    const trigger = new NitricTrigger<typeof testObject>(testObject, new HttpTriggerContext(
-      "POST", "/test/", headers, {}
-    ));
+    const trigger = new NitricTrigger<typeof testObject>(
+      testObject,
+      new HttpTriggerContext('POST', '/test/', headers, {})
+    );
 
     test('NitricRequest.getObject, should throw', () => {
       // Fix typings here...

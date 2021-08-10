@@ -11,5 +11,19 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-export const SERVICE_BIND = process.env.SERVICE_ADDRESS || '127.0.0.1:50051';
-export const NITRIC_DEBUG = process.env.NITRIC_DEBUG === 'true' || false;
+// [START import]
+import { documents } from '@nitric/sdk';
+// [END import]
+
+export async function querySubColQuery() {
+  // [START snippet]
+  const docs = documents();
+
+  const query = docs
+    .collection('Customers')
+		.collection('Order')
+    .query();
+
+  const results = await query.fetch();
+  // [END snippet]
+}

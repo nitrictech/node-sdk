@@ -15,7 +15,7 @@ import { Struct } from 'google-protobuf/google/protobuf/struct_pb';
 import { PassThrough } from 'stream';
 import { document } from '../../interfaces';
 import { documents, Documents } from './documents';
-import { DocumentResponse } from './query';
+import { DocumentSnapshot } from './document-snapshot';
 
 const {
   DocumentServiceClient: GrpcKeyDocumentsClient,
@@ -157,7 +157,7 @@ describe('Query Tests', () => {
 
           mockKey = new Key();
           mockKey.setCollection(collection);
-          mockKey.setId("test");
+          mockKey.setId('test');
 
           mockDocument.setKey(mockKey);
           response.setDocumentsList([mockDocument]);
@@ -179,17 +179,14 @@ describe('Query Tests', () => {
       const results = await q.fetch();
 
       expect(results.documents).toStrictEqual([
-        new DocumentResponse(
-          testCollection.doc("test"),
-          {
-            id: 'test',
-          }
-        ),
+        new DocumentSnapshot(testCollection.doc('test'), {
+          id: 'test',
+        }),
       ]);
 
-      expect(results.pagingToken).toStrictEqual(new Map([
-        ["test-key", "test-value"],
-      ]));
+      expect(results.pagingToken).toStrictEqual(
+        new Map([['test-key', 'test-value']])
+      );
     });
 
     test('The Grpc client for DocumentServiceClient.Query should have been called exactly once', () => {

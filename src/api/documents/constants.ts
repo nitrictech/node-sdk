@@ -11,13 +11,4 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Key, Collection } from '../../interfaces/document';
-
-export function getKey(collection: Collection, id?: string) {
-  const key = new Key();
-
-  key.setCollection(collection);
-  key.setId(id);
-
-  return key;
-}
+export const MAX_COLLECTION_DEPTH = 1;

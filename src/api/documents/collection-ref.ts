@@ -11,13 +11,10 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import {
-  DocumentServiceClient,
-  Collection,
-  Key,
-} from '../../interfaces/document';
+import { DocumentServiceClient, Collection } from '../../interfaces/document';
 import { Query } from './query';
 import { DocumentRef } from './document-ref';
+import { CollectionGroupRef } from './collection-group-ref';
 
 /**
  * CollectionRef
@@ -26,23 +23,30 @@ import { DocumentRef } from './document-ref';
  */
 export class CollectionRef<T extends { [key: string]: any }> {
   private documentClient: DocumentServiceClient;
-  private _collection: Collection;
+  public readonly name: string;
+  public readonly parent?: DocumentRef<any>;
 
   constructor(
     documentClient: DocumentServiceClient,
     name: string,
-    parentKey?: Key
+    parent?: DocumentRef<any>
   ) {
     this.documentClient = documentClient;
+    this.name = name;
+    this.parent = parent;
+  }
 
-    const collection = new Collection();
-    collection.setName(name);
-
-    if (parentKey) {
-      collection.setParent(parentKey);
-    }
-
-    this._collection = collection;
+  /**
+   * Return a reference to a subcollection within the documents of this collection.
+   *
+   * Useful when querying subcollection documents across all/many parent documents. E.g. Querying landmarks from multiple cities.
+   * @param name
+   */
+  public collection(name: string): CollectionGroupRef<T> {
+    return CollectionGroupRef.fromCollectionRef(
+      this,
+      this.documentClient
+    ).collection(name);
   }
 
   /**
@@ -50,19 +54,27 @@ export class CollectionRef<T extends { [key: string]: any }> {
    * @param documentId id the document unique id (required)
    * @returns new collection document reference
    */
-  public doc(documentId: string) {
-    return new DocumentRef<T>(
-      this.documentClient,
-      this._collection,
-      documentId
-    );
+  public doc(id: string): DocumentRef<T> {
+    return new DocumentRef<T>(this.documentClient, this, id);
   }
 
   /**
    * Create a new collection query object
    * @returns a new collection query object
    */
-  public query() {
-    return new Query<T>(this.documentClient, this._collection);
+  public query(): Query<T> {
+    return new Query<T>(this.documentClient, this);
+  }
+
+  private toWire(): Collection {
+    const col = new Collection();
+
+    col.setName(this.name);
+
+    if (this.parent) {
+      col.setParent(this.parent["toWire"]());
+    }
+
+    return col;
   }
 }

@@ -14,7 +14,6 @@
 import { faas } from '../interfaces';
 
 export abstract class NitricTriggerContext {
-
   /**
    * Determine if the trigger source was HTTP
    * @returns true if the trigger source was an HTTP Request
@@ -40,7 +39,7 @@ export abstract class NitricTriggerContext {
       return this;
     }
 
-    throw new Error("Context is not topic context");
+    throw new Error('Context is not topic context');
   }
 
   /**
@@ -52,7 +51,7 @@ export abstract class NitricTriggerContext {
       return this;
     }
 
-    throw new Error("Context is not topic context");
+    throw new Error('Context is not topic context');
   }
 }
 
@@ -69,8 +68,8 @@ export class HttpTriggerContext extends NitricTriggerContext {
   public constructor(
     method: string,
     path: string,
-    headers: Record<string, string>, 
-    query: Record<string, string>,
+    headers: Record<string, string>,
+    query: Record<string, string>
   ) {
     super();
     this.method = method;
@@ -79,12 +78,20 @@ export class HttpTriggerContext extends NitricTriggerContext {
     this.path = path;
   }
 
-  static fromGrpcHttpTriggerContext(ctx: faas.HttpTriggerContext): HttpTriggerContext {
+  static fromGrpcHttpTriggerContext(
+    ctx: faas.HttpTriggerContext
+  ): HttpTriggerContext {
     return new HttpTriggerContext(
       ctx.getMethod(),
       ctx.getPath(),
-      ctx.getHeadersMap().toArray().reduce((acc, [key, val]) => ({...acc, [key]: val}), {}),
-      ctx.getQueryParamsMap().toArray().reduce((acc, [key, val]) => ({...acc, [key]: val}), {}),
+      ctx
+        .getHeadersMap()
+        .toArray()
+        .reduce((acc, [key, val]) => ({ ...acc, [key]: val }), {}),
+      ctx
+        .getQueryParamsMap()
+        .toArray()
+        .reduce((acc, [key, val]) => ({ ...acc, [key]: val }), {})
     );
   }
 }
@@ -95,16 +102,14 @@ export class HttpTriggerContext extends NitricTriggerContext {
 export class TopicTriggerContext extends NitricTriggerContext {
   public readonly topic: string;
 
-  public constructor(
-    topic: string,
-  ) {
+  public constructor(topic: string) {
     super();
     this.topic = topic;
   }
 
-  static fromGrpcTopicTriggerContext(ctx: faas.TopicTriggerContext): TopicTriggerContext {
+  static fromGrpcTopicTriggerContext(
+    ctx: faas.TopicTriggerContext
+  ): TopicTriggerContext {
     return new TopicTriggerContext(ctx.getTopic());
   }
 }
-
-

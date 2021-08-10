@@ -11,5 +11,18 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-export const SERVICE_BIND = process.env.SERVICE_ADDRESS || '127.0.0.1:50051';
-export const NITRIC_DEBUG = process.env.NITRIC_DEBUG === 'true' || false;
+import { DocumentRef } from './document-ref';
+
+export class DocumentSnapshot<T> {
+  public readonly ref: DocumentRef<T>;
+  public readonly content: T;
+
+  constructor(ref: DocumentRef<T>, content: T) {
+    this.ref = ref;
+    this.content = content;
+  }
+
+  get id(): string {
+    return this.ref.id;
+  }
+}
