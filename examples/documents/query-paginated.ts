@@ -29,6 +29,8 @@ export async function queryPaginatedDocument() {
   let results = await query.fetch();
 
   // Fetch next page
-  results = await query.pagingFrom(results.pagingToken).fetch();
+  if (results.pagingToken) {
+    results = await query.pagingFrom(results.pagingToken).fetch();
+  }
   // [END snippet]
 }

@@ -15,7 +15,7 @@
 import { documents } from '@nitric/sdk';
 // [END import]
 
-export async function querySubCollection() {
+export async function querySubDocQuery() {
   // [START snippet]
   const docs = documents();
 
