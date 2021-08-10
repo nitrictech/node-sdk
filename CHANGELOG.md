@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.24](https://github.com/nitrictech/node-sdk/compare/v0.1.23...v0.1.24) (2021-08-10)
+
+
+### Bug Fixes
+
+* add secrets type to secrets function ([59f3562](https://github.com/nitrictech/node-sdk/commit/59f356216fc49a65180387fe9c78e39430970507))
+
 ### [0.1.23](https://github.com/nitrictech/node-sdk/compare/v0.1.22...v0.1.23) (2021-08-06)
 
 ### [0.1.22](https://github.com/nitrictech/node-sdk/compare/v0.1.21...v0.1.22) (2021-08-02)
