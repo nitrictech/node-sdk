@@ -20,11 +20,13 @@ export async function queueReceive() {
   // Receive tasks from the queue
   const tasks = await queues().queue('my-queue').receive();
 
-  tasks.map((task) => {
-    // Work on a task...
+  await Promise.all(
+    tasks.map((task) => {
+      // Work on a task...
 
-    // Complete the task
-    return task.complete();
-  });
+      // Complete the task
+      return task.complete();
+    })
+  );
   // [END snippet]
 }
