@@ -20,6 +20,7 @@ const {
   StorageServiceClient,
   StorageDeleteResponse,
   StorageReadResponse,
+  StorageWriteResponse,
 } = grpc.storage;
 
 const proto = StorageServiceClient.prototype;
@@ -34,6 +35,9 @@ describe('test storage snippets', () => {
     jest
       .spyOn(proto, 'read')
       .mockImplementation(CALLBACKFN(new StorageReadResponse()));
+    jest
+      .spyOn(proto, 'write')
+      .mockImplementation(CALLBACKFN(new StorageWriteResponse()));
   });
 
   test('ensure all storage snippets run', async () => {
