@@ -36,7 +36,7 @@ describe('test storage snippets', () => {
       .mockImplementation(CALLBACKFN(new StorageReadResponse()));
   });
 
-  test('ensure all document snippets run', async () => {
+  test('ensure all storage snippets run', async () => {
     await expect(storageDelete()).resolves.toEqual(undefined);
     await expect(storageRead()).resolves.toEqual(undefined);
     await expect(storageWrite()).resolves.toEqual(undefined);
