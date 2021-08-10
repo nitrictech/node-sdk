@@ -15,23 +15,20 @@
 import { documents } from '@nitric/sdk';
 // [END import]
 
-export async function setDocument() {
+export async function queryPaginatedDocument() {
   // [START snippet]
-  interface Product {
-    id: string;
-    name: string;
-    description: string;
-  }
-
   const docs = documents();
 
-  const document = docs.collection<Product>('products').doc('nitric');
+  const query = docs
+    .collection('Customers')
+    .query()
+    .where('active', '==', true)
+    .limit(100);
 
-  await document.set({
-    id: 'nitric',
-    name: 'nitric',
-    description: 'A development framework!',
-  });
+  // Fetch first page
+  let results = await query.fetch();
+
+  // Fetch next page
+  results = await query.pagingFrom(results.pagingToken).fetch();
   // [END snippet]
-  return true;
 }
