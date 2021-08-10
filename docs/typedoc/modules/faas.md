@@ -50,7 +50,7 @@ Name | Type |
 
 **Returns:** *Promise*<T\> \| T \| *Promise*<[*Response*](../classes/faas.response.md)<T\>\> \| [*Response*](../classes/faas.response.md)<T\>
 
-Defined in: [src/faas/function.ts:27](https://github.com/nitrictech/node-sdk/blob/77b89fd/src/faas/function.ts#L27)
+Defined in: [src/faas/function.ts:27](https://github.com/nitrictech/node-sdk/blob/6b44767/src/faas/function.ts#L27)
 
 ## Functions
 
@@ -97,4 +97,4 @@ Name | Type | Description |
 
 **Returns:** *Promise*<void\>
 
-Defined in: [src/faas/start.ts:48](https://github.com/nitrictech/node-sdk/blob/77b89fd/src/faas/start.ts#L48)
+Defined in: [src/faas/start.ts:48](https://github.com/nitrictech/node-sdk/blob/6b44767/src/faas/start.ts#L48)
