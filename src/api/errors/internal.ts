@@ -14,6 +14,8 @@
 
 /**
  * InternalError
+ * 
+ * Some invariant error has incurred internally
  */
  export class InternalError extends Error {
 	constructor (message: string) {

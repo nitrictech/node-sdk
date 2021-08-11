@@ -14,6 +14,8 @@
 
 /**
  * UnauthenticatedError
+ * 
+ * The request does not have or has invalid credentials
  */
  export class UnauthenticatedError extends Error {
 	constructor (message: string) {

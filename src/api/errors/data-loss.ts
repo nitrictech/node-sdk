@@ -14,6 +14,8 @@
 
 /**
  * DataLossError
+ * 
+ * Unrecoverable data loss or corruption
  */
  export class DataLossError extends Error {
 	constructor (message: string) {

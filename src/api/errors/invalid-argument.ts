@@ -14,6 +14,8 @@
 
 /**
  * InvalidArgumentError
+ * 
+ * Invalid argument was provided by the client
  */
  export class InvalidArgumentError extends Error {
 	constructor (message: string) {

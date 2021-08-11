@@ -14,6 +14,8 @@
 
 /**
  * AbortedError
+ * 
+ * The operation was aborted
  */
  export class AbortedError extends Error {
 	constructor (message: string) {

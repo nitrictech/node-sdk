@@ -13,7 +13,9 @@
 // limitations under the License.
 
 /**
- * AbortedError
+ * AlreadyExistsError
+ * 
+ * Client attempted to illegally create an entity that already exists
  */
  export class AlreadyExistsError extends Error {
 	constructor (message: string) {

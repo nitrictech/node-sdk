@@ -14,6 +14,8 @@
 
 /**
  * UnimplementedError
+ * 
+ * The requested operation was not implemented for the service provider.
  */
  export class UnimplementedError extends Error {
 	constructor (message: string) {

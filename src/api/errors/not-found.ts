@@ -14,6 +14,8 @@
 
 /**
  * NotFoundError
+ * 
+ * Requested resource was not found
  */
  export class NotFoundError extends Error {
 	constructor (message: string) {
