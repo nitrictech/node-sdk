@@ -276,7 +276,7 @@ export class ReceivedTask implements Task {
       return await new Promise((resolve, reject) => {
         this.queue.queueing.QueueServiceClient.complete(request, (error) => {
           if (error) {
-            reject(error);
+            reject(fromGrpcError(error));
           } else {
             resolve();
           }

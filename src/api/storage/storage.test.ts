@@ -13,6 +13,7 @@
 // limitations under the License.
 import { Storage } from './storage';
 import { storage } from '../../interfaces';
+import { UnimplementedError } from '../errors';
 
 const { StorageServiceClient: GrpcStorageClient } = storage;
 
@@ -38,11 +39,11 @@ describe('Storage Client Tests', () => {
       jest.resetAllMocks();
     });
 
-    test('Then StorageClient.write should reject', () => {
+    test('Then StorageClient.write should reject', async () => {
       const storage = new Storage();
-      expect(
+      await expect(
         storage.bucket('test_bucket').file('test/item').write(new Uint8Array())
-      ).rejects.toBe(MOCK_ERROR);
+      ).rejects.toEqual(new UnimplementedError("UNIMPLEMENTED"));
     });
 
     test('The Grpc client for Storage.write should have been called exactly once', () => {
@@ -101,11 +102,11 @@ describe('Storage Client Tests', () => {
       jest.resetAllMocks();
     });
 
-    test('Then StorageClient.read should reject', () => {
+    test('Then StorageClient.read should reject', async () => {
       const storage = new Storage();
-      expect(
+      await expect(
         storage.bucket('test_bucket').file('test/item').read()
-      ).rejects.toBe(MOCK_ERROR);
+      ).rejects.toEqual(new UnimplementedError("UNIMPLEMENTED"));
     });
 
     test('The Grpc client for Storage.read should have been called exactly once', () => {
@@ -134,9 +135,9 @@ describe('Storage Client Tests', () => {
       jest.resetAllMocks();
     });
 
-    test('Then StorageClient.read should return the bytes of the retrieved item', () => {
+    test('Then StorageClient.read should return the bytes of the retrieved item', async () => {
       const storage = new Storage();
-      expect(
+      await expect(
         storage.bucket('test_bucket').file('test/item').read()
       ).resolves.toBe(MOCK_BYTES);
     });
@@ -166,10 +167,10 @@ describe('Storage Client Tests', () => {
       jest.resetAllMocks();
     });
 
-    test('Then StorageClient.delete should reject', () => {
+    test('Then StorageClient.delete should reject', async () => {
       const client = new Storage();
-      expect(client.bucket('test').file('test').delete()).rejects.toBe(
-        MOCK_ERROR
+      await expect(client.bucket('test').file('test').delete()).rejects.toEqual(
+        new UnimplementedError("UNIMPLEMENTED")
       );
     });
 
@@ -199,9 +200,9 @@ describe('Storage Client Tests', () => {
       jest.resetAllMocks();
     });
 
-    test('Then StorageClient.delete should delete the bytes from the bucket', () => {
+    test('Then StorageClient.delete should delete the bytes from the bucket', async () => {
       const client = new Storage().bucket('test_bucket').file('test/item');
-      expect(client.delete()).resolves;
+      await expect(client.delete()).resolves;
     });
 
     test('The Grpc client for Storage.delete should have been called exactly once', () => {
