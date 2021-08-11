@@ -13,6 +13,7 @@
 // limitations under the License.
 import { Struct } from 'google-protobuf/google/protobuf/struct_pb';
 import { document } from '../../interfaces';
+import { InvalidArgumentError } from '../errors';
 import { Documents, documents } from './documents';
 
 const {
@@ -172,7 +173,7 @@ describe('Document Ref Tests', () => {
       const testNestedAgain = () => nestedCollection.collection('nested-again');
 
       expect(testNestedAgain).toThrow(
-        new Error('Maximum collection depth 1 exceeded')
+        new InvalidArgumentError('Maximum collection depth 1 exceeded')
       );
     });
   });

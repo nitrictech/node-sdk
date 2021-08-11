@@ -14,6 +14,7 @@
 import { SERVICE_BIND } from '../../constants';
 import { storage as storageService } from '../../interfaces';
 import * as grpc from '@grpc/grpc-js';
+import { fromGrpcError, InvalidArgumentError } from '../errors';
 
 /**
  * Nitric storage client, facilitates writing and reading from blob storage (buckets).
@@ -30,7 +31,7 @@ export class Storage {
 
   bucket = (name: string): Bucket => {
     if (!name) {
-      throw new Error('A bucket name is required to use a Bucket.');
+      throw new InvalidArgumentError('A bucket name is required to use a Bucket.');
     }
     return new Bucket(this, name);
   };
@@ -50,7 +51,7 @@ class Bucket {
 
   file = (name: string) => {
     if (!name) {
-      throw new Error('A file name/path is required to use a File.');
+      throw new InvalidArgumentError('A file name/path is required to use a File.');
     }
     return new File(this.storage, this, name);
   };
@@ -94,7 +95,7 @@ class File {
     return new Promise((resolve, reject) => {
       this.storage.StorageServiceClient.write(request, (error) => {
         if (error) {
-          reject(error);
+          reject(fromGrpcError(error));
         } else {
           resolve();
         }
@@ -123,7 +124,7 @@ class File {
     return new Promise((resolve, reject) => {
       this.storage.StorageServiceClient.read(request, (error, response) => {
         if (error) {
-          reject(error);
+          reject(fromGrpcError(error));
         } else {
           resolve(response.getBody_asU8());
         }
@@ -152,7 +153,7 @@ class File {
     return new Promise((resolve, reject) => {
       this.storage.StorageServiceClient.delete(request, (error) => {
         if (error) {
-          reject(error);
+          reject(fromGrpcError(error));
         } else {
           resolve();
         }

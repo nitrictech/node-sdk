@@ -16,6 +16,7 @@ import { PassThrough } from 'stream';
 import { document } from '../../interfaces';
 import { documents, Documents } from './documents';
 import { DocumentSnapshot } from './document-snapshot';
+import { InvalidArgumentError } from '../errors';
 
 const {
   DocumentServiceClient: GrpcKeyDocumentsClient,
@@ -200,7 +201,7 @@ describe('Query Tests', () => {
       q.pagingFrom('test');
 
       await expect(q.fetch()).rejects.toStrictEqual(
-        new Error('Invalid paging token provided!')
+        new InvalidArgumentError('Invalid paging token provided!')
       );
     });
   });

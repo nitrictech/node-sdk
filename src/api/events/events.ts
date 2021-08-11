@@ -16,6 +16,7 @@ import { event as eventService } from '../../interfaces';
 import { Struct } from 'google-protobuf/google/protobuf/struct_pb';
 import * as grpc from '@grpc/grpc-js';
 import type { NitricEvent } from '../../types';
+import { fromGrpcError, InvalidArgumentError } from '../errors';
 
 function newEventServiceClients(): {
   event: eventService.EventServiceClient;
@@ -76,7 +77,7 @@ export class Topic {
     return new Promise<NitricEvent>((resolve, reject) => {
       this.eventing.EventServiceClient.publish(request, (error, response) => {
         if (error) {
-          reject(error);
+          reject(fromGrpcError(error));
         } else {
           resolve({ ...event, id: response.getId() });
         }
@@ -118,10 +119,11 @@ export class Eventing {
    * const eventing = new Eventing();
    * const topic = eventing.topic('notifications');
    * ```
+   *
    */
   topic = (name: string): Topic => {
     if (!name) {
-      throw new Error('A topic name is needed to use a Topic.');
+      throw new InvalidArgumentError('A topic name is needed to use a Topic.');
     }
 
     return new Topic(this, name);
@@ -145,7 +147,7 @@ export class Eventing {
     return new Promise((resolve, reject) => {
       this.TopicServiceClient.list(null, (error, response) => {
         if (error) {
-          reject(error);
+          reject(fromGrpcError(error));
         } else {
           resolve(
             response.getTopicsList().map((topic) => this.topic(topic.getName()))
