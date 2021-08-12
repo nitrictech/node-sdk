@@ -16,6 +16,7 @@ import { PassThrough } from 'stream';
 import { document } from '../../interfaces';
 import { documents, Documents } from './documents';
 import { DocumentSnapshot } from './document-snapshot';
+import { InvalidArgumentError, UnimplementedError } from '../errors';
 
 const {
   DocumentServiceClient: GrpcKeyDocumentsClient,
@@ -126,7 +127,7 @@ describe('Query Tests', () => {
 
     test('Then DocumentRef.Query should reject', async () => {
       const query = documentsClient.collection('test').query();
-      await expect(query.fetch()).rejects.toBe(MOCK_ERROR);
+      await expect(query.fetch()).rejects.toEqual(new UnimplementedError("UNIMPLEMENTED"));
     });
 
     test('The Grpc client for DocumentServiceClient.Query should have been called exactly once', () => {
@@ -200,7 +201,7 @@ describe('Query Tests', () => {
       q.pagingFrom('test');
 
       await expect(q.fetch()).rejects.toStrictEqual(
-        new Error('Invalid paging token provided!')
+        new InvalidArgumentError('Invalid paging token provided!')
       );
     });
   });
@@ -239,7 +240,7 @@ describe('Query Tests', () => {
         });
       });
 
-      await expect(test).resolves.toStrictEqual(MOCK_ERROR);
+      await expect(test).resolves.toEqual(new UnimplementedError("UNIMPLEMENTED"));
     });
 
     test('The Grpc client for DocumentServiceClient.QueryStream should have been called exactly once', () => {

@@ -14,6 +14,7 @@
 import { Secrets } from './secrets';
 import { secret } from '../../interfaces';
 import { Secret } from 'src/interfaces/secret';
+import { UnimplementedError } from '../errors';
 
 const { SecretServiceClient: GrpcSecretClient } = secret;
 
@@ -39,11 +40,11 @@ describe('Secrets Client Tests', () => {
       jest.resetAllMocks();
     });
 
-    it('then Secret.put should reject', () => {
+    it('then Secret.put should reject', async () => {
       const secrets = new Secrets();
 
-      expect(secrets.secret('test').put('test-secret')).rejects.toBe(
-        MOCK_ERROR
+      await expect(secrets.secret('test').put('test-secret')).rejects.toEqual(
+        new UnimplementedError("UNIMPLEMENTED")
       );
     });
 
@@ -112,10 +113,12 @@ describe('Secrets Client Tests', () => {
       jest.resetAllMocks();
     });
 
-    it('then Secret.access should reject', () => {
+    it('then Secret.access should reject', async () => {
       const secrets = new Secrets();
 
-      expect(secrets.secret('test').latest().access()).rejects.toBe(MOCK_ERROR);
+      await expect(secrets.secret('test').latest().access()).rejects.toEqual(
+        new UnimplementedError("UNIMPLEMENTED")
+      );
     });
 
     it('then Secret.access should be called once', () => {

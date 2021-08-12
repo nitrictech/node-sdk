@@ -26,6 +26,8 @@ import type { Map as ProtobufMap } from 'google-protobuf';
 import { DocumentRef } from './document-ref';
 import { CollectionRef } from './collection-ref';
 import { DocumentSnapshot } from './document-snapshot';
+import { fromGrpcError, InvalidArgumentError } from '../errors';
+import { ServiceError } from '@grpc/grpc-js';
 
 type PagingToken = Map<string, string>;
 
@@ -136,7 +138,7 @@ export class Query<T extends { [key: string]: any }> {
    */
   public limit(limit: number): Query<T> {
     if (typeof limit !== 'number' || limit < 0) {
-      throw Error('limit must be a positive integer or 0 for unlimited.');
+      throw new InvalidArgumentError('limit must be a positive integer or 0 for unlimited.');
     }
 
     this.fetchLimit = limit;
@@ -155,7 +157,7 @@ export class Query<T extends { [key: string]: any }> {
 
     if (this.pagingToken != null) {
       if (!(this.pagingToken instanceof Map)) {
-        throw Error('Invalid paging token provided!');
+        throw new InvalidArgumentError('Invalid paging token provided!');
       }
 
       const map = request.getPagingTokenMap();
@@ -169,7 +171,7 @@ export class Query<T extends { [key: string]: any }> {
         request,
         (error, response: DocumentQueryResponse) => {
           if (error) {
-            reject(error);
+            reject(fromGrpcError(error));
           } else {
             const pagingTokenMap = protoMapToMap(response.getPagingTokenMap());
 
@@ -253,7 +255,7 @@ export class Query<T extends { [key: string]: any }> {
       },
     });
 
-    responseStream.on('error', (e) => transform.destroy(e));
+    responseStream.on('error', (e) => transform.destroy(fromGrpcError(e as ServiceError)));
     responseStream.pipe(transform);
 
     return transform;

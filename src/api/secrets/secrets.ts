@@ -14,6 +14,7 @@
 import { SERVICE_BIND } from '../../constants';
 import { secret as secretService } from '../../interfaces';
 import * as grpc from '@grpc/grpc-js';
+import { fromGrpcError, InvalidArgumentError } from '../errors';
 
 const ENCODER = new TextEncoder();
 const DECODER = new TextDecoder();
@@ -44,7 +45,7 @@ export class Secrets {
    */
   secret = (name: string): Secret => {
     if (!name) {
-      throw new Error('A name is required to use a Secret.');
+      throw new InvalidArgumentError('A name is required to use a Secret.');
     }
     return new Secret(this, name);
   };
@@ -90,7 +91,7 @@ class Secret {
         request,
         (error, response: secretService.SecretPutResponse) => {
           if (error) {
-            reject(error);
+            reject(fromGrpcError(error));
           } else {
             resolve(
               new SecretVersion(
@@ -139,7 +140,7 @@ class Secret {
    */
   version = (version: string) => {
     if (!version) {
-      throw new Error('A version is required to create a version reference.');
+      throw new InvalidArgumentError('A version is required to create a version reference.');
     }
     return new SecretVersion(this.secrets, this, version);
   };
@@ -191,7 +192,7 @@ class SecretVersion {
         request,
         (error, response: secretService.SecretAccessResponse) => {
           if (error) {
-            reject(error);
+            reject(fromGrpcError(error));
           } else {
             const secretVersion = new SecretVersion(
               this.secrets,

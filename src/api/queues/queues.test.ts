@@ -22,6 +22,7 @@ import {
   QueueSendResponse,
 } from '../../interfaces/queue';
 import { Struct } from 'google-protobuf/google/protobuf/struct_pb';
+import { UnimplementedError } from '../errors';
 const { QueueServiceClient: GrpcQueueServiceClient } = queue;
 
 describe('Queue Client Tests', () => {
@@ -50,13 +51,13 @@ describe('Queue Client Tests', () => {
       it('Then Queue.send should reject', async () => {
         const queueing = new Queueing();
 
-        expect(
+        await expect(
           queueing.queue('test').send({
             id: 'task',
             payloadType: 'test',
             payload: { test: 1 },
           })
-        ).rejects.toBe(MOCK_ERROR);
+        ).rejects.toEqual(new UnimplementedError("UNIMPLEMENTED"));
       });
 
       it('Then Queue.send should be called once', async () => {
@@ -135,7 +136,7 @@ describe('Queue Client Tests', () => {
               },
             },
           ])
-        ).rejects.toBe(MOCK_ERROR);
+        ).rejects.toEqual(new UnimplementedError("UNIMPLEMENTED"));
       });
     });
 
@@ -258,8 +259,8 @@ describe('Queue Client Tests', () => {
       it('Then Queue.receive should reject', async () => {
         const queueing = new Queueing();
 
-        await expect(queueing.queue('test').receive(1)).rejects.toBe(
-          MOCK_ERROR
+        await expect(queueing.queue('test').receive(1)).rejects.toEqual(
+          new UnimplementedError("UNIMPLEMENTED")
         );
       });
     });
@@ -378,7 +379,7 @@ describe('Queue Client Tests', () => {
           queue: queueing.queue('test'),
         });
 
-        expect(task.complete()).rejects.toBe(MOCK_ERROR);
+        await expect(task.complete()).rejects.toEqual(new UnimplementedError("UNIMPLEMENTED"));
       });
 
       it('Then Queue.complete should be called once', async () => {

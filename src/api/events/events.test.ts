@@ -15,6 +15,7 @@ import { Eventing } from './events';
 import { NitricTopic } from '../../interfaces/event';
 import { event } from '../../interfaces';
 import { EventPublishResponse } from '../../interfaces/event';
+import { UnimplementedError } from '../errors';
 
 const {
   EventServiceClient: GrpcEventServiceClient,
@@ -42,9 +43,9 @@ describe('Event Client Tests', () => {
       jest.resetAllMocks();
     });
 
-    test('Then Eventing.Topic.publish should reject', () => {
+    test('Then Eventing.Topic.publish should reject', async () => {
       const topic = new Eventing().topic('test');
-      expect(
+      await expect(
         topic.publish({
           id: 'test',
           payloadType: 'Test Payload',
@@ -52,7 +53,7 @@ describe('Event Client Tests', () => {
             test: 'test',
           },
         })
-      ).rejects.toBe(MOCK_ERROR);
+      ).rejects.toEqual(new UnimplementedError("UNIMPLEMENTED"));
     });
 
     test('The Grpc client for Eventing.publish should have been called exactly once', () => {
@@ -124,9 +125,9 @@ describe('Event Client Tests', () => {
       jest.resetAllMocks();
     });
 
-    test('Then TopicServiceClient.publish should reject', () => {
+    test('Then TopicServiceClient.publish should reject', async () => {
       const eventing = new Eventing();
-      expect(eventing.topics()).rejects.toBe(MOCK_ERROR);
+      await expect(eventing.topics()).rejects.toEqual(new UnimplementedError("UNIMPLEMENTED"));
     });
 
     test('The Grpc client for TopicServiceClient.publish should have been called exactly once', () => {

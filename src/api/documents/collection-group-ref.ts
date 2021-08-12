@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { DocumentServiceClient } from '../../interfaces/document';
+import { InvalidArgumentError } from '../errors';
 import { CollectionRef } from './collection-ref';
 import { MAX_COLLECTION_DEPTH } from './constants';
 import { DocumentRef } from './document-ref';
@@ -47,7 +48,7 @@ export class CollectionGroupRef<T extends { [key: string]: any }> {
     name: string
   ): CollectionGroupRef<T> {
     if (this.depth() >= MAX_COLLECTION_DEPTH) {
-      throw new Error(
+      throw new InvalidArgumentError(
         `Maximum collection depth ${MAX_COLLECTION_DEPTH} exceeded`
       );
     }

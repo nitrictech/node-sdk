@@ -16,6 +16,7 @@ import { SERVICE_BIND } from '../../constants';
 import * as grpc from '@grpc/grpc-js';
 import type { Task } from '../../types';
 import { Struct } from 'google-protobuf/google/protobuf/struct_pb';
+import { fromGrpcError, InvalidArgumentError } from '../errors';
 
 /**
  * A message that has failed to be enqueued
@@ -55,7 +56,7 @@ export class Queueing {
 
   queue = (name: string): Queue => {
     if (!name) {
-      throw new Error('A queue name is needed to use a Queue.');
+      throw new InvalidArgumentError('A queue name is needed to use a Queue.');
     }
 
     return new Queue(this, name);
@@ -111,7 +112,7 @@ export class Queue {
 
       this.queueing.QueueServiceClient.send(request, (error) => {
         if (error) {
-          reject(error);
+          reject(fromGrpcError(error));
         } else {
           resolve();
         }
@@ -153,7 +154,7 @@ export class Queue {
 
       this.queueing.QueueServiceClient.sendBatch(request, (error, response) => {
         if (error) {
-          reject(error);
+          reject(fromGrpcError(error));
         } else {
           resolve(
             response.getFailedtasksList().map((m) => ({
@@ -206,7 +207,7 @@ export class Queue {
 
       this.queueing.QueueServiceClient.receive(request, (error, response) => {
         if (error) {
-          reject(error);
+          reject(fromGrpcError(error));
         } else {
           resolve(
             response.getTasksList().map((m) => {
@@ -275,7 +276,7 @@ export class ReceivedTask implements Task {
       return await new Promise((resolve, reject) => {
         this.queue.queueing.QueueServiceClient.complete(request, (error) => {
           if (error) {
-            reject(error);
+            reject(fromGrpcError(error));
           } else {
             resolve();
           }

@@ -13,6 +13,7 @@
 // limitations under the License.
 import { Struct } from 'google-protobuf/google/protobuf/struct_pb';
 import { document } from '../../interfaces';
+import { InvalidArgumentError, UnimplementedError } from '../errors';
 import { Documents, documents } from './documents';
 
 const {
@@ -46,7 +47,7 @@ describe('Document Ref Tests', () => {
 
     test('Then DocumentRef.Get should reject', async () => {
       const doc = documentsClient.collection('test').doc('id');
-      await expect(doc.get()).rejects.toBe(MOCK_ERROR);
+      await expect(doc.get()).rejects.toEqual(new UnimplementedError("UNIMPLEMENTED"));
     });
 
     test('The Grpc client for DocumentServiceClient.Put should have been called exactly once', () => {
@@ -123,7 +124,7 @@ describe('Document Ref Tests', () => {
         doc.set({
           name: 'test',
         })
-      ).rejects.toBe(MOCK_ERROR);
+      ).rejects.toEqual(new UnimplementedError("UNIMPLEMENTED"));
     });
 
     test('The Grpc client for DocumentServiceClient.Get should have been called exactly once', () => {
@@ -156,7 +157,7 @@ describe('Document Ref Tests', () => {
 
     test('Then DocumentRef.Delete should reject', async () => {
       const doc = documentsClient.collection('test').doc('id');
-      await expect(doc.delete()).rejects.toBe(MOCK_ERROR);
+      await expect(doc.delete()).rejects.toEqual(new UnimplementedError("UNIMPLEMENTED"));
     });
 
     test('The Grpc client for DocumentServiceClient.Delete should have been called exactly once', () => {
@@ -172,7 +173,7 @@ describe('Document Ref Tests', () => {
       const testNestedAgain = () => nestedCollection.collection('nested-again');
 
       expect(testNestedAgain).toThrow(
-        new Error('Maximum collection depth 1 exceeded')
+        new InvalidArgumentError('Maximum collection depth 1 exceeded')
       );
     });
   });
