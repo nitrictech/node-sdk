@@ -18,6 +18,9 @@ import { TriggerResponse } from '../interfaces/faas';
 import { EventHandler, GenericHandler, HttpHandler, TriggerContext, TriggerHandler } from '.';
 
 
+/**
+ * 
+ */
 class Faas {
   private httpHandler?: HttpHandler;
   private eventHandler?: EventHandler;
@@ -156,29 +159,27 @@ class Faas {
 // Faas Singleton
 let INSTANCE: Faas = undefined;
 
+const getInstance = (): Faas => {
+  INSTANCE = INSTANCE || new Faas();
+  return INSTANCE; 
+}
+
+
 /**
  * Register a HTTP handler
  */
-export const http = (handler: HttpHandler): Faas => {
-  INSTANCE = INSTANCE || new Faas();
-  
-  return INSTANCE.http(handler);
-}
+export const http = (handler: HttpHandler): Faas => 
+  getInstance().http(handler);
+
 
 /**
  * Register an event handler
  */
-export const event = (handler: EventHandler): Faas => {
-  INSTANCE = INSTANCE || new Faas();
-
-  return INSTANCE.event(handler);
-}
+export const event = (handler: EventHandler): Faas => 
+  getInstance().event(handler);
 
 /**
  * Start the FaaS server with a universal handler
  */
-export const start = async (handler: TriggerHandler): Promise<void> => {
-  INSTANCE = INSTANCE || new Faas();
-
-  return await INSTANCE.start(handler);
-}
+export const start = async (handler: TriggerHandler): Promise<void> => 
+  await getInstance().start(handler);

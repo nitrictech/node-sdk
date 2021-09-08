@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { faas } from '../interfaces';
-import { TriggerResponse } from 'src/interfaces/faas';
 
 export abstract class TriggerContext<Req extends AbstractRequest = AbstractRequest, Resp extends Record<string, any> = any> {
   protected request: Req;
@@ -90,13 +89,25 @@ interface EventResponse {
   success: boolean;
 }
 
+type Method = 'GET' | 'POST' | 'DELETE' | 'PATCH' | 'PUT' | 'HEAD';
+
+interface HttpRequestArgs {
+  data: string | Uint8Array,
+  method: Method | string;
+  path: string;
+  query: Record<string, string>;
+  headers: Record<string, string[]>;
+}
+
 export class HttpRequest extends AbstractRequest {
+  public readonly method: Method | string;
   public readonly path: string;
   public readonly query: Record<string, string>;
   public readonly headers: Record<string, string[]>;
 
-  constructor(data: string | Uint8Array , path: string, query: Record<string, string>, headers: Record<string, string[]>) {
+  constructor({ data, method, path, query, headers }: HttpRequestArgs) {
     super(data);
+    this.method = method;
     this.path = path;
     this.query = query;
     this.headers = headers;
@@ -129,18 +140,19 @@ export class HttpContext extends TriggerContext<HttpRequest, HttpResponse> {
     const http = trigger.getHttp();
     const ctx = new HttpContext();
 
-    ctx.request = new HttpRequest(
-      trigger.getData(),
-      http.getPath(),
-      http
-        .getQueryParamsMap()
-        .toArray()
-        .reduce((acc, [key, val]) => ({ ...acc, [key]: val }), {}),
-      http
-        .getHeadersMap()
-        .toArray()
-        .reduce((acc, [key, val]) => ({ ...acc, [key]: val }), {})
-    );
+    ctx.request = new HttpRequest({
+      data: trigger.getData(),
+      path: http.getPath(),
+      query: http
+      .getQueryParamsMap()
+      .toArray()
+      .reduce((acc, [key, val]) => ({ ...acc, [key]: val }), {}),
+      headers: http
+      .getHeadersMap()
+      .toArray()
+      .reduce((acc, [key, val]) => ({ ...acc, [key]: [val] }), {}),
+      method: http.getMethod(),
+    });
 
     ctx.response = {
       status: 200,
@@ -190,7 +202,7 @@ export class EventContext extends TriggerContext<EventRequest, EventResponse> {
 
   static toGrpcTriggerResponse(ctx: TriggerContext): faas.TriggerResponse {
     const evtCtx = ctx.event;
-    const triggerResponse = new TriggerResponse();
+    const triggerResponse = new faas.TriggerResponse();
     const topicResponse = new faas.TopicResponseContext();
     topicResponse.setSuccess(evtCtx.res.success);
     triggerResponse.setTopic(topicResponse);

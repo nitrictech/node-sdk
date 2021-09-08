@@ -74,14 +74,4 @@ describe('faas.start', () => {
       expect(f).toBeCalledTimes(0);
     });
   });
-
-  describe.skip('when returning a plain object', () => {
-    describe('when triggered by a http request', () => {
-      // TODO: Add tests
-    });
-
-    describe('when triggered by a topic', () => {
-      // TODO: Add tests
-    });
-  });
 });
