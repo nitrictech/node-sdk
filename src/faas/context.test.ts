@@ -59,13 +59,36 @@ describe('NitricTrigger.fromGrpcTriggerRequest', () => {
       expect(trigger.http.req.body).toBe('Hello World');
     });
 
-    it('should have to provided headers', () => {
+    it('should have the provided headers', () => {
       expect(trigger.http.req.headers['test']).toEqual(['test']);
       expect(trigger.http.req.headers['test2']).toEqual(['test2.1', 'test2.2']);
     });
 
-    it('should have to provided query params', () => {
+    it('should have the provided query params', () => {
       expect(trigger.http.req.query['test']).toBe('test');
+    });
+  });
+
+  // XXX: Remove once the deprecated old headers value is removed.
+  describe('From a HttpTriggerRequest with old headers', () => {
+    let trigger: TriggerContext;
+
+    beforeAll(() => {
+      const ctx = new GrpcHttpTriggerRequest();
+      ctx.setMethod('GET');
+      ctx.setPath('/test/');
+      ctx.getHeadersOldMap().set('test',  'test');
+      ctx.getHeadersOldMap().set('test2',  'test2');
+      const request = new TriggerRequest();
+      request.setData('Hello World');
+      request.setHttp(ctx);
+
+      trigger = TriggerContext.fromGrpcTriggerRequest(request);
+    });
+
+    it('should have the old headers', () => {
+      expect(trigger.http.req.headers['test']).toEqual(['test']);
+      expect(trigger.http.req.headers['test2']).toEqual(['test2']);
     });
   });
 

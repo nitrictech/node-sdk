@@ -148,7 +148,7 @@ export class HttpContext extends TriggerContext<HttpRequest, HttpResponse> {
       .reduce((acc, [key, [val]]) => ({ ...acc, [key]: val }), {});
       
     const oldHeaders = http
-    .getHeadersMap()
+    .getHeadersOldMap()
     .toArray()
     .reduce((acc, [key, val]) => ({ ...acc, [key]: [val] }), {});
 
