@@ -15,21 +15,21 @@ import * as grpc from '@grpc/grpc-js';
 import { SERVICE_BIND } from '../constants';
 import { faas } from '../interfaces';
 import { TriggerResponse } from '../interfaces/faas';
-import { EventHandler, GenericHandler, HttpHandler, TriggerContext, TriggerHandler } from '.';
+import { EventMiddleware, GenericMiddleware, HttpMiddleware, TriggerContext, TriggerMiddleware } from '.';
 
 
 /**
  * 
  */
 class Faas {
-  private httpHandler?: HttpHandler;
-  private eventHandler?: EventHandler;
-  private anyHandler?: TriggerHandler;
+  private httpHandler?: HttpMiddleware;
+  private eventHandler?: EventMiddleware;
+  private anyHandler?: TriggerMiddleware;
 
   /**
    * Add an event handler to this Faas server
    */
-  event(handler: EventHandler): Faas {
+  event(handler: EventMiddleware): Faas {
     this.eventHandler = handler;
     return this;
   }
@@ -37,7 +37,7 @@ class Faas {
   /**
    * Add a http handler to this Faas server
    */
-  http(handler: HttpHandler): Faas {
+  http(handler: HttpMiddleware): Faas {
     this.httpHandler = handler;
     return this;
   }
@@ -45,21 +45,21 @@ class Faas {
   /**
    * Get http handler for this server
    */
-  private getHttpHandler(): HttpHandler | TriggerHandler | undefined {
+  private getHttpHandler(): HttpMiddleware | TriggerMiddleware | undefined {
     return this.httpHandler || this.anyHandler;
   }
 
   /**
    * Get event handler for this server
    */
-  private getEventHandler(): EventHandler | TriggerHandler | undefined {
+  private getEventHandler(): EventMiddleware | TriggerMiddleware | undefined {
     return this.eventHandler || this.anyHandler;
   }
 
   /**
    * Start the Faas server
    */
-  async start(handler?: TriggerHandler): Promise<void> {
+  async start(handler?: TriggerMiddleware): Promise<void> {
     this.anyHandler = handler;
     if(!this.httpHandler && !this.eventHandler && !this.anyHandler) {
       throw new Error("A handler function must be provided.");
@@ -90,14 +90,14 @@ class Faas {
         try {
           const ctx = TriggerContext.fromGrpcTriggerRequest(triggerRequest);
 
-          let handler: GenericHandler<TriggerContext> = undefined;
+          let handler: GenericMiddleware<TriggerContext> = undefined;
           let triggerType = "Unknown";
           if (ctx.http) {
             triggerType = "HTTP";
-            handler = this.getHttpHandler() as GenericHandler<TriggerContext>;
+            handler = this.getHttpHandler() as GenericMiddleware<TriggerContext>;
           } else if (ctx.event) {
             triggerType = "Event";
-            handler = this.getEventHandler() as GenericHandler<TriggerContext>;
+            handler = this.getEventHandler() as GenericMiddleware<TriggerContext>;
           } else {
             console.error(`received an unexpected trigger type, are you using an outdated version of the SDK?`);
           }
@@ -120,11 +120,13 @@ class Faas {
           if (triggerRequest.hasHttp()) {
             const httpResponse = new faas.HttpResponseContext();
             triggerResponse.setHttp(httpResponse);
-            const headers = httpResponse.getHeadersMap();
             httpResponse.setStatus(500);
-  
-
-            headers.set('Content-Type', 'text/plain');
+            const headersOld = httpResponse.getHeadersOldMap();
+            headersOld.set('Content-Type', 'text/plain');
+            const headers = httpResponse.getHeadersMap();
+            const contentTypeHeader = new faas.HeaderValue();
+            contentTypeHeader.addValue('text/plain');
+            headers.set('Content-Type', contentTypeHeader);
             triggerResponse.setData('Internal Server Error');
           } else if (triggerRequest.hasTopic()) {
             const topicResponse = new faas.TopicResponseContext();
@@ -168,18 +170,18 @@ const getInstance = (): Faas => {
 /**
  * Register a HTTP handler
  */
-export const http = (handler: HttpHandler): Faas => 
+export const http = (handler: HttpMiddleware): Faas => 
   getInstance().http(handler);
 
 
 /**
  * Register an event handler
  */
-export const event = (handler: EventHandler): Faas => 
+export const event = (handler: EventMiddleware): Faas => 
   getInstance().event(handler);
 
 /**
  * Start the FaaS server with a universal handler
  */
-export const start = async (handler: TriggerHandler): Promise<void> => 
+export const start = async (handler: TriggerMiddleware): Promise<void> => 
   await getInstance().start(handler);

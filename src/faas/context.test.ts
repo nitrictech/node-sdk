@@ -15,6 +15,7 @@ import {
   HttpTriggerContext as GrpcHttpTriggerRequest,
   TopicTriggerContext as GrpcTopicTriggerContext,
   TriggerRequest,
+  HeaderValue,
 } from '../interfaces/faas';
 import { TriggerContext, HttpContext, EventContext } from './context';
 
@@ -26,7 +27,13 @@ describe('NitricTrigger.fromGrpcTriggerRequest', () => {
       const ctx = new GrpcHttpTriggerRequest();
       ctx.setMethod('GET');
       ctx.setPath('/test/');
-      ctx.getHeadersMap().set('test', 'test');
+      const testHeader = new HeaderValue();
+      testHeader.addValue('test');
+      const testHeader2 = new HeaderValue();
+      testHeader2.addValue('test2.1');
+      testHeader2.addValue('test2.2');
+      ctx.getHeadersMap().set('test',  testHeader);
+      ctx.getHeadersMap().set('test2',  testHeader2);
       ctx.getQueryParamsMap().set('test', 'test');
       const request = new TriggerRequest();
       request.setData('Hello World');
@@ -53,7 +60,8 @@ describe('NitricTrigger.fromGrpcTriggerRequest', () => {
     });
 
     it('should have to provided headers', () => {
-      expect(trigger.http.req.headers['test']).toBe(['test']);
+      expect(trigger.http.req.headers['test']).toEqual(['test']);
+      expect(trigger.http.req.headers['test2']).toEqual(['test2.1', 'test2.2']);
     });
 
     it('should have to provided query params', () => {

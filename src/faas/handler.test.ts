@@ -34,7 +34,7 @@ describe('createHandler', () => {
 
 			describe('When executing the returned function', () => {
 				beforeEach(async () => {
-					await execFunc(null, ctx => ctx);
+					await execFunc(null);
 				});
 
 				afterEach(() => {
@@ -69,7 +69,7 @@ describe('createHandler', () => {
 			
 			describe('When executing the returned function', () => {
 				beforeEach(async () => {
-					await execFunc(null, async ctx => ctx);
+					await execFunc(null);
 				});
 
 				afterEach(() => {
@@ -78,6 +78,24 @@ describe('createHandler', () => {
 
 				it('should execute the functions in the exact order provided', () => {
 					expect(funSpy.mock.calls).toEqual([
+						[1],
+						[2]
+					]);
+				});
+			});
+
+			describe('When executing the function multiple times', () => {
+				beforeEach(async () => {
+					await execFunc(null);
+					await execFunc(null);
+				});
+
+				it('should produce the same result each time', () => {
+					expect(funSpy.mock.calls).toEqual([
+						// first run
+						[1],
+						[2],
+						// second run
 						[1],
 						[2]
 					]);
@@ -122,7 +140,7 @@ describe('createHandler', () => {
 		));
 
 		it('should call in the specified order', async () => {
-			await handler(null, ctx => ctx);
+			await handler(null);
 
 			expect(funSpy.mock.calls).toEqual([
 				['first', 'before', 1],

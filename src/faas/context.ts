@@ -140,6 +140,18 @@ export class HttpContext extends TriggerContext<HttpRequest, HttpResponse> {
     const http = trigger.getHttp();
     const ctx = new HttpContext();
 
+    const headers = (http
+      .getHeadersMap()
+      // XXX: getEntryList claims to return [string, faas.HeaderValue][], but really returns [string, string[]][]
+      // we force the type to match the real return type.
+      .getEntryList() as unknown as [string, string[]][])
+      .reduce((acc, [key, [val]]) => ({ ...acc, [key]: val }), {});
+      
+    const oldHeaders = http
+    .getHeadersMap()
+    .toArray()
+    .reduce((acc, [key, val]) => ({ ...acc, [key]: [val] }), {});
+
     ctx.request = new HttpRequest({
       data: trigger.getData(),
       path: http.getPath(),
@@ -147,10 +159,9 @@ export class HttpContext extends TriggerContext<HttpRequest, HttpResponse> {
       .getQueryParamsMap()
       .toArray()
       .reduce((acc, [key, val]) => ({ ...acc, [key]: val }), {}),
-      headers: http
-      .getHeadersMap()
-      .toArray()
-      .reduce((acc, [key, val]) => ({ ...acc, [key]: [val] }), {}),
+      // TODO: remove after 1.0
+      // check for old headers if new headers is unpopulated. This is for backwards compatibility.
+      headers: Object.keys(headers).length ? headers : oldHeaders,
       method: http.getMethod(),
     });
 
@@ -159,6 +170,10 @@ export class HttpContext extends TriggerContext<HttpRequest, HttpResponse> {
       headers: {},
       body: '',
     };
+
+    if(!ctx) {
+      throw new Error('failed to create context');
+    }
 
     return ctx;
   }
@@ -172,7 +187,10 @@ export class HttpContext extends TriggerContext<HttpRequest, HttpResponse> {
     resp.getHttp().setStatus(httpCtx.response.status);
 
     Object.entries(httpCtx.response.headers).forEach(([k, v]) => {
-      resp.getHttp().getHeadersMap().set(k, v[0])
+      const headerVal = new faas.HeaderValue();
+      headerVal.setValueList(v)
+      resp.getHttp().getHeadersMap().set(k, headerVal)
+      resp.getHttp().getHeadersOldMap().set(k, v[0]);
     });
 
     return resp;

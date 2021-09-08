@@ -1,3 +1,6 @@
+# Ignore tmp directory
+tmp/
+
 # Logs
 logs
 *.log
