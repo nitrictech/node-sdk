@@ -103,7 +103,7 @@ export class HttpRequest extends AbstractRequest {
   public readonly method: Method | string;
   public readonly path: string;
   public readonly query: Record<string, string>;
-  public readonly headers: Record<string, string[]>;
+  public readonly headers: Record<string, (string[] | string)>;
 
   constructor({ data, method, path, query, headers }: HttpRequestArgs) {
     super(data);
@@ -142,15 +142,20 @@ export class HttpContext extends TriggerContext<HttpRequest, HttpResponse> {
 
     const headers = (http
       .getHeadersMap()
-      // XXX: getEntryList claims to return [string, faas.HeaderValue][], but really returns [string, string[]][]
+      // XXX: getEntryList claims to return [string, faas.HeaderValue][], but really returns [string, string[][]][]
       // we force the type to match the real return type.
-      .getEntryList() as unknown as [string, string[]][])
-      .reduce((acc, [key, [val]]) => ({ ...acc, [key]: val }), {});
+      .getEntryList() as unknown as [string, string[][]][])
+      .reduce((acc, [key, [val]]) => ({
+        ...acc, [key.toLowerCase()]: val.length === 1 ? val[0] : val,
+      }), {});
       
     const oldHeaders = http
-    .getHeadersOldMap()
-    .toArray()
-    .reduce((acc, [key, val]) => ({ ...acc, [key]: [val] }), {});
+      .getHeadersOldMap()
+      .toArray()
+      .reduce((acc, [key, val]) => ({
+        ...acc,
+        [key.toLowerCase()]: val
+      }), {});
 
     ctx.request = new HttpRequest({
       data: trigger.getData(),

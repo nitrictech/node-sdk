@@ -60,7 +60,7 @@ describe('NitricTrigger.fromGrpcTriggerRequest', () => {
     });
 
     it('should have the provided headers', () => {
-      expect(trigger.http.req.headers['test']).toEqual(['test']);
+      expect(trigger.http.req.headers['test']).toEqual('test');
       expect(trigger.http.req.headers['test2']).toEqual(['test2.1', 'test2.2']);
     });
 
@@ -87,8 +87,8 @@ describe('NitricTrigger.fromGrpcTriggerRequest', () => {
     });
 
     it('should have the old headers', () => {
-      expect(trigger.http.req.headers['test']).toEqual(['test']);
-      expect(trigger.http.req.headers['test2']).toEqual(['test2']);
+      expect(trigger.http.req.headers['test']).toEqual('test');
+      expect(trigger.http.req.headers['test2']).toEqual('test2');
     });
   });
 
