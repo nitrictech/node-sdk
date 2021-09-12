@@ -72,7 +72,7 @@ export abstract class TriggerContext<Req extends AbstractRequest = AbstractReque
 }
 
 export abstract class AbstractRequest {
-  protected readonly data: string | Uint8Array;
+  readonly data: string | Uint8Array;
 
   protected constructor(data: string | Uint8Array) {
     this.data = data;
@@ -111,10 +111,6 @@ export class HttpRequest extends AbstractRequest {
     this.path = path;
     this.query = query;
     this.headers = headers;
-  }
-  
-  get body(): string | Uint8Array {
-    return this.data;
   }
 }
 
