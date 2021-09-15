@@ -11,25 +11,35 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v2
-      with:
-        token: ${{secrets.SUB_MODULE_PAT}}
-        submodules: recursive
+
     - name: Cache Dependencies
       uses: actions/cache@v2
       with:
         path: 'node_modules'
         key: ${{ runner.os }}-modules-${{ hashFiles('yarn.lock') }}
+
     - name: Use Node 14
       uses: actions/setup-node@v1
       with:
         node-version: 14
         registry-url: 'https://registry.npmjs.org'
         always-auth: true
+
+    - name: Set Version
+      run: npm version ${{ github.event.release.tag_name }}
+
     - name: Install Dependencies
       run: yarn install --frozen-lockfile
+
     - name: Build
       run: yarn build
-    - name: Publish to NPM
-      run: npm publish
+
+    - name: Publish latest to NPM
+      run: npm publish --access public
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+    - name: Publish latest RC to NPM
+      run: npm publish --access public --tag rc-latest
       env:
         NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
