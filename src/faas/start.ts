@@ -13,8 +13,18 @@
 // limitations under the License.
 import * as grpc from '@grpc/grpc-js';
 import { SERVICE_BIND } from '../constants';
-import { faas } from '../interfaces';
-import { TriggerResponse } from '../interfaces/faas';
+
+import { FaasServiceClient } from '@nitric/api/proto/faas/v1/faas_grpc_pb';
+import {
+  ServerMessage,
+  ClientMessage,
+  HttpResponseContext,
+  HeaderValue,
+  TriggerResponse,
+  TopicResponseContext,
+  InitRequest
+} from '@nitric/api/proto/faas/v1/faas_pb';
+
 import { EventMiddleware, GenericMiddleware, HttpMiddleware, TriggerContext, TriggerMiddleware } from '.';
 
 
@@ -66,7 +76,7 @@ class Faas {
     }
 
     // Actually start the server...
-    const faasClient = new faas.FaasServiceClient(
+    const faasClient = new FaasServiceClient(
       SERVICE_BIND,
       grpc.ChannelCredentials.createInsecure()
     );
@@ -74,7 +84,7 @@ class Faas {
     // Begin Bi-Di streaming
     const faasStream = faasClient.triggerStream();
   
-    faasStream.on('data', async (message: faas.ServerMessage) => {
+    faasStream.on('data', async (message: ServerMessage) => {
       // We have an init response from the membrane
       if (message.hasInitResponse()) {
         console.log('Function connected with membrane');
@@ -83,7 +93,7 @@ class Faas {
       } else if (message.hasTriggerRequest()) {
         // We want to handle a function here...
         const triggerRequest = message.getTriggerRequest();
-        const responseMessage = new faas.ClientMessage();
+        const responseMessage = new ClientMessage();
   
         responseMessage.setId(message.getId());
   
@@ -118,18 +128,18 @@ class Faas {
           responseMessage.setTriggerResponse(triggerResponse);
   
           if (triggerRequest.hasHttp()) {
-            const httpResponse = new faas.HttpResponseContext();
+            const httpResponse = new HttpResponseContext();
             triggerResponse.setHttp(httpResponse);
             httpResponse.setStatus(500);
             const headersOld = httpResponse.getHeadersOldMap();
             headersOld.set('Content-Type', 'text/plain');
             const headers = httpResponse.getHeadersMap();
-            const contentTypeHeader = new faas.HeaderValue();
+            const contentTypeHeader = new HeaderValue();
             contentTypeHeader.addValue('text/plain');
             headers.set('Content-Type', contentTypeHeader);
             triggerResponse.setData('Internal Server Error');
           } else if (triggerRequest.hasTopic()) {
-            const topicResponse = new faas.TopicResponseContext();
+            const topicResponse = new TopicResponseContext();
   
             topicResponse.setSuccess(false);
             triggerResponse.setTopic(topicResponse);
@@ -142,8 +152,8 @@ class Faas {
     });
   
     // Let the membrane know we're ready to start
-    const initRequest = new faas.InitRequest();
-    const initMessage = new faas.ClientMessage();
+    const initRequest = new InitRequest();
+    const initMessage = new ClientMessage();
     initMessage.setInitRequest(initRequest);
     faasStream.write(initMessage);
   

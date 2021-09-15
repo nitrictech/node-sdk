@@ -16,7 +16,7 @@ import {
   TopicTriggerContext as GrpcTopicTriggerContext,
   TriggerRequest,
   HeaderValue,
-} from '../interfaces/faas';
+} from '@nitric/api/proto/faas/v1/faas_pb';
 import { TriggerContext, HttpContext, EventContext } from './context';
 
 describe('NitricTrigger.fromGrpcTriggerRequest', () => {
@@ -56,7 +56,7 @@ describe('NitricTrigger.fromGrpcTriggerRequest', () => {
     });
 
     it('should have the provided data', () => {
-      expect(trigger.http.req.body).toBe('Hello World');
+      expect(trigger.http.req.data).toBe('Hello World');
     });
 
     it('should have the provided headers', () => {

@@ -12,7 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { start } from './start';
-import { faas } from '../interfaces';
+import { FaasServiceClient } from '@nitric/api/proto/faas/v1/faas_grpc_pb';
+import { ServerMessage, ClientMessage } from '@nitric/api/proto/faas/v1/faas_pb';
 
 // We only need to handle half of the duplex stream
 class MockClientStream<Req, Resp> {
@@ -45,7 +46,7 @@ afterAll(() => {
 });
 
 describe('faas.start', () => {
-  let mockStream: MockClientStream<faas.ClientMessage, faas.ServerMessage>;
+  let mockStream: MockClientStream<ClientMessage, ServerMessage>;
   describe('when starting the stream', () => {
     mockStream = new MockClientStream() as any;
     let streamSpy: jest.SpyInstance;
@@ -53,7 +54,7 @@ describe('faas.start', () => {
 
     beforeAll(async () => {
       streamSpy = jest
-        .spyOn(faas.FaasServiceClient.prototype, 'triggerStream')
+        .spyOn(FaasServiceClient.prototype, 'triggerStream')
         .mockReturnValueOnce(mockStream as any);
       const startPromise = start(f);
       mockStream.emit('end', 'EOF');

@@ -11,7 +11,13 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { faas } from '../interfaces';
+import {
+  TriggerRequest,
+  TriggerResponse,
+  TopicResponseContext,
+  HttpResponseContext,
+  HeaderValue,
+} from '@nitric/api/proto/faas/v1/faas_pb';
 
 export abstract class TriggerContext<Req extends AbstractRequest = AbstractRequest, Resp extends Record<string, any> = any> {
   protected request: Req;
@@ -47,7 +53,7 @@ export abstract class TriggerContext<Req extends AbstractRequest = AbstractReque
 
   // Instantiate a concrete TriggerContext from the gRPC trigger model
   static fromGrpcTriggerRequest(
-    trigger: faas.TriggerRequest
+    trigger: TriggerRequest
   ): TriggerContext<any, any> {
     // create context
     if (trigger.hasHttp()) {
@@ -60,7 +66,7 @@ export abstract class TriggerContext<Req extends AbstractRequest = AbstractReque
 
   static toGrpcTriggerResponse(
     ctx: TriggerContext
-  ): faas.TriggerResponse {
+  ): TriggerResponse {
     if (ctx.http) {
       return HttpContext.toGrpcTriggerResponse(ctx);
     } else if (ctx.event) {
@@ -132,7 +138,7 @@ export class HttpContext extends TriggerContext<HttpRequest, HttpResponse> {
     return this;
   }
 
-  static fromGrpcTriggerRequest(trigger: faas.TriggerRequest): HttpContext {
+  static fromGrpcTriggerRequest(trigger: TriggerRequest): HttpContext {
     const http = trigger.getHttp();
     const ctx = new HttpContext();
 
@@ -179,16 +185,16 @@ export class HttpContext extends TriggerContext<HttpRequest, HttpResponse> {
     return ctx;
   }
 
-  static toGrpcTriggerResponse(ctx: TriggerContext): faas.TriggerResponse {
+  static toGrpcTriggerResponse(ctx: TriggerContext): TriggerResponse {
     const httpCtx = ctx.http;
-    const resp = new faas.TriggerResponse();
+    const resp = new TriggerResponse();
 
-    resp.setHttp(new faas.HttpResponseContext());
+    resp.setHttp(new HttpResponseContext());
     resp.setData(httpCtx.response.body);
     resp.getHttp().setStatus(httpCtx.response.status);
 
     Object.entries(httpCtx.response.headers).forEach(([k, v]) => {
-      const headerVal = new faas.HeaderValue();
+      const headerVal = new HeaderValue();
       headerVal.setValueList(v)
       resp.getHttp().getHeadersMap().set(k, headerVal)
       resp.getHttp().getHeadersOldMap().set(k, v[0]);
@@ -203,7 +209,7 @@ export class EventContext extends TriggerContext<EventRequest, EventResponse> {
     return this;
   }
 
-  static fromGrpcTriggerRequest(trigger: faas.TriggerRequest): EventContext {
+  static fromGrpcTriggerRequest(trigger: TriggerRequest): EventContext {
     const topic = trigger.getTopic();
     const ctx = new EventContext();
 
@@ -219,10 +225,10 @@ export class EventContext extends TriggerContext<EventRequest, EventResponse> {
     return ctx;
   }
 
-  static toGrpcTriggerResponse(ctx: TriggerContext): faas.TriggerResponse {
+  static toGrpcTriggerResponse(ctx: TriggerContext): TriggerResponse {
     const evtCtx = ctx.event;
-    const triggerResponse = new faas.TriggerResponse();
-    const topicResponse = new faas.TopicResponseContext();
+    const triggerResponse = new TriggerResponse();
+    const topicResponse = new TopicResponseContext();
     topicResponse.setSuccess(evtCtx.res.success);
     triggerResponse.setTopic(topicResponse);
     return triggerResponse;
