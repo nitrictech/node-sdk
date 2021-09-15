@@ -12,15 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { Eventing } from './events';
-import { NitricTopic } from '../../interfaces/event';
-import { event } from '../../interfaces';
+import { NitricTopic, TopicListResponse } from '@nitric/api/proto/event/v1/event_pb';
+import { 
+  EventServiceClient as GrpcEventServiceClient, 
+  TopicServiceClient as GrpcTopicServiceClient
+} from '@nitric/api/proto/event/v1/event_grpc_pb';
 import { EventPublishResponse } from '../../interfaces/event';
 import { UnimplementedError } from '../errors';
-
-const {
-  EventServiceClient: GrpcEventServiceClient,
-  TopicServiceClient: GrpcTopicServiceClient,
-} = event;
 
 describe('Event Client Tests', () => {
   describe('Given nitric.interfaces.event.EventServiceClient.publish throws an error', () => {
@@ -139,7 +137,7 @@ describe('Event Client Tests', () => {
     const MOCK_TOPIC = new NitricTopic();
     MOCK_TOPIC.setName('test-topic');
     const MOCK_TOPICS: NitricTopic[] = [MOCK_TOPIC];
-    const MOCK_TOPICS_REPLY = new event.TopicListResponse();
+    const MOCK_TOPICS_REPLY = new TopicListResponse();
     MOCK_TOPICS_REPLY.setTopicsList(MOCK_TOPICS);
 
     let listMock;

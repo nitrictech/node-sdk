@@ -19,8 +19,8 @@ import {
   DocumentQueryResponse,
   DocumentQueryStreamRequest,
   DocumentQueryStreamResponse,
-  DocumentServiceClient,
-} from '../../interfaces/document';
+} from '@nitric/api/proto/document/v1/document_pb';
+import { DocumentServiceClient } from '@nitric/api/proto/document/v1/document_grpc_pb'
 import { WhereQueryOperator, WhereValueExpression } from '../../types';
 import type { Map as ProtobufMap } from 'google-protobuf';
 import { DocumentRef } from './document-ref';

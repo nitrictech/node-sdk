@@ -12,10 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { Storage } from './storage';
-import { storage } from '../../interfaces';
+import { StorageServiceClient as GrpcStorageClient } from '@nitric/api/proto/storage/v1/storage_grpc_pb';
+import { StorageWriteResponse, StorageReadResponse } from '@nitric/api/proto/storage/v1/storage_pb';
 import { UnimplementedError } from '../errors';
-
-const { StorageServiceClient: GrpcStorageClient } = storage;
 
 describe('Storage Client Tests', () => {
   describe('Given nitric.api.storage.StorageClient.Write throws an error', () => {
@@ -53,7 +52,7 @@ describe('Storage Client Tests', () => {
 
   describe('Given nitric.api.storage.StorageClient.Write succeeds', () => {
     let writeMock;
-    const MOCK_REPLY = new storage.StorageWriteResponse();
+    const MOCK_REPLY = new StorageWriteResponse();
 
     beforeAll(() => {
       writeMock = jest
@@ -116,7 +115,7 @@ describe('Storage Client Tests', () => {
 
   describe('Given nitric.api.storage.StorageClient.Read succeeds', () => {
     const MOCK_BYTES = new Uint8Array();
-    const MOCK_REPLY = new storage.StorageReadResponse();
+    const MOCK_REPLY = new StorageReadResponse();
     MOCK_REPLY.setBody(MOCK_BYTES);
 
     let readMock;
@@ -181,7 +180,7 @@ describe('Storage Client Tests', () => {
 
   describe('Given nitric.api.storage.StorageClient.Delete succeeds', () => {
     const MOCK_BYTES = new Uint8Array();
-    const MOCK_REPLY = new storage.StorageReadResponse();
+    const MOCK_REPLY = new StorageReadResponse();
     MOCK_REPLY.setBody(MOCK_BYTES);
 
     let deleteMock;

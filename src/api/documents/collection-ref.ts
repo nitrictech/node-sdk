@@ -11,7 +11,8 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { DocumentServiceClient, Collection } from '../../interfaces/document';
+import { Collection } from '@nitric/api/proto/document/v1/document_pb';
+import { DocumentServiceClient } from '@nitric/api/proto/document/v1/document_grpc_pb';
 import { Query } from './query';
 import { DocumentRef } from './document-ref';
 import { CollectionGroupRef } from './collection-group-ref';

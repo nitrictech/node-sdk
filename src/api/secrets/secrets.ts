@@ -12,7 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { SERVICE_BIND } from '../../constants';
-import { secret as secretService } from '../../interfaces';
+import { SecretServiceClient } from '@nitric/api/proto/secret/v1/secret_grpc_pb';
+import { 
+  SecretPutRequest, 
+  SecretPutResponse, 
+  SecretAccessRequest, 
+  SecretAccessResponse, 
+  SecretVersion as GrpcSecretVersion,
+  Secret as GrpcSecret,
+} from '@nitric/api/proto/secret/v1/secret_pb';
 import * as grpc from '@grpc/grpc-js';
 import { fromGrpcError, InvalidArgumentError } from '../errors';
 
@@ -23,10 +31,10 @@ const DECODER = new TextDecoder();
  * Nitric secret client, facilitates writing and and accessing secrets.cd ../
  */
 export class Secrets {
-  SecretServiceClient: secretService.SecretServiceClient;
+  SecretServiceClient: SecretServiceClient;
 
   constructor() {
-    this.SecretServiceClient = new secretService.SecretServiceClient(
+    this.SecretServiceClient = new SecretServiceClient(
       SERVICE_BIND,
       grpc.ChannelCredentials.createInsecure()
     );
@@ -83,13 +91,13 @@ class Secret {
       const secretBuff =
         typeof secret === 'string' ? ENCODER.encode(secret) : secret;
 
-      const request = new secretService.SecretPutRequest();
+      const request = new SecretPutRequest();
       request.setSecret(Secret.toWire(this));
       request.setValue(secretBuff);
 
       this.secrets.SecretServiceClient.put(
         request,
-        (error, response: secretService.SecretPutResponse) => {
+        (error, response: SecretPutResponse) => {
           if (error) {
             reject(fromGrpcError(error));
           } else {
@@ -146,7 +154,7 @@ class Secret {
   };
 
   static toWire = (secret: Secret) => {
-    const wire = new secretService.Secret();
+    const wire = new GrpcSecret();
 
     wire.setName(secret.name);
 
@@ -185,12 +193,12 @@ class SecretVersion {
    */
   access = async (): Promise<SecretValue> => {
     return new Promise((resolve, reject) => {
-      const request = new secretService.SecretAccessRequest();
+      const request = new SecretAccessRequest();
       request.setSecretVersion(SecretVersion.toWire(this));
 
       this.secrets.SecretServiceClient.access(
         request,
-        (error, response: secretService.SecretAccessResponse) => {
+        (error, response: SecretAccessResponse) => {
           if (error) {
             reject(fromGrpcError(error));
           } else {
@@ -213,7 +221,7 @@ class SecretVersion {
   };
 
   static toWire = (secretVersion: SecretVersion) => {
-    const wire = new secretService.SecretVersion();
+    const wire = new GrpcSecretVersion();
 
     wire.setSecret(Secret.toWire(secretVersion.secret));
     wire.setVersion(secretVersion.version);

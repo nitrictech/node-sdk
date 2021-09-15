@@ -12,14 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { Struct } from 'google-protobuf/google/protobuf/struct_pb';
-import { document } from '../../interfaces';
+import { DocumentServiceClient as GrpcKeyDocumentsClient } from '@nitric/api/proto/document/v1/document_grpc_pb';
+import { DocumentGetResponse, Document } from '@nitric/api/proto/document/v1/document_pb';
 import { InvalidArgumentError, UnimplementedError } from '../errors';
 import { Documents, documents } from './documents';
-
-const {
-  DocumentServiceClient: GrpcKeyDocumentsClient,
-  DocumentGetResponse,
-} = document;
 
 describe('Document Ref Tests', () => {
   describe('Given DocumentServiceClient.Get throws an error', () => {
@@ -64,7 +60,7 @@ describe('Document Ref Tests', () => {
           .spyOn(GrpcKeyDocumentsClient.prototype, 'get')
           .mockImplementation((request, callback: any) => {
             const response = new DocumentGetResponse();
-            const mockDocument = new document.Document();
+            const mockDocument = new Document();
             mockDocument.setContent(
               Struct.fromJavaScript({
                 id: 'test',

@@ -13,17 +13,18 @@
 // limitations under the License.
 import { Queueing, ReceivedTask } from './queues';
 
-import { queue } from '../../interfaces';
+import { QueueServiceClient as GrpcQueueServiceClient } from '@nitric/api/proto/queue/v1/queue_grpc_pb';
 import {
+  NitricTask,
   FailedTask,
   QueueCompleteResponse,
   QueueReceiveResponse,
   QueueSendBatchResponse,
   QueueSendResponse,
-} from '../../interfaces/queue';
+} from '@nitric/api/proto/queue/v1/queue_pb';
+
 import { Struct } from 'google-protobuf/google/protobuf/struct_pb';
 import { UnimplementedError } from '../errors';
-const { QueueServiceClient: GrpcQueueServiceClient } = queue;
 
 describe('Queue Client Tests', () => {
   describe('Send', () => {
@@ -192,7 +193,7 @@ describe('Queue Client Tests', () => {
             mockResponse.setFailedtasksList(
               mockEvents.map((e) => {
                 const msg = new FailedTask();
-                const evt = new queue.NitricTask();
+                const evt = new NitricTask();
                 evt.setId(e.id);
                 evt.setPayloadType(e.payloadType);
                 evt.setPayload(Struct.fromJavaScript(e.payload));
@@ -310,7 +311,7 @@ describe('Queue Client Tests', () => {
             const mockResponse = new QueueReceiveResponse();
             mockResponse.setTasksList(
               mockTasks.map((e) => {
-                const task = new queue.NitricTask();
+                const task = new NitricTask();
 
                 task.setId(e.id);
                 task.setPayloadType(e.payloadType);

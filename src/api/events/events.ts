@@ -12,20 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { SERVICE_BIND } from '../../constants';
-import { event as eventService } from '../../interfaces';
+import { EventServiceClient, TopicServiceClient } from '@nitric/api/proto/event/v1/event_grpc_pb';
+import { NitricEvent as PbEvent, EventPublishRequest } from '@nitric/api/proto/event/v1/event_pb';
 import { Struct } from 'google-protobuf/google/protobuf/struct_pb';
 import * as grpc from '@grpc/grpc-js';
 import type { NitricEvent } from '../../types';
 import { fromGrpcError, InvalidArgumentError } from '../errors';
 
 function newEventServiceClients(): {
-  event: eventService.EventServiceClient;
-  topic: eventService.TopicServiceClient;
+  event: EventServiceClient;
+  topic: TopicServiceClient;
 } {
   const channel = grpc.ChannelCredentials.createInsecure();
   return {
-    event: new eventService.EventServiceClient(SERVICE_BIND, channel),
-    topic: new eventService.TopicServiceClient(SERVICE_BIND, channel),
+    event: new EventServiceClient(SERVICE_BIND, channel),
+    topic: new TopicServiceClient(SERVICE_BIND, channel),
   };
 }
 
@@ -64,8 +65,8 @@ export class Topic {
    */
   publish = async (event: NitricEvent): Promise<NitricEvent> => {
     const { id, payloadType = 'none', payload } = event;
-    const request = new eventService.EventPublishRequest();
-    const evt = new eventService.NitricEvent();
+    const request = new EventPublishRequest();
+    const evt = new PbEvent();
 
     evt.setId(id);
     evt.setPayload(Struct.fromJavaScript(payload));
@@ -99,8 +100,8 @@ export class Topic {
  * ```
  */
 export class Eventing {
-  EventServiceClient: eventService.EventServiceClient;
-  TopicServiceClient: eventService.TopicServiceClient;
+  EventServiceClient: EventServiceClient;
+  TopicServiceClient: TopicServiceClient;
 
   constructor() {
     const clients = newEventServiceClients();

@@ -12,7 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { SERVICE_BIND } from '../../constants';
-import { storage as storageService } from '../../interfaces';
+import { StorageServiceClient } from '@nitric/api/proto/storage/v1/storage_grpc_pb';
+import { StorageWriteRequest, StorageReadRequest, StorageDeleteRequest } from '@nitric/api/proto/storage/v1/storage_pb';
 import * as grpc from '@grpc/grpc-js';
 import { fromGrpcError, InvalidArgumentError } from '../errors';
 
@@ -20,10 +21,10 @@ import { fromGrpcError, InvalidArgumentError } from '../errors';
  * Nitric storage client, facilitates writing and reading from blob storage (buckets).
  */
 export class Storage {
-  StorageServiceClient: storageService.StorageServiceClient;
+  StorageServiceClient: StorageServiceClient;
 
   constructor() {
-    this.StorageServiceClient = new storageService.StorageServiceClient(
+    this.StorageServiceClient = new StorageServiceClient(
       SERVICE_BIND,
       grpc.ChannelCredentials.createInsecure()
     );
@@ -87,7 +88,7 @@ class File {
    * ```
    */
   write = async (body: Uint8Array): Promise<void> => {
-    const request = new storageService.StorageWriteRequest();
+    const request = new StorageWriteRequest();
     request.setBucketName(this.bucket.name);
     request.setKey(this.name);
     request.setBody(body);
@@ -117,7 +118,7 @@ class File {
    * ```
    */
   read = async (): Promise<Uint8Array> => {
-    const request = new storageService.StorageReadRequest();
+    const request = new StorageReadRequest();
     request.setBucketName(this.bucket.name);
     request.setKey(this.name);
 
@@ -146,7 +147,7 @@ class File {
    * ```
    */
   delete = async (): Promise<void> => {
-    const request = new storageService.StorageDeleteRequest();
+    const request = new StorageDeleteRequest();
     request.setBucketName(this.bucket.name);
     request.setKey(this.name);
 

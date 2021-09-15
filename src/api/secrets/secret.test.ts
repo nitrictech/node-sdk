@@ -12,11 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { Secrets } from './secrets';
-import { secret } from '../../interfaces';
-import { Secret } from 'src/interfaces/secret';
+import { SecretServiceClient as GrpcSecretClient } from '@nitric/api/proto/secret/v1/secret_grpc_pb';
+import { 
+  SecretPutRequest, 
+  SecretPutResponse, 
+  SecretAccessRequest, 
+  SecretAccessResponse, 
+  SecretVersion as GrpcSecretVersion,
+  Secret as GrpcSecret,
+} from '@nitric/api/proto/secret/v1/secret_pb';
 import { UnimplementedError } from '../errors';
-
-const { SecretServiceClient: GrpcSecretClient } = secret;
 
 describe('Secrets Client Tests', () => {
   describe('Given nitric.api.secrets.SecretsClient.Put throws an error', () => {
@@ -60,10 +65,10 @@ describe('Secrets Client Tests', () => {
       sendMock = jest
         .spyOn(GrpcSecretClient.prototype, 'put')
         .mockImplementation((request, callback: any) => {
-          const mockResponse = new secret.SecretPutResponse();
-          const s = new secret.Secret();
+          const mockResponse = new SecretPutResponse();
+          const s = new GrpcSecret();
           s.setName('test');
-          const sv = new secret.SecretVersion();
+          const sv = new GrpcSecretVersion();
           sv.setSecret(s);
           sv.setVersion('1');
 
@@ -133,10 +138,10 @@ describe('Secrets Client Tests', () => {
       sendMock = jest
         .spyOn(GrpcSecretClient.prototype, 'access')
         .mockImplementation((request, callback: any) => {
-          const mockResponse = new secret.SecretAccessResponse();
-          const s = new secret.Secret();
+          const mockResponse = new SecretAccessResponse();
+          const s = new GrpcSecret();
           s.setName('test');
-          const sv = new secret.SecretVersion();
+          const sv = new GrpcSecretVersion();
           sv.setSecret(s);
           sv.setVersion('1');
 

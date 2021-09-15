@@ -13,20 +13,18 @@
 // limitations under the License.
 import { Struct } from 'google-protobuf/google/protobuf/struct_pb';
 import { PassThrough } from 'stream';
-import { document } from '../../interfaces';
-import { documents, Documents } from './documents';
-import { DocumentSnapshot } from './document-snapshot';
-import { InvalidArgumentError, UnimplementedError } from '../errors';
-
-const {
-  DocumentServiceClient: GrpcKeyDocumentsClient,
-  DocumentQueryResponse,
+import { DocumentServiceClient as GrpcKeyDocumentsClient } from '@nitric/api/proto/document/v1/document_grpc_pb';
+import { 
+  DocumentQueryResponse, 
   DocumentQueryStreamResponse,
   Document,
   ExpressionValue,
   Collection,
-  Key,
-} = document;
+  Key
+} from '@nitric/api/proto/document/v1/document_pb';
+import { documents, Documents } from './documents';
+import { DocumentSnapshot } from './document-snapshot';
+import { InvalidArgumentError, UnimplementedError } from '../errors';
 
 describe('Query Tests', () => {
   describe('Adding a where clause to a query', () => {
@@ -144,7 +142,7 @@ describe('Query Tests', () => {
         .spyOn(GrpcKeyDocumentsClient.prototype, 'query')
         .mockImplementation((request, callback: any) => {
           const response = new DocumentQueryResponse();
-          const mockDocument = new document.Document();
+          const mockDocument = new Document();
           mockDocument.setContent(
             Struct.fromJavaScript({
               id: 'test',

@@ -11,7 +11,14 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { queue as queueService } from '../../interfaces';
+import { QueueServiceClient } from '@nitric/api/proto/queue/v1/queue_grpc_pb';
+import { 
+  NitricTask, 
+  QueueSendRequest, 
+  QueueSendBatchRequest, 
+  QueueReceiveRequest,
+  QueueCompleteRequest,
+} from '@nitric/api/proto/queue/v1/queue_pb';
 import { SERVICE_BIND } from '../../constants';
 import * as grpc from '@grpc/grpc-js';
 import type { Task } from '../../types';
@@ -28,7 +35,7 @@ interface FailedMessage {
 
 /** @internal */
 function taskToWire(task: Task) {
-  const wireTask = new queueService.NitricTask();
+  const wireTask = new NitricTask();
 
   wireTask.setId(task.id);
   wireTask.setPayloadType(task.payloadType);
@@ -37,8 +44,8 @@ function taskToWire(task: Task) {
   return wireTask;
 }
 
-function newQueueServiceClient(): queueService.QueueServiceClient {
-  return new queueService.QueueServiceClient(
+function newQueueServiceClient(): QueueServiceClient {
+  return new QueueServiceClient(
     SERVICE_BIND,
     grpc.ChannelCredentials.createInsecure()
   );
@@ -48,7 +55,7 @@ function newQueueServiceClient(): queueService.QueueServiceClient {
  * Nitric queue client, facilitates pushing and popping to distributed queues.
  */
 export class Queueing {
-  QueueServiceClient: queueService.QueueServiceClient;
+  QueueServiceClient: QueueServiceClient;
 
   constructor() {
     this.QueueServiceClient = newQueueServiceClient();
@@ -105,7 +112,7 @@ export class Queue {
     }
 
     return new Promise((resolve, reject) => {
-      const request = new queueService.QueueSendRequest();
+      const request = new QueueSendRequest();
 
       request.setTask(taskToWire(tasks));
       request.setQueue(this.name);
@@ -145,7 +152,7 @@ export class Queue {
    */
   private sendBatch = async (tasks: Task[]): Promise<FailedMessage[]> => {
     return new Promise((resolve, reject) => {
-      const request = new queueService.QueueSendBatchRequest();
+      const request = new QueueSendBatchRequest();
 
       const wireTasks = tasks.map(taskToWire);
 
@@ -195,7 +202,7 @@ export class Queue {
    */
   receive = async (depth?: number): Promise<ReceivedTask[]> => {
     return new Promise((resolve, reject) => {
-      const request = new queueService.QueueReceiveRequest();
+      const request = new QueueReceiveRequest();
 
       // Set the default and min depth to 1.
       if (Number.isNaN(depth) || depth < 1) {
@@ -268,7 +275,7 @@ export class ReceivedTask implements Task {
    */
   complete = async (): Promise<void> => {
     try {
-      const request = new queueService.QueueCompleteRequest();
+      const request = new QueueCompleteRequest();
 
       request.setQueue(this.queue.name);
       request.setLeaseId(this.leaseId);
