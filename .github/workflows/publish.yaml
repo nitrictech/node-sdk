@@ -35,11 +35,13 @@ jobs:
       run: yarn build
 
     - name: Publish latest to NPM
+      if: "!github.event.release.prerelease"
       run: npm publish --access public
       env:
         NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
     - name: Publish latest RC to NPM
+      if: "github.event.release.prerelease"
       run: npm publish --access public --tag rc-latest
       env:
         NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
