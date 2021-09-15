@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { DocumentServiceClient } from '@nitric/api/proto/document/v1/document_grpc_pb';
-import { InvalidArgumentError } from '../errors';
+import { InvalidArgumentError } from '../../errors';
 import { CollectionRef } from './collection-ref';
 import { MAX_COLLECTION_DEPTH } from './constants';
 import { DocumentRef } from './document-ref';

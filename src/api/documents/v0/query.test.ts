@@ -24,7 +24,7 @@ import {
 } from '@nitric/api/proto/document/v1/document_pb';
 import { documents, Documents } from './documents';
 import { DocumentSnapshot } from './document-snapshot';
-import { InvalidArgumentError, UnimplementedError } from '../errors';
+import { InvalidArgumentError, UnimplementedError } from '../../errors';
 
 describe('Query Tests', () => {
   describe('Adding a where clause to a query', () => {

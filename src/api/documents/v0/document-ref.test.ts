@@ -14,7 +14,7 @@
 import { Struct } from 'google-protobuf/google/protobuf/struct_pb';
 import { DocumentServiceClient as GrpcKeyDocumentsClient } from '@nitric/api/proto/document/v1/document_grpc_pb';
 import { DocumentGetResponse, Document } from '@nitric/api/proto/document/v1/document_pb';
-import { InvalidArgumentError, UnimplementedError } from '../errors';
+import { InvalidArgumentError, UnimplementedError } from '../../errors';
 import { Documents, documents } from './documents';
 
 describe('Document Ref Tests', () => {

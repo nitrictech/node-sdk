@@ -20,7 +20,7 @@ import {
   DocumentDeleteRequest,
 } from '@nitric/api/proto/document/v1/document_pb';
 import { DocumentServiceClient } from '@nitric/api/proto/document/v1/document_grpc_pb'; 
-import { fromGrpcError, InvalidArgumentError } from '../errors';
+import { fromGrpcError, InvalidArgumentError } from '../../errors';
 import { CollectionRef } from './collection-ref';
 import { MAX_COLLECTION_DEPTH } from './constants';
 

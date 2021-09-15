@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { SERVICE_BIND } from '../../constants';
+import { SERVICE_BIND } from '../../../constants';
 import { SecretServiceClient } from '@nitric/api/proto/secret/v1/secret_grpc_pb';
 import { 
   SecretPutRequest, 
@@ -22,7 +22,7 @@ import {
   Secret as GrpcSecret,
 } from '@nitric/api/proto/secret/v1/secret_pb';
 import * as grpc from '@grpc/grpc-js';
-import { fromGrpcError, InvalidArgumentError } from '../errors';
+import { fromGrpcError, InvalidArgumentError } from '../../errors';
 
 const ENCODER = new TextEncoder();
 const DECODER = new TextDecoder();

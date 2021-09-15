@@ -21,7 +21,7 @@ import {
   SecretVersion as GrpcSecretVersion,
   Secret as GrpcSecret,
 } from '@nitric/api/proto/secret/v1/secret_pb';
-import { UnimplementedError } from '../errors';
+import { UnimplementedError } from '../../errors';
 
 describe('Secrets Client Tests', () => {
   describe('Given nitric.api.secrets.SecretsClient.Put throws an error', () => {

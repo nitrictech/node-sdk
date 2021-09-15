@@ -11,13 +11,13 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { SERVICE_BIND } from '../../constants';
+import { SERVICE_BIND } from '../../../constants';
 import { EventServiceClient, TopicServiceClient } from '@nitric/api/proto/event/v1/event_grpc_pb';
 import { NitricEvent as PbEvent, EventPublishRequest } from '@nitric/api/proto/event/v1/event_pb';
 import { Struct } from 'google-protobuf/google/protobuf/struct_pb';
 import * as grpc from '@grpc/grpc-js';
-import type { NitricEvent } from '../../types';
-import { fromGrpcError, InvalidArgumentError } from '../errors';
+import type { NitricEvent } from '../../../types';
+import { fromGrpcError, InvalidArgumentError } from '../../errors';
 
 function newEventServiceClients(): {
   event: EventServiceClient;

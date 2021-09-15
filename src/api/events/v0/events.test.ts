@@ -12,13 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { Eventing } from './events';
-import { NitricTopic, TopicListResponse } from '@nitric/api/proto/event/v1/event_pb';
+import { NitricTopic, TopicListResponse, EventPublishResponse } from '@nitric/api/proto/event/v1/event_pb';
 import { 
   EventServiceClient as GrpcEventServiceClient, 
   TopicServiceClient as GrpcTopicServiceClient
 } from '@nitric/api/proto/event/v1/event_grpc_pb';
-import { EventPublishResponse } from '../../interfaces/event';
-import { UnimplementedError } from '../errors';
+import { UnimplementedError } from '../../errors';
 
 describe('Event Client Tests', () => {
   describe('Given nitric.interfaces.event.EventServiceClient.publish throws an error', () => {

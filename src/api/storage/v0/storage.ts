@@ -11,11 +11,11 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { SERVICE_BIND } from '../../constants';
+import { SERVICE_BIND } from '../../../constants';
 import { StorageServiceClient } from '@nitric/api/proto/storage/v1/storage_grpc_pb';
 import { StorageWriteRequest, StorageReadRequest, StorageDeleteRequest } from '@nitric/api/proto/storage/v1/storage_pb';
 import * as grpc from '@grpc/grpc-js';
-import { fromGrpcError, InvalidArgumentError } from '../errors';
+import { fromGrpcError, InvalidArgumentError } from '../../errors';
 
 /**
  * Nitric storage client, facilitates writing and reading from blob storage (buckets).

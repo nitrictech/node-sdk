@@ -14,7 +14,7 @@
 import { Storage } from './storage';
 import { StorageServiceClient as GrpcStorageClient } from '@nitric/api/proto/storage/v1/storage_grpc_pb';
 import { StorageWriteResponse, StorageReadResponse } from '@nitric/api/proto/storage/v1/storage_pb';
-import { UnimplementedError } from '../errors';
+import { UnimplementedError } from '../../errors';
 
 describe('Storage Client Tests', () => {
   describe('Given nitric.api.storage.StorageClient.Write throws an error', () => {

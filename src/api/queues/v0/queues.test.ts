@@ -24,7 +24,7 @@ import {
 } from '@nitric/api/proto/queue/v1/queue_pb';
 
 import { Struct } from 'google-protobuf/google/protobuf/struct_pb';
-import { UnimplementedError } from '../errors';
+import { UnimplementedError } from '../../errors';
 
 describe('Queue Client Tests', () => {
   describe('Send', () => {

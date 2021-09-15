@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import * as grpc from '@grpc/grpc-js';
-import { SERVICE_BIND } from '../constants';
+import { SERVICE_BIND } from '../../constants';
 
 import { FaasServiceClient } from '@nitric/api/proto/faas/v1/faas_grpc_pb';
 import {

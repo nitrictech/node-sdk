@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { SERVICE_BIND } from '../../constants';
+import { SERVICE_BIND } from '../../../constants';
 import { DocumentServiceClient } from '@nitric/api/proto/document/v1/document_grpc_pb';
 import * as grpc from '@grpc/grpc-js';
 import { CollectionRef } from './collection-ref';

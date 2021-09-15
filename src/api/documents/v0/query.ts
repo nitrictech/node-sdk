@@ -21,12 +21,12 @@ import {
   DocumentQueryStreamResponse,
 } from '@nitric/api/proto/document/v1/document_pb';
 import { DocumentServiceClient } from '@nitric/api/proto/document/v1/document_grpc_pb'
-import { WhereQueryOperator, WhereValueExpression } from '../../types';
+import { WhereQueryOperator, WhereValueExpression } from '../../../types';
 import type { Map as ProtobufMap } from 'google-protobuf';
 import { DocumentRef } from './document-ref';
 import { CollectionRef } from './collection-ref';
 import { DocumentSnapshot } from './document-snapshot';
-import { fromGrpcError, InvalidArgumentError } from '../errors';
+import { fromGrpcError, InvalidArgumentError } from '../../errors';
 import { ServiceError } from '@grpc/grpc-js';
 
 type PagingToken = Map<string, string>;
