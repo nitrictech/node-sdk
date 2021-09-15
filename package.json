@@ -7,7 +7,7 @@
   "types": "lib/index.d.ts",
   "scripts": {
     "bump": "standard-version",
-    "build": "yarn run generate:proto && tsc --project tsconfig.build.json",
+    "build": "tsc --project tsconfig.build.json",
     "test": "jest",
     "test:coverage": "jest --coverage",
     "coverage:upload": "yarn run test:coverage && codecov",
