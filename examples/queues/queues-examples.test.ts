@@ -11,15 +11,10 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { grpc } from '@nitric/sdk';
 import { queueReceive } from './receive';
 import { queueSend } from './send';
-
-const {
-  QueueServiceClient,
-  QueueSendResponse,
-  QueueReceiveResponse,
-} = grpc.queue;
+import { QueueServiceClient } from '@nitric/api/proto/queue/v1/queue_grpc_pb';
+import { QueueSendResponse, QueueReceiveResponse } from '@nitric/api/proto/queue/v1/queue_pb';
 
 const proto = QueueServiceClient.prototype;
 

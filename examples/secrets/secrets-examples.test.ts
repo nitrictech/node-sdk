@@ -11,18 +11,16 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { grpc } from '@nitric/sdk';
 import { secretsAccess } from './access';
 import { secretsLatest } from './latest';
 import { secretsPut } from './put';
-
-const {
-  SecretServiceClient,
+import { SecretServiceClient } from '@nitric/api/proto/secret/v1/secret_grpc_pb';
+import { 
   SecretAccessResponse,
   SecretPutResponse,
   SecretVersion,
-  Secret,
-} = grpc.secret;
+  Secret
+} from '@nitric/api/proto/secret/v1/secret_pb';
 
 const proto = SecretServiceClient.prototype;
 

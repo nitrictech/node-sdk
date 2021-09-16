@@ -11,11 +11,11 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { grpc } from '@nitric/sdk';
+import { EventServiceClient } from '@nitric/api/proto/event/v1/event_grpc_pb';
+import { EventPublishResponse } from '@nitric/api/proto/event/v1/event_pb';
+
 import { eventsPublish } from './publish';
 import { eventsPublishIds } from './publish-ids';
-
-const { EventServiceClient, EventPublishResponse } = grpc.event;
 
 const proto = EventServiceClient.prototype;
 

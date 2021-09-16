@@ -11,17 +11,16 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { grpc } from '@nitric/sdk';
-import { storageDelete } from './delete';
-import { storageRead } from './read';
-import { storageWrite } from './write';
-
-const {
-  StorageServiceClient,
+import { StorageServiceClient } from '@nitric/api/proto/storage/v1/storage_grpc_pb';
+import { 
   StorageDeleteResponse,
   StorageReadResponse,
   StorageWriteResponse,
-} = grpc.storage;
+} from '@nitric/api/proto/storage/v1/storage_pb';
+
+import { storageDelete } from './delete';
+import { storageRead } from './read';
+import { storageWrite } from './write';
 
 const proto = StorageServiceClient.prototype;
 
