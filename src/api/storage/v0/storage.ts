@@ -67,6 +67,10 @@ export interface SignUrlOptions {
   expiry?: number;
 }
 
+const DEFAULT_SIGN_URL_OPTS = {
+  expiry: 600,
+}
+
 /**
  * A reference to a file in a bucket.
  */
@@ -84,7 +88,8 @@ class File {
   /**
    * Create a presigned url for reading or writing for the given file reference
    */
-  signUrl = async (mode: FileMode, { expiry = 600 }: SignUrlOptions): Promise<string> => {
+  signUrl = async (mode: FileMode, opts: SignUrlOptions = DEFAULT_SIGN_URL_OPTS): Promise<string> => {
+    const { expiry } = opts;
     const request = new StoragePreSignUrlRequest();
     request.setBucketName(this.bucket.name);
     request.setKey(this.name);
