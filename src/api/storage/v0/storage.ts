@@ -89,7 +89,11 @@ class File {
    * Create a presigned url for reading or writing for the given file reference
    */
   signUrl = async (mode: FileMode, opts: SignUrlOptions = DEFAULT_SIGN_URL_OPTS): Promise<string> => {
-    const { expiry } = opts;
+    const { expiry } = {
+      // inject default options in case where some are undefined
+      ...DEFAULT_SIGN_URL_OPTS,
+      ...opts, 
+    };
     const request = new StoragePreSignUrlRequest();
     request.setBucketName(this.bucket.name);
     request.setKey(this.name);
