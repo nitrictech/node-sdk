@@ -13,7 +13,7 @@
 // limitations under the License.
 import { SERVICE_BIND } from '../../../constants';
 import { StorageServiceClient } from '@nitric/api/proto/storage/v1/storage_grpc_pb';
-import { StorageWriteRequest, StorageReadRequest, StorageDeleteRequest } from '@nitric/api/proto/storage/v1/storage_pb';
+import { StorageWriteRequest, StorageReadRequest, StorageDeleteRequest, StoragePreSignUrlRequest } from '@nitric/api/proto/storage/v1/storage_pb';
 import * as grpc from '@grpc/grpc-js';
 import { fromGrpcError, InvalidArgumentError } from '../../errors';
 
@@ -58,6 +58,19 @@ class Bucket {
   };
 }
 
+export enum FileMode {
+  Read = 0,
+  Write = 1
+}
+
+export interface SignUrlOptions {
+  expiry?: number;
+}
+
+const DEFAULT_SIGN_URL_OPTS = {
+  expiry: 600,
+}
+
 /**
  * A reference to a file in a bucket.
  */
@@ -70,6 +83,32 @@ class File {
     this.storage = storage;
     this.bucket = bucket;
     this.name = name;
+  }
+
+  /**
+   * Create a presigned url for reading or writing for the given file reference
+   */
+  signUrl = async (mode: FileMode, opts: SignUrlOptions = DEFAULT_SIGN_URL_OPTS): Promise<string> => {
+    const { expiry } = {
+      // inject default options in case where some are undefined
+      ...DEFAULT_SIGN_URL_OPTS,
+      ...opts, 
+    };
+    const request = new StoragePreSignUrlRequest();
+    request.setBucketName(this.bucket.name);
+    request.setKey(this.name);
+    request.setOperation(mode);
+    request.setExpiry(expiry);
+
+    return new Promise((resolve, reject) => {
+      this.storage.StorageServiceClient.preSignUrl(request, (error, response) => {
+        if (error) {
+          reject(fromGrpcError(error));
+        } else {
+          resolve(response.getUrl());
+        }
+      });
+    });
   }
 
   /**
