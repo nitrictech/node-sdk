@@ -50,6 +50,6 @@ describe('test storage snippets', () => {
     await expect(storageRead()).resolves.toEqual(undefined);
     await expect(storageWrite()).resolves.toEqual(undefined);
     await expect(storagePresignedUrlRead()).resolves.toEqual('');
-    await expect(storagePresignedUrlWrite()).resolves.toEqual(undefined);
+    await expect(storagePresignedUrlWrite()).resolves.toEqual('');
   });
 });

@@ -36,5 +36,7 @@ export async function storagePresignedUrlWrite() {
     "curl -X PUT -H 'Content-Type: application/octet-stream' " +
       `--upload-file my-file '${url}'`
   );
+
+  return url;
   // [END snippet]
 }
