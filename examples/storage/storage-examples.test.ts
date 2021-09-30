@@ -12,14 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { StorageServiceClient } from '@nitric/api/proto/storage/v1/storage_grpc_pb';
-import { 
+import {
   StorageDeleteResponse,
+  StoragePreSignUrlResponse,
   StorageReadResponse,
   StorageWriteResponse,
 } from '@nitric/api/proto/storage/v1/storage_pb';
 
 import { storageDelete } from './delete';
 import { storageRead } from './read';
+import { storagePresignedUrlRead } from './signed-url-read';
+import { storagePresignedUrlWrite } from './signed-url-write';
 import { storageWrite } from './write';
 
 const proto = StorageServiceClient.prototype;
@@ -37,11 +40,16 @@ describe('test storage snippets', () => {
     jest
       .spyOn(proto, 'write')
       .mockImplementation(CALLBACKFN(new StorageWriteResponse()));
+    jest
+      .spyOn(proto, 'preSignUrl')
+      .mockImplementation(CALLBACKFN(new StoragePreSignUrlResponse()));
   });
 
   test('ensure all storage snippets run', async () => {
     await expect(storageDelete()).resolves.toEqual(undefined);
     await expect(storageRead()).resolves.toEqual(undefined);
     await expect(storageWrite()).resolves.toEqual(undefined);
+    await expect(storagePresignedUrlRead()).resolves.toEqual('');
+    await expect(storagePresignedUrlWrite()).resolves.toEqual('');
   });
 });
