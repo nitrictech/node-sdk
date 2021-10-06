@@ -15,7 +15,7 @@
 import { queues } from '@nitric/sdk';
 // [END import]
 
-export async function queueSend() {
+export async function queueSend(): Promise<void> {
   // [START snippet]
   // Publish a task to the queue
   const payload = {

@@ -14,17 +14,17 @@
 import { queueReceive } from './receive';
 import { queueSend } from './send';
 import { QueueServiceClient } from '@nitric/api/proto/queue/v1/queue_grpc_pb';
-import { QueueSendResponse, QueueReceiveResponse } from '@nitric/api/proto/queue/v1/queue_pb';
+import { QueueReceiveResponse, QueueSendBatchResponse } from '@nitric/api/proto/queue/v1/queue_pb';
 
 const proto = QueueServiceClient.prototype;
 
 const CALLBACKFN = (response) => (_, cb: any) => cb(null, response);
-
+            
 describe('test queues snippets', () => {
   beforeAll(() => {
     jest
-      .spyOn(proto, 'send')
-      .mockImplementation(CALLBACKFN(new QueueSendResponse()));
+      .spyOn(proto, 'sendBatch')
+      .mockImplementation(CALLBACKFN(new QueueSendBatchResponse()));
     jest
       .spyOn(proto, 'receive')
       .mockImplementation(CALLBACKFN(new QueueReceiveResponse()));

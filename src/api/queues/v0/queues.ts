@@ -106,57 +106,14 @@ export class Queue {
    * });
    * ```
    */
-  send = async (tasks: Task | Task[]): Promise<void | FailedMessage[]> => {
-    if (Array.isArray(tasks)) {
-      return this.sendBatch(tasks);
-    }
-
+  send = async (tasks: Task | Task[]): Promise<FailedMessage[]> => {
     return new Promise((resolve, reject) => {
-      const request = new QueueSendRequest();
-
-      request.setTask(taskToWire(tasks));
-      request.setQueue(this.name);
-
-      this.queueing.QueueServiceClient.send(request, (error) => {
-        if (error) {
-          reject(fromGrpcError(error));
-        } else {
-          resolve();
-        }
-      });
-    });
-  };
-
-  /**
-   * Send a collection of tasks to a queue, which can be retrieved by other services.
-   *
-   * @param tasks the tasks to push to the queue
-   * @returns a list containing details of any tasks that failed to publish.
-   *
-   * Example:
-   * ```typescript
-   * import { Queueing } from "@nitric/sdk"
-   *
-   * const queueing = new Queueing();
-   *
-   * const failedTasks = await queueing.queue("my-queue").sendBatch([{
-   *   payloadType: "my-payload";
-   *   payload: {
-   *     value: "test"
-   *   };
-   * }]);
-   *
-   * // do something with failedTasks
-   * // console.log(failedTasks);
-   * ```
-   */
-  private sendBatch = async (tasks: Task[]): Promise<FailedMessage[]> => {
-    return new Promise((resolve, reject) => {
+      if (!Array.isArray(tasks)){
+        tasks = [tasks];
+      }
       const request = new QueueSendBatchRequest();
 
-      const wireTasks = tasks.map(taskToWire);
-
-      request.setTasksList(wireTasks);
+      request.setTasksList(tasks.map(task => taskToWire(task)));
       request.setQueue(this.name);
 
       this.queueing.QueueServiceClient.sendBatch(request, (error, response) => {

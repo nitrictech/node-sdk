@@ -37,7 +37,7 @@ describe('Queue Client Tests', () => {
 
       beforeAll(() => {
         sendMock = jest
-          .spyOn(GrpcQueueServiceClient.prototype, 'send')
+          .spyOn(GrpcQueueServiceClient.prototype, 'sendBatch')
           .mockImplementation((request, callback: any) => {
             callback(MOCK_ERROR, null);
 
@@ -71,9 +71,9 @@ describe('Queue Client Tests', () => {
 
       beforeAll(() => {
         sendMock = jest
-          .spyOn(GrpcQueueServiceClient.prototype, 'send')
+          .spyOn(GrpcQueueServiceClient.prototype, 'sendBatch')
           .mockImplementation((request, callback: any) => {
-            const mockResponse = new QueueSendResponse();
+            const mockResponse = new QueueSendBatchResponse();
 
             callback(null, mockResponse);
 
@@ -93,7 +93,7 @@ describe('Queue Client Tests', () => {
             payloadType: 'test',
             payload: { test: 1 },
           })
-        ).resolves.toBeUndefined();
+        ).resolves.toEqual([]);
       });
 
       it('Then Queue.Send should be called once', async () => {
