@@ -1,31 +1,31 @@
 {
-    "ignoreFile": ".gitignore",
-    "ignore": [
-        "README",
-        ".*",
-        "**/*.config.*",
-        "**/.gitignore",
-        "lib/**/*",
-        "contracts/**/*",
-        ".yarn/",
-        ".github/",
-        "**/*.md",
-        "*.lock",
-        "*.html",
-        "**/.eslintignore"
-    ],
-    "license": "./assets/license_header.txt",
-    "licenseFormats": {
-        "js|ts": {
-            "eachLine": {
-                "prepend": "// "
-            }
-        },
-        "dotfile|^Dockerfile": {
-            "eachLine": {
-                "prepend": "# "
-            }
-        }
+  "ignoreFile": ".gitignore",
+  "ignore": [
+    "README",
+    ".*",
+    "**/*.config.*",
+    "**/.gitignore",
+    "lib/**/*",
+    "contracts/**/*",
+    ".yarn/",
+    ".github/",
+    "**/*.md",
+    "*.lock",
+    "*.html",
+    "**/.eslintignore"
+  ],
+  "license": "./assets/license_header.txt",
+  "licenseFormats": {
+    "js|ts": {
+      "eachLine": {
+        "prepend": "// "
+      }
     },
-    "trailingWhitespace": "TRIM"
+    "dotfile|^Dockerfile": {
+      "eachLine": {
+        "prepend": "# "
+      }
+    }
+  },
+  "trailingWhitespace": "TRIM"
 }

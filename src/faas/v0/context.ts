@@ -87,13 +87,6 @@ export abstract class AbstractRequest {
   }
 }
 
-interface HttpResponse {
-  status: number;
-  headers: Record<string, string[]>;
-  body: string | Uint8Array;
-  json: ReturnType<typeof jsonResponse>;
-}
-
 interface EventResponse {
   success: boolean;
 }
@@ -120,6 +113,35 @@ export class HttpRequest extends AbstractRequest {
     this.path = path;
     this.query = query;
     this.headers = headers;
+  }
+}
+
+interface HttpResponseArgs {
+  body: string | Uint8Array;
+  status: number;
+  headers: Record<string, string[]>;
+  ctx: HttpContext;
+}
+
+export class HttpResponse {
+  public status: number;
+  public body: string | Uint8Array;
+  public headers: Record<string, string[]>;
+  private ctx: HttpContext;
+
+  constructor({ status, headers, body, ctx }: HttpResponseArgs) {
+    this.status = status;
+    this.headers = headers;
+    this.body = body;
+    this.ctx = ctx;
+  }
+
+  /**
+   * Helper method to encode to JSON string for JSON http responses
+   * @returns HttpContext with body property set with an encoded JSON string and json headers set.
+   */
+  get json() {
+    return jsonResponse(this.ctx);
   }
 }
 
@@ -181,12 +203,12 @@ export class HttpContext extends TriggerContext<HttpRequest, HttpResponse> {
       method: http.getMethod(),
     });
 
-    ctx.response = {
+    ctx.response = new HttpResponse({
       status: 200,
       headers: {},
       body: '',
-      json: jsonResponse(ctx),
-    };
+      ctx,
+    });
 
     if (!ctx) {
       throw new Error('failed to create context');

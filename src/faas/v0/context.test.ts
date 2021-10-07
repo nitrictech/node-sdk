@@ -32,8 +32,8 @@ describe('NitricTrigger.fromGrpcTriggerRequest', () => {
       const testHeader2 = new HeaderValue();
       testHeader2.addValue('test2.1');
       testHeader2.addValue('test2.2');
-      ctx.getHeadersMap().set('test',  testHeader);
-      ctx.getHeadersMap().set('test2',  testHeader2);
+      ctx.getHeadersMap().set('test', testHeader);
+      ctx.getHeadersMap().set('test2', testHeader2);
       ctx.getQueryParamsMap().set('test', 'test');
       const request = new TriggerRequest();
       request.setData('Hello World');
@@ -49,7 +49,6 @@ describe('NitricTrigger.fromGrpcTriggerRequest', () => {
     it('should have HTTP context', () => {
       expect(trigger.http).not.toBeUndefined();
     });
-    
 
     it('should have the triggers HTTP Method', () => {
       expect(trigger.http.req.method).toBe('GET');
@@ -67,6 +66,17 @@ describe('NitricTrigger.fromGrpcTriggerRequest', () => {
     it('should have the provided query params', () => {
       expect(trigger.http.req.query['test']).toBe('test');
     });
+
+    it('should allow json response', () => {
+      const ctx = trigger.http.res.json({ message: 'success' });
+      expect(ctx.res.headers).toEqual({ 'Content-Type': ['application/json'] });
+
+      expect(
+        JSON.parse(new TextDecoder('utf-8').decode(ctx.res.body as Uint8Array))
+      ).toEqual({
+        message: 'success',
+      });
+    });
   });
 
   // XXX: Remove once the deprecated old headers value is removed.
@@ -77,8 +87,8 @@ describe('NitricTrigger.fromGrpcTriggerRequest', () => {
       const ctx = new GrpcHttpTriggerRequest();
       ctx.setMethod('GET');
       ctx.setPath('/test/');
-      ctx.getHeadersOldMap().set('test',  'test');
-      ctx.getHeadersOldMap().set('test2',  'test2');
+      ctx.getHeadersOldMap().set('test', 'test');
+      ctx.getHeadersOldMap().set('test2', 'test2');
       const request = new TriggerRequest();
       request.setData('Hello World');
       request.setHttp(ctx);

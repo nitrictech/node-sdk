@@ -31,7 +31,7 @@ export const json = (): HttpMiddleware => (ctx: HttpContext, next) => {
 };
 
 /**
- * Helper method to encode to JSON string for JSON Http responses
+ * Helper method to encode to JSON string for JSON http responses
  * @param ctx HttpContext
  * @returns HttpContext with body property set with an encoded JSON string and json headers set.
  */
