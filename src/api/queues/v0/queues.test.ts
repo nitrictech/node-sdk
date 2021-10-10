@@ -85,7 +85,7 @@ describe('Queue Client Tests', () => {
         jest.resetAllMocks();
       });
 
-      it('Then Queue.Send should resolve with no failed messages', async () => {
+      it('Then Queue.Send with an array of tasks should resolve with no failed messages', async () => {
         const queueing = new Queueing();
         await expect(
           queueing.queue('test').send([{
@@ -96,30 +96,7 @@ describe('Queue Client Tests', () => {
         ).resolves.toEqual([]);
       });
 
-      it('Then Queue.Send should be called once', async () => {
-        expect(sendMock).toBeCalledTimes(1);
-      });
-    });
-    describe('Given nitric.api.queue.QueueServiceClient.Send succeeds when a task is sent', () => {
-      let sendMock;
-
-      beforeAll(() => {
-        sendMock = jest
-          .spyOn(GrpcQueueServiceClient.prototype, 'sendBatch')
-          .mockImplementation((request, callback: any) => {
-            const mockResponse = new QueueSendBatchResponse();
-
-            callback(null, mockResponse);
-
-            return null as any;
-          });
-      });
-
-      afterAll(() => {
-        jest.resetAllMocks();
-      });
-
-      it('Then Queue.Send should resolve with no failed messages', async () => {
+      it('Then Queue.Send with one task should resolve with no failed messages', async () => {
         const queueing = new Queueing();
         await expect(
           queueing.queue('test').send({
@@ -131,7 +108,7 @@ describe('Queue Client Tests', () => {
       });
 
       it('Then Queue.Send should be called once', async () => {
-        expect(sendMock).toBeCalledTimes(1);
+        expect(sendMock).toBeCalledTimes(2);
       });
     });
   });
