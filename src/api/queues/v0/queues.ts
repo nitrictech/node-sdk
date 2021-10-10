@@ -104,37 +104,35 @@ export class Queue {
    *     value: "test"
    *   };
    * });
-   * ```
    */
-  send = async (tasks: Task | Task[]): Promise<FailedMessage[]> => {
+   async send(tasks: Task): Promise<FailedMessage>;
+   async send(tasks: Task[]): Promise<FailedMessage[]>;
+   async send(tasks: Task | Task[]): Promise<FailedMessage | FailedMessage[]> {
     return new Promise((resolve, reject) => {
-      if (!Array.isArray(tasks)){
-        tasks = [tasks];
-      }
       const request = new QueueSendBatchRequest();
 
-      request.setTasksList(tasks.map(task => taskToWire(task)));
+      request.setTasksList(Array.isArray(tasks) ? tasks.map(task => taskToWire(task)) : [taskToWire(tasks)]);
       request.setQueue(this.name);
 
       this.queueing.QueueServiceClient.sendBatch(request, (error, response) => {
         if (error) {
           reject(fromGrpcError(error));
         } else {
-          resolve(
-            response.getFailedtasksList().map((m) => ({
-              task: {
-                id: m.getTask().getId(),
-                payload: m.getTask().getPayload().toJavaScript(),
-                payloadType: m.getTask().getPayloadType(),
-              },
-              message: m.getMessage(),
-            }))
-          );
+          const failedTasks = response.getFailedtasksList().map((m) => ({
+            task: {
+              id: m.getTask().getId(),
+              payload: m.getTask().getPayload().toJavaScript(),
+              payloadType: m.getTask().getPayloadType(),
+            },
+            message: m.getMessage(),
+          }))
+          Array.isArray(tasks) ?
+            resolve(failedTasks) :
+            resolve(failedTasks[0] ? failedTasks[0] : undefined)
         }
       });
-    });
-  };
-
+    });   
+  }
   /**
    * Pop 1 or more queue items from the specified queue up to the depth limit.
    *

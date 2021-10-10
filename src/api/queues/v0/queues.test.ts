@@ -66,7 +66,41 @@ describe('Queue Client Tests', () => {
       });
     });
 
-    describe('Given nitric.api.queue.QueueServiceClient.Send succeeds', () => {
+    describe('Given nitric.api.queue.QueueServiceClient.Send succeeds when an array of tasks are sent', () => {
+      let sendMock;
+
+      beforeAll(() => {
+        sendMock = jest
+          .spyOn(GrpcQueueServiceClient.prototype, 'sendBatch')
+          .mockImplementation((request, callback: any) => {
+            const mockResponse = new QueueSendBatchResponse();
+
+            callback(null, mockResponse);
+
+            return null as any;
+          });
+      });
+
+      afterAll(() => {
+        jest.resetAllMocks();
+      });
+
+      it('Then Queue.Send should resolve with no failed messages', async () => {
+        const queueing = new Queueing();
+        await expect(
+          queueing.queue('test').send([{
+            id: 'task',
+            payloadType: 'test',
+            payload: { test: 1 },
+          }])
+        ).resolves.toEqual([]);
+      });
+
+      it('Then Queue.Send should be called once', async () => {
+        expect(sendMock).toBeCalledTimes(1);
+      });
+    });
+    describe('Given nitric.api.queue.QueueServiceClient.Send succeeds when a task is sent', () => {
       let sendMock;
 
       beforeAll(() => {
@@ -93,144 +127,11 @@ describe('Queue Client Tests', () => {
             payloadType: 'test',
             payload: { test: 1 },
           })
-        ).resolves.toEqual([]);
+        ).resolves.toEqual(undefined);
       });
 
       it('Then Queue.Send should be called once', async () => {
         expect(sendMock).toBeCalledTimes(1);
-      });
-    });
-  });
-
-  describe('SendBatch', () => {
-    describe('Given nitric.api.queue.QueueServiceClient.SendBatch throws an error', () => {
-      const MOCK_ERROR = {
-        code: 12,
-        message: 'UNIMPLEMENTED',
-      };
-      let sendBatchMock;
-
-      beforeAll(() => {
-        sendBatchMock = jest
-          .spyOn(GrpcQueueServiceClient.prototype, 'sendBatch')
-          .mockImplementation((request, callback: any) => {
-            callback(MOCK_ERROR, null);
-
-            return null as any;
-          });
-      });
-
-      afterAll(() => {
-        jest.resetAllMocks();
-      });
-
-      it('Then Queue.sendBatch should reject', async () => {
-        const queueing = new Queueing();
-        // expect.assertions(1);
-        await expect(
-          queueing.queue('test').send([
-            {
-              id: 'test',
-              payloadType: 'Test Payload',
-              payload: {
-                test: 'test',
-              },
-            },
-          ])
-        ).rejects.toEqual(new UnimplementedError("UNIMPLEMENTED"));
-      });
-    });
-
-    describe('Given nitric.api.queue.QueueServiceClient.SendBatch succeeds', () => {
-      beforeAll(() => {
-        jest
-          .spyOn(GrpcQueueServiceClient.prototype, 'sendBatch')
-          .mockImplementation((request, callback: any) => {
-            const mockResponse = new QueueSendBatchResponse();
-            mockResponse.setFailedtasksList([]);
-            callback(null, mockResponse);
-
-            return null as any;
-          });
-      });
-
-      afterAll(() => {
-        jest.resetAllMocks();
-      });
-
-      it('Then Queue.sendBatch should resolve with no failed messages', async () => {
-        const queueing = new Queueing();
-        await expect(
-          queueing.queue('test').send([
-            {
-              id: 'test',
-              payloadType: 'Test Payload',
-              payload: {
-                test: 'test',
-              },
-            },
-          ])
-        ).resolves.toEqual([]);
-      });
-    });
-
-    describe('Given nitric.api.queue.QueueServiceClient.SendBatch partially succeeds', () => {
-      const mockEvents = [
-        {
-          id: 'test',
-          payloadType: 'Test Payload',
-          payload: {
-            test: 'test',
-          },
-        },
-      ];
-
-      beforeAll(() => {
-        jest
-          .spyOn(GrpcQueueServiceClient.prototype, 'sendBatch')
-          .mockImplementation((request, callback: any) => {
-            const mockResponse = new QueueSendBatchResponse();
-            mockResponse.setFailedtasksList(
-              mockEvents.map((e) => {
-                const msg = new FailedTask();
-                const evt = new NitricTask();
-                evt.setId(e.id);
-                evt.setPayloadType(e.payloadType);
-                evt.setPayload(Struct.fromJavaScript(e.payload));
-                msg.setTask(evt);
-                msg.setMessage('Failed to Push task');
-
-                return msg;
-              })
-            );
-            callback(null, mockResponse);
-
-            return null as any;
-          });
-      });
-
-      afterAll(() => {
-        jest.resetAllMocks();
-      });
-
-      it('Then EventingClient.publish should resolve with no failed messages', async () => {
-        const queueing = new Queueing();
-        await expect(
-          queueing.queue('test').send([
-            {
-              id: 'test',
-              payloadType: 'Test Payload',
-              payload: {
-                test: 'test',
-              },
-            },
-          ])
-        ).resolves.toEqual([
-          {
-            task: mockEvents[0],
-            message: 'Failed to Push task',
-          },
-        ]);
       });
     });
   });
