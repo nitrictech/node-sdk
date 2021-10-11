@@ -23,7 +23,7 @@ import { SERVICE_BIND } from '../../../constants';
 import * as grpc from '@grpc/grpc-js';
 import type { Task } from '../../../types';
 import { Struct } from 'google-protobuf/google/protobuf/struct_pb';
-import { fromGrpcError, InvalidArgumentError } from '../../errors';
+import { fromGrpcError, InvalidArgumentError, InternalError } from '../../errors';
 
 /**
  * A message that has failed to be enqueued
@@ -105,9 +105,9 @@ export class Queue {
    *   };
    * });
    */
-   async send(tasks: Task): Promise<FailedMessage>;
    async send(tasks: Task[]): Promise<FailedMessage[]>;
-   async send(tasks: Task | Task[]): Promise<FailedMessage | FailedMessage[]> {
+   async send(tasks: Task): Promise<void>;
+   async send(tasks: Task | Task[]): Promise<void | FailedMessage[]> {
     return new Promise((resolve, reject) => {
       const request = new QueueSendBatchRequest();
 
@@ -117,18 +117,22 @@ export class Queue {
       this.queueing.QueueServiceClient.sendBatch(request, (error, response) => {
         if (error) {
           reject(fromGrpcError(error));
-        } else {
-          const failedTasks = response.getFailedtasksList().map((m) => ({
-            task: {
-              id: m.getTask().getId(),
-              payload: m.getTask().getPayload().toJavaScript(),
-              payloadType: m.getTask().getPayloadType(),
-            },
-            message: m.getMessage(),
-          }))
-          Array.isArray(tasks) ?
-            resolve(failedTasks) :
-            resolve(failedTasks[0] ? failedTasks[0] : undefined)
+        }
+        const failedTasks = response.getFailedtasksList().map((m) => ({
+          task: {
+            id: m.getTask().getId(),
+            payload: m.getTask().getPayload().toJavaScript(),
+            payloadType: m.getTask().getPayloadType(),
+          },
+          message: m.getMessage(),
+        }))
+        if (!Array.isArray(tasks)) { // Single Task returns
+          if (failedTasks.length > 0) { 
+            reject(new InternalError(failedTasks[0].message));
+          }
+          resolve();
+        } else { // Array of Tasks return
+          resolve(failedTasks)
         }
       });
     });   
