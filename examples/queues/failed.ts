@@ -15,18 +15,17 @@
 import { queues } from '@nitric/sdk';
 // [END import]
 
-export async function queueFailed() {
+export async function queueFailed(): Promise<void> {
   // [START snippet]
+  const taskList = [{ id: '1' }, { id: '2' }]
   // Publish a collection of tasks
   const failedMessages = await queues()
     .queue('my-queue')
-    .send({ id: '1234'})
+    .send(taskList)
 
   // Check that it returned Failed Messages
-  if (failedMessages instanceof Object) {
-    for (const message in failedMessages) {
-      console.log(message)
-    }
+  for (const message in failedMessages) {
+    console.log(message)
   }
   // [END snippet]
 }
