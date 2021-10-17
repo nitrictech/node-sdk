@@ -15,10 +15,12 @@ import { queueReceive } from './receive';
 import { queueSend } from './send';
 import { QueueServiceClient } from '@nitric/api/proto/queue/v1/queue_grpc_pb';
 import { QueueReceiveResponse, QueueSendBatchResponse } from '@nitric/api/proto/queue/v1/queue_pb';
+import { queueFailed } from './failed';
 
 const proto = QueueServiceClient.prototype;
 
 const CALLBACKFN = (response) => (_, cb: any) => cb(null, response);
+
             
 describe('test queues snippets', () => {
   beforeAll(() => {
@@ -28,10 +30,14 @@ describe('test queues snippets', () => {
     jest
       .spyOn(proto, 'receive')
       .mockImplementation(CALLBACKFN(new QueueReceiveResponse()));
+    jest
+      .spyOn(proto, 'sendBatch')
+      .mockImplementation(CALLBACKFN(new QueueSendBatchResponse()));
   });
 
   test('ensure all queues snippets run', async () => {
     await expect(queueSend()).resolves.toEqual(undefined);
     await expect(queueReceive()).resolves.toEqual(undefined);
+    await expect(queueFailed()).resolves.toEqual(undefined);
   });
 });
