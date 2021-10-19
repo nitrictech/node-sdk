@@ -18,10 +18,10 @@ import { storage, FileMode } from '@nitric/sdk';
 export async function storagePresignedUrlRead() {
   // [START snippet]
   // Construct a new storage client with default settings
-  const storageClient = storage();
+  const sc = storage();
 
   // Get a signed url for reading a file
-  const url = await storageClient
+  const url = await sc
     .bucket('my-bucket')
     .file('path/to/item')
     .signUrl(FileMode.Read, {
