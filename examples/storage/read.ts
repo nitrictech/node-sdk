@@ -18,12 +18,9 @@ import { storage } from '@nitric/sdk';
 export async function storageRead() {
   // [START snippet]
   // Construct a new storage client with default settings
-  const storageClient = storage();
+  const sc = storage();
 
   // Read a byte array from a bucket
-  const bytes = await storageClient
-    .bucket('my-bucket')
-    .file('path/to/item')
-    .read();
+  const bytes = await sc.bucket('my-bucket').file('path/to/item').read();
   // [END snippet]
 }

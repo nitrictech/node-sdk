@@ -18,13 +18,12 @@ import { storage } from '@nitric/sdk';
 export async function storageWrite() {
   // [START snippet]
   // Construct a new storage client with default settings
-  // Construct a new storage client with default settings
-  const storageClient = storage();
+  const sc = storage();
 
   // Example byte array
   const contents = new Uint8Array();
 
   // Write a byte array to a bucket
-  storageClient.bucket('my-bucket').file('path/to/item').write(contents);
+  await sc.bucket('my-bucket').file('path/to/item').write(contents);
   // [END snippet]
 }
