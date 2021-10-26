@@ -22,7 +22,7 @@ export const events = async () => {
 	.event(async (ctx) => {
 		console.log("received event: ", ctx.req.payload);
 
-		// make the event as successfully handled
+		// mark the event as successfully handled
 		ctx.res.success = true;
 
 		return ctx;
