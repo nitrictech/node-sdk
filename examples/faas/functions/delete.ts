@@ -1,3 +1,4 @@
+// [START snippet]
 import { faas, documents } from '@nitric/sdk';
 import { Example, path } from '../common';
 
@@ -26,3 +27,4 @@ faas
     return ctx;
   })
   .start();
+// [END snippet]

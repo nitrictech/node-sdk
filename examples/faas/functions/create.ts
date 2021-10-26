@@ -1,3 +1,4 @@
+// [START snippet]
 import { faas, documents } from "@nitric/sdk";
 import { Example } from "../common";
 import { uuid } from "uuidv4";
@@ -27,3 +28,4 @@ faas
     }
   )
   .start();
+// [END snippet]
