@@ -16,6 +16,7 @@ import {
   TopicTriggerContext as GrpcTopicTriggerContext,
   TriggerRequest,
   HeaderValue,
+  QueryValue,
 } from '@nitric/api/proto/faas/v1/faas_pb';
 import { TriggerContext, HttpContext, EventContext } from './context';
 
@@ -34,7 +35,9 @@ describe('NitricTrigger.fromGrpcTriggerRequest', () => {
       testHeader2.addValue('test2.2');
       ctx.getHeadersMap().set('test', testHeader);
       ctx.getHeadersMap().set('test2', testHeader2);
-      ctx.getQueryParamsMap().set('test', 'test');
+      const testQuery = new QueryValue();
+      testQuery.addValue("test");
+      ctx.getQueryParamsMap().set('test', testQuery);
       const request = new TriggerRequest();
       request.setData('Hello World');
       request.setHttp(ctx);
