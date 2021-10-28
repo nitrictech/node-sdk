@@ -97,14 +97,14 @@ interface HttpRequestArgs {
   data: string | Uint8Array;
   method: Method | string;
   path: string;
-  query: Record<string, string>;
+  query: Record<string, string[]>;
   headers: Record<string, string[]>;
 }
 
 export class HttpRequest extends AbstractRequest {
   public readonly method: Method | string;
   public readonly path: string;
-  public readonly query: Record<string, string>;
+  public readonly query: Record<string, string[]>;
   public readonly headers: Record<string, string[] | string>;
 
   constructor({ data, method, path, query, headers }: HttpRequestArgs) {
@@ -179,6 +179,29 @@ export class HttpContext extends TriggerContext<HttpRequest, HttpResponse> {
       {}
     );
 
+    const query = ((http
+      .getQueryParamsMap()
+      // XXX: getEntryList claims to return [string, faas.HeaderValue][], but really returns [string, string[][]][]
+      // we force the type to match the real return type.
+      .getEntryList() as unknown) as [string, string[][]][]).reduce(
+      (acc, [key, [val]]) => ({
+        ...acc,
+        [key.toLowerCase()]: val.length === 1 ? val[0] : val,
+      }),
+      {}
+    );
+    
+    const oldQuery = http
+      .getQueryParamsOldMap()
+      .toArray()
+      .reduce(
+        (acc, [key, val]) => ({
+          ...acc,
+          [key.toLowerCase()]: val,
+        }),
+        {}
+      );
+
     const oldHeaders = http
       .getHeadersOldMap()
       .toArray()
@@ -193,10 +216,9 @@ export class HttpContext extends TriggerContext<HttpRequest, HttpResponse> {
     ctx.request = new HttpRequest({
       data: trigger.getData(),
       path: http.getPath(),
-      query: http
-        .getQueryParamsMap()
-        .toArray()
-        .reduce((acc, [key, val]) => ({ ...acc, [key]: val }), {}),
+      // TODO: remove after 1.0
+      // check for old query if new query is unpopulated. This is for backwards compatibility.
+      query: Object.keys(query).length ? query : oldQuery,
       // TODO: remove after 1.0
       // check for old headers if new headers is unpopulated. This is for backwards compatibility.
       headers: Object.keys(headers).length ? headers : oldHeaders,
