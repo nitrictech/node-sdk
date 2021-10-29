@@ -11,7 +11,24 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-export * from './api';
+// [START import]
+import { storage, FileMode } from '@nitric/sdk';
+// [END import]
 
-// Nitric Node FaaS library
-export * as faas from './faas';
+export async function storagePresignedUrlRead() {
+  // [START snippet]
+  // Construct a new storage client with default settings
+  const sc = storage();
+
+  // Get a signed url for reading a file
+  const url = await sc
+    .bucket('my-bucket')
+    .file('path/to/item')
+    .signUrl(FileMode.Read, {
+      // expiry in seconds
+      expiry: 3600,
+    });
+
+  return url;
+  // [END snippet]
+}

@@ -1,6 +1,5 @@
 {
   "name": "@nitric/sdk",
-  "version": "0.1.26",
   "description": "Nitric NodeJS client sdk",
   "author": "Nitric <https://github.com/nitrictech>",
   "repository": "https://github.com/nitrictech/node-sdk",
@@ -8,18 +7,13 @@
   "types": "lib/index.d.ts",
   "scripts": {
     "bump": "standard-version",
-    "build": "yarn run gen-services && yarn run gen-types && yarn run fix-type-deps && yarn run fix-js-deps && tsc --project tsconfig.build.json",
+    "build": "tsc --project tsconfig.build.json",
     "test": "jest",
     "test:coverage": "jest --coverage",
     "coverage:upload": "yarn run test:coverage && codecov",
-    "gen-services": "glob-run grpc_tools_node_protoc --js_out=import_style=commonjs,binary:./src/interfaces --grpc_out=./src/interfaces -I ./contracts/proto \"./contracts/proto/*/**/*.proto\"",
-    "gen-types": "glob-run grpc_tools_node_protoc --ts_out=service=grpc-node:./src/interfaces -I ./contracts/proto \"./contracts/proto/*/**/*.proto\"",
-    "fix-type-deps": "replace-in-files --string=\"from \\\"grpc\\\"\" --replacement=\"from \\\"@grpc/grpc-js\\\"\" ./src/**/*.d.ts",
-    "fix-js-deps": "replace-in-files --string=\"require('grpc')\" --replacement=\"require('@grpc/grpc-js')\" ./src/**/*.js",
-    "generate:docs": "yarn run build && typedoc",
     "prettier:check": "prettier --check src",
     "prettier:fix": "prettier --write src",
-    "lint": "eslint \"src/!(interfaces)/*.ts\"",
+    "lint": "eslint \"src/**/*.ts\"",
     "lint:fix": "yarn lint --fix",
     "license:header:remove": "license-check-and-add remove -f ./licenseconfig.json",
     "license:header:add": "license-check-and-add add -f ./licenseconfig.json",
@@ -33,6 +27,7 @@
   ],
   "dependencies": {
     "@grpc/grpc-js": "^1.1.7",
+    "@nitric/api": "^0.12.0",
     "common-tags": "^1.8.0",
     "google-protobuf": "3.14.0",
     "path-parser": "^6.1.0",
@@ -55,7 +50,6 @@
     "codecov": "^3.8.3",
     "eslint": "^7.24.0",
     "glob-run": "^0.1.7",
-    "grpc-tools": "^1.9.1",
     "husky": "^6.0.0",
     "jest": "^26.6.1",
     "license-check-and-add": "^4.0.2",
@@ -65,9 +59,6 @@
     "replace-in-files-cli": "latest",
     "standard-version": "^9.0.0",
     "ts-jest": "^26.4.3",
-    "ts-protoc-gen": "^0.14.0",
-    "typedoc": "^0.20.35",
-    "typedoc-plugin-markdown": "^3.6.1",
     "typescript": "^3.3"
   },
   "license-check-config": {

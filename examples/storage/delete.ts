@@ -18,9 +18,9 @@ import { storage } from '@nitric/sdk';
 export async function storageDelete() {
   // [START snippet]
   // Construct a new storage client with default settings
-  const storageClient = storage();
+  const sc = storage();
 
-  // Read a byte array from a bucket
-  const bytes = storageClient.bucket('my-bucket').file('path/to/item').delete();
+  // Delete a file from a bucket
+  await sc.bucket('my-bucket').file('path/to/item').delete();
   // [END snippet]
 }

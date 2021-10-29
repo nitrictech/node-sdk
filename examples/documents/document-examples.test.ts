@@ -11,7 +11,15 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { grpc } from '@nitric/sdk';
+import { 
+  DocumentServiceClient 
+} from '@nitric/api/proto/document/v1/document_grpc_pb';
+import { 
+  DocumentQueryResponse,
+  DocumentGetResponse,
+  DocumentSetResponse,
+  DocumentDeleteResponse, 
+} from '@nitric/api/proto/document/v1/document_pb';
 import { PassThrough } from 'stream';
 import { deleteDocument } from './delete';
 import { getDocument } from './get';
@@ -24,14 +32,6 @@ import { getDocumentRef } from './refs';
 import { setDocument } from './set';
 import { querySubColQuery } from './sub-col-query';
 import { querySubDocQuery } from './sub-doc-query';
-
-const {
-  DocumentServiceClient,
-  DocumentQueryResponse,
-  DocumentGetResponse,
-  DocumentSetResponse,
-  DocumentDeleteResponse,
-} = grpc.document;
 
 const docProto = DocumentServiceClient.prototype;
 

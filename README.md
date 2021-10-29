@@ -21,14 +21,13 @@ The NodeJS SDK supports the use of the cloud-portable [Nitric](https://nitric.io
 > @nitric/sdk is included in all node related SDK projects by default
 
 ```bash
-nitric make:function <node-template> example
+nitric make:stack <node-stack> example
 ```
 
-Some available node templates are:
+Some available node stacks are:
 
-* faas/nodejs12
-* faas/nodets12
-* community/nextjs
+* typescript
+* javascript
 
 
 ### Adding to an existing project
@@ -42,14 +41,7 @@ yarn add @nitric/sdk
 ```
 
 ## Usage
-The nitric node SDK contains modules that cover (Usage examples and detailed API documentation included in the links):
-* [FaaS](./docs/typedoc/modules/faas.md)
-* [Events](./docs/typedoc/classes/eventclient.md)
-* [Queues](./docs/typedoc/classes/queueclient.md)
-* [Storage](./docs/typedoc/classes/storageclient.md)
-* [KV Store](./docs/typedoc/classes/keyvalueclient.md)
-
-Base gRPC clients are also made available from this package via the [grpc](./docs/typedoc/modules/grpc.md) module
+[Nitric Documentation](https://nitric.io/docs)
 
 ## Local Development
 

@@ -11,7 +11,23 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-export * from './api';
 
-// Nitric Node FaaS library
-export * as faas from './faas';
+// [START import]
+import { faas } from "@nitric/sdk";
+// [END import]
+
+export const events = async () => {
+	// [START snippet]
+	await faas
+	.event(async (ctx) => {
+		console.log("received event: ", ctx.req.payload);
+
+		// mark the event as successfully handled
+		ctx.res.success = true;
+
+		return ctx;
+	})
+	.start();
+	// [END snippet]
+}
+

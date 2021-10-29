@@ -12,15 +12,31 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 // [START import]
-import { storage } from '@nitric/sdk';
+import { storage, FileMode } from '@nitric/sdk';
 // [END import]
 
-export async function storageRead() {
+export async function storagePresignedUrlWrite() {
   // [START snippet]
   // Construct a new storage client with default settings
   const sc = storage();
 
-  // Read a byte array from a bucket
-  const bytes = await sc.bucket('my-bucket').file('path/to/item').read();
+  // Get a signed url for for uploading file
+  const url = await sc
+    .bucket('my-bucket')
+    .file('path/to/item')
+    .signUrl(FileMode.Write, {
+      // expiry in seconds
+      expiry: 3600,
+    });
+
+  console.log('Generated PUT signed URL:');
+  console.log(url);
+  console.log('You can use this URL with any user agent, for example:');
+  console.log(
+    "curl -X PUT -H 'Content-Type: application/octet-stream' " +
+      `--upload-file my-file '${url}'`
+  );
+
+  return url;
   // [END snippet]
 }

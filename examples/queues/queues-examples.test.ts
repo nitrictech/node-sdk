@@ -11,15 +11,14 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { grpc } from '@nitric/sdk';
 import { queueReceive } from './receive';
 import { queueSend } from './send';
-
-const {
-  QueueServiceClient,
-  QueueSendResponse,
+import { QueueServiceClient } from '@nitric/api/proto/queue/v1/queue_grpc_pb';
+import {
   QueueReceiveResponse,
-} = grpc.queue;
+  QueueSendBatchResponse,
+} from '@nitric/api/proto/queue/v1/queue_pb';
+import { queueFailed } from './failed';
 
 const proto = QueueServiceClient.prototype;
 
@@ -28,8 +27,8 @@ const CALLBACKFN = (response) => (_, cb: any) => cb(null, response);
 describe('test queues snippets', () => {
   beforeAll(() => {
     jest
-      .spyOn(proto, 'send')
-      .mockImplementation(CALLBACKFN(new QueueSendResponse()));
+      .spyOn(proto, 'sendBatch')
+      .mockImplementation(CALLBACKFN(new QueueSendBatchResponse()));
     jest
       .spyOn(proto, 'receive')
       .mockImplementation(CALLBACKFN(new QueueReceiveResponse()));
@@ -38,5 +37,6 @@ describe('test queues snippets', () => {
   test('ensure all queues snippets run', async () => {
     await expect(queueSend()).resolves.toEqual(undefined);
     await expect(queueReceive()).resolves.toEqual(undefined);
+    await expect(queueFailed()).resolves.toEqual(undefined);
   });
 });
