@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { events } from './event';
+import { events } from './events';
 import { FaasServiceClient } from '@nitric/api/proto/faas/v1/faas_grpc_pb';
 
 const proto = FaasServiceClient.prototype;
@@ -47,9 +47,7 @@ describe('test queues snippets', () => {
 
   beforeEach(() => {
     mockStream = new MockClientStream() as any;
-    jest
-      .spyOn(proto, 'triggerStream')
-      .mockReturnValue(mockStream);
+    jest.spyOn(proto, 'triggerStream').mockReturnValue(mockStream);
   });
 
   test('events snippet', async () => {
