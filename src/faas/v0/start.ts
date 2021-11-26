@@ -132,11 +132,11 @@ class Faas {
             TriggerContext.toGrpcTriggerResponse(result)
           );
         } catch (e) {
-          console.error(e);
           // generic error handling
           console.error(e);
           const triggerResponse = new TriggerResponse();
           responseMessage.setTriggerResponse(triggerResponse);
+          triggerResponse.setData(new TextEncoder().encode('Internal Server Error'));
 
           if (triggerRequest.hasHttp()) {
             const httpResponse = new HttpResponseContext();
@@ -148,13 +148,10 @@ class Faas {
             const contentTypeHeader = new HeaderValue();
             contentTypeHeader.addValue('text/plain');
             headers.set('Content-Type', contentTypeHeader);
-            triggerResponse.setData('Internal Server Error');
           } else if (triggerRequest.hasTopic()) {
             const topicResponse = new TopicResponseContext();
-
             topicResponse.setSuccess(false);
             triggerResponse.setTopic(topicResponse);
-            triggerResponse.setData('Internal Server Error');
           }
         }
         // Send the response back to the membrane
