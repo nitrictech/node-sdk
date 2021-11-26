@@ -125,7 +125,7 @@ interface HttpResponseArgs {
 
 export class HttpResponse {
   public status: number;
-  public body: string | Uint8Array;
+  public body: string | Uint8Array | Record<string, any>;
   public headers: Record<string, string[]>;
   private ctx: HttpContext;
 
@@ -244,15 +244,39 @@ export class HttpContext extends TriggerContext<HttpRequest, HttpResponse> {
     const resp = new TriggerResponse();
 
     resp.setHttp(new HttpResponseContext());
-    resp.setData(httpCtx.response.body);
+
+    // Convert the body content to bytes
+    let body: Uint8Array;
+    let bodyContentType: "text/plain" | "application/octet-stream" | "application/json" = 'application/octet-stream';
+    if(typeof httpCtx.response.body === 'string') {
+      body = new TextEncoder().encode(httpCtx.response.body);
+      bodyContentType = "text/plain";
+    } else if(httpCtx.response.body instanceof Uint8Array) {
+      body = httpCtx.response.body;
+      bodyContentType = 'application/octet-stream';
+    } else {
+      body = new TextEncoder().encode(JSON.stringify(httpCtx.response.body));
+      bodyContentType = 'application/json';
+    }
+
+    resp.setData(body);
     resp.getHttp().setStatus(httpCtx.response.status);
 
     Object.entries(httpCtx.response.headers).forEach(([k, v]) => {
       const headerVal = new HeaderValue();
       headerVal.setValueList(v);
-      resp.getHttp().getHeadersMap().set(k, headerVal);
-      resp.getHttp().getHeadersOldMap().set(k, v[0]);
+      resp.getHttp().getHeadersMap().set(k.toLowerCase(), headerVal);
+      resp.getHttp().getHeadersOldMap().set(k.toLowerCase(), v[0]);
     });
+
+    // Automatically set the content-type header if it's missing
+    const contentHeader = resp.getHttp().getHeadersMap().get('content-type');
+    if(!contentHeader || contentHeader.getValueList().length === 0){
+      const headerVal = new HeaderValue();
+      headerVal.setValueList([bodyContentType]);
+      resp.getHttp().getHeadersMap().set('content-type', headerVal);
+      resp.getHttp().getHeadersOldMap().set('content-type', bodyContentType);
+    }
 
     return resp;
   }
