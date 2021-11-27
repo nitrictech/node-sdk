@@ -17,14 +17,14 @@ import { ServerMessage, ClientMessage } from '@nitric/api/proto/faas/v1/faas_pb'
 
 // We only need to handle half of the duplex stream
 class MockClientStream<Req, Resp> {
-  public recievedMessages: Req[] = [];
+  public receivedMessages: Req[] = [];
 
   private listeners: {
     [event: string]: ((req: Resp | string) => void)[];
   } = {};
 
   public write(req: Req) {
-    this.recievedMessages.push(req);
+    this.receivedMessages.push(req);
   }
 
   public on(event: string, cback: (req: Resp) => void) {
@@ -64,7 +64,7 @@ describe('faas.start', () => {
 
     it('The first sent message should be an InitRequest', () => {
       // TODO: Add test
-      expect(mockStream.recievedMessages[0].hasInitRequest()).toBe(true);
+      expect(mockStream.receivedMessages[0].hasInitRequest()).toBe(true);
     });
 
     it('Should start the server', () => {

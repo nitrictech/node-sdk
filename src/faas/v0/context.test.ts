@@ -17,6 +17,7 @@ import {
   TriggerRequest,
   HeaderValue,
   QueryValue,
+  TriggerResponse,
 } from '@nitric/api/proto/faas/v1/faas_pb';
 import { TriggerContext, HttpContext, EventContext } from './context';
 
@@ -129,6 +130,88 @@ describe('NitricTrigger.fromGrpcTriggerRequest', () => {
 
     it('should have the topic name that raised the trigger', () => {
       expect(trigger.event.req.topic).toBe('test');
+    });
+  });
+});
+
+describe('NitricTriggger.toGrpcTriggerResponse', () => {
+  const grpcTrigger = new GrpcHttpTriggerRequest();
+  grpcTrigger.setMethod('GET');
+  grpcTrigger.setPath('/test/');
+  const request = new TriggerRequest();
+  request.setData('Hello World');
+  request.setHttp(grpcTrigger);
+
+  describe('When the response body is text', () => {
+    let response: TriggerResponse;
+    
+    beforeEach(() => {
+      const ctx: TriggerContext = TriggerContext.fromGrpcTriggerRequest(request);
+      ctx.http.res.body = 'test';
+      response = HttpContext.toGrpcTriggerResponse(ctx);
+    });
+
+    it('Should convert to bytes', () => {
+      expect(response.getData() instanceof Uint8Array).toBe(true);
+    });
+
+    it('Should set the content-type to text', () => {
+      expect(response.getHttp().getHeadersMap().get('content-type').getValueList()).toEqual(['text/plain']);
+    });
+  });
+
+  describe('When the response body is an object', () => {
+    let response: TriggerResponse;
+    
+    beforeEach(() => {
+      const ctx: TriggerContext = TriggerContext.fromGrpcTriggerRequest(request);
+      ctx.http.res.body = { any: 'object' };
+      response = HttpContext.toGrpcTriggerResponse(ctx);
+    });
+
+    it('Should convert to bytes', () => {
+      expect(response.getData() instanceof Uint8Array).toBe(true);
+    });
+
+    it('Should set the content-type to json', () => {
+      expect(response.getHttp().getHeadersMap().get('content-type').getValueList()).toEqual(['application/json']);
+    });
+  });
+
+  describe('When the response body is bytes', () => {
+    let response: TriggerResponse;
+    
+    beforeEach(() => {
+      const ctx: TriggerContext = TriggerContext.fromGrpcTriggerRequest(request);
+      ctx.http.res.body = new TextEncoder().encode("response text");
+      response = HttpContext.toGrpcTriggerResponse(ctx);
+    });
+
+    it('Should not modify the body', () => {
+      expect(response.getData()).toEqual(new TextEncoder().encode("response text"));
+    });
+
+    it('Should set the content-type to octet stream', () => {
+      expect(response.getHttp().getHeadersMap().get('content-type').getValueList()).toEqual(['application/octet-stream']);
+    });
+  });
+
+  describe('When the content-type is set', () => {
+    let response: TriggerResponse;
+    
+    beforeEach(() => {
+      const ctx: TriggerContext = TriggerContext.fromGrpcTriggerRequest(request);
+      ctx.http.res.headers['Content-Type'] = ['application/json'];
+      ctx.http.res.body = new TextEncoder().encode('{"json":"which is already text"}');
+      response = HttpContext.toGrpcTriggerResponse(ctx);
+    });
+
+    it('Should convert to bytes', () => {
+      expect(response.getData() instanceof Uint8Array).toBe(true);
+    });
+
+    it('Should not change the content-type header(s)', () => {
+      expect(response.getHttp().getHeadersMap().get('content-type').getValueList()).toEqual(['application/json']);
     });
   });
 });
