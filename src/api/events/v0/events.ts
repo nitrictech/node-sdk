@@ -12,8 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { SERVICE_BIND } from '../../../constants';
-import { EventServiceClient, TopicServiceClient } from '@nitric/api/proto/event/v1/event_grpc_pb';
-import { NitricEvent as PbEvent, EventPublishRequest } from '@nitric/api/proto/event/v1/event_pb';
+import {
+  EventServiceClient,
+  TopicServiceClient,
+} from '@nitric/api/proto/event/v1/event_grpc_pb';
+import {
+  NitricEvent as PbEvent,
+  EventPublishRequest,
+} from '@nitric/api/proto/event/v1/event_pb';
 import { Struct } from 'google-protobuf/google/protobuf/struct_pb';
 import * as grpc from '@grpc/grpc-js';
 import type { NitricEvent } from '../../../types';
@@ -78,6 +84,8 @@ export class Topic {
     return new Promise<NitricEvent>((resolve, reject) => {
       this.eventing.EventServiceClient.publish(request, (error, response) => {
         if (error) {
+          // TODO: remove this ignore when not using link
+          // @ts-ignore
           reject(fromGrpcError(error));
         } else {
           resolve({ ...event, id: response.getId() });
@@ -148,6 +156,8 @@ export class Eventing {
     return new Promise((resolve, reject) => {
       this.TopicServiceClient.list(null, (error, response) => {
         if (error) {
+          // TODO: remove this ignore when not using link
+          // @ts-ignore
           reject(fromGrpcError(error));
         } else {
           resolve(

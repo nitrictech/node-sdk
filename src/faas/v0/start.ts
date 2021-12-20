@@ -22,6 +22,7 @@ import {
   HeaderValue,
   TriggerResponse,
   TopicResponseContext,
+  RouteWorker,
   InitRequest,
 } from '@nitric/api/proto/faas/v1/faas_pb';
 
@@ -35,13 +36,25 @@ import {
   TriggerMiddleware,
 } from '.';
 
+import { ApiWorkerOptions } from "../../resources/api";
+
+class FaasWorkerOptions {}
+
+type FaasClientOptions = ApiWorkerOptions | FaasWorkerOptions; 
+
 /**
  *
  */
-class Faas {
+export class Faas {
   private httpHandler?: HttpMiddleware;
   private eventHandler?: EventMiddleware;
   private anyHandler?: TriggerMiddleware;
+  private readonly options: FaasClientOptions;
+
+
+  constructor(opts: FaasClientOptions) {
+    this.options = opts;
+  }
 
   /**
    * Add an event handler to this Faas server
@@ -72,6 +85,8 @@ class Faas {
   private getEventHandler(): EventMiddleware | TriggerMiddleware | undefined {
     return this.eventHandler || this.anyHandler;
   }
+
+
 
   /**
    * Start the Faas server
@@ -162,6 +177,14 @@ class Faas {
     // Let the membrane know we're ready to start
     const initRequest = new InitRequest();
     const initMessage = new ClientMessage();
+
+    if (this.options instanceof ApiWorkerOptions) {
+      const apiWorker = new RouteWorker();
+      apiWorker.setMethodsList(this.options.methods)
+      apiWorker.setPath(this.options.route);
+      initRequest.setRoute(apiWorker);
+    }
+
     initMessage.setInitRequest(initRequest);
     faasStream.write(initMessage);
 
@@ -179,25 +202,25 @@ class Faas {
 // Faas Singleton
 let INSTANCE: Faas = undefined;
 
-const getInstance = (): Faas => {
-  INSTANCE = INSTANCE || new Faas();
-  return INSTANCE;
+const getFaasInstance = (): Faas => {
+ INSTANCE = INSTANCE || new Faas(new FaasWorkerOptions());
+ return INSTANCE;
 };
 
 /**
  * Register a HTTP handler
  */
 export const http = (...handlers: HttpMiddleware[]): Faas =>
-  getInstance().http(...handlers);
+  getFaasInstance().http(...handlers);
 
 /**
  * Register an event handler
  */
 export const event = (...handlers: EventMiddleware[]): Faas =>
-  getInstance().event(...handlers);
+  getFaasInstance().event(...handlers);
 
 /**
  * Start the FaaS server with a universal handler
  */
 export const start = async (...handlers: TriggerMiddleware[]): Promise<void> =>
-  await getInstance().start(...handlers);
+  await getFaasInstance().start(...handlers);
