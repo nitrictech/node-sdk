@@ -48,7 +48,7 @@ export class Storage {
 /**
  * A reference to a storage bucket.
  */
-class Bucket {
+export class Bucket {
   storage: Storage;
   name: string;
 
@@ -83,7 +83,7 @@ const DEFAULT_SIGN_URL_OPTS = {
 /**
  * A reference to a file in a bucket.
  */
-class File {
+export class File {
   storage: Storage;
   bucket: Bucket;
   name: string;
