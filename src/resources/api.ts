@@ -1,8 +1,6 @@
 import {
   HttpMiddleware,
 	Faas,
-  TriggerContext,
-  TriggerMiddleware,
 } from '../faas';
 
 import { HttpMethod } from "../types"
@@ -125,23 +123,3 @@ class Api {
 export const api = (name: string, ...middleware: HttpMiddleware[]): Api => {
 	return new Api(name, ...middleware);
 }
-
-// const userApi = api("users")
-
-// // ==== user collection operations ====
-// const allUsers = userApi.route('/users')
-
-// // list all
-// allUsers.get(ctx => { return ctx })
-// // create new
-// allUsers.post(ctx => { return ctx })
-
-// // ==== single user operations ====
-// const singleUser = userApi.route('/users/:userId')
-
-// // retrieve user
-// singleUser.get(ctx => { return ctx })
-// // update user
-// singleUser.put(ctx => { return ctx })
-// // delete user
-// singleUser.delete(ctx => { return ctx })
