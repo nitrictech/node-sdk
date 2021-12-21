@@ -23,6 +23,9 @@ import {
   TriggerResponse,
   TopicResponseContext,
   RouteWorker,
+  ScheduleRate,
+  SubscriptionWorker,
+  ScheduleWorker,
   InitRequest,
 } from '@nitric/api/proto/faas/v1/faas_pb';
 
@@ -36,11 +39,11 @@ import {
   TriggerMiddleware,
 } from '.';
 
-import { ApiWorkerOptions } from "../../resources/api";
+import { ApiWorkerOptions, RateWorkerOptions, SubscriptionWorkerOptions } from "../../resources";
 
 class FaasWorkerOptions {}
 
-type FaasClientOptions = ApiWorkerOptions | FaasWorkerOptions; 
+type FaasClientOptions = ApiWorkerOptions | RateWorkerOptions | FaasWorkerOptions; 
 
 /**
  *
@@ -183,6 +186,16 @@ export class Faas {
       apiWorker.setMethodsList(this.options.methods)
       apiWorker.setPath(this.options.route);
       initRequest.setRoute(apiWorker);
+    } else if(this.options instanceof RateWorkerOptions) {
+      const scheduleWorker = new ScheduleWorker();
+      const rate = new ScheduleRate();
+      rate.setRate(`${this.options.rate} ${this.options.frequency}`);
+      scheduleWorker.setRate(rate);
+      initRequest.setSchedule(scheduleWorker);
+    } else if (this.options instanceof SubscriptionWorkerOptions) {
+      const subscriptionWorker = new SubscriptionWorker()
+      subscriptionWorker.setTopic(this.options.topic);
+      initRequest.setSubscription(subscriptionWorker);
     }
 
     initMessage.setInitRequest(initRequest);

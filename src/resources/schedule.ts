@@ -4,7 +4,7 @@ type Frequency = "days" | "hours" | "minutes";
 
 const FREQUENCIES: Frequency[] = ["days", "hours", "minutes"];
 
-class RateWorkerOptions {
+export class RateWorkerOptions {
 	public readonly description: string;
 	public readonly rate: number;
 	public readonly frequency: Frequency;

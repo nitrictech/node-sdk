@@ -108,13 +108,25 @@ export class Topic {
  * ```
  */
 export class Eventing {
-  EventServiceClient: EventServiceClient;
-  TopicServiceClient: TopicServiceClient;
+  private _clients: {
+    event: EventServiceClient,
+    topic: TopicServiceClient,
+  } = undefined;
 
-  constructor() {
-    const clients = newEventServiceClients();
-    this.EventServiceClient = clients.event;
-    this.TopicServiceClient = clients.topic;
+  get EventServiceClient(): EventServiceClient {
+    if (!this._clients) {
+      this._clients = newEventServiceClients();
+    }
+
+    return this._clients.event;
+  }
+
+  get TopicServiceClient(): TopicServiceClient {
+    if (!this._clients) {
+      this._clients = newEventServiceClients();
+    }
+
+    return this._clients.topic;
   }
 
   /**
