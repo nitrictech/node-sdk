@@ -11,8 +11,9 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-export * from './api';
+export * from './api'
 
 // Nitric Node FaaS library
-export * as faas from './faas';
-export * from './resources';
+export * as faas from './faas'
+export * as resources from './resources'
+export { schedule } from './resources'
