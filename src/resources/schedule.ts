@@ -17,9 +17,9 @@ export class RateWorkerOptions {
 }
 
 /**
- * Rate
+ * Provides a rate based schedule 
  * 
- * rates provide a simple expressive way to define schedules
+ * Rates provide a simple expressive way to define schedules
  */
 class Rate {
 	public readonly schedule: Schedule;
@@ -37,7 +37,7 @@ class Rate {
 		}
 
 		if (!FREQUENCIES.includes(normalizedFrequency)) {
-			throw new Error(`invalid rate expression frequency must be one of ${FREQUENCIES}, recieved ${frequency}`)
+			throw new Error(`invalid rate expression frequency must be one of ${FREQUENCIES}, received ${frequency}`)
 		}
 
 		this.schedule = schedule;
@@ -52,7 +52,7 @@ class Rate {
 }
 
 /**
- * 
+ * Providers a scheduled worker.
  */
 class Schedule {
 	private readonly description: string;
@@ -61,13 +61,31 @@ class Schedule {
 		this.description = description;
 	}
 
+	/**
+	 * Run this schedule on the provided frequency.
+	 * 
+	 * @param rate to run the schedule, e.g. '7 days'. All rates accept a number and a frequency. Valid frequencies are 'days', 'hours' or 'minutes'.
+	 * @param mw the handler/middleware to run on a schedule
+	 * @returns {Promise} that resolves when the schedule worker stops running.
+	 */
 	every = (rate: string, ...mw: EventMiddleware[]): Promise<void> => {
+		// handle singular frequencies. e.g. schedule('something').every('day')
+		if(FREQUENCIES.indexOf(`${rate}s` as Frequency) !== -1) {
+			rate = `1 ${rate}s` // 'day' becomes '1 days'
+		}
+
 		const r = new Rate(this, rate, ...mw);
 		// Start the new rate immediately
 		return r['start']();
 	}
 }
 
+/**
+ * Provides a new schedule, which can be configured with a rate/cron and a callback to run on the schedule.
+ * 
+ * @param description of the schedule, e.g. "Nightly"
+ * @returns 
+ */
 export const schedule = (description: string): Schedule => {
 	return new Schedule(description);
 };
