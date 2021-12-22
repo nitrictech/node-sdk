@@ -15,6 +15,7 @@ class CollectionResource {
 	}
 
 	public for(perm: CollectionPermission[] | CollectionPermission, ...perms: CollectionPermission[]): CollectionRef {
+		// TODO: call server to request permissions.
 		return new CollectionRef();
 	}
 }

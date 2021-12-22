@@ -12,7 +12,7 @@ class BucketRef {
 	}
 
 	private async register() {
-		// TODO: register this resources details
+		// TODO: register this resource's details
 	}
 
 	public file(name: string): File {
@@ -46,6 +46,12 @@ class BucketResource {
 	}
 }
 
+/**
+ * Provides a cloud bucket resource.
+ * 
+ * @param name the _unique_ name of the bucket within the stack
+ * @returns 
+ */
 export const bucket = (name: string): BucketResource => {
 	return new BucketResource(name);
 }
