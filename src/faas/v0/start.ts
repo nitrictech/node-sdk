@@ -188,6 +188,7 @@ export class Faas {
       initRequest.setRoute(apiWorker);
     } else if(this.options instanceof RateWorkerOptions) {
       const scheduleWorker = new ScheduleWorker();
+      scheduleWorker.setKey(this.options.description)
       const rate = new ScheduleRate();
       rate.setRate(`${this.options.rate} ${this.options.frequency}`);
       scheduleWorker.setRate(rate);
