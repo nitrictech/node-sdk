@@ -183,12 +183,12 @@ export class Faas {
 
     if (this.options instanceof ApiWorkerOptions) {
       const apiWorker = new RouteWorker();
-      apiWorker.setMethodsList(this.options.methods)
+      apiWorker.setMethodsList(this.options.methods);
       apiWorker.setPath(this.options.route);
       initRequest.setRoute(apiWorker);
     } else if(this.options instanceof RateWorkerOptions) {
       const scheduleWorker = new ScheduleWorker();
-      scheduleWorker.setKey(this.options.description)
+      scheduleWorker.setKey(this.options.description);
       const rate = new ScheduleRate();
       rate.setRate(`${this.options.rate} ${this.options.frequency}`);
       scheduleWorker.setRate(rate);
@@ -198,6 +198,7 @@ export class Faas {
       subscriptionWorker.setTopic(this.options.topic);
       initRequest.setSubscription(subscriptionWorker);
     }
+    // Original faas workers should return a blank InitRequest for compatibility.
 
     initMessage.setInitRequest(initRequest);
     faasStream.write(initMessage);

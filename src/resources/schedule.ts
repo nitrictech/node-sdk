@@ -37,7 +37,7 @@ class Rate {
 		}
 
 		if (!FREQUENCIES.includes(normalizedFrequency)) {
-			throw new Error(`invalid rate expression frequency must be one of ${FREQUENCIES}, received ${frequency}`)
+			throw new Error(`invalid rate expression, frequency must be one of ${FREQUENCIES}, received ${frequency}`)
 		}
 
 		this.schedule = schedule;
