@@ -22,11 +22,11 @@ import {
   HeaderValue,
   TriggerResponse,
   TopicResponseContext,
-  RouteWorker,
   ScheduleRate,
   SubscriptionWorker,
   ScheduleWorker,
   InitRequest,
+  ApiWorker,
 } from '@nitric/api/proto/faas/v1/faas_pb';
 
 import {
@@ -182,10 +182,10 @@ export class Faas {
     const initMessage = new ClientMessage();
 
     if (this.options instanceof ApiWorkerOptions) {
-      const apiWorker = new RouteWorker();
+      const apiWorker = new ApiWorker();
       apiWorker.setMethodsList(this.options.methods);
       apiWorker.setPath(this.options.route);
-      initRequest.setRoute(apiWorker);
+      initRequest.setApi(apiWorker);
     } else if(this.options instanceof RateWorkerOptions) {
       const scheduleWorker = new ScheduleWorker();
       scheduleWorker.setKey(this.options.description);
