@@ -145,7 +145,7 @@ export class Faas {
             faasStream.cancel();
           }
 
-          const result = await handler(ctx, async (ctx) => ctx);
+          const result = await handler(ctx, async (ctx) => ctx) || ctx;
           responseMessage.setTriggerResponse(
             TriggerContext.toGrpcTriggerResponse(result)
           );
