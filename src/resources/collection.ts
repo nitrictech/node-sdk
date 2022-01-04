@@ -1,4 +1,9 @@
-import { Resource, ResourceDeclareRequest, ResourceDeclareResponse, ResourceType } from "@nitric/api/proto/resource/v1/resource_pb";
+import {
+  Resource,
+  ResourceDeclareRequest,
+  ResourceDeclareResponse,
+  ResourceType,
+} from '@nitric/api/proto/resource/v1/resource_pb';
 import resourceClient from './client';
 
 class CollectionRef {}
@@ -17,6 +22,10 @@ class CollectionResource {
     this.name = name;
   }
 
+  /**
+   * Register this collection as a required resource for the calling function/container
+   * @returns a promise that resolves when the registration is complete
+   */
   private async register(): Promise<void> {
     const req = new ResourceDeclareRequest();
     const resource = new Resource();
@@ -40,10 +49,15 @@ class CollectionResource {
     });
   }
 
-  public for(
-    perm: CollectionPermission[] | CollectionPermission,
-    ...perms: CollectionPermission[]
-  ): CollectionRef {
+  /**
+   * Return a collection reference and register the permissions required by the currently scoped function for this resource.
+   *
+   * e.g. const customers = resources.collection('customers').for('reading', 'writing')
+   *
+   * @param perms the required permission set
+   * @returns a usable collection reference
+   */
+  public for(...perms: CollectionPermission[]): CollectionRef {
     // TODO: call server to request permissions.
     return new CollectionRef();
   }

@@ -17,7 +17,7 @@ export class RateWorkerOptions {
 }
 
 /**
- * Provides a rate based schedule 
+ * Provides a rate based schedule
  * 
  * Rates provide a simple expressive way to define schedules
  */

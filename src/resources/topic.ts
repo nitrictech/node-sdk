@@ -8,23 +8,8 @@ import {
   ResourceDeclareResponse,
   ResourceType,
 } from '@nitric/api/proto/resource/v1/resource_pb';
-import { SERVICE_BIND } from 'src/constants';
 
-/**
- * Creates a new event publisher
- */
-class Publisher {
-  public topic: Topic;
-
-  constructor(name: string) {
-    this.topic = events().topic(name);
-  }
-
-  // publishes events to a topic
-  async publish(event: NitricEvent) {
-    this.topic.publish(event);
-  }
-}
+type TopicPermission = 'publishing';
 
 export class SubscriptionWorkerOptions {
   public readonly topic: string;
@@ -49,6 +34,9 @@ class Subscription {
   }
 }
 
+/**
+ * Topic resource for pub/sub async messaging.
+ */
 class TopicResource {
   private readonly name: string;
   private hasPublisher: boolean;
@@ -58,6 +46,10 @@ class TopicResource {
     this.name = name;
   }
 
+  /**
+   * Register this topic as a required resource for the calling function/container
+   * @returns a promise that resolves when the registration is complete
+   */
   private async register(): Promise<void> {
     const req = new ResourceDeclareRequest();
     const resource = new Resource();
@@ -81,31 +73,31 @@ class TopicResource {
     });
   }
 
-  publisher(): Publisher {
-    if (this.hasSubscriber) {
-      // TODO: Move this logic into the server
-      // TODO: Allow cycles based on config e.g. app().enableCycles();
-      throw new Error(
-        'cannot create subscriber and publisher in same nitric function!'
-      );
-    }
-
-    this.hasPublisher = true;
-    return new Publisher(this.name);
-  }
-
+  /**
+   * Register and start a subscription handler that will be called for all events from this topic.
+   * @param mw handler middleware which will be run for every incoming event
+   * @returns Promise which resolves when the handler server terminates
+   */
   subscribe(...mw: EventMiddleware[]): Promise<void> {
-    if (this.hasPublisher) {
-      // TODO: Move this logic into the server
-      throw new Error(
-        'cannot create subscriber and publisher in same nitric function!'
-      );
-    }
-
-    this.hasSubscriber = true;
+    // TODO: Check if publish policy has already been registered and error.
+    // TODO: register subscription policy
 
     const sub = new Subscription(this.name, ...mw);
     return sub['start']();
+  }
+
+  /**
+   * Return a topic reference and register the permissions required by the currently scoped function for this resource.
+   * 
+   * e.g. const updates = resources.topic('updates').for('publishing')
+   * 
+   * @param perms the required permission set
+   * @returns a usable topic reference
+   */
+  public for(...perms: TopicPermission[]): Topic {
+    // TODO: check if subscriber has been registered and error if so.
+    // TODO: register required policy resource.
+    return events().topic(this.name)
   }
 }
 
@@ -113,6 +105,12 @@ class TopicResource {
 // will return the same topic resource
 const topics: Record<string, TopicResource> = {};
 
+/**
+ * Provides a cloud topic resource.
+ * 
+ * @param name the _unique_ name of the topic
+ * @returns the topic resource
+ */
 export const topic = (name: string): TopicResource => {
   if (!topics[name]) {
     topics[name] = new TopicResource(name);
