@@ -1,6 +1,5 @@
 import { Faas, EventMiddleware } from '../faas';
 import { events, Topic } from '../api/';
-import { NitricEvent } from '../types';
 import resourceClient from './client';
 import {
   Resource,
@@ -8,6 +7,7 @@ import {
   ResourceDeclareResponse,
   ResourceType,
 } from '@nitric/api/proto/resource/v1/resource_pb';
+import { make, Resource as Base } from './common';
 
 type TopicPermission = 'publishing';
 
@@ -37,20 +37,13 @@ class Subscription {
 /**
  * Topic resource for pub/sub async messaging.
  */
-class TopicResource {
-  private readonly name: string;
-  private hasPublisher: boolean;
-  private hasSubscriber: boolean;
-
-  constructor(name: string) {
-    this.name = name;
-  }
+class TopicResource extends Base {
 
   /**
    * Register this topic as a required resource for the calling function/container
    * @returns a promise that resolves when the registration is complete
    */
-  private async register(): Promise<void> {
+  protected async register(): Promise<void> {
     const req = new ResourceDeclareRequest();
     const resource = new Resource();
     resource.setName(this.name);
@@ -101,21 +94,4 @@ class TopicResource {
   }
 }
 
-// This singleton helps avoid duplicate references to topic('name')
-// will return the same topic resource
-const topics: Record<string, TopicResource> = {};
-
-/**
- * Provides a cloud topic resource.
- * 
- * @param name the _unique_ name of the topic
- * @returns the topic resource
- */
-export const topic = (name: string): TopicResource => {
-  if (!topics[name]) {
-    topics[name] = new TopicResource(name);
-    topics[name]['register']();
-  }
-
-  return topics[name];
-};
+export const topic = make(TopicResource)

@@ -5,6 +5,7 @@ import {
   ResourceType,
 } from '@nitric/api/proto/resource/v1/resource_pb';
 import resourceClient from './client';
+import { make, Resource as Base } from './common';
 
 class CollectionRef {}
 
@@ -15,18 +16,12 @@ const everything: CollectionPermission[] = ['reading', 'writing', 'deleting'];
 /**
  * A document collection resources, such as a collection/table in a document database.
  */
-class CollectionResource {
-  private readonly name: string;
-
-  constructor(name: string) {
-    this.name = name;
-  }
-
+class CollectionResource extends Base {
   /**
    * Register this collection as a required resource for the calling function/container
    * @returns a promise that resolves when the registration is complete
    */
-  private async register(): Promise<void> {
+  protected async register(): Promise<void> {
     const req = new ResourceDeclareRequest();
     const resource = new Resource();
     resource.setName(this.name);
@@ -63,15 +58,4 @@ class CollectionResource {
   }
 }
 
-// This singleton helps avoid duplicate references to collection('name')
-// will return the same collection resource
-const collections: Record<string, CollectionResource> = {};
-
-export const collection = (name: string): CollectionResource => {
-  if (!collections[name]) {
-    collections[name] = new CollectionResource(name);
-    collections[name]['register']();
-  }
-
-  return collections[name];
-};
+export const collection = make(CollectionResource);
