@@ -139,7 +139,7 @@ class Api {
 
   private readonly routes: Route[];
 
-  constructor(name: string, options?: ApiOpts) {
+  constructor(name: string, options: ApiOpts = {}) {
     const { middleware, path = '/' } = options;
     this.name = name;
     this.path = path;
