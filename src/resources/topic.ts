@@ -19,7 +19,7 @@ import {
   ResourceDeclareRequest,
   ResourceDeclareResponse,
   ResourceType,
-  Action
+  Action,
 } from '@nitric/api/proto/resource/v1/resource_pb';
 import { ActionsList, make, Resource as Base } from './common';
 
@@ -82,12 +82,9 @@ class TopicResource extends Base<TopicPermission> {
   protected permsToActions(...perms: TopicPermission[]): ActionsList {
     // TODO
     return perms.reduce((actions, p) => {
-      switch(p) {
-        case "publishing":
-          return [
-            ...actions, 
-            Action.TOPICEVENTPUBLISH, 
-          ];
+      switch (p) {
+        case 'publishing':
+          return [...actions, Action.TOPICEVENTPUBLISH];
       }
     }, []);
   }
@@ -113,9 +110,11 @@ class TopicResource extends Base<TopicPermission> {
    * @param perms the required permission set
    * @returns a usable topic reference
    */
-  public for(...perms: TopicPermission[]): Topic {
+
+  public for<T>(...perms: TopicPermission[]) {
     // TODO: check if subscriber has been registered and error if so.
     // TODO: register required policy resource.
+    this.registerPolicy(...perms);
     return events().topic(this.name);
   }
 }
