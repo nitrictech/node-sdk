@@ -85,6 +85,11 @@ class TopicResource extends Base<TopicPermission> {
       switch (p) {
         case 'publishing':
           return [...actions, Action.TOPICEVENTPUBLISH];
+        default:
+          throw new Error(
+            `unknown permission ${p}, supported permissions is publishing.}
+            )}`
+          );
       }
     }, []);
   }
