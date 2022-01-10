@@ -28,7 +28,7 @@ const everything: QueuePermission[] = ['sending', 'receiving'];
 /**
  * Queue resource for async send/receive messaging
  */
-class QueueResource extends Base {
+class QueueResource extends Base<QueuePermission> {
   /**
    * Register this queue as a required resource for the calling function/container
    * @returns a promise that resolves when the registration is complete

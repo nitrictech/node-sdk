@@ -30,7 +30,7 @@ const everything: CollectionPermission[] = ['reading', 'writing', 'deleting'];
 /**
  * A document collection resources, such as a collection/table in a document database.
  */
-class CollectionResource extends Base {
+class CollectionResource extends Base<CollectionPermission> {
   /**
    * Register this collection as a required resource for the calling function/container
    * @returns a promise that resolves when the registration is complete

@@ -23,7 +23,7 @@ import resourceClient from './client';
 
 export type ActionsList = ActionMap[keyof ActionMap][];
 
-export abstract class Resource {
+export abstract class Resource<P = string> {
   /**
    * Unique name for the resource by type within the stack.
    *
@@ -39,7 +39,7 @@ export abstract class Resource {
     this.name = name;
   }
 
-  public registerPolicy(...perms: string[]) {
+  public registerPolicy(...perms: P[]) {
     const actions = this.permsToActions(...perms);
 
     const req = new ResourceDeclareRequest();
@@ -70,7 +70,7 @@ export abstract class Resource {
 
   protected abstract register(): Promise<ProtoResource>;
 
-  protected abstract permsToActions(...perms: string[]): ActionsList;
+  protected abstract permsToActions(...perms: P[]): ActionsList;
 }
 
 // This singleton helps avoid duplicate references to bucket('name')

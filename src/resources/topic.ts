@@ -50,7 +50,7 @@ class Subscription {
 /**
  * Topic resource for pub/sub async messaging.
  */
-class TopicResource extends Base {
+class TopicResource extends Base<TopicPermission> {
   /**
    * Register this topic as a required resource for the calling function/container
    * @returns a promise that resolves when the registration is complete
