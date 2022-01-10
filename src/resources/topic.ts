@@ -19,6 +19,7 @@ import {
   ResourceDeclareRequest,
   ResourceDeclareResponse,
   ResourceType,
+  Action
 } from '@nitric/api/proto/resource/v1/resource_pb';
 import { ActionsList, make, Resource as Base } from './common';
 
@@ -78,9 +79,17 @@ class TopicResource extends Base<TopicPermission> {
     });
   }
 
-  protected permsToActions(...perms: string[]): ActionsList {
+  protected permsToActions(...perms: TopicPermission[]): ActionsList {
     // TODO
-    return [];
+    return perms.reduce((actions, p) => {
+      switch(p) {
+        case "publishing":
+          return [
+            ...actions, 
+            Action.TOPICEVENTPUBLISH, 
+          ];
+      }
+    }, []);
   }
 
   /**
