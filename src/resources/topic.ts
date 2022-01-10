@@ -1,3 +1,16 @@
+// Copyright 2021, Nitric Technologies Pty Ltd.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 import { Faas, EventMiddleware } from '../faas';
 import { events, Topic } from '../api/';
 import resourceClient from './client';
@@ -7,7 +20,7 @@ import {
   ResourceDeclareResponse,
   ResourceType,
 } from '@nitric/api/proto/resource/v1/resource_pb';
-import { make, Resource as Base } from './common';
+import { ActionsList, make, Resource as Base } from './common';
 
 type TopicPermission = 'publishing';
 
@@ -37,20 +50,19 @@ class Subscription {
 /**
  * Topic resource for pub/sub async messaging.
  */
-class TopicResource extends Base {
-
+class TopicResource extends Base<TopicPermission> {
   /**
    * Register this topic as a required resource for the calling function/container
    * @returns a promise that resolves when the registration is complete
    */
-  protected async register(): Promise<void> {
+  protected async register(): Promise<Resource> {
     const req = new ResourceDeclareRequest();
     const resource = new Resource();
     resource.setName(this.name);
     resource.setType(ResourceType.TOPIC);
     req.setResource(resource);
 
-    return new Promise<void>((resolve, reject) => {
+    return new Promise<Resource>((resolve, reject) => {
       resourceClient.declare(
         req,
         (error, response: ResourceDeclareResponse) => {
@@ -59,11 +71,16 @@ class TopicResource extends Base {
             // @ts-ignore
             reject(fromGrpcError(error));
           } else {
-            resolve();
+            resolve(resource);
           }
         }
       );
     });
+  }
+
+  protected permsToActions(...perms: string[]): ActionsList {
+    // TODO
+    return [];
   }
 
   /**
@@ -81,17 +98,17 @@ class TopicResource extends Base {
 
   /**
    * Return a topic reference and register the permissions required by the currently scoped function for this resource.
-   * 
+   *
    * e.g. const updates = resources.topic('updates').for('publishing')
-   * 
+   *
    * @param perms the required permission set
    * @returns a usable topic reference
    */
   public for(...perms: TopicPermission[]): Topic {
     // TODO: check if subscriber has been registered and error if so.
     // TODO: register required policy resource.
-    return events().topic(this.name)
+    return events().topic(this.name);
   }
 }
 
-export const topic = make(TopicResource)
+export const topic = make(TopicResource);
