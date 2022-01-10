@@ -58,7 +58,7 @@ class BucketResource extends Base<BucketPermission> {
     });
   }
 
-  protected permsToActions(...perms: string[]): ActionsList {
+  protected permsToActions(...perms: BucketPermission[]): ActionsList {
     return perms.reduce((actions, perm) => {
       switch (perm) {
         case 'reading':

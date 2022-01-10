@@ -23,7 +23,7 @@ import resourceClient from './client';
 
 export type ActionsList = ActionMap[keyof ActionMap][];
 
-export abstract class Resource<P = string> {
+export abstract class Resource<P> {
   /**
    * Unique name for the resource by type within the stack.
    *
@@ -75,7 +75,7 @@ export abstract class Resource<P = string> {
 
 // This singleton helps avoid duplicate references to bucket('name')
 // will return the same bucket resource
-const cache: Record<string, Record<string, Resource>> = {};
+const cache: Record<string, Record<string, Resource<string>>> = {};
 
 type newer = <T>(name: string) => T;
 
@@ -85,7 +85,7 @@ type newer = <T>(name: string) => T;
  * @param name the _unique_ name of the resource within the stack
  * @returns the resource
  */
-export const make = <T extends Resource>(
+export const make = <T extends Resource<string>>(
   T: new (name: string) => T
 ): ((name: string) => T) => {
   const typename = typeof T;
