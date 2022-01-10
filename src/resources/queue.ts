@@ -14,16 +14,15 @@
 import {
   Resource,
   ResourceDeclareRequest,
-  ResourceDeclareResponse,
   ResourceType,
+  Action,
 } from '@nitric/api/proto/resource/v1/resource_pb';
 import resourceClient from './client';
 import { queues, Queue } from '../api/';
+import { fromGrpcError } from '../api/errors';
 import { ActionsList, make, Resource as Base } from './common';
 
 type QueuePermission = 'sending' | 'receiving';
-
-const everything: QueuePermission[] = ['sending', 'receiving'];
 
 /**
  * Queue resource for async send/receive messaging
@@ -43,10 +42,8 @@ class QueueResource extends Base<QueuePermission> {
     return new Promise<Resource>((resolve, reject) => {
       resourceClient.declare(
         req,
-        (error, response: ResourceDeclareResponse) => {
+        (error) => {
           if (error) {
-            // TODO: remove this ignore when not using link
-            // @ts-ignore
             reject(fromGrpcError(error));
           } else {
             resolve(resource);
@@ -56,9 +53,21 @@ class QueueResource extends Base<QueuePermission> {
     });
   }
 
-  protected permsToActions(...perms: string[]): ActionsList {
-    // TODO
-    return [];
+  protected permsToActions(...perms: QueuePermission[]): ActionsList {
+    return perms.reduce((actions, p) => {
+      switch(p) {
+        case "sending":
+          return [
+            ...actions, 
+            Action.QUEUESEND, 
+          ];
+        case "receiving":
+          return [
+            ...actions,
+            Action.QUEUERECEIVE,
+          ];
+      }
+    }, []);
   }
 
   /**
@@ -71,10 +80,10 @@ class QueueResource extends Base<QueuePermission> {
    * @returns
    */
   public for(
-    perm: QueuePermission[] | QueuePermission,
     ...perms: QueuePermission[]
   ): Queue {
-    // TODO: register required policy resources.
+    this.registerPolicy(...perms);
+
     return queues().queue(this.name);
   }
 }
