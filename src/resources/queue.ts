@@ -19,7 +19,7 @@ import {
 } from '@nitric/api/proto/resource/v1/resource_pb';
 import resourceClient from './client';
 import { queues, Queue } from '../api/';
-import { make, Resource as Base } from './common';
+import { ActionsList, make, Resource as Base } from './common';
 
 type QueuePermission = 'sending' | 'receiving';
 
@@ -33,14 +33,14 @@ class QueueResource extends Base {
    * Register this queue as a required resource for the calling function/container
    * @returns a promise that resolves when the registration is complete
    */
-  protected async register(): Promise<void> {
+  protected async register(): Promise<Resource> {
     const req = new ResourceDeclareRequest();
     const resource = new Resource();
     resource.setName(this.name);
     resource.setType(ResourceType.QUEUE);
     req.setResource(resource);
 
-    return new Promise<void>((resolve, reject) => {
+    return new Promise<Resource>((resolve, reject) => {
       resourceClient.declare(
         req,
         (error, response: ResourceDeclareResponse) => {
@@ -49,11 +49,16 @@ class QueueResource extends Base {
             // @ts-ignore
             reject(fromGrpcError(error));
           } else {
-            resolve();
+            resolve(resource);
           }
         }
       );
     });
+  }
+
+  protected permsToActions(...perms: string[]): ActionsList {
+    // TODO
+    return [];
   }
 
   /**
@@ -74,4 +79,4 @@ class QueueResource extends Base {
   }
 }
 
-export const queue = make(QueueResource)
+export const queue = make(QueueResource);
