@@ -84,7 +84,6 @@ class QueueResource extends Base<QueuePermission> {
   ): Queue {
     this.registerPolicy(...perms);
 
-    // TODO: register required policy resources.
     return queues().queue(this.name);
   }
 }
