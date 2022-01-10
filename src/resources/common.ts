@@ -88,7 +88,7 @@ type newer = <T>(name: string) => T;
 export const make = <T extends Resource<string>>(
   T: new (name: string) => T
 ): ((name: string) => T) => {
-  const typename = typeof T;
+  const typename = T.name;
   return (name: string) => {
     if (!cache[typename]) {
       cache[typename] = {};
@@ -99,7 +99,6 @@ export const make = <T extends Resource<string>>(
         'register'
       ]();
     }
-
     return cache[typename][name] as T;
   };
 };
