@@ -44,7 +44,6 @@ class QueueResource extends Base<QueuePermission> {
         req,
         (error) => {
           if (error) {
-            // TODO: remove this ignore when not using link
             reject(fromGrpcError(error));
           } else {
             resolve(resource);
