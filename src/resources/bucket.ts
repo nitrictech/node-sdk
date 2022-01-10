@@ -12,14 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import {
+  Action,
   Resource,
   ResourceDeclareRequest,
   ResourceDeclareResponse,
   ResourceType,
 } from '@nitric/api/proto/resource/v1/resource_pb';
 import resourceClient from './client';
-import { storage, Bucket, File } from '../api/storage';
-import { make, Resource as Base } from './common';
+import { storage, Bucket } from '../api/storage';
+import { ActionsList, make, Resource as Base } from './common';
 
 type BucketPermission = 'reading' | 'writing' | 'deleting';
 
@@ -29,19 +30,19 @@ const everything: BucketPermission[] = ['reading', 'writing', 'deleting'];
  * Cloud storage bucket resource for large file storage.
  */
 class BucketResource extends Base {
-
   /**
    * Register this bucket as a required resource for the calling function/container
    * @returns a promise that resolves when the registration is complete
    */
-  protected async register(): Promise<void> {
+  protected async register(): Promise<Resource> {
     const req = new ResourceDeclareRequest();
     const resource = new Resource();
     resource.setName(this.name);
     resource.setType(ResourceType.BUCKET);
+
     req.setResource(resource);
 
-    return new Promise<void>((resolve, reject) => {
+    return new Promise<Resource>((resolve, reject) => {
       resourceClient.declare(
         req,
         (error, response: ResourceDeclareResponse) => {
@@ -50,11 +51,30 @@ class BucketResource extends Base {
             // @ts-ignore
             reject(fromGrpcError(error));
           } else {
-            resolve();
+            resolve(resource);
           }
         }
       );
     });
+  }
+
+  protected permsToActions(...perms: string[]): ActionsList {
+    return perms.reduce((actions, perm) => {
+      switch (perm) {
+        case 'reading':
+          return [...actions, Action.BUCKETFILEGET, Action.BUCKETFILELIST];
+        case 'writing':
+          return [...actions, Action.BUCKETFILEPUT];
+        case 'deleting':
+          return [...actions, Action.BUCKETFILEDELETE];
+        default:
+          throw new Error(
+            `unknown bucket permission ${perm}, supported permissions are ${everything.join(
+              ', '
+            )}`
+          );
+      }
+    }, []);
   }
 
   /**
@@ -66,7 +86,8 @@ class BucketResource extends Base {
    * @returns a usable bucket reference
    */
   public for(...perms: BucketPermission[]): Bucket {
-    // TODO: register required policy resources.
+    this.registerPolicy(...perms);
+
     return storage().bucket(this.name);
   }
 }
