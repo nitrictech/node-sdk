@@ -21,6 +21,7 @@ import {
 import resourceClient from './client';
 import { storage, Bucket } from '../api/storage';
 import { ActionsList, make, Resource as Base } from './common';
+import { fromGrpcError } from '../api/errors';
 
 type BucketPermission = 'reading' | 'writing' | 'deleting';
 
@@ -47,8 +48,6 @@ class BucketResource extends Base<BucketPermission> {
         req,
         (error, response: ResourceDeclareResponse) => {
           if (error) {
-            // TODO: remove this ignore when not using link
-            // @ts-ignore
             reject(fromGrpcError(error));
           } else {
             resolve(resource);
