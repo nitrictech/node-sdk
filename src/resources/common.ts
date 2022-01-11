@@ -60,8 +60,7 @@ export abstract class Resource<P> {
         req,
         (error, response: ResourceDeclareResponse) => {
           if (error) {
-            //@ts-ignore
-            throw new Error(fromGrpcError(error));
+            throw fromGrpcError(error);
           }
         }
       );
