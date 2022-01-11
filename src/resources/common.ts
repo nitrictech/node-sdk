@@ -32,7 +32,7 @@ export abstract class Resource<P> {
    */
   protected readonly name: string;
   /**
-   * Used to resolve the given reource for policy creation
+   * Used to resolve the given resource for policy creation
    */
   public registerPromise: Promise<ProtoResource>;
 
