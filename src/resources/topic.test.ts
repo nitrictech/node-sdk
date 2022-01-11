@@ -1,25 +1,56 @@
 import { ResourceServiceClient } from '@nitric/api/proto/resource/v1/resource_grpc_pb';
 import { UnimplementedError } from '../api/errors';
 import { topic } from '.';
+import { ResourceDeclareResponse } from '@nitric/api/proto/resource/v1/resource_pb';
+
+// const declareSpy =
 
 describe('Registering topic resources', () => {
   describe('Given declare returns an error from the resource server', () => {
-    describe('When the service returns an error', () => {
-      const MOCK_ERROR = {
-        code: 2,
-        message: 'UNIMPLEMENTED',
-      };
+    const MOCK_ERROR = {
+      code: 2,
+      message: 'UNIMPLEMENTED',
+    };
 
-      const validName = 'my-topic';
+    const validName = 'my-topic';
+    let declareSpy;
 
-      let declareMock;
+    beforeAll(() => {
+      declareSpy = jest
+        .spyOn(ResourceServiceClient.prototype, 'declare')
+        .mockImplementationOnce((request, callback: any) => {
+          callback(MOCK_ERROR, null);
+
+          return null as any;
+        });
+    });
+
+    afterAll(() => {
+      declareSpy.mockClear();
+    });
+
+    it('Should throw the error', async () => {
+      await expect(topic(validName).registerPromise).rejects.toEqual(
+        new UnimplementedError('UNIMPLEMENTED')
+      );
+    });
+
+    it('Should call the resource server', () => {
+      expect(declareSpy).toBeCalledTimes(1);
+    });
+  });
+
+  describe('Given declare succeeds on the resource server', () => {
+    describe('When the service succeeds', () => {
+      const validName = 'my-topic2';
+      let otherSpy;
 
       beforeAll(() => {
-        declareMock = jest
+        otherSpy = jest
           .spyOn(ResourceServiceClient.prototype, 'declare')
-          .mockImplementation((request, callback: any) => {
-            callback(MOCK_ERROR, null);
-
+          .mockImplementationOnce((request, callback: any) => {
+            const response = new ResourceDeclareResponse();
+            callback(null, response);
             return null as any;
           });
       });
@@ -28,16 +59,13 @@ describe('Registering topic resources', () => {
         jest.resetAllMocks();
       });
 
-      it('Should throw the error', async () => {
-        await expect(topic(validName).registerPromise).rejects.toEqual(
-          new UnimplementedError('UNIMPLEMENTED')
-        );
+      it('Should succeed', async () => {
+        await expect(topic(validName).registerPromise).resolves.not.toBeNull();
+      });
+
+      it('Should call the resource server', () => {
+        expect(otherSpy).toBeCalledTimes(1);
       });
     });
   });
-  // describe('Given the topic doesn\'t exist', () => {
-  //   describe('When a valid topic name is provided', () => {
-
-  //   })
-  // })
 });
