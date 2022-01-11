@@ -20,6 +20,7 @@ import {
   ActionMap,
 } from '@nitric/api/proto/resource/v1/resource_pb';
 import resourceClient from './client';
+import { fromGrpcError } from '../api/errors';
 
 export type ActionsList = ActionMap[keyof ActionMap][];
 
@@ -59,8 +60,7 @@ export abstract class Resource<P> {
         req,
         (error, response: ResourceDeclareResponse) => {
           if (error) {
-            // TODO: remove this ignore when not using link
-            // @ts-ignore
+            //@ts-ignore
             throw new Error(fromGrpcError(error));
           }
         }
@@ -98,6 +98,9 @@ export const make = <T extends Resource<string>>(
       cache[typename][name].registerPromise = cache[typename][name][
         'register'
       ]();
+      cache[typename][name].registerPromise.catch((err) => {
+        console.log(err);
+      });
     }
 
     return cache[typename][name] as T;
