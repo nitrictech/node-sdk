@@ -21,6 +21,7 @@ import {
 import resourceClient from './client';
 import { storage, Bucket } from '../api/storage';
 import { ActionsList, make, Resource as Base } from './common';
+import { fromGrpcError } from '../api/errors';
 
 type BucketPermission = 'reading' | 'writing' | 'deleting';
 
