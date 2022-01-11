@@ -48,8 +48,6 @@ class BucketResource extends Base<BucketPermission> {
         req,
         (error, response: ResourceDeclareResponse) => {
           if (error) {
-            // TODO: remove this ignore when not using link
-            // @ts-ignore
             reject(fromGrpcError(error));
           } else {
             resolve(resource);
