@@ -22,6 +22,7 @@ import {
   Action,
 } from '@nitric/api/proto/resource/v1/resource_pb';
 import { ActionsList, make, Resource as Base } from './common';
+import { fromGrpcError } from '../api/errors';
 
 type TopicPermission = 'publishing';
 
@@ -68,8 +69,6 @@ class TopicResource extends Base<TopicPermission> {
         req,
         (error, response: ResourceDeclareResponse) => {
           if (error) {
-            // TODO: remove this ignore when not using link
-            // @ts-ignore
             reject(fromGrpcError(error));
           } else {
             resolve(resource);
