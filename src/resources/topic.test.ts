@@ -17,8 +17,6 @@ import { UnimplementedError } from '../api/errors';
 import { topic } from '.';
 import { ResourceDeclareResponse } from '@nitric/api/proto/resource/v1/resource_pb';
 
-// const declareSpy =
-
 describe('Registering topic resources', () => {
   describe('Given declare returns an error from the resource server', () => {
     const MOCK_ERROR = {
