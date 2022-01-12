@@ -27,29 +27,12 @@ type BucketPermission = 'reading' | 'writing' | 'deleting';
 
 const everything: BucketPermission[] = ['reading', 'writing', 'deleting'];
 
-const permsToActions = (...perms: BucketPermission[]) => {
-  return perms.reduce((actions, perm) => {
-    switch (perm) {
-      case 'reading':
-        return [...actions, Action.BUCKETFILEGET, Action.BUCKETFILELIST];
-      case 'writing':
-        return [...actions, Action.BUCKETFILEPUT];
-      case 'deleting':
-        return [...actions, Action.BUCKETFILEDELETE];
-      default:
-        throw new Error(
-          `unknown bucket permission ${perm}, supported permissions are ${everything.join(
-            ', '
-          )}`
-        );
-    }
-  }, []);
-};
-
 /**
  * Cloud storage bucket resource for large file storage.
  */
 class BucketResource extends Base<BucketPermission> {
+  resourcePromise: Promise<Resource>;
+
   /**
    * Register this bucket as a required resource for the calling function/container
    * @returns a promise that resolves when the registration is complete
@@ -62,7 +45,7 @@ class BucketResource extends Base<BucketPermission> {
 
     req.setResource(resource);
 
-    return new Promise<Resource>((resolve, reject) => {
+    const prom = new Promise<Resource>((resolve, reject) => {
       resourceClient.declare(
         req,
         (error, response: ResourceDeclareResponse) => {
@@ -78,6 +61,9 @@ class BucketResource extends Base<BucketPermission> {
     this.resourcePromise = new Promise<Resource>((res, rej) => {
       prom.then(() => res(resource)).catch(rej);
     });
+    this.resourcePromise.catch((err) => {
+      console.error(err);
+    })
 
     return prom;
   }
