@@ -34,13 +34,13 @@ export abstract class Resource<P> {
   /**
    * Used to resolve the given resource for policy creation
    */
-  public registerPromise: Promise<ProtoResource>;
+  private _registerPromise: Promise<ProtoResource>;
 
   constructor(name: string) {
     this.name = name;
   }
 
-  public registerPolicy(...perms: P[]) {
+  protected registerPolicy(...perms: P[]) {
     const actions = this.permsToActions(...perms);
 
     const req = new ResourceDeclareRequest();
@@ -65,6 +65,14 @@ export abstract class Resource<P> {
         }
       );
     });
+  }
+
+  protected get registerPromise() {
+    return this._registerPromise;
+  }
+
+  protected set registerPromise(promise: Promise<ProtoResource>) {
+    this._registerPromise = promise;
   }
 
   protected abstract register(): Promise<ProtoResource>;
@@ -94,10 +102,13 @@ export const make = <T extends Resource<string>>(
     }
     if (!cache[typename][name]) {
       cache[typename][name] = new T(name);
-      cache[typename][name].registerPromise = cache[typename][name][
-        'register'
-      ]();
-      cache[typename][name].registerPromise.catch((err) => {
+
+      const prom = cache[typename][name]['register']();
+
+      // @ts-ignore protected to remove it from autocomplete
+      cache[typename][name].registerPromise = prom;
+
+      prom.catch((err) => {
         console.log(err);
       });
     }

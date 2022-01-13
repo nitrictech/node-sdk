@@ -42,7 +42,7 @@ describe('Registering bucket resources', () => {
     });
 
     it('Should throw the error', async () => {
-      await expect(bucket(validName).registerPromise).rejects.toEqual(
+      await expect(bucket(validName)['registerPromise']).rejects.toEqual(
         new UnimplementedError('UNIMPLEMENTED')
       );
     });
@@ -72,7 +72,9 @@ describe('Registering bucket resources', () => {
       });
 
       it('Should succeed', async () => {
-        await expect(bucket(validName).registerPromise).resolves.not.toBeNull();
+        await expect(
+          bucket(validName)['registerPromise']
+        ).resolves.not.toBeNull();
       });
 
       it('Should call the resource server', () => {

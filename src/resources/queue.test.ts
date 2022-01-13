@@ -42,7 +42,7 @@ describe('Registering queue resources', () => {
     });
 
     it('Should throw the error', async () => {
-      await expect(queue(validName).registerPromise).rejects.toEqual(
+      await expect(queue(validName)['registerPromise']).rejects.toEqual(
         new UnimplementedError('UNIMPLEMENTED')
       );
     });
@@ -72,7 +72,9 @@ describe('Registering queue resources', () => {
       });
 
       it('Should succeed', async () => {
-        await expect(queue(validName).registerPromise).resolves.not.toBeNull();
+        await expect(
+          queue(validName)['registerPromise']
+        ).resolves.not.toBeNull();
       });
 
       it('Should call the resource server', () => {
