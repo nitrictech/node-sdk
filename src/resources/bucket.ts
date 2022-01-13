@@ -45,7 +45,7 @@ class BucketResource extends Base<BucketPermission> {
 
     req.setResource(resource);
 
-    const prom = new Promise<Resource>((resolve, reject) => {
+    return new Promise<Resource>((resolve, reject) => {
       resourceClient.declare(
         req,
         (error, response: ResourceDeclareResponse) => {
@@ -57,15 +57,6 @@ class BucketResource extends Base<BucketPermission> {
         }
       );
     });
-
-    this.resourcePromise = new Promise<Resource>((res, rej) => {
-      prom.then(() => res(resource)).catch(rej);
-    });
-    this.resourcePromise.catch((err) => {
-      console.error(err);
-    })
-
-    return prom;
   }
 
   protected permsToActions(...perms: BucketPermission[]): ActionsList {
