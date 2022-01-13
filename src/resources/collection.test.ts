@@ -43,7 +43,7 @@ describe('Registering collection resources', () => {
     });
 
     it('Should throw the error', async () => {
-      await expect(collection(validName).registerPromise).rejects.toEqual(
+      await expect(collection(validName)['registerPromise']).rejects.toEqual(
         new UnimplementedError('UNIMPLEMENTED')
       );
     });
@@ -74,7 +74,7 @@ describe('Registering collection resources', () => {
 
       it('Should succeed', async () => {
         await expect(
-          collection(validName).registerPromise
+          collection(validName)['registerPromise']
         ).resolves.not.toBeNull();
       });
 
