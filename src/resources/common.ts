@@ -41,13 +41,18 @@ export abstract class Resource<P> {
   }
 
   protected registerPolicy(...perms: P[]) {
-    const actions = this.permsToActions(...perms);
-
     const req = new ResourceDeclareRequest();
     const policyResource = new ProtoResource();
     policyResource.setType(ResourceType.POLICY);
 
+    // Send an unnamed function as the principle. This is interpreted to mean the currently running function, making the request.
     const policy = new PolicyResource();
+    const defaultPrincipal = new ProtoResource()
+    defaultPrincipal.setType(ResourceType.FUNCTION)
+    policy.setPrincipalsList([defaultPrincipal]);
+
+    // Convert the permissions to an action set.
+    const actions = this.permsToActions(...perms);
     policy.setActionsList(actions);
 
     req.setResource(policyResource);
