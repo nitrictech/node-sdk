@@ -62,7 +62,7 @@ class Route {
   constructor(api: Api, path: string, opts: RouteOpts = {}) {
     this.api = api;
     this.path = path;
-    const { middleware } = opts;
+    const { middleware = [] } = opts;
     this.middleware = Array.isArray(middleware) ? middleware : [middleware];
   }
 
