@@ -143,6 +143,7 @@ export class Faas {
             // No handler defined for the trigger type received.
             console.error(`no handler defined for ${triggerType} triggers`);
             faasStream.cancel();
+            return;
           }
 
           const result = await handler(ctx, async (ctx) => ctx) || ctx;
@@ -182,7 +183,9 @@ export class Faas {
     const initMessage = new ClientMessage();
 
     if (this.options instanceof ApiWorkerOptions) {
+      console.log('i work for big api')
       const apiWorker = new ApiWorker();
+      apiWorker.setApi(this.options.api);
       apiWorker.setMethodsList(this.options.methods);
       apiWorker.setPath(this.options.route);
       initRequest.setApi(apiWorker);
