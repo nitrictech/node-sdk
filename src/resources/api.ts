@@ -16,10 +16,12 @@ import { HttpMiddleware, Faas } from '../faas';
 import { HttpMethod } from '../types';
 
 export class ApiWorkerOptions {
+  public readonly api: string;
   public readonly route: string;
   public readonly methods: HttpMethod[];
 
-  constructor(route: string, methods: HttpMethod[]) {
+  constructor(api: string, route: string, methods: HttpMethod[]) {
+    this.api = api;
     this.route = route;
     this.methods = methods;
   }
@@ -38,7 +40,7 @@ class Method {
     this.route = route;
     this.methods = methods;
     console.log('faas', Faas);
-    this.faas = new Faas(new ApiWorkerOptions(route.path, methods));
+    this.faas = new Faas(new ApiWorkerOptions(route.api.name, route.path, methods));
     this.faas.http(...middleware);
   }
 

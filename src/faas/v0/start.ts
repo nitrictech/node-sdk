@@ -185,6 +185,7 @@ export class Faas {
     if (this.options instanceof ApiWorkerOptions) {
       console.log('i work for big api')
       const apiWorker = new ApiWorker();
+      apiWorker.setApi(this.options.api);
       apiWorker.setMethodsList(this.options.methods);
       apiWorker.setPath(this.options.route);
       initRequest.setApi(apiWorker);
