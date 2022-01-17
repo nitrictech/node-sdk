@@ -16,6 +16,7 @@ import { ResourceServiceClient } from '@nitric/api/proto/resource/v1/resource_gr
 import { UnimplementedError } from '../api/errors';
 import { queue } from '.';
 import { ResourceDeclareResponse } from '@nitric/api/proto/resource/v1/resource_pb';
+import { Queue } from '..';
 
 describe('Registering queue resources', () => {
   describe('Given declare returns an error from the resource server', () => {
@@ -79,6 +80,55 @@ describe('Registering queue resources', () => {
 
       it('Should call the resource server', () => {
         expect(otherSpy).toBeCalledTimes(1);
+      });
+    });
+  });
+
+  describe('Given a topic is already registered', () => {
+    const queueName = 'already-exists';
+    let queueResource;
+    let existsSpy;
+
+    beforeEach(() => {
+      // ensure a success is returned and calls can be counted.
+      existsSpy = jest
+        .spyOn(ResourceServiceClient.prototype, 'declare')
+        .mockImplementation((request, callback: any) => {
+          const response = new ResourceDeclareResponse();
+          callback(null, response);
+          return null as any;
+        });
+
+      // register the resource for the first time
+      queueResource = queue(queueName);
+    });
+
+    afterEach(() => {
+      jest.resetAllMocks();
+    });
+
+    describe('When registering a queue with the same name', () => {
+      let secondTopic;
+
+      beforeEach(() => {
+        // make sure the initial registration isn't counted for these tests.
+        existsSpy.mockClear();
+        secondTopic = queue(queueName);
+      });
+
+      it('Should not call the server again', () => {
+        expect(existsSpy).not.toBeCalled();
+      });
+
+      it('Should return the same resource object', () => {
+        expect(queueResource === secondTopic).toEqual(true);
+      });
+    });
+
+    describe('When declaring usage', () => {
+      it('Should return a topic reference', () => {
+        const ref = queueResource.for('reading');
+        expect(ref).toBeInstanceOf(Queue);
       });
     });
   });

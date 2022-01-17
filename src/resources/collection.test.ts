@@ -16,6 +16,7 @@ import { ResourceServiceClient } from '@nitric/api/proto/resource/v1/resource_gr
 import { UnimplementedError } from '../api/errors';
 import { collection } from '.';
 import { ResourceDeclareResponse } from '@nitric/api/proto/resource/v1/resource_pb';
+import { CollectionRef } from '../api/documents/v0/collection-ref';
 
 describe('Registering collection resources', () => {
   describe('Given declare returns an error from the resource server', () => {
@@ -79,6 +80,55 @@ describe('Registering collection resources', () => {
 
       it('Should call the resource server', () => {
         expect(otherSpy).toBeCalledTimes(1);
+      });
+    });
+  });
+
+  describe('Given a collection is already registered', () => {
+    const collectionName = 'already-exists';
+    let collectionResource;
+    let existsSpy;
+
+    beforeEach(() => {
+      // ensure a success is returned and calls can be counted.
+      existsSpy = jest
+        .spyOn(ResourceServiceClient.prototype, 'declare')
+        .mockImplementation((request, callback: any) => {
+          const response = new ResourceDeclareResponse();
+          callback(null, response);
+          return null as any;
+        });
+
+      // register the resource for the first time
+      collectionResource = collection(collectionName);
+    });
+
+    afterEach(() => {
+      jest.resetAllMocks();
+    });
+
+    describe('When registering a collection with the same name', () => {
+      let secondTopic;
+
+      beforeEach(() => {
+        // make sure the initial registration isn't counted for these tests.
+        existsSpy.mockClear();
+        secondTopic = collection(collectionName);
+      });
+
+      it('Should not call the server again', () => {
+        expect(existsSpy).not.toBeCalled();
+      });
+
+      it('Should return the same resource object', () => {
+        expect(collectionResource === secondTopic).toEqual(true);
+      });
+    });
+
+    describe('When declaring usage', () => {
+      it('Should return a collection reference', () => {
+        const ref = collectionResource.for('reading');
+        expect(ref).toBeInstanceOf(CollectionRef);
       });
     });
   });
