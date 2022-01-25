@@ -39,7 +39,6 @@ class Method {
   ) {
     this.route = route;
     this.methods = methods;
-    console.log('faas', Faas);
     this.faas = new Faas(new ApiWorkerOptions(route.api.name, route.path, methods));
     this.faas.http(...middleware);
   }
