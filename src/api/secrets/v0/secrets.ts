@@ -13,11 +13,11 @@
 // limitations under the License.
 import { SERVICE_BIND } from '../../../constants';
 import { SecretServiceClient } from '@nitric/api/proto/secret/v1/secret_grpc_pb';
-import { 
-  SecretPutRequest, 
-  SecretPutResponse, 
-  SecretAccessRequest, 
-  SecretAccessResponse, 
+import {
+  SecretPutRequest,
+  SecretPutResponse,
+  SecretAccessRequest,
+  SecretAccessResponse,
   SecretVersion as GrpcSecretVersion,
   Secret as GrpcSecret,
 } from '@nitric/api/proto/secret/v1/secret_pb';
@@ -99,6 +99,8 @@ class Secret {
         request,
         (error, response: SecretPutResponse) => {
           if (error) {
+            // TODO: remove this ignore when not using link
+            // @ts-ignore
             reject(fromGrpcError(error));
           } else {
             resolve(
@@ -148,7 +150,9 @@ class Secret {
    */
   version = (version: string) => {
     if (!version) {
-      throw new InvalidArgumentError('A version is required to create a version reference.');
+      throw new InvalidArgumentError(
+        'A version is required to create a version reference.'
+      );
     }
     return new SecretVersion(this.secrets, this, version);
   };
@@ -200,6 +204,8 @@ class SecretVersion {
         request,
         (error, response: SecretAccessResponse) => {
           if (error) {
+            // TODO: remove this ignore when not using link
+            // @ts-ignore
             reject(fromGrpcError(error));
           } else {
             const secretVersion = new SecretVersion(

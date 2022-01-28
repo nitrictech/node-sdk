@@ -58,6 +58,8 @@ export class DocumentRef<T extends { [key: string]: any }> {
         request,
         (error, response: DocumentGetResponse) => {
           if (error) {
+            // TODO: remove this ignore when not using link
+            // @ts-ignore
             reject(fromGrpcError(error));
           } else if (response.hasDocument()) {
             const document = response.getDocument();
@@ -86,6 +88,8 @@ export class DocumentRef<T extends { [key: string]: any }> {
     return new Promise<void>((resolve, reject) => {
       this.documentClient.set(request, (error) => {
         if (error) {
+          // TODO: remove this ignore when not using link
+          // @ts-ignore
           reject(fromGrpcError(error));
         } else {
           resolve();
@@ -104,6 +108,8 @@ export class DocumentRef<T extends { [key: string]: any }> {
     return new Promise<void>((resolve, reject) => {
       this.documentClient.delete(request, (error) => {
         if (error) {
+          // TODO: remove this ignore when not using link
+          // @ts-ignore
           reject(fromGrpcError(error));
         } else {
           resolve();

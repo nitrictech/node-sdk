@@ -20,7 +20,7 @@ import {
   DocumentQueryStreamRequest,
   DocumentQueryStreamResponse,
 } from '@nitric/api/proto/document/v1/document_pb';
-import { DocumentServiceClient } from '@nitric/api/proto/document/v1/document_grpc_pb'
+import { DocumentServiceClient } from '@nitric/api/proto/document/v1/document_grpc_pb';
 import { WhereQueryOperator, WhereValueExpression } from '../../../types';
 import type { Map as ProtobufMap } from 'google-protobuf';
 import { DocumentRef } from './document-ref';
@@ -138,7 +138,9 @@ export class Query<T extends { [key: string]: any }> {
    */
   public limit(limit: number): Query<T> {
     if (typeof limit !== 'number' || limit < 0) {
-      throw new InvalidArgumentError('limit must be a positive integer or 0 for unlimited.');
+      throw new InvalidArgumentError(
+        'limit must be a positive integer or 0 for unlimited.'
+      );
     }
 
     this.fetchLimit = limit;
@@ -148,7 +150,7 @@ export class Query<T extends { [key: string]: any }> {
   public async fetch() {
     const request = new DocumentQueryRequest();
 
-    request.setCollection(this.collection["toWire"]());
+    request.setCollection(this.collection['toWire']());
     request.setLimit(this.fetchLimit);
 
     if (this.expressions.length) {
@@ -171,6 +173,8 @@ export class Query<T extends { [key: string]: any }> {
         request,
         (error, response: DocumentQueryResponse) => {
           if (error) {
+            // TODO: remove this ignore when not using link
+            // @ts-ignore
             reject(fromGrpcError(error));
           } else {
             const pagingTokenMap = protoMapToMap(response.getPagingTokenMap());
@@ -205,7 +209,7 @@ export class Query<T extends { [key: string]: any }> {
   protected getStreamRequest() {
     const request = new DocumentQueryStreamRequest();
 
-    request.setCollection(this.collection["toWire"]());
+    request.setCollection(this.collection['toWire']());
     request.setLimit(this.fetchLimit);
     request.setExpressionsList(this.expressions);
 
@@ -255,7 +259,9 @@ export class Query<T extends { [key: string]: any }> {
       },
     });
 
-    responseStream.on('error', (e) => transform.destroy(fromGrpcError(e as ServiceError)));
+    responseStream.on('error', (e) =>
+      transform.destroy(fromGrpcError(e as ServiceError))
+    );
     responseStream.pipe(transform);
 
     return transform;
