@@ -41,7 +41,8 @@ class Subscription {
   private readonly faas: Faas;
 
   constructor(name: string, ...mw: EventMiddleware[]) {
-    this.faas = new Faas(new SubscriptionWorkerOptions(name)).event(...mw);
+    this.faas = new Faas(new SubscriptionWorkerOptions(name));
+    this.faas.event(...mw);
   }
 
   private async start(): Promise<void> {

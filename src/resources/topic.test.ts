@@ -14,9 +14,12 @@
 
 import { ResourceServiceClient } from '@nitric/api/proto/resource/v1/resource_grpc_pb';
 import { UnimplementedError } from '../api/errors';
-import { topic } from '.';
+import { topic, SubscriptionWorkerOptions } from '.';
 import { ResourceDeclareResponse } from '@nitric/api/proto/resource/v1/resource_pb';
 import { Topic } from '..';
+import * as faas from "../faas/index";
+
+jest.mock('../faas/index');
 
 describe('Registering topic resources', () => {
   describe('Given declare returns an error from the resource server', () => {
@@ -132,4 +135,38 @@ describe('Registering topic resources', () => {
       });
     });
   });
+
+  
 });
+
+describe("subscription", () => {
+  const startSpy = jest.spyOn(faas.Faas.prototype, 'start').mockReturnValue(Promise.resolve());
+  const mockFn = jest.fn();
+    
+  afterAll(() => {
+    jest.clearAllMocks();
+  });
+
+  describe('When registering a subscription', () => {
+    afterAll(() => {
+      jest.resetAllMocks();
+    });
+
+    beforeAll(async () => {
+      await topic("test-subscribe").subscribe(mockFn);
+    });
+
+    it("should create a new FaasClient", () => {
+      expect(faas.Faas).toBeCalledTimes(1);
+    });
+
+    it("should provide Faas with ApiWorkerOptions", () => {
+      const expectedOpts = new SubscriptionWorkerOptions("test-subscribe");
+      expect(faas.Faas).toBeCalledWith(expectedOpts)
+    });
+
+    it("should call FaasClient::start()", () => {
+      expect(startSpy).toBeCalledTimes(1);
+    });
+  });
+})
