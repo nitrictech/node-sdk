@@ -56,7 +56,8 @@ class Rate {
 		this.schedule = schedule;
 		this.faas = new Faas(
 			new RateWorkerOptions(schedule['description'], rateNum, normalizedFrequency)
-		).event(...mw);
+		);
+		this.faas.event(...mw);
 	}
 
 	private async start(): Promise<void> {
