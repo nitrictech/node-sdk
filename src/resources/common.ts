@@ -16,7 +16,6 @@ import {
   ResourceType,
   PolicyResource,
   ResourceDeclareRequest,
-  ResourceDeclareResponse,
   ActionMap,
 } from '@nitric/api/proto/resource/v1/resource_pb';
 import resourceClient from './client';
@@ -63,7 +62,7 @@ export abstract class Resource<P> {
 
       resourceClient.declare(
         req,
-        (error, response: ResourceDeclareResponse) => {
+        (error) => {
           if (error) {
             throw fromGrpcError(error);
           }
@@ -72,7 +71,7 @@ export abstract class Resource<P> {
     });
   }
 
-  protected get registerPromise() {
+  protected get registerPromise(): Promise<ProtoResource> {
     return this._registerPromise;
   }
 
@@ -89,7 +88,7 @@ export abstract class Resource<P> {
 // will return the same bucket resource
 const cache: Record<string, Record<string, Resource<string>>> = {};
 
-type newer = <T>(name: string) => T;
+type newer<T> = (name: string) => T;
 
 /**
  * Provides a new resource instance.
@@ -99,7 +98,7 @@ type newer = <T>(name: string) => T;
  */
 export const make = <T extends Resource<string>>(
   T: new (name: string) => T
-): ((name: string) => T) => {
+): newer<T> => {
   const typename = T.name;
   return (name: string) => {
     if (!cache[typename]) {
@@ -110,8 +109,7 @@ export const make = <T extends Resource<string>>(
 
       const prom = cache[typename][name]['register']();
 
-      // @ts-ignore protected to remove it from autocomplete
-      cache[typename][name].registerPromise = prom;
+      cache[typename][name]['registerPromise'] = prom;
 
       prom.catch((err) => {
         console.log(err);
