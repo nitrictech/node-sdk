@@ -84,7 +84,7 @@ class TopicResource extends Base<TopicPermission> {
     return perms.reduce((actions, p) => {
       switch (p) {
         case 'publishing':
-          return [...actions, Action.TOPICEVENTPUBLISH];
+          return [...actions, Action.TOPICEVENTPUBLISH, Action.TOPICLIST, Action.TOPICDETAIL];
         default:
           throw new Error(
             `unknown permission ${p}, supported permissions is publishing.}
