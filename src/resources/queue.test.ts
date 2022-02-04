@@ -14,9 +14,9 @@
 
 import { ResourceServiceClient } from '@nitric/api/proto/resource/v1/resource_grpc_pb';
 import { UnimplementedError } from '../api/errors';
-import { queue } from '.';
+import { Queue } from '../api';
+import { queue, QueueResource } from '.';
 import { ResourceDeclareResponse } from '@nitric/api/proto/resource/v1/resource_pb';
-import { Queue } from '..';
 
 describe('Registering queue resources', () => {
   describe('Given declare returns an error from the resource server', () => {
@@ -86,7 +86,7 @@ describe('Registering queue resources', () => {
 
   describe('Given a topic is already registered', () => {
     const queueName = 'already-exists';
-    let queueResource;
+    let queueResource: QueueResource;
     let existsSpy;
 
     beforeEach(() => {
@@ -127,7 +127,7 @@ describe('Registering queue resources', () => {
 
     describe('When declaring usage', () => {
       it('Should return a topic reference', () => {
-        const ref = queueResource.for('reading');
+        const ref = queueResource.for('receiving');
         expect(ref).toBeInstanceOf(Queue);
       });
     });

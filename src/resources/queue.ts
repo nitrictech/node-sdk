@@ -16,18 +16,19 @@ import {
   ResourceDeclareRequest,
   ResourceType,
   Action,
+  ActionMap,
 } from '@nitric/api/proto/resource/v1/resource_pb';
 import resourceClient from './client';
 import { queues, Queue } from '../api/';
 import { fromGrpcError } from '../api/errors';
 import { ActionsList, make, Resource as Base } from './common';
 
-type QueuePermission = 'sending' | 'receiving';
+export type QueuePermission = 'sending' | 'receiving';
 
 /**
  * Queue resource for async send/receive messaging
  */
-class QueueResource extends Base<QueuePermission> {
+export class QueueResource extends Base<QueuePermission> {
   /**
    * Register this queue as a required resource for the calling function/container
    * @returns a promise that resolves when the registration is complete
@@ -54,7 +55,7 @@ class QueueResource extends Base<QueuePermission> {
   }
 
   protected permsToActions(...perms: QueuePermission[]): ActionsList {
-    return perms.reduce((actions, p) => {
+    let actions: ActionsList = perms.reduce((actions, p) => {
       switch(p) {
         case "sending":
           return [
@@ -66,8 +67,19 @@ class QueueResource extends Base<QueuePermission> {
             ...actions,
             Action.QUEUERECEIVE,
           ];
+        default:
+          throw new Error(
+            `unknown permission ${p}, supported permissions is publishing.}
+            )}`
+          );
       }
     }, []);
+
+    if (actions.length > 0) {
+      actions = [...actions, Action.QUEUELIST, Action.QUEUEDETAIL]
+    }
+
+    return actions;
   }
 
   /**
