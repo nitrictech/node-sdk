@@ -59,13 +59,12 @@ class CollectionResource extends Base<CollectionPermission> {
   }
 
   protected permsToActions(...perms: CollectionPermission[]) {
-    return perms.reduce((actions, perm) => {
+    let actions = perms.reduce((actions, perm) => {
       switch (perm) {
         case 'reading':
           return [
             ...actions,
             Action.COLLECTIONDOCUMENTREAD,
-            Action.COLLECTIONLIST,
             Action.COLLECTIONQUERY,
           ];
         case 'writing':
@@ -80,6 +79,12 @@ class CollectionResource extends Base<CollectionPermission> {
           );
       }
     }, []);
+
+    if (actions.length > 0) {
+      actions = [...actions, Action.COLLECTIONLIST]
+    }
+
+    return actions;
   }
 
   /**

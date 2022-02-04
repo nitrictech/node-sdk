@@ -54,7 +54,7 @@ class QueueResource extends Base<QueuePermission> {
   }
 
   protected permsToActions(...perms: QueuePermission[]): ActionsList {
-    return perms.reduce((actions, p) => {
+    let actions = perms.reduce((actions, p) => {
       switch(p) {
         case "sending":
           return [
@@ -68,6 +68,12 @@ class QueueResource extends Base<QueuePermission> {
           ];
       }
     }, []);
+
+    if (actions.length > 0) {
+      actions = [...actions, Action.QUEUELIST, Action.QUEUEDETAIL]
+    }
+
+    return actions;
   }
 
   /**
