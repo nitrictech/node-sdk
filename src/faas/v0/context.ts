@@ -85,6 +85,20 @@ export abstract class AbstractRequest {
   protected constructor(data: string | Uint8Array) {
     this.data = data;
   }
+
+  text(): string {
+    const stringPayload = typeof this.data === 'string' 
+      ? this.data 
+      : new TextDecoder('utf-8').decode(this.data);
+
+    // attempt to deserialize as a JSON object
+    return stringPayload;
+  }
+
+  json(): Record<string, any> {
+    // attempt to deserialize as a JSON object
+    return JSON.parse(this.text());
+  }
 }
 
 interface EventResponse {
@@ -154,10 +168,6 @@ export class EventRequest extends AbstractRequest {
   constructor(data: string | Uint8Array, topic: string) {
     super(data);
     this.topic = topic;
-  }
-
-  get payload(): string | Uint8Array {
-    return this.data;
   }
 }
 
