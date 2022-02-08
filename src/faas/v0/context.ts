@@ -91,7 +91,6 @@ export abstract class AbstractRequest {
       ? this.data 
       : new TextDecoder('utf-8').decode(this.data);
 
-    // attempt to deserialize as a JSON object
     return stringPayload;
   }
 
