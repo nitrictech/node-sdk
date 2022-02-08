@@ -20,7 +20,7 @@ export const events = async () => {
 	// [START snippet]
 	await faas
 	.event(async (ctx) => {
-		console.log("received event: ", ctx.req.payload);
+		console.log("received event: ", ctx.req.json());
 
 		// mark the event as successfully handled
 		ctx.res.success = true;
