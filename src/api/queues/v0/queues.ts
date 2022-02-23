@@ -124,8 +124,6 @@ export class Queue {
 
       this.queueing.QueueServiceClient.sendBatch(request, (error, response) => {
         if (error) {
-          // TODO: remove this ignore when not using link
-          // @ts-ignore
           reject(fromGrpcError(error));
         }
         const failedTasks = response.getFailedtasksList().map((m) => ({
@@ -185,8 +183,6 @@ export class Queue {
 
       this.queueing.QueueServiceClient.receive(request, (error, response) => {
         if (error) {
-          // TODO: remove this ignore when not using link
-          // @ts-ignore
           reject(fromGrpcError(error));
         } else {
           resolve(
@@ -256,8 +252,6 @@ export class ReceivedTask implements Task {
       return await new Promise((resolve, reject) => {
         this.queue.queueing.QueueServiceClient.complete(request, (error) => {
           if (error) {
-            // TODO: remove this ignore when not using link
-            // @ts-ignore
             reject(fromGrpcError(error));
           } else {
             resolve();

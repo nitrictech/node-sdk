@@ -99,8 +99,6 @@ class Secret {
         request,
         (error, response: SecretPutResponse) => {
           if (error) {
-            // TODO: remove this ignore when not using link
-            // @ts-ignore
             reject(fromGrpcError(error));
           } else {
             resolve(
@@ -204,8 +202,6 @@ class SecretVersion {
         request,
         (error, response: SecretAccessResponse) => {
           if (error) {
-            // TODO: remove this ignore when not using link
-            // @ts-ignore
             reject(fromGrpcError(error));
           } else {
             const secretVersion = new SecretVersion(

@@ -48,7 +48,6 @@ class CollectionResource extends Base<CollectionPermission> {
         req,
         (error, response: ResourceDeclareResponse) => {
           if (error) {
-            // TODO: remove this ignore when not using link
             reject(fromGrpcError(error));
           } else {
             resolve(resource);

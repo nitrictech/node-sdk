@@ -117,8 +117,6 @@ export class File {
         request,
         (error, response) => {
           if (error) {
-            // TODO: remove this ignore when not using link
-            // @ts-ignore
             reject(fromGrpcError(error));
           } else {
             resolve(response.getUrl());

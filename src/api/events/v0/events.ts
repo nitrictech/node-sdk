@@ -84,8 +84,6 @@ export class Topic {
     return new Promise<NitricEvent>((resolve, reject) => {
       this.eventing.EventServiceClient.publish(request, (error, response) => {
         if (error) {
-          // TODO: remove this ignore when not using link
-          // @ts-ignore
           reject(fromGrpcError(error));
         } else {
           resolve({ ...event, id: response.getId() });
@@ -168,8 +166,6 @@ export class Eventing {
     return new Promise((resolve, reject) => {
       this.TopicServiceClient.list(null, (error, response) => {
         if (error) {
-          // TODO: remove this ignore when not using link
-          // @ts-ignore
           reject(fromGrpcError(error));
         } else {
           resolve(

@@ -173,8 +173,6 @@ export class Query<T extends { [key: string]: any }> {
         request,
         (error, response: DocumentQueryResponse) => {
           if (error) {
-            // TODO: remove this ignore when not using link
-            // @ts-ignore
             reject(fromGrpcError(error));
           } else {
             const pagingTokenMap = protoMapToMap(response.getPagingTokenMap());
