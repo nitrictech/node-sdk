@@ -62,7 +62,7 @@ export class Secrets {
 /**
  * A reference to a secret.
  */
-class Secret {
+export class Secret {
   readonly secrets: Secrets;
   readonly name: string;
 

@@ -17,3 +17,4 @@ export * from './queue';
 export * from './collection';
 export * from './bucket';
 export * from './schedule';
+export * from './secret';
