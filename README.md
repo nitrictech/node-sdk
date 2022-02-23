@@ -17,35 +17,5 @@ The NodeJS SDK supports the use of the cloud-portable [Nitric](https://nitric.io
 
 ## Getting Started
 
-### Using the [Nitric CLI](https://github.com/nitric-tech/cli)
-> @nitric/sdk is included in all node related SDK projects by default
+Checkout the [nitric docs](https://nitric.io/docs) to see how to get started using nitric
 
-```bash
-nitric make:stack <node-stack> example
-```
-
-Some available node stacks are:
-
-* typescript
-* javascript
-
-
-### Adding to an existing project
-**NPM**
-```bash
-npm install @nitric/sdk
-```
-**Yarn**
-```bash
-yarn add @nitric/sdk
-```
-
-## Usage
-[Nitric Documentation](https://nitric.io/docs)
-
-## Local Development
-
-```bash
-yarn install
-yarn build
-```
