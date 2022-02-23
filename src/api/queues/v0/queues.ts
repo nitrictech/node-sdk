@@ -12,10 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { QueueServiceClient } from '@nitric/api/proto/queue/v1/queue_grpc_pb';
-import { 
-  NitricTask, 
-  QueueSendRequest, 
-  QueueSendBatchRequest, 
+import {
+  NitricTask,
+  QueueSendRequest,
+  QueueSendBatchRequest,
   QueueReceiveRequest,
   QueueCompleteRequest,
 } from '@nitric/api/proto/queue/v1/queue_pb';
@@ -23,7 +23,11 @@ import { SERVICE_BIND } from '../../../constants';
 import * as grpc from '@grpc/grpc-js';
 import type { Task } from '../../../types';
 import { Struct } from 'google-protobuf/google/protobuf/struct_pb';
-import { fromGrpcError, InvalidArgumentError, InternalError } from '../../errors';
+import {
+  fromGrpcError,
+  InvalidArgumentError,
+  InternalError,
+} from '../../errors';
 
 /**
  * A message that has failed to be enqueued
@@ -105,13 +109,17 @@ export class Queue {
    *   };
    * });
    */
-   async send(tasks: Task[]): Promise<FailedMessage[]>;
-   async send(tasks: Task): Promise<void>;
-   async send(tasks: Task | Task[]): Promise<void | FailedMessage[]> {
+  async send(tasks: Task[]): Promise<FailedMessage[]>;
+  async send(tasks: Task): Promise<void>;
+  async send(tasks: Task | Task[]): Promise<void | FailedMessage[]> {
     return new Promise((resolve, reject) => {
       const request = new QueueSendBatchRequest();
 
-      request.setTasksList(Array.isArray(tasks) ? tasks.map(task => taskToWire(task)) : [taskToWire(tasks)]);
+      request.setTasksList(
+        Array.isArray(tasks)
+          ? tasks.map((task) => taskToWire(task))
+          : [taskToWire(tasks)]
+      );
       request.setQueue(this.name);
 
       this.queueing.QueueServiceClient.sendBatch(request, (error, response) => {
@@ -125,17 +133,19 @@ export class Queue {
             payloadType: m.getTask().getPayloadType(),
           },
           message: m.getMessage(),
-        }))
-        if (!Array.isArray(tasks)) { // Single Task returns
-          if (failedTasks.length > 0) { 
+        }));
+        if (!Array.isArray(tasks)) {
+          // Single Task returns
+          if (failedTasks.length > 0) {
             reject(new InternalError(failedTasks[0].message));
           }
           resolve();
-        } else { // Array of Tasks return
-          resolve(failedTasks)
+        } else {
+          // Array of Tasks return
+          resolve(failedTasks);
         }
       });
-    });   
+    });
   }
   /**
    * Pop 1 or more queue items from the specified queue up to the depth limit.

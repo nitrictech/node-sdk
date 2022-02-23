@@ -22,7 +22,11 @@ import {
   HeaderValue,
   TriggerResponse,
   TopicResponseContext,
+  ScheduleRate,
+  SubscriptionWorker,
+  ScheduleWorker,
   InitRequest,
+  ApiWorker,
 } from '@nitric/api/proto/faas/v1/faas_pb';
 
 import {
@@ -35,13 +39,25 @@ import {
   TriggerMiddleware,
 } from '.';
 
+import { ApiWorkerOptions, RateWorkerOptions, SubscriptionWorkerOptions } from "../../resources";
+
+class FaasWorkerOptions {}
+
+type FaasClientOptions = ApiWorkerOptions | RateWorkerOptions | FaasWorkerOptions; 
+
 /**
  *
  */
-class Faas {
+export class Faas {
   private httpHandler?: HttpMiddleware;
   private eventHandler?: EventMiddleware;
   private anyHandler?: TriggerMiddleware;
+  private readonly options: FaasClientOptions;
+
+
+  constructor(opts: FaasClientOptions) {
+    this.options = opts;
+  }
 
   /**
    * Add an event handler to this Faas server
@@ -72,6 +88,8 @@ class Faas {
   private getEventHandler(): EventMiddleware | TriggerMiddleware | undefined {
     return this.eventHandler || this.anyHandler;
   }
+
+
 
   /**
    * Start the Faas server
@@ -125,9 +143,10 @@ class Faas {
             // No handler defined for the trigger type received.
             console.error(`no handler defined for ${triggerType} triggers`);
             faasStream.cancel();
+            return;
           }
 
-          const result = await handler(ctx, async (ctx) => ctx);
+          const result = await handler(ctx, async (ctx) => ctx) || ctx;
           responseMessage.setTriggerResponse(
             TriggerContext.toGrpcTriggerResponse(result)
           );
@@ -162,6 +181,27 @@ class Faas {
     // Let the membrane know we're ready to start
     const initRequest = new InitRequest();
     const initMessage = new ClientMessage();
+
+    if (this.options instanceof ApiWorkerOptions) {
+      const apiWorker = new ApiWorker();
+      apiWorker.setApi(this.options.api);
+      apiWorker.setMethodsList(this.options.methods);
+      apiWorker.setPath(this.options.route);
+      initRequest.setApi(apiWorker);
+    } else if(this.options instanceof RateWorkerOptions) {
+      const scheduleWorker = new ScheduleWorker();
+      scheduleWorker.setKey(this.options.description);
+      const rate = new ScheduleRate();
+      rate.setRate(`${this.options.rate} ${this.options.frequency}`);
+      scheduleWorker.setRate(rate);
+      initRequest.setSchedule(scheduleWorker);
+    } else if (this.options instanceof SubscriptionWorkerOptions) {
+      const subscriptionWorker = new SubscriptionWorker()
+      subscriptionWorker.setTopic(this.options.topic);
+      initRequest.setSubscription(subscriptionWorker);
+    }
+    // Original faas workers should return a blank InitRequest for compatibility.
+
     initMessage.setInitRequest(initRequest);
     faasStream.write(initMessage);
 
@@ -179,25 +219,25 @@ class Faas {
 // Faas Singleton
 let INSTANCE: Faas = undefined;
 
-const getInstance = (): Faas => {
-  INSTANCE = INSTANCE || new Faas();
-  return INSTANCE;
+const getFaasInstance = (): Faas => {
+ INSTANCE = INSTANCE || new Faas(new FaasWorkerOptions());
+ return INSTANCE;
 };
 
 /**
  * Register a HTTP handler
  */
 export const http = (...handlers: HttpMiddleware[]): Faas =>
-  getInstance().http(...handlers);
+  getFaasInstance().http(...handlers);
 
 /**
  * Register an event handler
  */
 export const event = (...handlers: EventMiddleware[]): Faas =>
-  getInstance().event(...handlers);
+  getFaasInstance().event(...handlers);
 
 /**
  * Start the FaaS server with a universal handler
  */
 export const start = async (...handlers: TriggerMiddleware[]): Promise<void> =>
-  await getInstance().start(...handlers);
+  await getFaasInstance().start(...handlers);

@@ -22,7 +22,7 @@ export type EventHandler = GenericHandler<EventContext>;
 export type GenericMiddleware<Ctx> = (
   ctx: Ctx,
   next?: GenericHandler<Ctx>
-) => Promise<Ctx> | Ctx;
+) => Promise<Ctx|void> | Ctx | void;
 
 export type TriggerMiddleware = GenericMiddleware<TriggerContext>;
 export type HttpMiddleware = GenericMiddleware<HttpContext>;
@@ -46,10 +46,10 @@ export const createHandler = <Ctx extends TriggerContext = TriggerContext>(
 
   return async (ctx: Ctx, finalNext: GenericHandler<Ctx> = ctx => ctx) => {
     if (handlers.length < 1) {
-      throw new Error('at least one handler function must be provided');
+      throw new Error('at least one handler or middleware function must be provided');
     }
     if (handlers.some((handler) => typeof handler !== 'function')) {
-      throw new Error('all handlers must functions');
+      throw new Error('all handlers and middleware must be functions');
     }
 
     // Chain the provided handlers together, passing each as 'next' to the following handler in the chain.
@@ -57,7 +57,7 @@ export const createHandler = <Ctx extends TriggerContext = TriggerContext>(
     const composedHandler = reversedHandlers.reduce((next: GenericHandler<Ctx>, h: GenericMiddleware<Ctx>) => {
         const nextNext: GenericHandler<Ctx> = async (ctx) => {
           // Actual function written by user that calls next and returns context
-          return await h(ctx, next);
+          return (await h(ctx, next)) || ctx;
         };
         return nextNext;
       }, finalNext);

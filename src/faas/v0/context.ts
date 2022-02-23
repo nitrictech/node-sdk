@@ -85,6 +85,19 @@ export abstract class AbstractRequest {
   protected constructor(data: string | Uint8Array) {
     this.data = data;
   }
+
+  text(): string {
+    const stringPayload = typeof this.data === 'string' 
+      ? this.data 
+      : new TextDecoder('utf-8').decode(this.data);
+
+    return stringPayload;
+  }
+
+  json(): Record<string, any> {
+    // attempt to deserialize as a JSON object
+    return JSON.parse(this.text());
+  }
 }
 
 interface EventResponse {
@@ -97,6 +110,7 @@ interface HttpRequestArgs {
   data: string | Uint8Array;
   method: Method | string;
   path: string;
+  params: Record<string, string>;
   query: Record<string, string[]>;
   headers: Record<string, string[]>;
 }
@@ -104,13 +118,15 @@ interface HttpRequestArgs {
 export class HttpRequest extends AbstractRequest {
   public readonly method: Method | string;
   public readonly path: string;
+  public readonly params: Record<string, string>;
   public readonly query: Record<string, string[]>;
   public readonly headers: Record<string, string[] | string>;
 
-  constructor({ data, method, path, query, headers }: HttpRequestArgs) {
+  constructor({ data, method, path, params, query, headers }: HttpRequestArgs) {
     super(data);
     this.method = method;
     this.path = path;
+    this.params = params;
     this.query = query;
     this.headers = headers;
   }
@@ -152,10 +168,6 @@ export class EventRequest extends AbstractRequest {
     super(data);
     this.topic = topic;
   }
-
-  get payload(): string | Uint8Array {
-    return this.data;
-  }
 }
 
 export class HttpContext extends TriggerContext<HttpRequest, HttpResponse> {
@@ -190,7 +202,20 @@ export class HttpContext extends TriggerContext<HttpRequest, HttpResponse> {
       }),
       {}
     );
-    
+
+    const params = http
+      .getPathParamsMap()
+      // XXX: getEntryList claims to return [string, faas.HeaderValue][], but really returns [string, string[][]][]
+      // we force the type to match the real return type.
+      .getEntryList()
+      .reduce(
+        (acc, [key, val]) => ({
+          ...acc,
+          [key.toLowerCase()]: val.length === 1 ? val[0] : val,
+        }),
+        {} as Record<string, string>
+      );
+
     const oldQuery = http
       .getQueryParamsOldMap()
       .toArray()
@@ -216,6 +241,7 @@ export class HttpContext extends TriggerContext<HttpRequest, HttpResponse> {
     ctx.request = new HttpRequest({
       data: trigger.getData(),
       path: http.getPath(),
+      params,
       // TODO: remove after 1.0
       // check for old query if new query is unpopulated. This is for backwards compatibility.
       query: Object.keys(query).length ? query : oldQuery,
@@ -247,11 +273,14 @@ export class HttpContext extends TriggerContext<HttpRequest, HttpResponse> {
 
     // Convert the body content to bytes
     let body: Uint8Array;
-    let bodyContentType: "text/plain" | "application/octet-stream" | "application/json" = 'application/octet-stream';
-    if(typeof httpCtx.response.body === 'string') {
+    let bodyContentType:
+      | 'text/plain'
+      | 'application/octet-stream'
+      | 'application/json' = 'application/octet-stream';
+    if (typeof httpCtx.response.body === 'string') {
       body = new TextEncoder().encode(httpCtx.response.body);
-      bodyContentType = "text/plain";
-    } else if(httpCtx.response.body instanceof Uint8Array) {
+      bodyContentType = 'text/plain';
+    } else if (httpCtx.response.body instanceof Uint8Array) {
       body = httpCtx.response.body;
       bodyContentType = 'application/octet-stream';
     } else {
@@ -271,7 +300,7 @@ export class HttpContext extends TriggerContext<HttpRequest, HttpResponse> {
 
     // Automatically set the content-type header if it's missing
     const contentHeader = resp.getHttp().getHeadersMap().get('content-type');
-    if(!contentHeader || contentHeader.getValueList().length === 0){
+    if (!contentHeader || contentHeader.getValueList().length === 0) {
       const headerVal = new HeaderValue();
       headerVal.setValueList([bodyContentType]);
       resp.getHttp().getHeadersMap().set('content-type', headerVal);

@@ -13,11 +13,11 @@
 // limitations under the License.
 import { SERVICE_BIND } from '../../../constants';
 import { SecretServiceClient } from '@nitric/api/proto/secret/v1/secret_grpc_pb';
-import { 
-  SecretPutRequest, 
-  SecretPutResponse, 
-  SecretAccessRequest, 
-  SecretAccessResponse, 
+import {
+  SecretPutRequest,
+  SecretPutResponse,
+  SecretAccessRequest,
+  SecretAccessResponse,
   SecretVersion as GrpcSecretVersion,
   Secret as GrpcSecret,
 } from '@nitric/api/proto/secret/v1/secret_pb';
@@ -148,7 +148,9 @@ class Secret {
    */
   version = (version: string) => {
     if (!version) {
-      throw new InvalidArgumentError('A version is required to create a version reference.');
+      throw new InvalidArgumentError(
+        'A version is required to create a version reference.'
+      );
     }
     return new SecretVersion(this.secrets, this, version);
   };

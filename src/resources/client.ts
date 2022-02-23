@@ -11,33 +11,13 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-export interface NitricEvent {
-  id?: string;
-  payloadType?: string;
-  payload: Record<string, any>;
-}
+import { ResourceServiceClient } from "@nitric/api/proto/resource/v1/resource_grpc_pb"
+import { SERVICE_BIND } from "../constants"
+import * as grpc from '@grpc/grpc-js';
 
-export interface Task {
-  id?: string;
-  leaseId?: string;
-  payloadType?: string;
-  payload?: Record<string, any>;
-}
+const resourceClient = new ResourceServiceClient(
+  SERVICE_BIND,
+  grpc.ChannelCredentials.createInsecure()
+)
 
-export interface PublishOptions {
-  topicName: string;
-  event: NitricEvent;
-}
-
-export type WhereQueryOperator =
-  | '<'
-  | '<='
-  | '=='
-  | '!='
-  | '>='
-  | '>'
-  | 'startsWith';
-
-export type WhereValueExpression = string | number | boolean;
-
-export type HttpMethod = 'GET' | 'POST' | 'PATCH' | 'PUT' | 'DELETE';
+export default resourceClient

@@ -13,7 +13,12 @@
 // limitations under the License.
 import { SERVICE_BIND } from '../../../constants';
 import { StorageServiceClient } from '@nitric/api/proto/storage/v1/storage_grpc_pb';
-import { StorageWriteRequest, StorageReadRequest, StorageDeleteRequest, StoragePreSignUrlRequest } from '@nitric/api/proto/storage/v1/storage_pb';
+import {
+  StorageWriteRequest,
+  StorageReadRequest,
+  StorageDeleteRequest,
+  StoragePreSignUrlRequest,
+} from '@nitric/api/proto/storage/v1/storage_pb';
 import * as grpc from '@grpc/grpc-js';
 import { fromGrpcError, InvalidArgumentError } from '../../errors';
 
@@ -32,7 +37,9 @@ export class Storage {
 
   bucket = (name: string): Bucket => {
     if (!name) {
-      throw new InvalidArgumentError('A bucket name is required to use a Bucket.');
+      throw new InvalidArgumentError(
+        'A bucket name is required to use a Bucket.'
+      );
     }
     return new Bucket(this, name);
   };
@@ -41,7 +48,7 @@ export class Storage {
 /**
  * A reference to a storage bucket.
  */
-class Bucket {
+export class Bucket {
   storage: Storage;
   name: string;
 
@@ -52,7 +59,9 @@ class Bucket {
 
   file = (name: string) => {
     if (!name) {
-      throw new InvalidArgumentError('A file name/path is required to use a File.');
+      throw new InvalidArgumentError(
+        'A file name/path is required to use a File.'
+      );
     }
     return new File(this.storage, this, name);
   };
@@ -60,7 +69,7 @@ class Bucket {
 
 export enum FileMode {
   Read = 0,
-  Write = 1
+  Write = 1,
 }
 
 export interface SignUrlOptions {
@@ -69,12 +78,12 @@ export interface SignUrlOptions {
 
 const DEFAULT_SIGN_URL_OPTS = {
   expiry: 600,
-}
+};
 
 /**
  * A reference to a file in a bucket.
  */
-class File {
+export class File {
   storage: Storage;
   bucket: Bucket;
   name: string;
@@ -88,11 +97,14 @@ class File {
   /**
    * Create a presigned url for reading or writing for the given file reference
    */
-  signUrl = async (mode: FileMode, opts: SignUrlOptions = DEFAULT_SIGN_URL_OPTS): Promise<string> => {
+  signUrl = async (
+    mode: FileMode,
+    opts: SignUrlOptions = DEFAULT_SIGN_URL_OPTS
+  ): Promise<string> => {
     const { expiry } = {
       // inject default options in case where some are undefined
       ...DEFAULT_SIGN_URL_OPTS,
-      ...opts, 
+      ...opts,
     };
     const request = new StoragePreSignUrlRequest();
     request.setBucketName(this.bucket.name);
@@ -101,15 +113,18 @@ class File {
     request.setExpiry(expiry);
 
     return new Promise((resolve, reject) => {
-      this.storage.StorageServiceClient.preSignUrl(request, (error, response) => {
-        if (error) {
-          reject(fromGrpcError(error));
-        } else {
-          resolve(response.getUrl());
+      this.storage.StorageServiceClient.preSignUrl(
+        request,
+        (error, response) => {
+          if (error) {
+            reject(fromGrpcError(error));
+          } else {
+            resolve(response.getUrl());
+          }
         }
-      });
+      );
     });
-  }
+  };
 
   /**
    * Write a an array of bytes to this file

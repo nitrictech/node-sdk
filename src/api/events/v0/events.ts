@@ -12,8 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { SERVICE_BIND } from '../../../constants';
-import { EventServiceClient, TopicServiceClient } from '@nitric/api/proto/event/v1/event_grpc_pb';
-import { NitricEvent as PbEvent, EventPublishRequest } from '@nitric/api/proto/event/v1/event_pb';
+import {
+  EventServiceClient,
+  TopicServiceClient,
+} from '@nitric/api/proto/event/v1/event_grpc_pb';
+import {
+  NitricEvent as PbEvent,
+  EventPublishRequest,
+} from '@nitric/api/proto/event/v1/event_pb';
 import { Struct } from 'google-protobuf/google/protobuf/struct_pb';
 import * as grpc from '@grpc/grpc-js';
 import type { NitricEvent } from '../../../types';
@@ -100,13 +106,25 @@ export class Topic {
  * ```
  */
 export class Eventing {
-  EventServiceClient: EventServiceClient;
-  TopicServiceClient: TopicServiceClient;
+  private _clients: {
+    event: EventServiceClient,
+    topic: TopicServiceClient,
+  } = undefined;
 
-  constructor() {
-    const clients = newEventServiceClients();
-    this.EventServiceClient = clients.event;
-    this.TopicServiceClient = clients.topic;
+  get EventServiceClient(): EventServiceClient {
+    if (!this._clients) {
+      this._clients = newEventServiceClients();
+    }
+
+    return this._clients.event;
+  }
+
+  get TopicServiceClient(): TopicServiceClient {
+    if (!this._clients) {
+      this._clients = newEventServiceClients();
+    }
+
+    return this._clients.topic;
   }
 
   /**
