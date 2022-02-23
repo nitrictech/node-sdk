@@ -36,7 +36,7 @@ class SecretResource extends Base<SecretPermission> {
     const resource = new Resource();
     resource.setName(this.name);
     resource.setType(ResourceType.SECRET);
-
+    
     req.setResource(resource);
 
     return new Promise<Resource>((resolve, reject) => {
@@ -52,6 +52,7 @@ class SecretResource extends Base<SecretPermission> {
       )
     })
   }
+
   protected permsToActions(...perms: SecretPermission[]): ActionsList {
       return perms.reduce((actions, perm) => {
         switch(perm) {
@@ -68,6 +69,7 @@ class SecretResource extends Base<SecretPermission> {
         }
       }, []);
   }
+
   protected for(...perms: SecretPermission[]): Secret {
     this.registerPolicy(...perms);
 
