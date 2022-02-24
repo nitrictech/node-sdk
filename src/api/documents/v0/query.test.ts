@@ -25,6 +25,7 @@ import {
 import { documents, Documents } from './documents';
 import { DocumentSnapshot } from './document-snapshot';
 import { InvalidArgumentError, UnimplementedError } from '../../errors';
+import { DocumentRef } from './document-ref';
 
 describe('Query Tests', () => {
   describe('Adding a where clause to a query', () => {
@@ -295,14 +296,13 @@ describe('Query Tests', () => {
         chunks.push(chunk);
       }
 
-      expect(chunks).toStrictEqual([
-        {
-          content: {
-            id: 'test',
-          },
-          ref: mockKey,
-        },
-      ]);
+      expect(chunks[0] instanceof DocumentSnapshot).toBe(true);
+
+      const snapShot = chunks[0] as DocumentSnapshot<any>;
+
+      expect(snapShot.content).toStrictEqual({
+        id: 'test',
+      });
     });
 
     test('The Grpc client for DocumentServiceClient.QueryStream should have been called exactly once', () => {

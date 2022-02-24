@@ -247,13 +247,17 @@ export class Query<T extends { [key: string]: any }> {
 
     const transform = new Transform({
       objectMode: true,
-      transform(result: DocumentQueryStreamResponse, encoding, callback) {
+      transform: (result: DocumentQueryStreamResponse, encoding, callback) => {
         const doc = result.getDocument();
 
-        callback(undefined, {
-          ref: doc.getKey(),
-          content: doc.getContent().toJavaScript() as T,
-        });
+        callback(undefined, new DocumentSnapshot<T>(
+          new DocumentRef<T>(
+            this.documentClient,
+            this.collection,
+            doc.getKey().getId()
+          ),
+          doc.getContent().toJavaScript() as T
+        ));
       },
     });
 
