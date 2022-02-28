@@ -27,7 +27,7 @@
   ],
   "dependencies": {
     "@grpc/grpc-js": "^1.1.7",
-    "@nitric/api": "rc-latest",
+    "@nitric/api": "0.14.0-rc.4",
     "common-tags": "^1.8.0",
     "google-protobuf": "3.14.0",
     "path-parser": "^6.1.0",
