@@ -22,6 +22,7 @@ import { fromGrpcError } from '../api/errors';
 import { documents } from '../api/documents';
 import resourceClient from './client';
 import { make, Resource as Base } from './common';
+import { DocumentStructure } from 'src/api/documents/v0/document-ref';
 
 type CollectionPermission = 'reading' | 'writing' | 'deleting';
 
@@ -94,7 +95,7 @@ class CollectionResource extends Base<CollectionPermission> {
    * @param perms the required permission set
    * @returns a usable collection reference
    */
-  public for<T>(...perms: CollectionPermission[]) {
+  public for<T extends DocumentStructure>(...perms: CollectionPermission[]) {
     this.registerPolicy(...perms);
 
     return documents().collection<T>(this.name);
