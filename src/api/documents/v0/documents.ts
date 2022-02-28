@@ -15,6 +15,7 @@ import { SERVICE_BIND } from '../../../constants';
 import { DocumentServiceClient } from '@nitric/api/proto/document/v1/document_grpc_pb';
 import * as grpc from '@grpc/grpc-js';
 import { CollectionRef } from './collection-ref';
+import { DocumentStructure } from './document-ref';
 
 /**
  * Documents
@@ -37,7 +38,7 @@ export class Documents {
    * @param name The name of the collection (required)
    * @returns The Collection instance
    */
-  public collection<T extends { [key: string]: any }>(name: string) {
+  public collection<T extends DocumentStructure>(name: string) {
     return new CollectionRef<T>(this.documentClient, name);
   }
 }

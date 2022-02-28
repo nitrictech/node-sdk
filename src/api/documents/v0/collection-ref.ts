@@ -14,7 +14,7 @@
 import { Collection } from '@nitric/api/proto/document/v1/document_pb';
 import { DocumentServiceClient } from '@nitric/api/proto/document/v1/document_grpc_pb';
 import { Query } from './query';
-import { DocumentRef } from './document-ref';
+import { DocumentRef, DocumentStructure } from './document-ref';
 import { CollectionGroupRef } from './collection-group-ref';
 
 /**
@@ -22,7 +22,7 @@ import { CollectionGroupRef } from './collection-group-ref';
  *
  * Provides a Document API CollectionRef class.
  */
-export class CollectionRef<T extends { [key: string]: any }> {
+export class CollectionRef<T extends DocumentStructure> {
   private documentClient: DocumentServiceClient;
   public readonly name: string;
   public readonly parent?: DocumentRef<any>;

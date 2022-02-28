@@ -11,9 +11,9 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { DocumentRef } from './document-ref';
+import { DocumentRef, DocumentStructure } from './document-ref';
 
-export class DocumentSnapshot<T> {
+export class DocumentSnapshot<T extends DocumentStructure> {
   public readonly ref: DocumentRef<T>;
   public readonly content: T;
 

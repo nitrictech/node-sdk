@@ -24,13 +24,15 @@ import { fromGrpcError, InvalidArgumentError } from '../../errors';
 import { CollectionRef } from './collection-ref';
 import { MAX_COLLECTION_DEPTH } from './constants';
 
+export type DocumentStructure = Record<string, any>;
+
 /**
  * Document Ref
  *
  * Provides a Document Reference class.
  * Used to create references to collections.
  */
-export class DocumentRef<T extends { [key: string]: any }> {
+export class DocumentRef<T extends DocumentStructure> {
   private documentClient: DocumentServiceClient;
   public readonly parent: CollectionRef<T>;
   public readonly id: string;
@@ -138,7 +140,7 @@ export class DocumentRef<T extends { [key: string]: any }> {
    * @param name The name of the collection (required)
    * @returns The Collection instance
    */
-  public collection<T extends { [key: string]: any }>(
+  public collection<T extends DocumentStructure>(
     name: string
   ): CollectionRef<T> {
     if (this.depth() >= MAX_COLLECTION_DEPTH) {
