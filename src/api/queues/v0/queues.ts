@@ -125,6 +125,7 @@ export class Queue {
       this.queueing.QueueServiceClient.sendBatch(request, (error, response) => {
         if (error) {
           reject(fromGrpcError(error));
+          return;
         }
         const failedTasks = response.getFailedtasksList().map((m) => ({
           task: {
