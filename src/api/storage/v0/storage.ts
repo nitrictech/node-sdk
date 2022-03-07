@@ -35,6 +35,12 @@ export class Storage {
     );
   }
 
+  /**
+   * Create a bucket reference.
+   * 
+   * @param name of the bucket to reference
+   * @returns a bucket reference
+   */
   bucket = (name: string): Bucket => {
     if (!name) {
       throw new InvalidArgumentError(
@@ -73,6 +79,10 @@ export enum FileMode {
 }
 
 export interface SignUrlOptions {
+  /**
+   * The number of seconds the signed URL remains valid.
+   * The minimum value is 1 and the maximum value is 604800 (7 days).
+   */
   expiry?: number;
 }
 
@@ -127,9 +137,9 @@ export class File {
   };
 
   /**
-   * Write a an array of bytes to this file
+   * Write an array of bytes to the file
    * @param body The file contents to write
-   * @retuns A void promise
+   * @returns A void promise
    *
    * Example:
    * ```typescript
