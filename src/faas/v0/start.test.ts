@@ -63,7 +63,6 @@ describe('faas.start', () => {
     });
 
     it('The first sent message should be an InitRequest', () => {
-      // TODO: Add test
       expect(mockStream.receivedMessages[0].hasInitRequest()).toBe(true);
     });
 
