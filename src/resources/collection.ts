@@ -102,4 +102,8 @@ class CollectionResource<T extends DocumentStructure> extends Base<CollectionPer
   }
 }
 
-export const collection = make(CollectionResource);
+const newCollection = make(CollectionResource);
+
+export function collection<T extends DocumentStructure>(name: string): CollectionResource<T> {
+  return newCollection(name) as CollectionResource<T>;
+}
