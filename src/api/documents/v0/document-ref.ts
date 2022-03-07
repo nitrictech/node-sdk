@@ -114,14 +114,10 @@ export class DocumentRef<T extends DocumentStructure> {
     });
   }
 
-  /**
-   *
-   */
   private toWire(): Key {
     const key = new Key();
     key.setCollection(this.parent["toWire"]());
     key.setId(this.id);
-
     return key;
   }
 
