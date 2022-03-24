@@ -12,9 +12,6 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v2
-      with:
-        token: ${{secrets.SUB_MODULE_PAT}}
-        submodules: recursive
     - name: Cache Yarn Cache
       uses: actions/cache@v2
       with:
