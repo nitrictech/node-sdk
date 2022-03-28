@@ -23,7 +23,7 @@ import {
 import { DocumentServiceClient } from '@nitric/api/proto/document/v1/document_grpc_pb';
 import { WhereQueryOperator, WhereValueExpression } from '../../../types';
 import type { Map as ProtobufMap } from 'google-protobuf';
-import { DocumentRef } from './document-ref';
+import { DocumentRef, DocumentStructure } from './document-ref';
 import { CollectionRef } from './collection-ref';
 import { DocumentSnapshot } from './document-snapshot';
 import { fromGrpcError, InvalidArgumentError } from '../../errors';
@@ -61,7 +61,7 @@ function protoMapToMap(
  * Provides a Document API client.
  * Used to create references to collections.
  */
-export class Query<T extends { [key: string]: any }> {
+export class Query<T extends DocumentStructure> {
   private documentClient: DocumentServiceClient;
   public readonly collection: CollectionRef<T>;
   private expressions: Expression[];

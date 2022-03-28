@@ -62,7 +62,7 @@ export class Secrets {
 /**
  * A reference to a secret.
  */
-class Secret {
+export class Secret {
   readonly secrets: Secrets;
   readonly name: string;
 
@@ -234,7 +234,7 @@ class SecretVersion {
 
 /**
  * Container for a SecretValue
- * Also provides addtional metadata about the actual accessed secret version in the case that "latest" is used
+ * Also provides additional metadata about the actual accessed secret version in the case that "latest" is used
  */
 class SecretValue {
   readonly secretVersion: SecretVersion;

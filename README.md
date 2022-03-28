@@ -8,14 +8,26 @@
 [![Version](https://img.shields.io/npm/v/@nitric/sdk.svg)](https://npmjs.org/package/@nitric/sdk)
 [![Downloads/week](https://img.shields.io/npm/dw/@nitric/sdk.svg)](https://npmjs.org/package/@nitric/sdk)
 
-# @nitric/sdk
-The NodeJS SDK supports the use of the cloud-portable [Nitric](https://nitric.io) framework with NodeJS 12+.
-> The SDK is in early stage development and APIs and interfaces are still subject to breaking changes
+# Node SDK for Nitric
 
-## Prerequisites
-- NodeJS 12+
+The NodeJS SDK supports the use of the Nitric framework with NodeJS 12+. For more information, check out the main [Nitric repo](https://github.com/nitrictech/nitric).
 
-## Getting Started
+Nitric SDKs provide an infrastructure-as-code style that lets you define resources in code. You can also write the functions that support the logic behind APIs, subscribers and schedules.
 
-Checkout the [nitric docs](https://nitric.io/docs) to see how to get started using nitric
+You can request the type of access you need to resources such as publishing for topics, without dealing directly with IAM or policy documents.
 
+## Status
+
+The SDK is in early stage development and APIs and interfaces are still subject to breaking changes. We’d love your feedback as we build additional functionality!
+
+## Get in touch:
+
+- Ask questions in [GitHub discussions](https://github.com/nitrictech/nitric/discussions)
+
+- Find us on [Twitter](https://twitter.com/nitric_io)
+
+- Send us an [email](mailto:maintainers@nitric.io)
+
+## Get Started
+
+Check out the [Nitric docs](https://nitric.io/docs) to see how to get started using Nitric.

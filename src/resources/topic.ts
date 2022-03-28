@@ -80,11 +80,15 @@ class TopicResource extends Base<TopicPermission> {
   }
 
   protected permsToActions(...perms: TopicPermission[]): ActionsList {
-    // TODO
     return perms.reduce((actions, p) => {
       switch (p) {
         case 'publishing':
-          return [...actions, Action.TOPICEVENTPUBLISH, Action.TOPICLIST, Action.TOPICDETAIL];
+          return [
+            ...actions,
+            Action.TOPICEVENTPUBLISH,
+            Action.TOPICLIST,
+            Action.TOPICDETAIL,
+          ];
         default:
           throw new Error(
             `unknown permission ${p}, supported permissions is publishing.}
@@ -100,9 +104,6 @@ class TopicResource extends Base<TopicPermission> {
    * @returns Promise which resolves when the handler server terminates
    */
   subscribe(...mw: EventMiddleware[]): Promise<void> {
-    // TODO: Check if publish policy has already been registered and error.
-    // TODO: register subscription policy
-
     const sub = new Subscription(this.name, ...mw);
     return sub['start']();
   }
@@ -115,10 +116,7 @@ class TopicResource extends Base<TopicPermission> {
    * @param perms the required permission set
    * @returns a usable topic reference
    */
-
   public for<T>(...perms: TopicPermission[]) {
-    // TODO: check if subscriber has been registered and error if so.
-    // TODO: register required policy resource.
     this.registerPolicy(...perms);
     return events().topic(this.name);
   }

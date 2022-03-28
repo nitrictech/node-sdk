@@ -15,7 +15,7 @@ import { DocumentServiceClient } from '@nitric/api/proto/document/v1/document_gr
 import { InvalidArgumentError } from '../../errors';
 import { CollectionRef } from './collection-ref';
 import { MAX_COLLECTION_DEPTH } from './constants';
-import { DocumentRef } from './document-ref';
+import { DocumentRef, DocumentStructure } from './document-ref';
 import { Query } from './query';
 
 const NIL_DOC_ID = '';
@@ -25,7 +25,7 @@ const NIL_DOC_ID = '';
  *
  * Provides a Document API CollectionGroupRef class.
  */
-export class CollectionGroupRef<T extends { [key: string]: any }> {
+export class CollectionGroupRef<T extends DocumentStructure> {
   private documentClient: DocumentServiceClient;
   public readonly parent: CollectionGroupRef<any>;
   public readonly name: string;
@@ -44,7 +44,7 @@ export class CollectionGroupRef<T extends { [key: string]: any }> {
    * Create a CollectionGroupRef referencing a sub-collection of this collection
    * @param name
    */
-  public collection<T extends { [key: string]: any }>(
+  public collection<T extends DocumentStructure>(
     name: string
   ): CollectionGroupRef<T> {
     if (this.depth() >= MAX_COLLECTION_DEPTH) {

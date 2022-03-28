@@ -26,8 +26,8 @@
     "David Moore <david.moore@nitric.io>"
   ],
   "dependencies": {
-    "@grpc/grpc-js": "^1.1.7",
-    "@nitric/api": "^0.13.0",
+    "@grpc/grpc-js": "^1.5.9",
+    "@nitric/api": "0.15.0",
     "common-tags": "^1.8.0",
     "google-protobuf": "3.14.0",
     "path-parser": "^6.1.0",

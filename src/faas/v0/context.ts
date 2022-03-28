@@ -181,7 +181,7 @@ export class HttpContext extends TriggerContext<HttpRequest, HttpResponse> {
 
     const headers = ((http
       .getHeadersMap()
-      // XXX: getEntryList claims to return [string, faas.HeaderValue][], but really returns [string, string[][]][]
+      // getEntryList claims to return [string, faas.HeaderValue][], but really returns [string, string[][]][]
       // we force the type to match the real return type.
       .getEntryList() as unknown) as [string, string[][]][]).reduce(
       (acc, [key, [val]]) => ({
@@ -193,7 +193,7 @@ export class HttpContext extends TriggerContext<HttpRequest, HttpResponse> {
 
     const query = ((http
       .getQueryParamsMap()
-      // XXX: getEntryList claims to return [string, faas.HeaderValue][], but really returns [string, string[][]][]
+      // getEntryList claims to return [string, faas.HeaderValue][], but really returns [string, string[][]][]
       // we force the type to match the real return type.
       .getEntryList() as unknown) as [string, string[][]][]).reduce(
       (acc, [key, [val]]) => ({
@@ -205,7 +205,7 @@ export class HttpContext extends TriggerContext<HttpRequest, HttpResponse> {
 
     const params = http
       .getPathParamsMap()
-      // XXX: getEntryList claims to return [string, faas.HeaderValue][], but really returns [string, string[][]][]
+      // getEntryList claims to return [string, faas.HeaderValue][], but really returns [string, string[][]][]
       // we force the type to match the real return type.
       .getEntryList()
       .reduce(

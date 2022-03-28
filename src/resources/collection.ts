@@ -22,6 +22,7 @@ import { fromGrpcError } from '../api/errors';
 import { documents } from '../api/documents';
 import resourceClient from './client';
 import { make, Resource as Base } from './common';
+import { DocumentStructure } from 'src/api/documents/v0/document-ref';
 
 type CollectionPermission = 'reading' | 'writing' | 'deleting';
 
@@ -30,7 +31,7 @@ const everything: CollectionPermission[] = ['reading', 'writing', 'deleting'];
 /**
  * A document collection resources, such as a collection/table in a document database.
  */
-class CollectionResource extends Base<CollectionPermission> {
+class CollectionResource<T extends DocumentStructure> extends Base<CollectionPermission> {
   /**
    * Register this collection as a required resource for the calling function/container
    * @returns a promise that resolves when the registration is complete
@@ -94,11 +95,15 @@ class CollectionResource extends Base<CollectionPermission> {
    * @param perms the required permission set
    * @returns a usable collection reference
    */
-  public for<T>(...perms: CollectionPermission[]) {
+  public for(...perms: CollectionPermission[]) {
     this.registerPolicy(...perms);
 
     return documents().collection<T>(this.name);
   }
 }
 
-export const collection = make(CollectionResource);
+const newCollection = make(CollectionResource);
+
+export function collection<T extends DocumentStructure>(name: string): CollectionResource<T> {
+  return newCollection(name) as CollectionResource<T>;
+}
