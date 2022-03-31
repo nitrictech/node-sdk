@@ -30,7 +30,7 @@ const everything: BucketPermission[] = ['reading', 'writing', 'deleting'];
 /**
  * Cloud storage bucket resource for large file storage.
  */
-class BucketResource extends Base<BucketPermission> {
+export class BucketResource extends Base<BucketPermission> {
   /**
    * Register this bucket as a required resource for the calling function/container
    * @returns a promise that resolves when the registration is complete
