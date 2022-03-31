@@ -30,7 +30,7 @@ const everything: SecretPermission[] = ['put', 'access'];
 /**
  * Cloud secret resource for secret storage
  */
-class SecretResource extends Base<SecretPermission> {
+export class SecretResource extends Base<SecretPermission> {
   protected async register(): Promise<Resource> {
     const req = new ResourceDeclareRequest();
     const resource = new Resource();
@@ -70,7 +70,7 @@ class SecretResource extends Base<SecretPermission> {
       }, []);
   }
 
-  protected for(...perms: SecretPermission[]): Secret {
+  public for(...perms: SecretPermission[]): Secret {
     this.registerPolicy(...perms);
 
     return secrets().secret(this.name);

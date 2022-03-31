@@ -69,7 +69,7 @@ export class Topic {
    * }
    * ```
    */
-  publish = async (event: NitricEvent): Promise<NitricEvent> => {
+  async publish(event: NitricEvent): Promise<NitricEvent> {
     const { id, payloadType = 'none', payload } = event;
     const request = new EventPublishRequest();
     const evt = new PbEvent();
@@ -140,7 +140,7 @@ export class Eventing {
    * ```
    *
    */
-  topic = (name: string): Topic => {
+  public topic(name: string): Topic {
     if (!name) {
       throw new InvalidArgumentError('A topic name is needed to use a Topic.');
     }
@@ -162,7 +162,7 @@ export class Eventing {
    * const topics = await eventing.topics();
    * ```
    */
-  topics = async (): Promise<Topic[]> => {
+  public async topics(): Promise<Topic[]> {
     return new Promise((resolve, reject) => {
       this.TopicServiceClient.list(null, (error, response) => {
         if (error) {

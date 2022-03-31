@@ -109,9 +109,9 @@ export class Queue {
    *   };
    * });
    */
-  async send(tasks: Task[]): Promise<FailedMessage[]>;
-  async send(tasks: Task): Promise<void>;
-  async send(tasks: Task | Task[]): Promise<void | FailedMessage[]> {
+  public async send(tasks: Task[]): Promise<FailedMessage[]>;
+  public async send(tasks: Task): Promise<void>;
+  public async send(tasks: Task | Task[]): Promise<void | FailedMessage[]> {
     return new Promise((resolve, reject) => {
       const request = new QueueSendBatchRequest();
 
@@ -170,7 +170,7 @@ export class Queue {
    * // do something with task
    * ```
    */
-  receive = async (depth?: number): Promise<ReceivedTask[]> => {
+  public async receive(depth?: number): Promise<ReceivedTask[]> {
     return new Promise((resolve, reject) => {
       const request = new QueueReceiveRequest();
 
@@ -243,7 +243,7 @@ export class ReceivedTask implements Task {
    * await task.complete();
    * ```
    */
-  complete = async (): Promise<void> => {
+  public async complete(): Promise<void> {
     try {
       const request = new QueueCompleteRequest();
 

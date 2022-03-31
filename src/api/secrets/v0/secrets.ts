@@ -51,7 +51,7 @@ export class Secrets {
    * const secret = secrets().secret("my-secret");
    * ```
    */
-  secret = (name: string): Secret => {
+  public secret = (name: string): Secret => {
     if (!name) {
       throw new InvalidArgumentError('A name is required to use a Secret.');
     }
@@ -86,7 +86,7 @@ export class Secret {
    * }
    * ```
    */
-  put = async (secret: string | Uint8Array) => {
+  public async put(secret: string | Uint8Array) {
     return new Promise<SecretVersion>((resolve, reject) => {
       const secretBuff =
         typeof secret === 'string' ? ENCODER.encode(secret) : secret;
@@ -128,7 +128,7 @@ export class Secret {
    * ```
    *
    */
-  latest = () => {
+  public latest() {
     return this.version('latest');
   };
 
@@ -146,7 +146,7 @@ export class Secret {
    * ```
    *
    */
-  version = (version: string) => {
+  public version(version: string) {
     if (!version) {
       throw new InvalidArgumentError(
         'A version is required to create a version reference.'
@@ -193,7 +193,7 @@ class SecretVersion {
    * }
    * ```
    */
-  access = async (): Promise<SecretValue> => {
+  public async access(): Promise<SecretValue> {
     return new Promise((resolve, reject) => {
       const request = new SecretAccessRequest();
       request.setSecretVersion(SecretVersion.toWire(this));
@@ -259,7 +259,7 @@ class SecretValue {
    * }
    * ```
    */
-  asBytes = () => {
+  public asBytes = () => {
     return this.val;
   };
 
@@ -277,7 +277,7 @@ class SecretValue {
    * }
    * ```
    */
-  asString = () => {
+  public asString = () => {
     return DECODER.decode(this.asBytes());
   };
 }
