@@ -28,9 +28,7 @@
   "dependencies": {
     "@grpc/grpc-js": "^1.5.9",
     "@nitric/api": "0.15.0",
-    "common-tags": "^1.8.0",
     "google-protobuf": "3.14.0",
-    "path-parser": "^6.1.0",
     "tslib": "^2.1.0"
   },
   "license": "Apache-2.0",
@@ -56,7 +54,6 @@
     "licensee": "^8.2.0",
     "lint-staged": "^10.5.4",
     "prettier": "^2.2.1",
-    "replace-in-files-cli": "latest",
     "standard-version": "^9.0.0",
     "ts-jest": "^26.4.3",
     "typescript": "^3.3"
