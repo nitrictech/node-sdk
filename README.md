@@ -1,14 +1,25 @@
 <p align="center">
-  <img src="./docs/assets/dot-matrix-logo-node.png" alt="Nitric Logo"/>
+  <a href="https://nitric.io">
+    <img src="assets/nitric-logo.svg" width="120" alt="Nitric Logo"/>
+  </a>
 </p>
 
-![Tests](https://github.com/nitrictech/node-sdk/actions/workflows/test.yaml/badge.svg?branch=main)
-[![codecov](https://codecov.io/gh/nitrictech/node-sdk/branch/main/graph/badge.svg?token=N46TTGPE4G)](https://codecov.io/gh/nitrictech/node-sdk)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=nitrictech_node-sdk&metric=alert_status)](https://sonarcloud.io/dashboard?id=nitrictech_node-sdk)
-[![Version](https://img.shields.io/npm/v/@nitric/sdk.svg)](https://npmjs.org/package/@nitric/sdk)
-[![Downloads/week](https://img.shields.io/npm/dw/@nitric/sdk.svg)](https://npmjs.org/package/@nitric/sdk)
+<p align="center">
+  Build <a href="https://nitric.io">nitric</a> applications with Node.js
+</p>
 
-# Node SDK for Nitric
+<p align="center">
+  <img alt="Tests" src="https://github.com/nitrictech/node-sdk/actions/workflows/test.yaml/badge.svg?branch=main">
+  <a href="https://codecov.io/gh/nitrictech/node-sdk">
+    <img alt="codecov" src="https://codecov.io/gh/nitrictech/node-sdk/branch/main/graph/badge.svg?token=N46TTGPE4G">
+  </a>
+  <a href="https://npmjs.org/package/@nitric/sdk">
+    <img alt="Version" src="https://img.shields.io/npm/v/@nitric/sdk.svg">
+  </a>
+  <a href="https://npmjs.org/package/@nitric/sdk">
+    <img alt="Downloads/week" src="https://img.shields.io/npm/dw/@nitric/sdk.svg">
+  </a>
+</p>
 
 The NodeJS SDK supports the use of the Nitric framework with NodeJS 12+. For more information, check out the main [Nitric repo](https://github.com/nitrictech/nitric).
 
