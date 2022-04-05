@@ -1,9 +1,8 @@
 name: Release Candidate
 on:
-  pull_request:
-    types: [closed]
+  push:
     branches:
-      - 'develop'
+      - develop
 
 jobs:
   # Bump the membrane version

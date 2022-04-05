@@ -1,9 +1,8 @@
 name: Production Release
 on:
-  pull_request:
-    types: [closed]
+  push:
     branches:
-      - 'main'
+      - main
 jobs:
   # Bump the membrane version
   version_bump:
