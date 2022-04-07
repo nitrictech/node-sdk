@@ -228,14 +228,14 @@ describe('Storage Client Tests', () => {
       jest.resetAllMocks();
     });
 
-    test('Then StorageClient.delete should reject', async () => {
+    test('Then file.signUrl should reject', async () => {
       const client = new Storage();
       await expect(client.bucket('test').file('test').signUrl(FileMode.Read)).rejects.toEqual(
         new UnimplementedError("UNIMPLEMENTED")
       );
     });
 
-    test('The Grpc client for Storage.delete should have been called exactly once', () => {
+    test('The Grpc client for file.signUrl should have been called exactly once', () => {
       expect(signUrlMock).toBeCalledTimes(1);
     });
   });
@@ -244,14 +244,13 @@ describe('Storage Client Tests', () => {
     const MOCK_REPLY = new StoragePreSignUrlResponse();
     MOCK_REPLY.setUrl("testingUrl");
 
-    let preSignUrlMock;
+    let preSignUrlMock: jest.SpyInstance;
 
     beforeAll(() => {
       preSignUrlMock = jest
         .spyOn(GrpcStorageClient.prototype, 'preSignUrl')
         .mockImplementation((_, callback: any) => {
           callback(null, MOCK_REPLY);
-
           return null as any;
         });
     });
@@ -259,23 +258,87 @@ describe('Storage Client Tests', () => {
     afterAll(() => {
       jest.resetAllMocks();
     });
+    
 
-    test('Then StorageClient.delete should delete the bytes from the bucket', async () => {
-      const client = new Storage().bucket('test_bucket').file('test/item');
-      await expect(client.signUrl(FileMode.Read)).resolves.toEqual("testingUrl");
+    describe('When calling file.signUrl', () => {
+      let signUrl;
+
+      beforeAll(async () => {
+        preSignUrlMock.mockClear();
+        const client = new Storage().bucket('test_bucket').file('test/item');
+        signUrl = await client.signUrl(FileMode.Read)
+      })
+
+      test('Then file.signUrl should delete the bytes from the bucket', () => {
+        expect(signUrl).toEqual("testingUrl");
+      });
+  
+      test('The Grpc client for file.signUrl should have been called exactly once', () => {
+        expect(preSignUrlMock).toBeCalledTimes(1);
+      });
+  
+      test('The Grpc client for file.signUrl should have been called with provided options', () => {
+        const MOCK_REQUEST = new StoragePreSignUrlRequest();
+        MOCK_REQUEST.setBucketName("test_bucket");
+        MOCK_REQUEST.setKey("test/item");
+        MOCK_REQUEST.setOperation(FileMode.Read);
+        MOCK_REQUEST.setExpiry(600);
+        expect(preSignUrlMock).toBeCalledWith(MOCK_REQUEST, expect.anything());
+      });
     });
 
-    test('The Grpc client for Storage.delete should have been called exactly once', () => {
-      expect(preSignUrlMock).toBeCalledTimes(1);
+    describe('When calling file.getUploadUrl', () => {
+      let signUrl;
+
+      beforeAll(async () => {
+        preSignUrlMock.mockClear();
+        const client = new Storage().bucket('test_bucket').file('test/item');
+        signUrl = await client.getUploadUrl()
+      })
+
+      test('Then file.signUrl should delete the bytes from the bucket', () => {
+        expect(signUrl).toEqual("testingUrl");
+      });
+  
+      test('The Grpc client for file.signUrl should have been called exactly once', () => {
+        expect(preSignUrlMock).toBeCalledTimes(1);
+      });
+  
+      test('The Grpc client for file.signUrl should have been called with provided options', () => {
+        const MOCK_REQUEST = new StoragePreSignUrlRequest();
+        MOCK_REQUEST.setBucketName("test_bucket");
+        MOCK_REQUEST.setKey("test/item");
+        MOCK_REQUEST.setOperation(FileMode.Write);
+        MOCK_REQUEST.setExpiry(600);
+        expect(preSignUrlMock).toBeCalledWith(MOCK_REQUEST, expect.anything());
+      });
     });
 
-    test('The Grpc client for Storage.delete should have been called with provided options', () => {
-      const MOCK_REQUEST = new StoragePreSignUrlRequest();
-      MOCK_REQUEST.setBucketName("test_bucket");
-      MOCK_REQUEST.setKey("test/item");
-      MOCK_REQUEST.setOperation(FileMode.Read);
-      MOCK_REQUEST.setExpiry(600);
-      expect(preSignUrlMock).toBeCalledWith(MOCK_REQUEST, expect.anything());
+    describe('When calling file.getUploadUrl', () => {
+      let signUrl;
+
+      beforeAll(async () => {
+        preSignUrlMock.mockClear();
+        const client = new Storage().bucket('test_bucket').file('test/item');
+        signUrl = await client.getDownloadUrl()
+      })
+
+      test('Then file.signUrl should delete the bytes from the bucket', () => {
+        expect(signUrl).toEqual("testingUrl");
+      });
+  
+      test('The Grpc client for file.signUrl should have been called exactly once', () => {
+        expect(preSignUrlMock).toBeCalledTimes(1);
+      });
+  
+      test('The Grpc client for file.signUrl should have been called with provided options', () => {
+        const MOCK_REQUEST = new StoragePreSignUrlRequest();
+        MOCK_REQUEST.setBucketName("test_bucket");
+        MOCK_REQUEST.setKey("test/item");
+        MOCK_REQUEST.setOperation(FileMode.Read);
+        MOCK_REQUEST.setExpiry(600);
+        expect(preSignUrlMock).toBeCalledWith(MOCK_REQUEST, expect.anything());
+      });
     });
   });
 });
