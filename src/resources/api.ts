@@ -116,13 +116,20 @@ class Route {
   }
 
   /**
+   * Register a handler function for OPTIONS requests to this route
+   */
+  async options(...middleware: HttpMiddleware[]): Promise<void> {
+    return this.method(['OPTIONS'], ...middleware);
+  }
+
+  /**
    * Register a handler function for GET, POST, PATCH, PUT and DELETE requests to this route.
    *
    * Most useful when routing isn't important or you're doing you own internal routing.
    */
   async all(...middleware: HttpMiddleware[]): Promise<void> {
     return this.method(
-      ['GET', 'POST', 'PATCH', 'PUT', 'DELETE'],
+      ['GET', 'POST', 'PATCH', 'PUT', 'DELETE', 'OPTIONS'],
       ...middleware
     );
   }
@@ -245,6 +252,17 @@ class Api {
   async delete(match: string, ...middleware: HttpMiddleware[]): Promise<void> {
     const r = this.route(match);
     return r.delete(...middleware);
+  }
+
+  /**
+   * Registers a new route with a OPTIONS handler in a single method.
+   * @param match the route path matcher e.g. '/home'. Supports path params via colon prefix e.g. '/customers/:customerId'
+   * @param middleware the middleware/handler to register for calls to DELETE
+   * @returns {Promise} that resolves when the handler terminates.
+   */
+   async options(match: string, ...middleware: HttpMiddleware[]): Promise<void> {
+    const r = this.route(match);
+    return r.options(...middleware);
   }
 }
 
