@@ -2,6 +2,7 @@
   "ignoreFile": ".gitignore",
   "ignore": [
     "README",
+    "**/*.svg",
     ".*",
     "**/*.config.*",
     "**/.gitignore",

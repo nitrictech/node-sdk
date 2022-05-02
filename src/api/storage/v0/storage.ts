@@ -41,7 +41,7 @@ export class Storage {
    * @param name of the bucket to reference
    * @returns a bucket reference
    */
-  bucket = (name: string): Bucket => {
+  public bucket(name: string): Bucket {
     if (!name) {
       throw new InvalidArgumentError(
         'A bucket name is required to use a Bucket.'
@@ -63,7 +63,7 @@ export class Bucket {
     this.name = name;
   }
 
-  file = (name: string) => {
+  public file(name: string) {
     if (!name) {
       throw new InvalidArgumentError(
         'A file name/path is required to use a File.'
@@ -105,12 +105,33 @@ export class File {
   }
 
   /**
-   * Create a presigned url for reading or writing for the given file reference
+   * Get a pre-signed download URL for the file
+   * @param opts the option passed to the signUrl function.
+   * @returns a download URL string
    */
-  signUrl = async (
+  public getDownloadUrl(opts?: SignUrlOptions): Promise<string> {
+    return this.signUrl(FileMode.Read, opts)
+  }
+
+  /**
+   * Get a pre-signed upload URL for the file.
+   * @param opts the option passed to the signUrl function.
+   * @returns a upload URL string
+   */
+  public getUploadUrl(opts?: SignUrlOptions): Promise<string> {
+    return this.signUrl(FileMode.Write, opts)
+  }
+
+  /**
+   * Create a presigned url for reading or writing for the given file reference
+   * @param mode the mode the url will access the file with. E.g. reading or writing.
+   * @param opts.expiry how long the URL should be valid for in seconds.
+   * @deprecated for simplicity we suggest using getUploadUrl or getDownloadUrl
+   */
+  public async signUrl(
     mode: FileMode,
     opts: SignUrlOptions = DEFAULT_SIGN_URL_OPTS
-  ): Promise<string> => {
+  ): Promise<string> {
     const { expiry } = {
       // inject default options in case where some are undefined
       ...DEFAULT_SIGN_URL_OPTS,
@@ -151,7 +172,7 @@ export class File {
    * await storage.bucket("my-bucket").file("my-item").write(buf);
    * ```
    */
-  write = async (body: Uint8Array): Promise<void> => {
+  public async write (body: Uint8Array): Promise<void> {
     const request = new StorageWriteRequest();
     request.setBucketName(this.bucket.name);
     request.setKey(this.name);
@@ -181,7 +202,7 @@ export class File {
    * const bytes = await storage.bucket("my-bucket").file("my-item").read();
    * ```
    */
-  read = async (): Promise<Uint8Array> => {
+  public async read(): Promise<Uint8Array> {
     const request = new StorageReadRequest();
     request.setBucketName(this.bucket.name);
     request.setKey(this.name);
@@ -210,7 +231,7 @@ export class File {
    * const bytes = await storage.bucket("my-bucket").file("my-item").delete();
    * ```
    */
-  delete = async (): Promise<void> => {
+  public async delete(): Promise<void> {
     const request = new StorageDeleteRequest();
     request.setBucketName(this.bucket.name);
     request.setKey(this.name);
