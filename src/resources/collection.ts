@@ -22,7 +22,7 @@ import { fromGrpcError } from '../api/errors';
 import { documents } from '../api/documents';
 import resourceClient from './client';
 import { make, Resource as Base } from './common';
-import { DocumentStructure } from 'src/api/documents/v0/document-ref';
+import { DocumentStructure } from '../api/documents/v0/document-ref';
 
 type CollectionPermission = 'reading' | 'writing' | 'deleting';
 
