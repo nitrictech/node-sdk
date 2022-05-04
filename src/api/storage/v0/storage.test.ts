@@ -13,7 +13,7 @@
 // limitations under the License.
 import { FileMode, Storage } from './storage';
 import { StorageServiceClient as GrpcStorageClient } from '@nitric/api/proto/storage/v1/storage_grpc_pb';
-import { StorageWriteResponse, StorageReadResponse, StorageDeleteResponse, StoragePreSignUrlResponse, StoragePreSignUrlRequest } from '@nitric/api/proto/storage/v1/storage_pb';
+import { StorageWriteResponse, StorageReadResponse, StorageDeleteResponse, StoragePreSignUrlResponse, StoragePreSignUrlRequest, StorageListFilesResponse, File } from '@nitric/api/proto/storage/v1/storage_pb';
 import { UnimplementedError } from '../../errors';
 
 describe('Storage Client Tests', () => {
@@ -321,7 +321,7 @@ describe('Storage Client Tests', () => {
         preSignUrlMock.mockClear();
         const client = new Storage().bucket('test_bucket').file('test/item');
         signUrl = await client.getDownloadUrl()
-      })
+      });
 
       test('Then file.signUrl should delete the bytes from the bucket', () => {
         expect(signUrl).toEqual("testingUrl");
@@ -339,6 +339,77 @@ describe('Storage Client Tests', () => {
         MOCK_REQUEST.setExpiry(600);
         expect(preSignUrlMock).toBeCalledWith(MOCK_REQUEST, expect.anything());
       });
+    });
+  });
+
+  describe('Given nitric.api.storage.StorageClient.ListFiles throws an error', () => {
+    const MOCK_ERROR = {
+      code: 2,
+      message: 'UNIMPLEMENTED',
+    };
+
+    let listFilesMock;
+
+    beforeAll(() => {
+      listFilesMock = jest
+        .spyOn(GrpcStorageClient.prototype, 'listFiles')
+        .mockImplementation((_, callback: any) => {
+          callback(MOCK_ERROR, null);
+
+          return null as any;
+        });
+    });
+
+    afterAll(() => {
+      jest.resetAllMocks();
+    });
+
+    test('Then StorageClient.delete should reject', async () => {
+      const client = new Storage();
+      await expect(client.bucket('test').files()).rejects.toEqual(
+        new UnimplementedError("UNIMPLEMENTED")
+      );
+    });
+
+    test('The Grpc client for Storage.delete should have been called exactly once', () => {
+      expect(listFilesMock).toBeCalledTimes(1);
+    });
+  });
+
+  describe('Given nitric.api.storage.StorageClient.ListFiles succeeds', () => {
+    const MOCK_REPLY = new StorageListFilesResponse();
+    MOCK_REPLY.setFilesList(["test/test.txt"].map((k) => { 
+      const f = new File();
+      f.setKey(k);
+      return f; 
+    }));
+
+    let listFilesMock;
+
+    beforeAll(() => {
+      listFilesMock = jest
+        .spyOn(GrpcStorageClient.prototype, 'listFiles')
+        .mockImplementation((_, callback: any) => {
+          callback(null, MOCK_REPLY);
+
+          return null as any;
+        });
+    });
+
+    afterAll(() => {
+      jest.resetAllMocks();
+    });
+
+    test('Then StorageClient.listFiles should return files', async () => {
+      const client = new Storage();
+      const files = await client.bucket('test').files();
+
+      expect(files).toHaveLength(1);
+      expect(files[0].name).toBe('test/test.txt')
+    });
+
+    test('The Grpc client for Storage.delete should have been called exactly once', () => {
+      expect(listFilesMock).toBeCalledTimes(1);
     });
   });
 });
