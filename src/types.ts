@@ -78,4 +78,4 @@ export type WhereQueryOperator =
 
 export type WhereValueExpression = string | number | boolean;
 
-export type HttpMethod = 'GET' | 'POST' | 'PATCH' | 'PUT' | 'DELETE';
+export type HttpMethod = 'GET' | 'POST' | 'PATCH' | 'PUT' | 'DELETE' | 'OPTIONS';
