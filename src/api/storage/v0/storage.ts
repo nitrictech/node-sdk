@@ -18,6 +18,7 @@ import {
   StorageReadRequest,
   StorageDeleteRequest,
   StoragePreSignUrlRequest,
+  StorageListFilesRequest,
 } from '@nitric/api/proto/storage/v1/storage_pb';
 import * as grpc from '@grpc/grpc-js';
 import { fromGrpcError, InvalidArgumentError } from '../../errors';
@@ -61,6 +62,24 @@ export class Bucket {
   constructor(storage: Storage, name: string) {
     this.storage = storage;
     this.name = name;
+  }
+
+  public async files(): Promise<File[]> {
+    const request = new StorageListFilesRequest();
+
+    request.setBucketName(this.name);
+
+    return await new Promise<File[]>((res, rej) => {
+      this.storage.StorageServiceClient.listFiles(request, (err, data) => {
+        if (err) {
+          rej(fromGrpcError(err));
+        }
+
+        res(data.getFilesList().map(f => {
+          return new File(this.storage, this, f.getKey());
+        }));
+      });
+    });
   }
 
   public file(name: string) {
