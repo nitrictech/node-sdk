@@ -364,14 +364,14 @@ describe('Storage Client Tests', () => {
       jest.resetAllMocks();
     });
 
-    test('Then StorageClient.delete should reject', async () => {
+    test('Then StorageClient.listFiles should reject', async () => {
       const client = new Storage();
       await expect(client.bucket('test').files()).rejects.toEqual(
         new UnimplementedError("UNIMPLEMENTED")
       );
     });
 
-    test('The Grpc client for Storage.delete should have been called exactly once', () => {
+    test('The Grpc client for Storage.listFiles should have been called exactly once', () => {
       expect(listFilesMock).toBeCalledTimes(1);
     });
   });
@@ -408,7 +408,7 @@ describe('Storage Client Tests', () => {
       expect(files[0].name).toBe('test/test.txt')
     });
 
-    test('The Grpc client for Storage.delete should have been called exactly once', () => {
+    test('The Grpc client for Storage.listFiles should have been called exactly once', () => {
       expect(listFilesMock).toBeCalledTimes(1);
     });
   });

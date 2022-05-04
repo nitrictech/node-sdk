@@ -64,6 +64,10 @@ export class Bucket {
     this.name = name;
   }
 
+  /**
+   * Retrieve a list of files on the bucket
+   * @returns An array of file references
+   */
   public async files(): Promise<File[]> {
     const request = new StorageListFilesRequest();
 
