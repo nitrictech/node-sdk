@@ -531,10 +531,10 @@
     "@types/yargs" "^15.0.0"
     chalk "^4.0.0"
 
-"@nitric/api@0.15.0":
-  version "0.15.0"
-  resolved "https://registry.yarnpkg.com/@nitric/api/-/api-0.15.0.tgz#4e8825dd0fda21437b477e6c81ab2bb1f15a22e6"
-  integrity sha512-xxldlWIAZHhkrfHsueEcZ9zaoSLTSAtHlrrZaodF5bKIJigbXkI3GLhSLm1hOcFGerguUx1y8l+Pc/slPI+s6g==
+"@nitric/api@0.16.0":
+  version "0.16.0"
+  resolved "https://registry.yarnpkg.com/@nitric/api/-/api-0.16.0.tgz#233a1aa3cb4ef29188b5336c0e70d067e027cb26"
+  integrity sha512-dXJfPlAe/G35nSVn4IIvjB0TqWYJPyYNOqu1TdjV14vy++L7ALkabVJtKULQQ94+71okvfmO4kMHQeKsYYS/Mw==
   dependencies:
     google-protobuf "3.14.0"
     tslib "^2.1.0"
