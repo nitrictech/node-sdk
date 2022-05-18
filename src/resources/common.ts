@@ -23,13 +23,13 @@ import { fromGrpcError } from '../api/errors';
 
 export type ActionsList = ActionMap[keyof ActionMap][];
 
-export abstract class Resource<P> {
+export abstract class Resource {
   /**
    * Unique name for the resource by type within the stack.
    *
    * This name can be used in all future references, it will be resolved automatically at runtime.
    */
-  protected readonly name: string;
+  public readonly name: string;
   /**
    * Used to resolve the given resource for policy creation
    */
@@ -38,6 +38,20 @@ export abstract class Resource<P> {
   constructor(name: string) {
     this.name = name;
   }
+
+  protected get registerPromise(): Promise<ProtoResource> {
+    return this._registerPromise;
+  }
+
+  protected set registerPromise(promise: Promise<ProtoResource>) {
+    this._registerPromise = promise;
+  }
+
+  protected abstract register(): Promise<ProtoResource>;
+}
+
+export abstract class SecureResource<P> extends Resource {
+  protected abstract permsToActions(...perms: P[]): ActionsList;
 
   protected registerPolicy(...perms: P[]): void {
     const req = new ResourceDeclareRequest();
@@ -70,25 +84,13 @@ export abstract class Resource<P> {
       );
     });
   }
-
-  protected get registerPromise(): Promise<ProtoResource> {
-    return this._registerPromise;
-  }
-
-  protected set registerPromise(promise: Promise<ProtoResource>) {
-    this._registerPromise = promise;
-  }
-
-  protected abstract register(): Promise<ProtoResource>;
-
-  protected abstract permsToActions(...perms: P[]): ActionsList;
 }
 
 // This singleton helps avoid duplicate references to bucket('name')
 // will return the same bucket resource
-const cache: Record<string, Record<string, Resource<string>>> = {};
+const cache: Record<string, Record<string, Resource>> = {};
 
-type newer<T> = (name: string) => T;
+export type newer<T> = (name: string, ...args: any[]) => T;
 
 /**
  * Provides a new resource instance.
@@ -96,16 +98,16 @@ type newer<T> = (name: string) => T;
  * @param name the _unique_ name of the resource within the stack
  * @returns the resource
  */
-export const make = <T extends Resource<string>>(
-  T: new (name: string) => T
+export const make = <T extends Resource>(
+  T: new (name: string, ...args: any[]) => T
 ): newer<T> => {
   const typename = T.name;
-  return (name: string) => {
+  return (name: string, ...args: any[]) => {
     if (!cache[typename]) {
       cache[typename] = {};
     }
     if (!cache[typename][name]) {
-      cache[typename][name] = new T(name);
+      cache[typename][name] = new T(name, ...args);
 
       const prom = cache[typename][name]['register']();
 
