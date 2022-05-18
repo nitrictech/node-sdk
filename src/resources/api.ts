@@ -14,6 +14,7 @@
 import { HttpMiddleware, Faas } from '../faas';
 import {
   ApiResource,
+  ApiScopes,
   ApiSecurityDefinition,
   ApiSecurityDefinitionJwt,
   Resource,
@@ -325,10 +326,13 @@ class Api<SecurityDefs extends string> extends Base {
     const req = new ResourceDeclareRequest();
     const resource = new Resource();
     const apiResource = new ApiResource();
+    const { security } = this;
 
-    if (this.security) {
-      Object.keys(this.security).forEach(k => {
-        apiResource.getSecurityMap().set(k, this.security[k]);
+    if (security) {
+      Object.keys(security).forEach(k => {
+        const scopes = new ApiScopes();
+        scopes.setScopesList(security[k]);
+        apiResource.getSecurityMap().set(k, scopes);
       })
     }
 
