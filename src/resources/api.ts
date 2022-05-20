@@ -160,14 +160,13 @@ class Route<SecurityDefs extends string> {
   }
 }
 
-class JwtSecurityDefinition {
-  public readonly issuer: string;
-  public readonly audiences: string[];
+interface BaseSecurityDefinition<T extends string> {
+  kind: T
+}
 
-  constructor(issuer: string, audiences: string[]) {
-    this.issuer = issuer;
-    this.audiences = audiences;
-  }
+interface JwtSecurityDefinition extends BaseSecurityDefinition<"jwt"> {
+  issuer: string;
+  audiences: string[];
 }
 
 // TODO: Union type for multiple security definition mappings
@@ -343,7 +342,7 @@ class Api<SecurityDefs extends string> extends Base {
       const def = this.securityDefinitions[k] as SecurityDefinition;
       const definition =  new ApiSecurityDefinition();
 
-      if (def instanceof JwtSecurityDefinition) {
+      if (def.kind === "jwt") {
         // Set it to a JWT definition
         const secDef = new ApiSecurityDefinitionJwt();
         secDef.setIssuer(def.issuer);
@@ -389,6 +388,6 @@ export const api:<Defs extends string>(name: string, options?: ApiOpts<Defs>) =>
  * Create a jwt security definition
  * @returns 
  */
-export const jwt = (opts: { issuer: string, audiences: string[] }): JwtSecurityDefinition => {
-  return new JwtSecurityDefinition(opts.issuer, opts.audiences);
+export const jwt = (opts: Omit<JwtSecurityDefinition, "kind">): JwtSecurityDefinition => {
+  return { kind: "jwt", issuer: opts.issuer, audiences: opts.audiences };
 }
