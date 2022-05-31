@@ -14,7 +14,7 @@
 import { Resource, make } from "./common";
 
 
-class MockResource extends Resource<any> {
+class MockResource extends Resource {
 	register = jest.fn().mockReturnValue(Promise.resolve());
 	permsToActions = jest.fn();
 }

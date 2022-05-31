@@ -20,7 +20,7 @@ import {
 } from '@nitric/api/proto/resource/v1/resource_pb';
 import resourceClient from './client';
 import { secrets, Secret } from '../api/secrets';
-import { ActionsList, make, Resource as Base } from './common';
+import { ActionsList, make, SecureResource } from './common';
 import { fromGrpcError } from '../api/errors';
 
 type SecretPermission = 'put' | 'access';
@@ -30,7 +30,7 @@ const everything: SecretPermission[] = ['put', 'access'];
 /**
  * Cloud secret resource for secret storage
  */
-export class SecretResource extends Base<SecretPermission> {
+export class SecretResource extends SecureResource<SecretPermission> {
   protected async register(): Promise<Resource> {
     const req = new ResourceDeclareRequest();
     const resource = new Resource();
