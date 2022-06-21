@@ -96,7 +96,7 @@ export abstract class AbstractRequest {
 
   json(): Record<string, any> {
     // attempt to deserialize as a JSON object
-    return JSON.parse(this.text());
+    return this.text() ? JSON.parse(this.text()) : {};
   }
 }
 
