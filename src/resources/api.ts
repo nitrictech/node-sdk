@@ -325,7 +325,7 @@ class Api<SecurityDefs extends string> extends Base {
     const req = new ResourceDeclareRequest();
     const resource = new Resource();
     const apiResource = new ApiResource();
-    const { security } = this;
+    const { security, securityDefinitions } = this;
 
     if (security) {
       Object.keys(security).forEach(k => {
@@ -338,20 +338,23 @@ class Api<SecurityDefs extends string> extends Base {
     resource.setName(this.name);
     resource.setType(ResourceType.API);
     
-    Object.keys(this.securityDefinitions).forEach(k => {
-      const def = this.securityDefinitions[k] as SecurityDefinition;
-      const definition =  new ApiSecurityDefinition();
-
-      if (def.kind === "jwt") {
-        // Set it to a JWT definition
-        const secDef = new ApiSecurityDefinitionJwt();
-        secDef.setIssuer(def.issuer);
-        secDef.setAudiencesList(def.audiences);
-        definition.setJwt(secDef);
-      }
-
-      apiResource.getSecurityDefinitionsMap().set(k, definition);
-    });
+    if (securityDefinitions) {
+      Object.keys(securityDefinitions).forEach(k => {
+        const def = securityDefinitions[k] as SecurityDefinition;
+        const definition =  new ApiSecurityDefinition();
+  
+        if (def.kind === "jwt") {
+          // Set it to a JWT definition
+          const secDef = new ApiSecurityDefinitionJwt();
+          secDef.setIssuer(def.issuer);
+          secDef.setAudiencesList(def.audiences);
+          definition.setJwt(secDef);
+        }
+  
+        apiResource.getSecurityDefinitionsMap().set(k, definition);
+      });
+    }
+    
     req.setApi(apiResource);
     req.setResource(resource);
 
