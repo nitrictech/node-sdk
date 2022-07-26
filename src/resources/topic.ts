@@ -21,7 +21,7 @@ import {
   ResourceType,
   Action,
 } from '@nitric/api/proto/resource/v1/resource_pb';
-import { ActionsList, make, Resource as Base } from './common';
+import { ActionsList, make, SecureResource } from './common';
 import { fromGrpcError } from '../api/errors';
 
 type TopicPermission = 'publishing';
@@ -53,7 +53,7 @@ class Subscription {
 /**
  * Topic resource for pub/sub async messaging.
  */
-export class TopicResource extends Base<TopicPermission> {
+export class TopicResource extends SecureResource<TopicPermission> {
   /**
    * Register this topic as a required resource for the calling function/container
    * @returns a promise that resolves when the registration is complete

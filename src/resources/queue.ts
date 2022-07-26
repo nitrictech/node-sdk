@@ -21,14 +21,14 @@ import {
 import resourceClient from './client';
 import { queues, Queue } from '../api/';
 import { fromGrpcError } from '../api/errors';
-import { ActionsList, make, Resource as Base } from './common';
+import { ActionsList, make, SecureResource } from './common';
 
 export type QueuePermission = 'sending' | 'receiving';
 
 /**
  * Queue resource for async send/receive messaging
  */
-export class QueueResource extends Base<QueuePermission> {
+export class QueueResource extends SecureResource<QueuePermission> {
   /**
    * Register this queue as a required resource for the calling function/container
    * @returns a promise that resolves when the registration is complete

@@ -20,7 +20,7 @@ import {
 } from '@nitric/api/proto/resource/v1/resource_pb';
 import resourceClient from './client';
 import { storage, Bucket } from '../api/storage';
-import { ActionsList, make, Resource as Base } from './common';
+import { ActionsList, make, SecureResource } from './common';
 import { fromGrpcError } from '../api/errors';
 
 type BucketPermission = 'reading' | 'writing' | 'deleting';
@@ -30,7 +30,7 @@ const everything: BucketPermission[] = ['reading', 'writing', 'deleting'];
 /**
  * Cloud storage bucket resource for large file storage.
  */
-export class BucketResource extends Base<BucketPermission> {
+export class BucketResource extends SecureResource<BucketPermission> {
   /**
    * Register this bucket as a required resource for the calling function/container
    * @returns a promise that resolves when the registration is complete

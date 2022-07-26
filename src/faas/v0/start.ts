@@ -27,6 +27,8 @@ import {
   ScheduleWorker,
   InitRequest,
   ApiWorker,
+  ApiWorkerOptions as ApiWorkerOptionsPb,
+  ApiWorkerScopes,
 } from '@nitric/api/proto/faas/v1/faas_pb';
 
 import {
@@ -187,6 +189,23 @@ export class Faas {
       apiWorker.setApi(this.options.api);
       apiWorker.setMethodsList(this.options.methods);
       apiWorker.setPath(this.options.route);
+
+      const opts = new ApiWorkerOptionsPb();
+      if (this.options.opts && this.options.opts.security) {
+        if (Object.keys(this.options.opts.security).length == 0) {
+          // disable security if empty security is explicitly set
+          opts.setSecurityDisabled(true);
+        } else {
+          const methodOpts = this.options.opts;
+          Object.keys(methodOpts.security).forEach(k => {
+            const scopes = new ApiWorkerScopes();
+            scopes.setScopesList(methodOpts.security[k]);
+            opts.getSecurityMap().set(k, scopes);
+          })
+        }
+      }
+
+      apiWorker.setOptions(opts);
       initRequest.setApi(apiWorker);
     } else if(this.options instanceof RateWorkerOptions) {
       const scheduleWorker = new ScheduleWorker();

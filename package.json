@@ -27,7 +27,7 @@
   ],
   "dependencies": {
     "@grpc/grpc-js": "^1.5.9",
-    "@nitric/api": "0.16.0",
+    "@nitric/api": "v0.17.0",
     "google-protobuf": "3.14.0",
     "tslib": "^2.1.0"
   },

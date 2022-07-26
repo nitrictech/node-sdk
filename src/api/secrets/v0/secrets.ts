@@ -75,7 +75,7 @@ export class Secret {
    * Creates a new SecretVersion containing the given value
    *
    * @param secret - The secret value to store
-   * @returns Promise<SecretVersion>
+   * @returns {Promise<SecretVersion>} a version reference for a secret
    * @example
    * ```typescript
    * import { secrets } from "@nitric/sdk";
@@ -86,7 +86,7 @@ export class Secret {
    * }
    * ```
    */
-  public async put(secret: string | Uint8Array) {
+  public async put(secret: string | Uint8Array): Promise<SecretVersion> {
     return new Promise<SecretVersion>((resolve, reject) => {
       const secretBuff =
         typeof secret === 'string' ? ENCODER.encode(secret) : secret;
@@ -112,11 +112,11 @@ export class Secret {
         }
       );
     });
-  };
+  }
 
   /**
-   * Retrieves the latest version of a secret
-   * @returns Promise<SecretVersion>
+   * Returns a reference to the latest version of a secret
+   * @returns {SecretVersion} a reference to the latest version of the secret
    * @example
    * ```typescript
    * import { secrets } from "@nitric/sdk";
@@ -128,13 +128,13 @@ export class Secret {
    * ```
    *
    */
-  public latest() {
+  public latest(): SecretVersion {
     return this.version('latest');
-  };
+  }
 
   /**
-   * Retrieves the latest version of a secret
-   * @returns Promise<SecretVersion>
+   * Creates a reference to a specific version of a secret
+   * @returns {SecretVersion} a secret version reference, the version may or may not exist
    * @example
    * ```typescript
    * import { secrets } from "@nitric/sdk";
@@ -146,16 +146,16 @@ export class Secret {
    * ```
    *
    */
-  public version(version: string) {
+  public version(version: string): SecretVersion {
     if (!version) {
       throw new InvalidArgumentError(
         'A version is required to create a version reference.'
       );
     }
     return new SecretVersion(this.secrets, this, version);
-  };
+  }
 
-  static toWire = (secret: Secret) => {
+  static toWire = (secret: Secret): GrpcSecret => {
     const wire = new GrpcSecret();
 
     wire.setName(secret.name);
@@ -179,10 +179,10 @@ class SecretVersion {
   }
 
   /**
-   * Accesses the value stored in a secret version
+   * Accesses the stored secret value from this version, it can be used to access the underlying secret data
    *
    * @param secret - The secret value to store
-   * @returns Promise<Uint8Array>
+   * @returns {Promise<SecretValue>} Retrieve the SecretValue for this secret version
    * @example
    * ```typescript
    * import { secrets } from "@nitric/sdk";
@@ -190,6 +190,7 @@ class SecretVersion {
    * async function accessSecret() {
    *  const secret = secrets().secret('secret').latest();
    *  const secretValue = await secret.access();
+   *  const secretString = secretValue.asString();
    * }
    * ```
    */
@@ -220,7 +221,7 @@ class SecretVersion {
         }
       );
     });
-  };
+  }
 
   static toWire = (secretVersion: SecretVersion) => {
     const wire = new GrpcSecretVersion();
@@ -246,7 +247,7 @@ class SecretValue {
   }
 
   /**
-   * @returns Uint8Array
+   * @returns {Uint8Array} Value of the secret as a byte array
    * @example
    * ```typescript
    * import { secrets } from "@nitric/sdk";
@@ -264,7 +265,7 @@ class SecretValue {
   };
 
   /**
-   * @returns string
+   * @returns {string} Secret value as a string
    * @example
    * ```typescript
    * import { secrets } from "@nitric/sdk";
@@ -287,7 +288,7 @@ let SECRETS = undefined;
 
 /**
  * Secrets
- * @returns a Secrets API client.
+ * @returns {Secrets} a Secrets API client.
  * @example
  * ```typescript
  * import { secrets } from "@nitric/sdk";
