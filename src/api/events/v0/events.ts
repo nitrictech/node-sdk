@@ -36,6 +36,15 @@ function newEventServiceClients(): {
   };
 }
 
+export interface PublishOptions {
+  /** Number of seconds to delay message publishing by */
+  delay?: number;
+}
+
+const DEFAULT_PUBLISH_OPTS: PublishOptions = {
+  delay: 0
+};
+
 export class Topic {
   eventing: Eventing;
   name: string;
@@ -48,6 +57,7 @@ export class Topic {
   /**
    * Publishes an event to a nitric topic
    * @param event The event to publish
+   * @param opts Additional publishing options
    * @returns NitricEvent containing the unique id of the event (if not provided it will be generated)
    *
    * @example
@@ -64,22 +74,30 @@ export class Topic {
    *       value: "Hello World!"
    *     }
    *   };
-   *
-   *   return await topic.publish(event);
+   *   // Publish immediately
+   *   await topic.publish(event);
+   * 
+   *   // Publish after 10 seconds delay
+   *   await topic.publish(event, { delay: 10 });
    * }
    * ```
    */
-  async publish(event: NitricEvent): Promise<NitricEvent> {
+  async publish(event: NitricEvent, opts: PublishOptions = DEFAULT_PUBLISH_OPTS): Promise<NitricEvent> {
     const { id, payloadType = 'none', payload } = event;
+    const publishOpts = {
+      ...opts,
+      ...DEFAULT_PUBLISH_OPTS
+    };
     const request = new EventPublishRequest();
     const evt = new PbEvent();
 
     evt.setId(id);
     evt.setPayload(Struct.fromJavaScript(payload));
     evt.setPayloadType(payloadType);
-
+    
     request.setTopic(this.name);
     request.setEvent(evt);
+    request.setDelay(publishOpts.delay);
 
     return new Promise<NitricEvent>((resolve, reject) => {
       this.eventing.EventServiceClient.publish(request, (error, response) => {
