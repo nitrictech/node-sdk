@@ -56,6 +56,7 @@ export class Topic {
   /**
    * Publishes an event to a nitric topic
    * @param event The event to publish
+   * @param opts Additional publishing options
    * @returns NitricEvent containing the unique id of the event (if not provided it will be generated)
    *
    * @example
@@ -72,8 +73,11 @@ export class Topic {
    *       value: "Hello World!"
    *     }
    *   };
-   *
-   *   return await topic.publish(event);
+   *   // Publish immediately
+   *   await topic.publish(event);
+   * 
+   *   // Publish after 10 seconds delay
+   *   await topic.publish(event, { delay: 10 });
    * }
    * ```
    */
