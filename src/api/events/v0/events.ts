@@ -37,6 +37,7 @@ function newEventServiceClients(): {
 }
 
 export interface PublishOptions {
+  /** Number of seconds to delay message publishing by */
   delay?: number;
 }
 
