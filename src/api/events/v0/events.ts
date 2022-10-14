@@ -85,8 +85,8 @@ export class Topic {
   async publish(event: NitricEvent, opts: PublishOptions = DEFAULT_PUBLISH_OPTS): Promise<NitricEvent> {
     const { id, payloadType = 'none', payload } = event;
     const publishOpts = {
+      ...DEFAULT_PUBLISH_OPTS,
       ...opts,
-      ...DEFAULT_PUBLISH_OPTS
     };
     const request = new EventPublishRequest();
     const evt = new PbEvent();
