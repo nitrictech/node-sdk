@@ -343,9 +343,9 @@ class Api<SecurityDefs extends string> extends Base<ApiDetails> {
       return {
         url: resp.getApi().getUrl()
       }
-    } else {
-      throw new Error("Unexpected details in response. Expected API details")
     }
+
+    throw new Error("Unexpected details in response. Expected API details")
   }
 
   /**

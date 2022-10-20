@@ -86,7 +86,6 @@ describe('Api', () => {
 	});
 
 	describe("when getting the url", () => {
-
 		describe("when api details are returned", () => {
 			let a;
 			let detailsSpy;
