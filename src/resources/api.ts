@@ -20,7 +20,10 @@ import {
   Resource,
   ResourceDeclareRequest,
   ResourceDeclareResponse,
+  ResourceDetailsRequest,
+  ResourceDetailsResponse,
   ResourceType,
+  ResourceTypeMap,
 } from '@nitric/api/proto/resource/v1/resource_pb';
 import { fromGrpcError } from '../api/errors';
 import resourceClient from './client';
@@ -196,12 +199,16 @@ interface ApiOpts<Defs extends string> {
   security?: Record<Defs, string[]>;
 }
 
+interface ApiDetails {
+  url: string;
+}
+
 /**
  * API Resource
  *
  * Represents an HTTP API, capable of routing and securing incoming HTTP requests to handlers.
  */
-class Api<SecurityDefs extends string> extends Base {
+class Api<SecurityDefs extends string> extends Base<ApiDetails> {
   // public readonly name: string;
   public readonly path: string;
   public readonly middleware?: HttpMiddleware[];
@@ -318,7 +325,31 @@ class Api<SecurityDefs extends string> extends Base {
   }
 
   /**
-   * Register this bucket as a required resource for the calling function/container
+   * Retrieves the Invocation URL of this API at runtime
+   * @returns {Promise} that contains the url of this API
+   */
+  async url(): Promise<string> {
+    const { details: { url } } = await this.details();
+
+    return url;
+  }
+
+  protected resourceType(): ResourceTypeMap[keyof ResourceTypeMap] {
+    return ResourceType.API;
+  }
+
+  protected unwrapDetails(resp: ResourceDetailsResponse): ApiDetails {
+    if (resp.hasApi()) {
+      return {
+        url: resp.getApi().getUrl()
+      }
+    } else {
+      throw new Error("Unexpected details in response. Expected API details")
+    }
+  }
+
+  /**
+   * Register this api as a required resource for the calling function/container
    * @returns a promise that resolves when the registration is complete
    */
    protected async register(): Promise<Resource> {

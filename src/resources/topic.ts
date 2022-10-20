@@ -108,6 +108,14 @@ export class TopicResource extends SecureResource<TopicPermission> {
     return sub['start']();
   }
 
+  protected resourceType() {
+    return ResourceType.TOPIC;
+  }
+
+  protected unwrapDetails(resp: ResourceDeclareResponse): {} {
+    throw new Error("details unimplemented for topic");
+  }
+
   /**
    * Return a topic reference and register the permissions required by the currently scoped function for this resource.
    *
