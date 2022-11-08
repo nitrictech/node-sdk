@@ -24,6 +24,25 @@ describe('Schedule', () => {
 		jest.clearAllMocks();
 	});
 
+	describe("when creating a new schedule with cron expression", () => {
+		let error = undefined;
+		afterAll(() => {
+			jest.resetAllMocks();
+		});
+
+		beforeAll(async () => {
+			try {
+				await schedule("main").cron("0 10 * * *", mockFn);
+			} catch (err) {
+				error = err
+			}
+		});
+
+		it("should not return an error", () => {
+			expect(error).toBe(undefined);
+		});
+	});
+
 	describe("when creating a new schedule with an invalid rate", () => {
 		let error = undefined;
 		afterAll(() => {
@@ -40,7 +59,7 @@ describe('Schedule', () => {
 
 		it("should return an error", () => {
 			expect(error).not.toBe(undefined);
-		})
+		});
 	});
 
 	describe("when creating a new schedule with an invalid frequency", () => {
@@ -59,7 +78,7 @@ describe('Schedule', () => {
 
 		it("should throw an error", () => {
 			expect(error).not.toBe(undefined);
-		})
+		});
 	});
 
 	["day", "hour", "minute"].forEach(rate => {

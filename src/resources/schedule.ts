@@ -29,6 +29,16 @@ export class RateWorkerOptions {
 	}
 }
 
+export class CronWorkerOptions {
+	public readonly description: string;
+	public readonly cron: string;
+
+	constructor(description: string, cron: string) {
+		this.description = description;
+		this.cron = cron;
+	}
+}
+
 /**
  * Provides a rate based schedule
  * 
@@ -66,6 +76,26 @@ class Rate {
 }
 
 /**
+ * Provides a cron based schedule
+ */
+class Cron {
+	public readonly schedule: Schedule;
+	private readonly faas: Faas;
+
+	constructor(schedule: Schedule, cron: string, ...mw: EventMiddleware[]) {
+		this.schedule = schedule;
+		this.faas = new Faas(
+			new CronWorkerOptions(schedule['description'], cron)
+		);
+		this.faas.event(...mw);
+	}
+
+	private async start(): Promise<void> {
+		return this.faas.start();
+	}
+}
+
+/**
  * Providers a scheduled worker.
  */
 class Schedule {
@@ -90,6 +120,12 @@ class Schedule {
 
 		const r = new Rate(this, rate, ...mw);
 		// Start the new rate immediately
+		return r['start']();
+	}
+
+	cron = (expression: string, ...mw: EventMiddleware[]): Promise<void> => {
+		const r = new Cron(this, expression, ...mw);
+		// Start the new cron immediately
 		return r['start']();
 	}
 }

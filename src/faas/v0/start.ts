@@ -22,6 +22,7 @@ import {
   HeaderValue,
   TriggerResponse,
   TopicResponseContext,
+  ScheduleCron,
   ScheduleRate,
   SubscriptionWorker,
   ScheduleWorker,
@@ -41,11 +42,11 @@ import {
   TriggerMiddleware,
 } from '.';
 
-import { ApiWorkerOptions, RateWorkerOptions, SubscriptionWorkerOptions } from "../../resources";
+import { ApiWorkerOptions, CronWorkerOptions, RateWorkerOptions, SubscriptionWorkerOptions } from "../../resources";
 
 class FaasWorkerOptions {}
 
-type FaasClientOptions = ApiWorkerOptions | RateWorkerOptions | FaasWorkerOptions; 
+type FaasClientOptions = ApiWorkerOptions | RateWorkerOptions | CronWorkerOptions | FaasWorkerOptions; 
 
 /**
  *
@@ -213,6 +214,13 @@ export class Faas {
       const rate = new ScheduleRate();
       rate.setRate(`${this.options.rate} ${this.options.frequency}`);
       scheduleWorker.setRate(rate);
+      initRequest.setSchedule(scheduleWorker);
+    } else if (this.options instanceof CronWorkerOptions) {
+      const scheduleWorker = new ScheduleWorker();
+      scheduleWorker.setKey(this.options.description);
+      const cron = new ScheduleCron();
+      cron.setCron(this.options.cron);
+      scheduleWorker.setCron(cron);
       initRequest.setSchedule(scheduleWorker);
     } else if (this.options instanceof SubscriptionWorkerOptions) {
       const subscriptionWorker = new SubscriptionWorker()
