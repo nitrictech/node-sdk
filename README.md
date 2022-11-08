@@ -19,6 +19,7 @@
   <a href="https://npmjs.org/package/@nitric/sdk">
     <img alt="Downloads/week" src="https://img.shields.io/npm/dw/@nitric/sdk.svg">
   </a>
+  <a href="https://discord.gg/Webemece5C"><img alt="Discord" src="https://img.shields.io/discord/955259353043173427?label=discord"></a>
 </p>
 
 The NodeJS SDK supports the use of the Nitric framework with NodeJS 12+. For more information, check out the main [Nitric repo](https://github.com/nitrictech/nitric).
@@ -34,6 +35,8 @@ The SDK is in early stage development and APIs and interfaces are still subject 
 ## Get in touch:
 
 - Ask questions in [GitHub discussions](https://github.com/nitrictech/nitric/discussions)
+
+- Join us on [Discord](https://discord.gg/Webemece5C)
 
 - Find us on [Twitter](https://twitter.com/nitric_io)
 
