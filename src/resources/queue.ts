@@ -17,6 +17,7 @@ import {
   ResourceType,
   Action,
   ActionMap,
+  ResourceDeclareResponse,
 } from '@nitric/api/proto/resource/v1/resource_pb';
 import resourceClient from './client';
 import { queues, Queue } from '../api/';
@@ -80,6 +81,14 @@ export class QueueResource extends SecureResource<QueuePermission> {
     }
 
     return actions;
+  }
+
+  protected resourceType() {
+    return ResourceType.QUEUE;
+  }
+
+  protected unwrapDetails(resp: ResourceDeclareResponse): {} {
+    throw new Error("details unimplemented for queue");
   }
 
   /**

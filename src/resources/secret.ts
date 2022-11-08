@@ -17,6 +17,7 @@ import {
   ResourceType,
   ResourceDeclareRequest,
   ResourceDeclareResponse,
+  ResourceDetailsResponse,
 } from '@nitric/api/proto/resource/v1/resource_pb';
 import resourceClient from './client';
 import { secrets, Secret } from '../api/secrets';
@@ -68,6 +69,14 @@ export class SecretResource extends SecureResource<SecretPermission> {
             );
         }
       }, []);
+  }
+
+  protected resourceType() {
+    return ResourceType.SECRET;
+  }
+
+  protected unwrapDetails(resp: ResourceDetailsResponse): {} {
+    throw new Error("details unimplemented for secret");
   }
 
   public for(...perms: SecretPermission[]): Secret {

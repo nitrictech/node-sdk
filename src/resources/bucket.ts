@@ -16,6 +16,7 @@ import {
   Resource,
   ResourceDeclareRequest,
   ResourceDeclareResponse,
+  ResourceDetailsResponse,
   ResourceType,
 } from '@nitric/api/proto/resource/v1/resource_pb';
 import resourceClient from './client';
@@ -74,6 +75,14 @@ export class BucketResource extends SecureResource<BucketPermission> {
           );
       }
     }, []);
+  }
+
+  protected resourceType() {
+    return ResourceType.BUCKET;
+  }
+
+  protected unwrapDetails(resp: ResourceDetailsResponse): {} {
+    throw new Error("details unimplemented for bucket");
   }
 
   /**

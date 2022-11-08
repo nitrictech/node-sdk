@@ -17,6 +17,7 @@ import {
   ResourceDeclareResponse,
   ResourceType,
   Action,
+  ResourceDetailsResponse,
 } from '@nitric/api/proto/resource/v1/resource_pb';
 import { fromGrpcError } from '../api/errors';
 import { documents } from '../api/documents';
@@ -85,6 +86,14 @@ export class CollectionResource<T extends DocumentStructure> extends SecureResou
     }
 
     return actions;
+  }
+
+  protected resourceType() {
+    return ResourceType.COLLECTION;
+  }
+
+  protected unwrapDetails(resp: ResourceDetailsResponse): {} {
+    throw new Error("details unimplemented for collection");
   }
 
   /**
