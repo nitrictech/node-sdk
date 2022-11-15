@@ -57,6 +57,7 @@
     "prettier": "^2.2.1",
     "standard-version": "^9.0.0",
     "ts-jest": "^26.4.3",
+    "ts-node": "^10.9.1",
     "ts-protoc-gen": "^0.15.0",
     "typescript": "^3.3"
   },
