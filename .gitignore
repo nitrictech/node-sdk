@@ -93,3 +93,5 @@ typings/
 lib/
 
 *_pb.*
+
+contracts/

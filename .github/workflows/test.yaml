@@ -23,6 +23,11 @@ jobs:
       run: yarn license:header:check
     - name: OSS License Whitelist Check
       run: yarn license:check
+    - name: Check sources
+      run: |
+        make generate
+        git add .
+        git diff --cached --quiet || echo "Generated sources different from versioned, new sources not checked in!"
     - name: Build
       run: yarn build
     - name: Run tests
