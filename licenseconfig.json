@@ -15,7 +15,8 @@
     "*.html",
     "**/.eslintignore",
     "makefile",
-    "./src/gen/**/*"
+    "./src/gen/**/*",
+    "codecov.yml"
   ],
   "license": "./assets/license_header.txt",
   "licenseFormats": {
