@@ -23,6 +23,11 @@ jobs:
       run: yarn license:header:check
     - name: OSS License Whitelist Check
       run: yarn license:check
+    - name: Check sources
+      run: |
+        yarn gen:proto
+        git add .
+        git diff --cached --quiet
     - name: Build
       run: yarn build
     - name: Run tests

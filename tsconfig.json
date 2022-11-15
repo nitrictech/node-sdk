@@ -7,10 +7,13 @@
     "outDir": "lib",
     "allowJs": true,
     "types": ["node", "jest"],
+    "resolveJsonModule": true,
     "importHelpers": true,
     "baseUrl": "./",
     "paths": {
-      "@nitric/sdk": ["src"]
+      "@nitric/sdk": ["src"],
+      "@nitric/sdk/*": ["src/*"],
+      "@nitric/api/*": ["src/gen/*"]
     }
   },
   "include": ["src/**/*", "examples/**/*"]

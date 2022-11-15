@@ -13,7 +13,10 @@
     "**/*.md",
     "*.lock",
     "*.html",
-    "**/.eslintignore"
+    "**/.eslintignore",
+    "makefile",
+    "./src/gen/**/*",
+    "codecov.yml"
   ],
   "license": "./assets/license_header.txt",
   "licenseFormats": {
