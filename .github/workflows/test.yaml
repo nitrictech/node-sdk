@@ -27,7 +27,7 @@ jobs:
       run: |
         make generate
         git add .
-        git diff --cached --quiet || echo "Generated sources different from versioned, new sources not checked in!"
+        git diff --cached --quiet
     - name: Build
       run: yarn build
     - name: Run tests
