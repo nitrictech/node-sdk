@@ -25,7 +25,7 @@ jobs:
       run: yarn license:check
     - name: Check sources
       run: |
-        make generate
+        yarn gen:proto
         git add .
         git diff --cached --quiet
     - name: Build
