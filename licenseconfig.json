@@ -13,7 +13,9 @@
     "**/*.md",
     "*.lock",
     "*.html",
-    "**/.eslintignore"
+    "**/.eslintignore",
+    "makefile",
+    "./src/gen/**/*"
   ],
   "license": "./assets/license_header.txt",
   "licenseFormats": {
