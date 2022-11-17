@@ -9,7 +9,7 @@
     "types": ["node", "jest"],
     "resolveJsonModule": true,
     "importHelpers": true,
-    "baseUrl": "./",
+    "baseUrl": ".",
     "paths": {
       "@nitric/sdk": ["src"],
       "@nitric/sdk/*": ["src/*"],

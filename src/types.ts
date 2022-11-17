@@ -56,17 +56,6 @@ export interface Task {
   payload?: Record<string, any>;
 }
 
-export interface PublishOptions {
-  /**
-   * The name of the topic to publish to.
-   */
-  topicName: string;
-  /**
-   * The event to publish.
-   */
-  event: NitricEvent;
-}
-
 export type WhereQueryOperator =
   | '<'
   | '<='

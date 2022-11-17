@@ -8,7 +8,7 @@
   "types": "lib/index.d.ts",
   "scripts": {
     "bump": "standard-version",
-    "build": "tsc --project tsconfig.build.json",
+    "build": "tsup src/index.ts --dts --outDir lib",
     "test": "jest",
     "test:coverage": "jest --coverage",
     "coverage:upload": "yarn run test:coverage && codecov",
@@ -61,7 +61,8 @@
     "ts-jest": "^26.4.3",
     "ts-node": "^10.9.1",
     "ts-protoc-gen": "^0.15.0",
-    "typescript": "^3.3"
+    "tsup": "^6.5.0",
+    "typescript": "^4.4"
   },
   "license-check-config": {
     "src": [
