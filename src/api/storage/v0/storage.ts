@@ -195,11 +195,15 @@ export class File {
    * await storage.bucket("my-bucket").file("my-item").write(buf);
    * ```
    */
-  public async write (body: Uint8Array): Promise<void> {
+  public async write (body: Uint8Array | string): Promise<void> {
     const request = new StorageWriteRequest();
     request.setBucketName(this.bucket.name);
     request.setKey(this.name);
-    request.setBody(body);
+    if (typeof body === 'string' || body instanceof String) {
+      request.setBody(new TextEncoder().encode(body as string))
+    } else {
+      request.setBody(body);
+    }
 
     return new Promise((resolve, reject) => {
       this.storage.StorageServiceClient.write(request, (error) => {
