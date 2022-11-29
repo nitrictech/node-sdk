@@ -2,6 +2,7 @@ name: Check Nitric Version
 
 on:
   pull_request:
+    branches:
       - main
 
 jobs:
