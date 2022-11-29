@@ -1,0 +1,21 @@
+name: Check Nitric Version
+
+on:
+  pull_request:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Cache Yarn Cache
+      uses: actions/cache@v2
+      with:
+        path: 'node_modules'
+        key: ${{ runner.os }}-modules-${{ hashFiles('yarn.lock') }}
+    - name: Install modules
+      run: yarn --frozen-lockfile
+    - name: Check nitric version
+      run: yarn check-nitric
