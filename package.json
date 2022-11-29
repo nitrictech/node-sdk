@@ -10,6 +10,7 @@
     "bump": "standard-version",
     "build": "tsup src/index.ts --dts --outDir lib",
     "test": "jest",
+    "check-nitric": "ts-node ./scripts/check-nitric-version.ts",
     "test:coverage": "jest --coverage",
     "coverage:upload": "yarn run test:coverage && codecov",
     "prettier:check": "prettier --check src",
