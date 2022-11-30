@@ -17,13 +17,23 @@ import {
   PolicyResource,
   ResourceDeclareRequest,
   ActionMap,
+  ResourceDetailsRequest,
+  ResourceDetailsResponse,
+  ResourceTypeMap,
 } from '@nitric/api/proto/resource/v1/resource_pb';
 import resourceClient from './client';
 import { fromGrpcError } from '../api/errors';
 
 export type ActionsList = ActionMap[keyof ActionMap][];
 
-export abstract class Resource {
+export interface ResourceDetails<T> {
+  id: string;
+  provider: string;
+  service: string;
+  details: T;
+}
+
+export abstract class Resource<Detail = {}> {
   /**
    * Unique name for the resource by type within the stack.
    *
@@ -46,6 +56,36 @@ export abstract class Resource {
   protected set registerPromise(promise: Promise<ProtoResource>) {
     this._registerPromise = promise;
   }
+
+  /**
+   * Returns details of this 
+   */
+  protected async details(): Promise<ResourceDetails<Detail>> {
+    const req = new ResourceDetailsRequest();
+    const res = new ProtoResource();
+    res.setName(this.name);
+    res.setType(this.resourceType());
+
+    req.setResource(res);
+    return new Promise<ResourceDetails<Detail>>((resolve, reject) => {
+      resourceClient.details(req, (err, resp) => {
+        if (err) {
+          reject(fromGrpcError(err));
+        } else {
+          resolve({
+            id: resp.getId(),
+            provider: resp.getProvider(),
+            service: resp.getService(),
+            details: this.unwrapDetails(resp)
+          })
+        }
+      });
+    });
+  }
+
+  protected abstract resourceType(): ResourceTypeMap[keyof ResourceTypeMap];
+
+  protected abstract unwrapDetails(resp: ResourceDetailsResponse): Detail;
 
   protected abstract register(): Promise<ProtoResource>;
 }

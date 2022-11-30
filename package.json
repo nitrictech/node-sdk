@@ -1,14 +1,16 @@
 {
   "name": "@nitric/sdk",
   "description": "Nitric NodeJS client sdk",
+  "nitric": "v0.20.0",
   "author": "Nitric <https://github.com/nitrictech>",
   "repository": "https://github.com/nitrictech/node-sdk",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
     "bump": "standard-version",
-    "build": "tsc --project tsconfig.build.json",
+    "build": "tsup src/index.ts --dts --outDir lib",
     "test": "jest",
+    "check-nitric": "ts-node ./scripts/check-nitric-version.ts",
     "test:coverage": "jest --coverage",
     "coverage:upload": "yarn run test:coverage && codecov",
     "prettier:check": "prettier --check src",
@@ -18,7 +20,9 @@
     "license:header:remove": "license-check-and-add remove -f ./licenseconfig.json",
     "license:header:add": "license-check-and-add add -f ./licenseconfig.json",
     "license:header:check": "license-check-and-add check -f ./licenseconfig.json",
-    "license:check": "licensee --production"
+    "license:check": "licensee --production",
+    "download:contracts": "curl -L https://github.com/nitrictech/nitric/releases/download/${npm_package_nitric}/contracts.tgz -o contracts.tgz && tar xvzf contracts.tgz && rm contracts.tgz",
+    "gen:proto": "yarn run download:contracts && mkdir -p ./src/gen && grpc_tools_node_protoc --ts_out=service=grpc-node,mode=grpc-js:./src/gen --js_out=import_style=commonjs,binary:./src/gen --grpc_out=grpc_js:./src/gen -I ./contracts ./contracts/**/*.proto ./contracts/proto/**/*/*.proto"
   },
   "contributors": [
     "Jye Cusch <jye.cusch@nitric.io>",
@@ -27,7 +31,6 @@
   ],
   "dependencies": {
     "@grpc/grpc-js": "^1.5.9",
-    "@nitric/api": "v0.19.0",
     "google-protobuf": "3.14.0",
     "tslib": "^2.1.0"
   },
@@ -41,13 +44,14 @@
     }
   },
   "devDependencies": {
-    "@types/google-protobuf": "3.2.7",
+    "@types/google-protobuf": "^3.15.6",
     "@types/jest": "^26.0.15",
     "@typescript-eslint/eslint-plugin": "^4.22.0",
     "@typescript-eslint/parser": "^4.22.0",
     "codecov": "^3.8.3",
     "eslint": "^7.24.0",
     "glob-run": "^0.1.7",
+    "grpc-tools": "^1.11.3",
     "husky": "^6.0.0",
     "jest": "^26.6.1",
     "license-check-and-add": "^4.0.2",
@@ -56,7 +60,10 @@
     "prettier": "^2.2.1",
     "standard-version": "^9.0.0",
     "ts-jest": "^26.4.3",
-    "typescript": "^3.3"
+    "ts-node": "^10.9.1",
+    "ts-protoc-gen": "^0.15.0",
+    "tsup": "^6.5.0",
+    "typescript": "^4.4"
   },
   "license-check-config": {
     "src": [
