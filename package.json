@@ -30,7 +30,7 @@
     "David Moore <david.moore@nitric.io>"
   ],
   "dependencies": {
-    "@grpc/grpc-js": "^1.5.9",
+    "@grpc/grpc-js": "1.8.1",
     "google-protobuf": "3.14.0",
     "tslib": "^2.1.0"
   },
