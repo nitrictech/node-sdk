@@ -29,6 +29,7 @@ import { fromGrpcError } from '../api/errors';
 import resourceClient from './client';
 import { HttpMethod } from '../types';
 import { make, newer, Resource as Base } from './common';
+import path from "path"
 
 export class ApiWorkerOptions{
   public readonly api: string;
@@ -219,8 +220,8 @@ class Api<SecurityDefs extends string> extends Base<ApiDetails> {
   constructor(name: string, options: ApiOpts<SecurityDefs> = {}) {
     super(name);
     const { middleware, path = '/', securityDefinitions = null, security = {} as Record<SecurityDefs, string[]> } = options;
-    // this.name = name;
-    this.path = path;
+    // prepend / to path if its not there
+    this.path = path.replace(/^\/?/, '/');
     this.middleware = Array.isArray(middleware) ? middleware : [middleware];
     this.securityDefinitions = securityDefinitions;
     this.security = security;
@@ -245,7 +246,8 @@ class Api<SecurityDefs extends string> extends Base<ApiDetails> {
    * @returns the route object, which can be used to register method handlers
    */
   route(match: string, options?: RouteOpts): Route<SecurityDefs> {
-    const r = new Route(this, match, options);
+    const apiRoute = path.join(this.path, match);
+    const r = new Route(this, apiRoute, options);
     this.routes.push(r);
     return r;
   }

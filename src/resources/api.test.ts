@@ -57,7 +57,9 @@ describe('Api', () => {
 	["get", "post", "delete", "patch", "put", "options"].forEach(method => {
 		describe(`when creating a new ${method} handler`, () => {
 			beforeAll(async () => {
-				await api("main")[method]("/test/", mockFn, {
+				await api("main1", {
+					path: "v1",
+				})[method]("/test/", mockFn, {
 					security: {
 						"test": [],
 					},
@@ -73,7 +75,7 @@ describe('Api', () => {
 			});
 
 			it("should provide Faas with ApiWorkerOptions", () => {
-				const expectedOpts = new ApiWorkerOptions("main", "/test/", [method.toUpperCase() as any], {
+				const expectedOpts = new ApiWorkerOptions("main1", "/v1/test/", [method.toUpperCase() as any], {
 					security: { "test": [] }
 				});
 				expect(faas.Faas).toBeCalledWith(expectedOpts)
