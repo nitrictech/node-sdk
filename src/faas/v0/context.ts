@@ -198,7 +198,7 @@ export class HttpContext extends TriggerContext<HttpRequest, HttpResponse> {
       .getEntryList() as unknown) as [string, string[][]][]).reduce(
       (acc, [key, [val]]) => ({
         ...acc,
-        [key.toLowerCase()]: val.length === 1 ? val[0] : val,
+        [key]: val.length === 1 ? val[0] : val,
       }),
       {}
     );
@@ -211,7 +211,7 @@ export class HttpContext extends TriggerContext<HttpRequest, HttpResponse> {
       .reduce(
         (acc, [key, val]) => ({
           ...acc,
-          [key.toLowerCase()]: val.length === 1 ? val[0] : val,
+          [key]: val.length === 1 ? val[0] : val,
         }),
         {} as Record<string, string>
       );
@@ -222,7 +222,7 @@ export class HttpContext extends TriggerContext<HttpRequest, HttpResponse> {
       .reduce(
         (acc, [key, val]) => ({
           ...acc,
-          [key.toLowerCase()]: val,
+          [key]: val,
         }),
         {}
       );
@@ -233,7 +233,7 @@ export class HttpContext extends TriggerContext<HttpRequest, HttpResponse> {
       .reduce(
         (acc, [key, val]) => ({
           ...acc,
-          [key.toLowerCase()]: val,
+          [key]: val,
         }),
         {}
       );
