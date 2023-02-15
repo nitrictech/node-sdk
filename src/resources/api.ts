@@ -246,7 +246,8 @@ class Api<SecurityDefs extends string> extends Base<ApiDetails> {
    * @returns the route object, which can be used to register method handlers
    */
   route(match: string, options?: RouteOpts): Route<SecurityDefs> {
-    const apiRoute = path.join(this.path, match);
+    // ensure path seperator is always foward slash (for windows)
+    const apiRoute = path.join(this.path, match).split(path.sep).join('/');
     const r = new Route(this, apiRoute, options);
     this.routes.push(r);
     return r;
