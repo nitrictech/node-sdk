@@ -97,7 +97,11 @@ class Route<SecurityDefs extends string> {
     this.api = api;
     this.path = path;
     const { middleware = [] } = opts;
-    this.middleware = Array.isArray(middleware) ? middleware : [middleware];
+    this.middleware = Array.isArray(middleware)
+      ? middleware
+      : middleware
+      ? [middleware]
+      : [];
   }
 
   async method(
@@ -258,7 +262,11 @@ class Api<SecurityDefs extends string> extends Base<ApiDetails> {
     } = options;
     // prepend / to path if its not there
     this.path = path.replace(/^\/?/, '/');
-    this.middleware = Array.isArray(middleware) ? middleware : [middleware];
+    this.middleware = Array.isArray(middleware)
+      ? middleware
+      : middleware
+      ? [middleware]
+      : [];
     this.securityDefinitions = securityDefinitions;
     this.security = security;
     this.routes = [];
@@ -284,7 +292,20 @@ class Api<SecurityDefs extends string> extends Base<ApiDetails> {
   route(match: string, options?: RouteOpts): Route<SecurityDefs> {
     // ensure path seperator is always foward slash (for windows)
     const apiRoute = path.join(this.path, match).split(path.sep).join('/');
-    const r = new Route(this, apiRoute, options);
+
+    let routeMiddleware = [];
+    if (options) {
+      routeMiddleware = Array.isArray(options.middleware)
+        ? options.middleware
+        : options.middleware
+        ? [options.middleware]
+        : [];
+    }
+
+    const r = new Route(this, apiRoute, {
+      ...options,
+      middleware: [...this.middleware, ...routeMiddleware],
+    });
     this.routes.push(r);
     return r;
   }
@@ -308,9 +329,13 @@ class Api<SecurityDefs extends string> extends Base<ApiDetails> {
     middleware: HttpMiddleware | HttpMiddleware[],
     opts?: MethodOptions<SecurityDefs>
   ): Promise<void> {
-    const r = this.route(match);
-    const m = Array.isArray(middleware) ? middleware : [middleware];
-    return r.get(opts, ...m);
+    const r = this.route(match, {
+      middleware: this.middleware ?? [],
+    });
+    const routeMiddleware = Array.isArray(middleware)
+      ? middleware
+      : [middleware];
+    return r.get(opts, ...routeMiddleware);
   }
 
   /**
@@ -324,9 +349,13 @@ class Api<SecurityDefs extends string> extends Base<ApiDetails> {
     middleware: HttpMiddleware | HttpMiddleware[],
     opts?: MethodOptions<SecurityDefs>
   ): Promise<void> {
-    const r = this.route(match);
-    const m = Array.isArray(middleware) ? middleware : [middleware];
-    return r.post(opts, ...m);
+    const r = this.route(match, {
+      middleware: this.middleware ?? [],
+    });
+    const routeMiddleware = Array.isArray(middleware)
+      ? middleware
+      : [middleware];
+    return r.post(opts, ...(routeMiddleware ?? []));
   }
 
   /**
@@ -340,9 +369,13 @@ class Api<SecurityDefs extends string> extends Base<ApiDetails> {
     middleware: HttpMiddleware | HttpMiddleware[],
     opts?: MethodOptions<SecurityDefs>
   ): Promise<void> {
-    const r = this.route(match);
-    const m = Array.isArray(middleware) ? middleware : [middleware];
-    return r.put(opts, ...m);
+    const r = this.route(match, {
+      middleware: this.middleware ?? [],
+    });
+    const routeMiddleware = Array.isArray(middleware)
+      ? middleware
+      : [middleware];
+    return r.put(opts, ...(routeMiddleware ?? []));
   }
 
   /**
@@ -356,9 +389,13 @@ class Api<SecurityDefs extends string> extends Base<ApiDetails> {
     middleware: HttpMiddleware | HttpMiddleware[],
     opts?: MethodOptions<SecurityDefs>
   ): Promise<void> {
-    const r = this.route(match);
-    const m = Array.isArray(middleware) ? middleware : [middleware];
-    return r.patch(opts, ...m);
+    const r = this.route(match, {
+      middleware: this.middleware ?? [],
+    });
+    const routeMiddleware = Array.isArray(middleware)
+      ? middleware
+      : [middleware];
+    return r.patch(opts, ...(routeMiddleware ?? []));
   }
 
   /**
@@ -372,9 +409,13 @@ class Api<SecurityDefs extends string> extends Base<ApiDetails> {
     middleware: HttpMiddleware | HttpMiddleware[],
     opts?: MethodOptions<SecurityDefs>
   ): Promise<void> {
-    const r = this.route(match);
-    const m = Array.isArray(middleware) ? middleware : [middleware];
-    return r.delete(opts, ...m);
+    const r = this.route(match, {
+      middleware: this.middleware ?? [],
+    });
+    const routeMiddleware = Array.isArray(middleware)
+      ? middleware
+      : [middleware];
+    return r.delete(opts, ...(routeMiddleware ?? []));
   }
 
   /**
@@ -388,9 +429,13 @@ class Api<SecurityDefs extends string> extends Base<ApiDetails> {
     middleware: HttpMiddleware | HttpMiddleware[],
     opts?: MethodOptions<SecurityDefs>
   ): Promise<void> {
-    const r = this.route(match);
-    const m = Array.isArray(middleware) ? middleware : [middleware];
-    return r.options(opts, ...m);
+    const r = this.route(match, {
+      middleware: this.middleware ?? [],
+    });
+    const routeMiddleware = Array.isArray(middleware)
+      ? middleware
+      : [middleware];
+    return r.options(opts, ...(routeMiddleware ?? []));
   }
 
   /**
