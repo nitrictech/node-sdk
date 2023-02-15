@@ -97,7 +97,11 @@ class Route<SecurityDefs extends string> {
     this.api = api;
     this.path = path;
     const { middleware = [] } = opts;
-    this.middleware = Array.isArray(middleware) ? middleware : [middleware];
+    this.middleware = Array.isArray(middleware)
+      ? middleware
+      : middleware
+      ? [middleware]
+      : [];
   }
 
   async method(
@@ -258,7 +262,11 @@ class Api<SecurityDefs extends string> extends Base<ApiDetails> {
     } = options;
     // prepend / to path if its not there
     this.path = path.replace(/^\/?/, '/');
-    this.middleware = Array.isArray(middleware) ? middleware : [middleware];
+    this.middleware = Array.isArray(middleware)
+      ? middleware
+      : middleware
+      ? [middleware]
+      : [];
     this.securityDefinitions = securityDefinitions;
     this.security = security;
     this.routes = [];
