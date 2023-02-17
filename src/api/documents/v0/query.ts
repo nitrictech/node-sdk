@@ -250,14 +250,17 @@ export class Query<T extends DocumentStructure> {
       transform: (result: DocumentQueryStreamResponse, encoding, callback) => {
         const doc = result.getDocument();
 
-        callback(undefined, new DocumentSnapshot<T>(
-          new DocumentRef<T>(
-            this.documentClient,
-            this.collection,
-            doc.getKey().getId()
-          ),
-          doc.getContent().toJavaScript() as T
-        ));
+        callback(
+          undefined,
+          new DocumentSnapshot<T>(
+            new DocumentRef<T>(
+              this.documentClient,
+              this.collection,
+              doc.getKey().getId()
+            ),
+            doc.getContent().toJavaScript() as T
+          )
+        );
       },
     });
 

@@ -19,7 +19,7 @@ import {
   DocumentSetRequest,
   DocumentDeleteRequest,
 } from '@nitric/api/proto/document/v1/document_pb';
-import { DocumentServiceClient } from '@nitric/api/proto/document/v1/document_grpc_pb'; 
+import { DocumentServiceClient } from '@nitric/api/proto/document/v1/document_grpc_pb';
 import { fromGrpcError, InvalidArgumentError } from '../../errors';
 import { CollectionRef } from './collection-ref';
 import { MAX_COLLECTION_DEPTH } from './constants';
@@ -116,7 +116,7 @@ export class DocumentRef<T extends DocumentStructure> {
 
   private toWire(): Key {
     const key = new Key();
-    key.setCollection(this.parent["toWire"]());
+    key.setCollection(this.parent['toWire']());
     key.setId(this.id);
     return key;
   }

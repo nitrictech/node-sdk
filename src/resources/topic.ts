@@ -113,7 +113,7 @@ export class TopicResource extends SecureResource<TopicPermission> {
   }
 
   protected unwrapDetails(resp: ResourceDeclareResponse): {} {
-    throw new Error("details unimplemented for topic");
+    throw new Error('details unimplemented for topic');
   }
 
   /**

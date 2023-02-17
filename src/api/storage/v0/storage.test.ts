@@ -13,7 +13,15 @@
 // limitations under the License.
 import { FileMode, Storage } from './storage';
 import { StorageServiceClient as GrpcStorageClient } from '@nitric/api/proto/storage/v1/storage_grpc_pb';
-import { StorageWriteResponse, StorageReadResponse, StorageDeleteResponse, StoragePreSignUrlResponse, StoragePreSignUrlRequest, StorageListFilesResponse, File } from '@nitric/api/proto/storage/v1/storage_pb';
+import {
+  StorageWriteResponse,
+  StorageReadResponse,
+  StorageDeleteResponse,
+  StoragePreSignUrlResponse,
+  StoragePreSignUrlRequest,
+  StorageListFilesResponse,
+  File,
+} from '@nitric/api/proto/storage/v1/storage_pb';
 import { UnimplementedError } from '../../errors';
 
 describe('Storage Client Tests', () => {
@@ -42,7 +50,7 @@ describe('Storage Client Tests', () => {
       const storage = new Storage();
       await expect(
         storage.bucket('test_bucket').file('test/item').write(new Uint8Array())
-      ).rejects.toEqual(new UnimplementedError("UNIMPLEMENTED"));
+      ).rejects.toEqual(new UnimplementedError('UNIMPLEMENTED'));
     });
 
     test('The Grpc client for Storage.write should have been called exactly once', () => {
@@ -105,7 +113,7 @@ describe('Storage Client Tests', () => {
       const storage = new Storage();
       await expect(
         storage.bucket('test_bucket').file('test/item').read()
-      ).rejects.toEqual(new UnimplementedError("UNIMPLEMENTED"));
+      ).rejects.toEqual(new UnimplementedError('UNIMPLEMENTED'));
     });
 
     test('The Grpc client for Storage.read should have been called exactly once', () => {
@@ -169,7 +177,7 @@ describe('Storage Client Tests', () => {
     test('Then StorageClient.delete should reject', async () => {
       const client = new Storage();
       await expect(client.bucket('test').file('test').delete()).rejects.toEqual(
-        new UnimplementedError("UNIMPLEMENTED")
+        new UnimplementedError('UNIMPLEMENTED')
       );
     });
 
@@ -230,9 +238,9 @@ describe('Storage Client Tests', () => {
 
     test('Then file.signUrl should reject', async () => {
       const client = new Storage();
-      await expect(client.bucket('test').file('test').signUrl(FileMode.Read)).rejects.toEqual(
-        new UnimplementedError("UNIMPLEMENTED")
-      );
+      await expect(
+        client.bucket('test').file('test').signUrl(FileMode.Read)
+      ).rejects.toEqual(new UnimplementedError('UNIMPLEMENTED'));
     });
 
     test('The Grpc client for file.signUrl should have been called exactly once', () => {
@@ -242,7 +250,7 @@ describe('Storage Client Tests', () => {
 
   describe('Given nitric.api.storage.StorageClient.PreSignUrl succeeds', () => {
     const MOCK_REPLY = new StoragePreSignUrlResponse();
-    MOCK_REPLY.setUrl("testingUrl");
+    MOCK_REPLY.setUrl('testingUrl');
 
     let preSignUrlMock: jest.SpyInstance;
 
@@ -258,7 +266,6 @@ describe('Storage Client Tests', () => {
     afterAll(() => {
       jest.resetAllMocks();
     });
-    
 
     describe('When calling file.signUrl', () => {
       let signUrl;
@@ -266,21 +273,21 @@ describe('Storage Client Tests', () => {
       beforeAll(async () => {
         preSignUrlMock.mockClear();
         const client = new Storage().bucket('test_bucket').file('test/item');
-        signUrl = await client.signUrl(FileMode.Read)
-      })
+        signUrl = await client.signUrl(FileMode.Read);
+      });
 
       test('Then file.signUrl should delete the bytes from the bucket', () => {
-        expect(signUrl).toEqual("testingUrl");
+        expect(signUrl).toEqual('testingUrl');
       });
-  
+
       test('The Grpc client for file.signUrl should have been called exactly once', () => {
         expect(preSignUrlMock).toBeCalledTimes(1);
       });
-  
+
       test('The Grpc client for file.signUrl should have been called with provided options', () => {
         const MOCK_REQUEST = new StoragePreSignUrlRequest();
-        MOCK_REQUEST.setBucketName("test_bucket");
-        MOCK_REQUEST.setKey("test/item");
+        MOCK_REQUEST.setBucketName('test_bucket');
+        MOCK_REQUEST.setKey('test/item');
         MOCK_REQUEST.setOperation(FileMode.Read);
         MOCK_REQUEST.setExpiry(600);
         expect(preSignUrlMock).toBeCalledWith(MOCK_REQUEST, expect.anything());
@@ -293,21 +300,21 @@ describe('Storage Client Tests', () => {
       beforeAll(async () => {
         preSignUrlMock.mockClear();
         const client = new Storage().bucket('test_bucket').file('test/item');
-        signUrl = await client.getUploadUrl()
-      })
+        signUrl = await client.getUploadUrl();
+      });
 
       test('Then file.signUrl should delete the bytes from the bucket', () => {
-        expect(signUrl).toEqual("testingUrl");
+        expect(signUrl).toEqual('testingUrl');
       });
-  
+
       test('The Grpc client for file.signUrl should have been called exactly once', () => {
         expect(preSignUrlMock).toBeCalledTimes(1);
       });
-  
+
       test('The Grpc client for file.signUrl should have been called with provided options', () => {
         const MOCK_REQUEST = new StoragePreSignUrlRequest();
-        MOCK_REQUEST.setBucketName("test_bucket");
-        MOCK_REQUEST.setKey("test/item");
+        MOCK_REQUEST.setBucketName('test_bucket');
+        MOCK_REQUEST.setKey('test/item');
         MOCK_REQUEST.setOperation(FileMode.Write);
         MOCK_REQUEST.setExpiry(600);
         expect(preSignUrlMock).toBeCalledWith(MOCK_REQUEST, expect.anything());
@@ -320,21 +327,21 @@ describe('Storage Client Tests', () => {
       beforeAll(async () => {
         preSignUrlMock.mockClear();
         const client = new Storage().bucket('test_bucket').file('test/item');
-        signUrl = await client.getDownloadUrl()
+        signUrl = await client.getDownloadUrl();
       });
 
       test('Then file.signUrl should delete the bytes from the bucket', () => {
-        expect(signUrl).toEqual("testingUrl");
+        expect(signUrl).toEqual('testingUrl');
       });
-  
+
       test('The Grpc client for file.signUrl should have been called exactly once', () => {
         expect(preSignUrlMock).toBeCalledTimes(1);
       });
-  
+
       test('The Grpc client for file.signUrl should have been called with provided options', () => {
         const MOCK_REQUEST = new StoragePreSignUrlRequest();
-        MOCK_REQUEST.setBucketName("test_bucket");
-        MOCK_REQUEST.setKey("test/item");
+        MOCK_REQUEST.setBucketName('test_bucket');
+        MOCK_REQUEST.setKey('test/item');
         MOCK_REQUEST.setOperation(FileMode.Read);
         MOCK_REQUEST.setExpiry(600);
         expect(preSignUrlMock).toBeCalledWith(MOCK_REQUEST, expect.anything());
@@ -367,7 +374,7 @@ describe('Storage Client Tests', () => {
     test('Then StorageClient.listFiles should reject', async () => {
       const client = new Storage();
       await expect(client.bucket('test').files()).rejects.toEqual(
-        new UnimplementedError("UNIMPLEMENTED")
+        new UnimplementedError('UNIMPLEMENTED')
       );
     });
 
@@ -378,11 +385,13 @@ describe('Storage Client Tests', () => {
 
   describe('Given nitric.api.storage.StorageClient.ListFiles succeeds', () => {
     const MOCK_REPLY = new StorageListFilesResponse();
-    MOCK_REPLY.setFilesList(["test/test.txt"].map((k) => { 
-      const f = new File();
-      f.setKey(k);
-      return f; 
-    }));
+    MOCK_REPLY.setFilesList(
+      ['test/test.txt'].map((k) => {
+        const f = new File();
+        f.setKey(k);
+        return f;
+      })
+    );
 
     let listFilesMock;
 
@@ -405,7 +414,7 @@ describe('Storage Client Tests', () => {
       const files = await client.bucket('test').files();
 
       expect(files).toHaveLength(1);
-      expect(files[0].name).toBe('test/test.txt')
+      expect(files[0].name).toBe('test/test.txt');
     });
 
     test('The Grpc client for Storage.listFiles should have been called exactly once', () => {

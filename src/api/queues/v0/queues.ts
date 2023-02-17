@@ -200,7 +200,7 @@ export class Queue {
         }
       });
     });
-  };
+  }
 }
 
 export class ReceivedTask implements Task {
@@ -262,7 +262,7 @@ export class ReceivedTask implements Task {
     } catch (error) {
       throw error;
     }
-  };
+  }
 }
 
 // Queues client singleton

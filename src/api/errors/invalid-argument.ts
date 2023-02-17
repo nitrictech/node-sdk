@@ -14,12 +14,12 @@
 
 /**
  * InvalidArgumentError
- * 
+ *
  * Invalid argument was provided by the client
  */
- export class InvalidArgumentError extends Error {
-	constructor (message: string) {
-		super(message);
-		Object.setPrototypeOf(this, InvalidArgumentError.prototype);
-	}
+export class InvalidArgumentError extends Error {
+  constructor(message: string) {
+    super(message);
+    Object.setPrototypeOf(this, InvalidArgumentError.prototype);
+  }
 }

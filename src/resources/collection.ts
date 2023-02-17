@@ -32,7 +32,9 @@ const everything: CollectionPermission[] = ['reading', 'writing', 'deleting'];
 /**
  * A document collection resources, such as a collection/table in a document database.
  */
-export class CollectionResource<T extends DocumentStructure> extends SecureResource<CollectionPermission> {
+export class CollectionResource<
+  T extends DocumentStructure
+> extends SecureResource<CollectionPermission> {
   /**
    * Register this collection as a required resource for the calling function/container
    * @returns a promise that resolves when the registration is complete
@@ -82,7 +84,7 @@ export class CollectionResource<T extends DocumentStructure> extends SecureResou
     }, []);
 
     if (actions.length > 0) {
-      actions = [...actions, Action.COLLECTIONLIST]
+      actions = [...actions, Action.COLLECTIONLIST];
     }
 
     return actions;
@@ -93,7 +95,7 @@ export class CollectionResource<T extends DocumentStructure> extends SecureResou
   }
 
   protected unwrapDetails(resp: ResourceDetailsResponse): {} {
-    throw new Error("details unimplemented for collection");
+    throw new Error('details unimplemented for collection');
   }
 
   /**
@@ -113,6 +115,8 @@ export class CollectionResource<T extends DocumentStructure> extends SecureResou
 
 const newCollection = make(CollectionResource);
 
-export function collection<T extends DocumentStructure>(name: string): CollectionResource<T> {
+export function collection<T extends DocumentStructure>(
+  name: string
+): CollectionResource<T> {
   return newCollection(name) as CollectionResource<T>;
 }

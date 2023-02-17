@@ -13,11 +13,11 @@
 // limitations under the License.
 import { Secrets } from './secrets';
 import { SecretServiceClient as GrpcSecretClient } from '@nitric/api/proto/secret/v1/secret_grpc_pb';
-import { 
-  SecretPutRequest, 
-  SecretPutResponse, 
-  SecretAccessRequest, 
-  SecretAccessResponse, 
+import {
+  SecretPutRequest,
+  SecretPutResponse,
+  SecretAccessRequest,
+  SecretAccessResponse,
   SecretVersion as GrpcSecretVersion,
   Secret as GrpcSecret,
 } from '@nitric/api/proto/secret/v1/secret_pb';
@@ -49,7 +49,7 @@ describe('Secrets Client Tests', () => {
       const secrets = new Secrets();
 
       await expect(secrets.secret('test').put('test-secret')).rejects.toEqual(
-        new UnimplementedError("UNIMPLEMENTED")
+        new UnimplementedError('UNIMPLEMENTED')
       );
     });
 
@@ -122,7 +122,7 @@ describe('Secrets Client Tests', () => {
       const secrets = new Secrets();
 
       await expect(secrets.secret('test').latest().access()).rejects.toEqual(
-        new UnimplementedError("UNIMPLEMENTED")
+        new UnimplementedError('UNIMPLEMENTED')
       );
     });
 

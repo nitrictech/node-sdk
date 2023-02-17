@@ -14,14 +14,14 @@
 export interface NitricEvent {
   /**
    * Uniquely identifies the event.
-   * 
+   *
    * Within your app you must ensure the ID is unique.
    * Subscribers can assume events with the same ID are duplicates and avoid reprocessing them
    */
   id?: string;
-  /** 
+  /**
    * An optional description of the event type.
-   * 
+   *
    * Can be useful for de-serialization, routing or observability. The format of this value is determined by the producer.
    */
   payloadType?: string;
@@ -34,19 +34,19 @@ export interface NitricEvent {
 export interface Task {
   /**
    * Uniquely identifies the task.
-   * 
+   *
    * Within your app you must ensure the ID is unique.
    */
   id?: string;
   /**
    * The ID for the current lease of this task.
-   * 
+   *
    * A task may be leased multiple times, resulting in new lease IDs.
    */
   leaseId?: string;
-  /** 
+  /**
    * An optional description of the task type.
-   * 
+   *
    * Can be useful for de-serialization, routing or observability. The format of this value is determined by the producer.
    */
   payloadType?: string;
@@ -67,4 +67,10 @@ export type WhereQueryOperator =
 
 export type WhereValueExpression = string | number | boolean;
 
-export type HttpMethod = 'GET' | 'POST' | 'PATCH' | 'PUT' | 'DELETE' | 'OPTIONS';
+export type HttpMethod =
+  | 'GET'
+  | 'POST'
+  | 'PATCH'
+  | 'PUT'
+  | 'DELETE'
+  | 'OPTIONS';

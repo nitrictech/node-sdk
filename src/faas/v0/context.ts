@@ -87,9 +87,10 @@ export abstract class AbstractRequest {
   }
 
   text(): string {
-    const stringPayload = typeof this.data === 'string' 
-      ? this.data 
-      : new TextDecoder('utf-8').decode(this.data);
+    const stringPayload =
+      typeof this.data === 'string'
+        ? this.data
+        : new TextDecoder('utf-8').decode(this.data);
 
     return stringPayload;
   }
