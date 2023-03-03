@@ -97,11 +97,7 @@ class Route<SecurityDefs extends string> {
     this.api = api;
     this.path = path;
     const { middleware = [] } = opts;
-    this.middleware = Array.isArray(middleware)
-      ? middleware
-      : middleware
-      ? [middleware]
-      : [];
+    this.middleware = composeMiddleware(middleware);
   }
 
   async method(
@@ -123,60 +119,60 @@ class Route<SecurityDefs extends string> {
    * Register a handler function for GET requests to this route
    */
   async get(
-    opts: MethodOptions<SecurityDefs>,
-    ...middleware: HttpMiddleware[]
+    middleware: HttpMiddleware | HttpMiddleware[],
+    opts: MethodOptions<SecurityDefs> = {}
   ): Promise<void> {
-    return this.method(['GET'], opts, ...middleware);
+    return this.method(['GET'], opts, ...composeMiddleware(middleware));
   }
 
   /**
    * Register a handler function for POST requests to this route
    */
   async post(
-    opts: MethodOptions<SecurityDefs>,
-    ...middleware: HttpMiddleware[]
+    middleware: HttpMiddleware | HttpMiddleware[],
+    opts: MethodOptions<SecurityDefs> = {}
   ): Promise<void> {
-    return this.method(['POST'], opts, ...middleware);
+    return this.method(['POST'], opts, ...composeMiddleware(middleware));
   }
 
   /**
    * Register a handler function for PUT requests to this route
    */
   async put(
-    opts: MethodOptions<SecurityDefs>,
-    ...middleware: HttpMiddleware[]
+    middleware: HttpMiddleware | HttpMiddleware[],
+    opts: MethodOptions<SecurityDefs> = {}
   ): Promise<void> {
-    return this.method(['PUT'], opts, ...middleware);
+    return this.method(['PUT'], opts, ...composeMiddleware(middleware));
   }
 
   /**
    * Register a handler function for PATCH requests to this route
    */
   async patch(
-    opts: MethodOptions<SecurityDefs>,
-    ...middleware: HttpMiddleware[]
+    middleware: HttpMiddleware | HttpMiddleware[],
+    opts: MethodOptions<SecurityDefs> = {}
   ): Promise<void> {
-    return this.method(['PATCH'], opts, ...middleware);
+    return this.method(['PATCH'], opts, ...composeMiddleware(middleware));
   }
 
   /**
    * Register a handler function for DELETE requests to this route
    */
   async delete(
-    opts: MethodOptions<SecurityDefs>,
-    ...middleware: HttpMiddleware[]
+    middleware: HttpMiddleware | HttpMiddleware[],
+    opts: MethodOptions<SecurityDefs> = {}
   ): Promise<void> {
-    return this.method(['DELETE'], opts, ...middleware);
+    return this.method(['DELETE'], opts, ...composeMiddleware(middleware));
   }
 
   /**
    * Register a handler function for OPTIONS requests to this route
    */
   async options(
-    opts: MethodOptions<SecurityDefs>,
-    ...middleware: HttpMiddleware[]
+    middleware: HttpMiddleware | HttpMiddleware[],
+    opts: MethodOptions<SecurityDefs> = {}
   ): Promise<void> {
-    return this.method(['OPTIONS'], opts, ...middleware);
+    return this.method(['OPTIONS'], opts, ...composeMiddleware(middleware));
   }
 
   /**
@@ -185,13 +181,13 @@ class Route<SecurityDefs extends string> {
    * Most useful when routing isn't important or you're doing you own internal routing.
    */
   async all(
-    opts: MethodOptions<SecurityDefs>,
-    ...middleware: HttpMiddleware[]
+    middleware: HttpMiddleware | HttpMiddleware[],
+    opts: MethodOptions<SecurityDefs> = {}
   ): Promise<void> {
     return this.method(
       ['GET', 'POST', 'PATCH', 'PUT', 'DELETE', 'OPTIONS'],
       opts,
-      ...middleware
+      ...composeMiddleware(middleware)
     );
   }
 }
@@ -262,11 +258,7 @@ class Api<SecurityDefs extends string> extends Base<ApiDetails> {
     } = options;
     // prepend / to path if its not there
     this.path = path.replace(/^\/?/, '/');
-    this.middleware = Array.isArray(middleware)
-      ? middleware
-      : middleware
-      ? [middleware]
-      : [];
+    this.middleware = composeMiddleware(middleware);
     this.securityDefinitions = securityDefinitions;
     this.security = security;
     this.routes = [];
@@ -293,14 +285,9 @@ class Api<SecurityDefs extends string> extends Base<ApiDetails> {
     // ensure path seperator is always foward slash (for windows)
     const apiRoute = path.join(this.path, match).split(path.sep).join('/');
 
-    let routeMiddleware = [];
-    if (options) {
-      routeMiddleware = Array.isArray(options.middleware)
-        ? options.middleware
-        : options.middleware
-        ? [options.middleware]
-        : [];
-    }
+    const routeMiddleware = options
+      ? composeMiddleware(options.middleware)
+      : [];
 
     const r = new Route(this, apiRoute, {
       ...options,
@@ -327,15 +314,13 @@ class Api<SecurityDefs extends string> extends Base<ApiDetails> {
   async get(
     match: string,
     middleware: HttpMiddleware | HttpMiddleware[],
-    opts?: MethodOptions<SecurityDefs>
+    opts: MethodOptions<SecurityDefs> = {}
   ): Promise<void> {
     const r = this.route(match, {
       middleware: this.middleware ?? [],
     });
-    const routeMiddleware = Array.isArray(middleware)
-      ? middleware
-      : [middleware];
-    return r.get(opts, ...routeMiddleware);
+    const routeMiddleware = composeMiddleware(middleware);
+    return r.get(routeMiddleware, opts);
   }
 
   /**
@@ -347,15 +332,13 @@ class Api<SecurityDefs extends string> extends Base<ApiDetails> {
   async post(
     match: string,
     middleware: HttpMiddleware | HttpMiddleware[],
-    opts?: MethodOptions<SecurityDefs>
+    opts: MethodOptions<SecurityDefs> = {}
   ): Promise<void> {
     const r = this.route(match, {
       middleware: this.middleware ?? [],
     });
-    const routeMiddleware = Array.isArray(middleware)
-      ? middleware
-      : [middleware];
-    return r.post(opts, ...(routeMiddleware ?? []));
+    const routeMiddleware = composeMiddleware(middleware);
+    return r.post(routeMiddleware, opts);
   }
 
   /**
@@ -367,15 +350,13 @@ class Api<SecurityDefs extends string> extends Base<ApiDetails> {
   async put(
     match: string,
     middleware: HttpMiddleware | HttpMiddleware[],
-    opts?: MethodOptions<SecurityDefs>
+    opts: MethodOptions<SecurityDefs> = {}
   ): Promise<void> {
     const r = this.route(match, {
       middleware: this.middleware ?? [],
     });
-    const routeMiddleware = Array.isArray(middleware)
-      ? middleware
-      : [middleware];
-    return r.put(opts, ...(routeMiddleware ?? []));
+    const routeMiddleware = composeMiddleware(middleware);
+    return r.put(routeMiddleware, opts);
   }
 
   /**
@@ -387,15 +368,13 @@ class Api<SecurityDefs extends string> extends Base<ApiDetails> {
   async patch(
     match: string,
     middleware: HttpMiddleware | HttpMiddleware[],
-    opts?: MethodOptions<SecurityDefs>
+    opts: MethodOptions<SecurityDefs> = {}
   ): Promise<void> {
     const r = this.route(match, {
       middleware: this.middleware ?? [],
     });
-    const routeMiddleware = Array.isArray(middleware)
-      ? middleware
-      : [middleware];
-    return r.patch(opts, ...(routeMiddleware ?? []));
+    const routeMiddleware = composeMiddleware(middleware);
+    return r.patch(routeMiddleware, opts);
   }
 
   /**
@@ -407,15 +386,13 @@ class Api<SecurityDefs extends string> extends Base<ApiDetails> {
   async delete(
     match: string,
     middleware: HttpMiddleware | HttpMiddleware[],
-    opts?: MethodOptions<SecurityDefs>
+    opts: MethodOptions<SecurityDefs> = {}
   ): Promise<void> {
     const r = this.route(match, {
       middleware: this.middleware ?? [],
     });
-    const routeMiddleware = Array.isArray(middleware)
-      ? middleware
-      : [middleware];
-    return r.delete(opts, ...(routeMiddleware ?? []));
+    const routeMiddleware = composeMiddleware(middleware);
+    return r.delete(routeMiddleware, opts);
   }
 
   /**
@@ -427,15 +404,13 @@ class Api<SecurityDefs extends string> extends Base<ApiDetails> {
   async options(
     match: string,
     middleware: HttpMiddleware | HttpMiddleware[],
-    opts?: MethodOptions<SecurityDefs>
+    opts: MethodOptions<SecurityDefs> = {}
   ): Promise<void> {
     const r = this.route(match, {
       middleware: this.middleware ?? [],
     });
-    const routeMiddleware = Array.isArray(middleware)
-      ? middleware
-      : [middleware];
-    return r.options(opts, ...(routeMiddleware ?? []));
+    const routeMiddleware = composeMiddleware(middleware);
+    return r.options(routeMiddleware, opts);
   }
 
   /**
@@ -544,3 +519,6 @@ export const jwt = (
 ): JwtSecurityDefinition => {
   return { kind: 'jwt', issuer: opts.issuer, audiences: opts.audiences };
 };
+
+const composeMiddleware = (middleware: HttpMiddleware | HttpMiddleware[]) =>
+  Array.isArray(middleware) ? middleware : middleware ? [middleware] : [];
