@@ -14,12 +14,12 @@
 
 /**
  * DataLossError
- * 
+ *
  * Unrecoverable data loss or corruption
  */
- export class DataLossError extends Error {
-	constructor (message: string) {
-		super(message);
-		Object.setPrototypeOf(this, DataLossError.prototype);
-	}
+export class DataLossError extends Error {
+  constructor(message: string) {
+    super(message);
+    Object.setPrototypeOf(this, DataLossError.prototype);
+  }
 }

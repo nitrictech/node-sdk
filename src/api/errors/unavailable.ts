@@ -14,12 +14,12 @@
 
 /**
  * UnavailableError
- * 
+ *
  * The request operation is currently unavailable
  */
- export class UnavailableError extends Error {
-	constructor (message: string) {
-		super(message);
-		Object.setPrototypeOf(this, UnavailableError.prototype);
-	}
+export class UnavailableError extends Error {
+  constructor(message: string) {
+    super(message);
+    Object.setPrototypeOf(this, UnavailableError.prototype);
+  }
 }

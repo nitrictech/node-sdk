@@ -58,7 +58,7 @@ export abstract class Resource<Detail = {}> {
   }
 
   /**
-   * Returns details of this 
+   * Returns details of this
    */
   protected async details(): Promise<ResourceDetails<Detail>> {
     const req = new ResourceDetailsRequest();
@@ -76,8 +76,8 @@ export abstract class Resource<Detail = {}> {
             id: resp.getId(),
             provider: resp.getProvider(),
             service: resp.getService(),
-            details: this.unwrapDetails(resp)
-          })
+            details: this.unwrapDetails(resp),
+          });
         }
       });
     });
@@ -114,14 +114,11 @@ export abstract class SecureResource<P> extends Resource {
     this.registerPromise.then((resource) => {
       policy.setResourcesList([resource]);
 
-      resourceClient.declare(
-        req,
-        (error) => {
-          if (error) {
-            throw fromGrpcError(error);
-          }
+      resourceClient.declare(req, (error) => {
+        if (error) {
+          throw fromGrpcError(error);
         }
-      );
+      });
     });
   }
 }

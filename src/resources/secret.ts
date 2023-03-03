@@ -37,7 +37,7 @@ export class SecretResource extends SecureResource<SecretPermission> {
     const resource = new Resource();
     resource.setName(this.name);
     resource.setType(ResourceType.SECRET);
-    
+
     req.setResource(resource);
 
     return new Promise<Resource>((resolve, reject) => {
@@ -50,25 +50,25 @@ export class SecretResource extends SecureResource<SecretPermission> {
             resolve(resource);
           }
         }
-      )
-    })
+      );
+    });
   }
 
   protected permsToActions(...perms: SecretPermission[]): ActionsList {
-      return perms.reduce((actions, perm) => {
-        switch(perm) {
-          case 'put':
-            return [...actions, Action.SECRETPUT];
-          case 'access':
-            return [...actions, Action.SECRETACCESS];
-          default:
-            throw new Error(
-              `unknown secret permission ${perm}, supported permissions are ${everything.join(
-                ', '
-              )}`
-            );
-        }
-      }, []);
+    return perms.reduce((actions, perm) => {
+      switch (perm) {
+        case 'put':
+          return [...actions, Action.SECRETPUT];
+        case 'access':
+          return [...actions, Action.SECRETACCESS];
+        default:
+          throw new Error(
+            `unknown secret permission ${perm}, supported permissions are ${everything.join(
+              ', '
+            )}`
+          );
+      }
+    }, []);
   }
 
   protected resourceType() {
@@ -76,7 +76,7 @@ export class SecretResource extends SecureResource<SecretPermission> {
   }
 
   protected unwrapDetails(resp: ResourceDetailsResponse): {} {
-    throw new Error("details unimplemented for secret");
+    throw new Error('details unimplemented for secret');
   }
 
   public for(...perms: SecretPermission[]): Secret {

@@ -14,12 +14,12 @@
 
 /**
  * UnauthenticatedError
- * 
+ *
  * The request does not have or has invalid credentials
  */
- export class UnauthenticatedError extends Error {
-	constructor (message: string) {
-		super(message);
-		Object.setPrototypeOf(this, UnauthenticatedError.prototype);
-	}
+export class UnauthenticatedError extends Error {
+  constructor(message: string) {
+    super(message);
+    Object.setPrototypeOf(this, UnauthenticatedError.prototype);
+  }
 }

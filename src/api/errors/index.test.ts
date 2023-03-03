@@ -33,202 +33,201 @@ import { UnknownError } from './unknown';
 const DECODER = new TextDecoder();
 
 describe('fromGrpcError', () => {
-	const defaultMessage = {
-		message: "test",
-		details: "some-detail",
-	}
+  const defaultMessage = {
+    message: 'test',
+    details: 'some-detail',
+  };
 
   describe('When translating a known error code', () => {
-		describe("status.CANCELLED", () => {
-			const newError = fromGrpcError({
-				code: status.CANCELLED,
-				...defaultMessage,
-			} as any);
-	
-			it("should return a cancelled error", () => {
-				expect(newError instanceof CancelledError).toBeTruthy();
-			});
-		});
+    describe('status.CANCELLED', () => {
+      const newError = fromGrpcError({
+        code: status.CANCELLED,
+        ...defaultMessage,
+      } as any);
 
-		describe("status.UNKNOWN", () => {
-			const newError = fromGrpcError({
-				code: status.UNKNOWN,
-				...defaultMessage,
-			} as any);
-	
-			it("should return an unknown error", () => {
-				expect(newError instanceof UnknownError).toBeTruthy();
-			});
-		});
+      it('should return a cancelled error', () => {
+        expect(newError instanceof CancelledError).toBeTruthy();
+      });
+    });
 
-		describe("status.INVALID_ARGUMENT", () => {
-			const newError = fromGrpcError({
-				code: status.INVALID_ARGUMENT,
-				...defaultMessage,
-			} as any);
-	
-			it("should return an InvalidArgument error", () => {
-				expect(newError instanceof InvalidArgumentError).toBeTruthy();
-			});
-		});
+    describe('status.UNKNOWN', () => {
+      const newError = fromGrpcError({
+        code: status.UNKNOWN,
+        ...defaultMessage,
+      } as any);
 
-		describe("status.NOT_FOUND", () => {
-			const newError = fromGrpcError({
-				code: status.NOT_FOUND,
-				...defaultMessage,
-			} as any);
-	
-			it("should return an NotFound error", () => {
-				expect(newError instanceof NotFoundError).toBeTruthy();
-			});
-		});
+      it('should return an unknown error', () => {
+        expect(newError instanceof UnknownError).toBeTruthy();
+      });
+    });
 
-		describe("status.ALREADY_EXISTS", () => {
-			const newError = fromGrpcError({
-				code: status.ALREADY_EXISTS,
-				...defaultMessage,
-			} as any);
-	
-			it("should return an AlreadyExists error", () => {
-				expect(newError instanceof AlreadyExistsError).toBeTruthy();
-			});
-		});
+    describe('status.INVALID_ARGUMENT', () => {
+      const newError = fromGrpcError({
+        code: status.INVALID_ARGUMENT,
+        ...defaultMessage,
+      } as any);
 
-		describe("status.PERMISSION_DENIED", () => {
-			const newError = fromGrpcError({
-				code: status.PERMISSION_DENIED,
-				...defaultMessage,
-			} as any);
-	
-			it("should return an PermissionDenied error", () => {
-				expect(newError instanceof PermissionDeniedError).toBeTruthy();
-			});
-		});
+      it('should return an InvalidArgument error', () => {
+        expect(newError instanceof InvalidArgumentError).toBeTruthy();
+      });
+    });
 
-		describe("status.RESOURCE_EXHAUSTED", () => {
-			const newError = fromGrpcError({
-				code: status.RESOURCE_EXHAUSTED,
-				...defaultMessage,
-			} as any);
-	
-			it("should return an ResourceExhausted error", () => {
-				expect(newError instanceof ResourceExhaustedError).toBeTruthy();
-			});
-		});
+    describe('status.NOT_FOUND', () => {
+      const newError = fromGrpcError({
+        code: status.NOT_FOUND,
+        ...defaultMessage,
+      } as any);
 
-		describe("status.FAILED_PRECONDITION", () => {
-			const newError = fromGrpcError({
-				code: status.FAILED_PRECONDITION,
-				...defaultMessage,
-			} as any);
-	
-			it("should return an FailedPrecondition error", () => {
-				expect(newError instanceof FailedPreconditionError).toBeTruthy();
-			});
-		});
+      it('should return an NotFound error', () => {
+        expect(newError instanceof NotFoundError).toBeTruthy();
+      });
+    });
 
-		describe("status.ABORTED", () => {
-			const newError = fromGrpcError({
-				code: status.ABORTED,
-				...defaultMessage,
-			} as any);
-	
-			it("should return an Aborted error", () => {
-				expect(newError instanceof AbortedError).toBeTruthy();
-			});
-		});
+    describe('status.ALREADY_EXISTS', () => {
+      const newError = fromGrpcError({
+        code: status.ALREADY_EXISTS,
+        ...defaultMessage,
+      } as any);
 
-		describe("status.OUT_OF_RANGE", () => {
-			const newError = fromGrpcError({
-				code: status.OUT_OF_RANGE,
-				...defaultMessage,
-			} as any);
-	
-			it("should return an OutOfRange error", () => {
-				expect(newError instanceof OutOfRangeError).toBeTruthy();
-			});
-		});
+      it('should return an AlreadyExists error', () => {
+        expect(newError instanceof AlreadyExistsError).toBeTruthy();
+      });
+    });
 
-		describe("status.UNIMPLEMENTED", () => {
-			const newError = fromGrpcError({
-				code: status.UNIMPLEMENTED,
-				...defaultMessage,
-			} as any);
-	
-			it("should return an Unimplemented error", () => {
-				expect(newError instanceof UnimplementedError).toBeTruthy();
-			});
-		});
+    describe('status.PERMISSION_DENIED', () => {
+      const newError = fromGrpcError({
+        code: status.PERMISSION_DENIED,
+        ...defaultMessage,
+      } as any);
 
-		describe("status.INTERNAL", () => {
-			const newError = fromGrpcError({
-				code: status.INTERNAL,
-				...defaultMessage,
-			} as any);
-	
-			it("should return an Internal error", () => {
-				expect(newError instanceof InternalError).toBeTruthy();
-			});
-		});
+      it('should return an PermissionDenied error', () => {
+        expect(newError instanceof PermissionDeniedError).toBeTruthy();
+      });
+    });
 
-		describe("status.UNAVAILABLE", () => {
-			const newError = fromGrpcError({
-				code: status.UNAVAILABLE,
-				...defaultMessage,
-			} as any);
-	
-			it("should return an Unavailable error", () => {
-				expect(newError instanceof UnavailableError).toBeTruthy();
-			});
-		});
+    describe('status.RESOURCE_EXHAUSTED', () => {
+      const newError = fromGrpcError({
+        code: status.RESOURCE_EXHAUSTED,
+        ...defaultMessage,
+      } as any);
 
-		describe("status.DATA_LOSS", () => {
-			const newError = fromGrpcError({
-				code: status.DATA_LOSS,
-				...defaultMessage,
-			} as any);
-	
-			it("should return an DataLoss error", () => {
-				expect(newError instanceof DataLossError).toBeTruthy();
-			});
-		});
+      it('should return an ResourceExhausted error', () => {
+        expect(newError instanceof ResourceExhaustedError).toBeTruthy();
+      });
+    });
 
-		describe("status.UNAUTHENTICATED", () => {
-			const newError = fromGrpcError({
-				code: status.UNAUTHENTICATED,
-				...defaultMessage,
-			} as any);
-	
-			it("should return an Unauthenticated error", () => {
-				expect(newError instanceof UnauthenticatedError).toBeTruthy();
-			});
-		});
+    describe('status.FAILED_PRECONDITION', () => {
+      const newError = fromGrpcError({
+        code: status.FAILED_PRECONDITION,
+        ...defaultMessage,
+      } as any);
 
-		describe("status.ABORTED", () => {
-			const newError = fromGrpcError({
-				code: status.ABORTED,
-				message: "test",
-				details: "some-detail",
-			} as any);
-	
-			it("should return an aborted error", () => {
-				expect(newError instanceof AbortedError).toBeTruthy();
-			});
-		});
-    
+      it('should return an FailedPrecondition error', () => {
+        expect(newError instanceof FailedPreconditionError).toBeTruthy();
+      });
+    });
+
+    describe('status.ABORTED', () => {
+      const newError = fromGrpcError({
+        code: status.ABORTED,
+        ...defaultMessage,
+      } as any);
+
+      it('should return an Aborted error', () => {
+        expect(newError instanceof AbortedError).toBeTruthy();
+      });
+    });
+
+    describe('status.OUT_OF_RANGE', () => {
+      const newError = fromGrpcError({
+        code: status.OUT_OF_RANGE,
+        ...defaultMessage,
+      } as any);
+
+      it('should return an OutOfRange error', () => {
+        expect(newError instanceof OutOfRangeError).toBeTruthy();
+      });
+    });
+
+    describe('status.UNIMPLEMENTED', () => {
+      const newError = fromGrpcError({
+        code: status.UNIMPLEMENTED,
+        ...defaultMessage,
+      } as any);
+
+      it('should return an Unimplemented error', () => {
+        expect(newError instanceof UnimplementedError).toBeTruthy();
+      });
+    });
+
+    describe('status.INTERNAL', () => {
+      const newError = fromGrpcError({
+        code: status.INTERNAL,
+        ...defaultMessage,
+      } as any);
+
+      it('should return an Internal error', () => {
+        expect(newError instanceof InternalError).toBeTruthy();
+      });
+    });
+
+    describe('status.UNAVAILABLE', () => {
+      const newError = fromGrpcError({
+        code: status.UNAVAILABLE,
+        ...defaultMessage,
+      } as any);
+
+      it('should return an Unavailable error', () => {
+        expect(newError instanceof UnavailableError).toBeTruthy();
+      });
+    });
+
+    describe('status.DATA_LOSS', () => {
+      const newError = fromGrpcError({
+        code: status.DATA_LOSS,
+        ...defaultMessage,
+      } as any);
+
+      it('should return an DataLoss error', () => {
+        expect(newError instanceof DataLossError).toBeTruthy();
+      });
+    });
+
+    describe('status.UNAUTHENTICATED', () => {
+      const newError = fromGrpcError({
+        code: status.UNAUTHENTICATED,
+        ...defaultMessage,
+      } as any);
+
+      it('should return an Unauthenticated error', () => {
+        expect(newError instanceof UnauthenticatedError).toBeTruthy();
+      });
+    });
+
+    describe('status.ABORTED', () => {
+      const newError = fromGrpcError({
+        code: status.ABORTED,
+        message: 'test',
+        details: 'some-detail',
+      } as any);
+
+      it('should return an aborted error', () => {
+        expect(newError instanceof AbortedError).toBeTruthy();
+      });
+    });
   });
 
   describe('When translating a known error code', () => {
-    describe("status.OK", () => {
-			const newError = fromGrpcError({
-				code: status.OK,
-				message: "test",
-				details: "some-detail",
-			} as any);
-	
-			it("should return an unknown error", () => {
-				expect(newError instanceof UnknownError).toBeTruthy();
-			});
-		});
+    describe('status.OK', () => {
+      const newError = fromGrpcError({
+        code: status.OK,
+        message: 'test',
+        details: 'some-detail',
+      } as any);
+
+      it('should return an unknown error', () => {
+        expect(newError instanceof UnknownError).toBeTruthy();
+      });
+    });
   });
 });

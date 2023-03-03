@@ -38,7 +38,7 @@ export class Storage {
 
   /**
    * Create a bucket reference.
-   * 
+   *
    * @param name of the bucket to reference
    * @returns a bucket reference
    */
@@ -49,7 +49,7 @@ export class Storage {
       );
     }
     return new Bucket(this, name);
-  };
+  }
 }
 
 /**
@@ -79,9 +79,11 @@ export class Bucket {
           rej(fromGrpcError(err));
         }
 
-        res(data.getFilesList().map(f => {
-          return new File(this.storage, this, f.getKey());
-        }));
+        res(
+          data.getFilesList().map((f) => {
+            return new File(this.storage, this, f.getKey());
+          })
+        );
       });
     });
   }
@@ -93,7 +95,7 @@ export class Bucket {
       );
     }
     return new File(this.storage, this, name);
-  };
+  }
 }
 
 export enum FileMode {
@@ -133,7 +135,7 @@ export class File {
    * @returns a download URL string
    */
   public getDownloadUrl(opts?: SignUrlOptions): Promise<string> {
-    return this.signUrl(FileMode.Read, opts)
+    return this.signUrl(FileMode.Read, opts);
   }
 
   /**
@@ -142,7 +144,7 @@ export class File {
    * @returns a upload URL string
    */
   public getUploadUrl(opts?: SignUrlOptions): Promise<string> {
-    return this.signUrl(FileMode.Write, opts)
+    return this.signUrl(FileMode.Write, opts);
   }
 
   /**
@@ -178,7 +180,7 @@ export class File {
         }
       );
     });
-  };
+  }
 
   /**
    * Write an array of bytes to the file
@@ -195,12 +197,12 @@ export class File {
    * await storage.bucket("my-bucket").file("my-item").write(buf);
    * ```
    */
-  public async write (body: Uint8Array | string): Promise<void> {
+  public async write(body: Uint8Array | string): Promise<void> {
     const request = new StorageWriteRequest();
     request.setBucketName(this.bucket.name);
     request.setKey(this.name);
     if (typeof body === 'string' || body instanceof String) {
-      request.setBody(new TextEncoder().encode(body as string))
+      request.setBody(new TextEncoder().encode(body as string));
     } else {
       request.setBody(body);
     }
@@ -214,7 +216,7 @@ export class File {
         }
       });
     });
-  };
+  }
 
   /**
    * Read the contents of this file as an array of bytes
@@ -243,7 +245,7 @@ export class File {
         }
       });
     });
-  };
+  }
 
   /**
    * Delete this file from the bucket
@@ -272,7 +274,7 @@ export class File {
         }
       });
     });
-  };
+  }
 }
 
 // Storage client singleton

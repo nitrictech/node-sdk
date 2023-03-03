@@ -73,7 +73,7 @@ export class CollectionRef<T extends DocumentStructure> {
     col.setName(this.name);
 
     if (this.parent) {
-      col.setParent(this.parent["toWire"]());
+      col.setParent(this.parent['toWire']());
     }
 
     return col;

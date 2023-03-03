@@ -14,13 +14,13 @@
 
 /**
  * FailedPreconditionError
- * 
+ *
  * Operation was rejected due to the system being not being
  * in a state required for the requested operation.
  */
- export class FailedPreconditionError extends Error {
-	constructor (message: string) {
-		super(message);
-		Object.setPrototypeOf(this, FailedPreconditionError.prototype);
-	}
+export class FailedPreconditionError extends Error {
+  constructor(message: string) {
+    super(message);
+    Object.setPrototypeOf(this, FailedPreconditionError.prototype);
+  }
 }

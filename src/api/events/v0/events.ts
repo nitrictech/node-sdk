@@ -42,7 +42,7 @@ export interface PublishOptions {
 }
 
 const DEFAULT_PUBLISH_OPTS: PublishOptions = {
-  delay: 0
+  delay: 0,
 };
 
 export class Topic {
@@ -76,13 +76,16 @@ export class Topic {
    *   };
    *   // Publish immediately
    *   await topic.publish(event);
-   * 
+   *
    *   // Publish after 10 seconds delay
    *   await topic.publish(event, { delay: 10 });
    * }
    * ```
    */
-  async publish(event: NitricEvent, opts: PublishOptions = DEFAULT_PUBLISH_OPTS): Promise<NitricEvent> {
+  async publish(
+    event: NitricEvent,
+    opts: PublishOptions = DEFAULT_PUBLISH_OPTS
+  ): Promise<NitricEvent> {
     const { id, payloadType = 'none', payload } = event;
     const publishOpts = {
       ...DEFAULT_PUBLISH_OPTS,
@@ -94,7 +97,7 @@ export class Topic {
     evt.setId(id);
     evt.setPayload(Struct.fromJavaScript(payload));
     evt.setPayloadType(payloadType);
-    
+
     request.setTopic(this.name);
     request.setEvent(evt);
     request.setDelay(publishOpts.delay);
@@ -108,7 +111,7 @@ export class Topic {
         }
       });
     });
-  };
+  }
 }
 
 /**
@@ -125,8 +128,8 @@ export class Topic {
  */
 export class Eventing {
   private _clients: {
-    event: EventServiceClient,
-    topic: TopicServiceClient,
+    event: EventServiceClient;
+    topic: TopicServiceClient;
   } = undefined;
 
   get EventServiceClient(): EventServiceClient {
@@ -164,7 +167,7 @@ export class Eventing {
     }
 
     return new Topic(this, name);
-  };
+  }
 
   /**
    * Retrieve all available topic references by querying for available topics.
@@ -192,7 +195,7 @@ export class Eventing {
         }
       });
     });
-  };
+  }
 }
 
 // Events client singleton

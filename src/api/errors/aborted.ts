@@ -14,12 +14,12 @@
 
 /**
  * AbortedError
- * 
+ *
  * The operation was aborted
  */
- export class AbortedError extends Error {
-	constructor (message: string) {
-		super(message);
-		Object.setPrototypeOf(this, AbortedError.prototype);
-	}
+export class AbortedError extends Error {
+  constructor(message: string) {
+    super(message);
+    Object.setPrototypeOf(this, AbortedError.prototype);
+  }
 }

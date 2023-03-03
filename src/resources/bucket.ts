@@ -82,7 +82,7 @@ export class BucketResource extends SecureResource<BucketPermission> {
   }
 
   protected unwrapDetails(resp: ResourceDetailsResponse): {} {
-    throw new Error("details unimplemented for bucket");
+    throw new Error('details unimplemented for bucket');
   }
 
   /**

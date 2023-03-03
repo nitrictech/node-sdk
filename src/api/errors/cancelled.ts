@@ -14,12 +14,12 @@
 
 /**
  * CancelledError
- * 
+ *
  * Operation was cancelled (typically occurs client side)
  */
 export class CancelledError extends Error {
-	constructor (message: string) {
-		super(message);
-		Object.setPrototypeOf(this, CancelledError.prototype);
-	}
+  constructor(message: string) {
+    super(message);
+    Object.setPrototypeOf(this, CancelledError.prototype);
+  }
 }

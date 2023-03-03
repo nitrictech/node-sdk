@@ -42,32 +42,23 @@ export class QueueResource extends SecureResource<QueuePermission> {
     req.setResource(resource);
 
     return new Promise<Resource>((resolve, reject) => {
-      resourceClient.declare(
-        req,
-        (error) => {
-          if (error) {
-            reject(fromGrpcError(error));
-          } else {
-            resolve(resource);
-          }
+      resourceClient.declare(req, (error) => {
+        if (error) {
+          reject(fromGrpcError(error));
+        } else {
+          resolve(resource);
         }
-      );
+      });
     });
   }
 
   protected permsToActions(...perms: QueuePermission[]): ActionsList {
     let actions: ActionsList = perms.reduce((actions, p) => {
-      switch(p) {
-        case "sending":
-          return [
-            ...actions, 
-            Action.QUEUESEND, 
-          ];
-        case "receiving":
-          return [
-            ...actions,
-            Action.QUEUERECEIVE,
-          ];
+      switch (p) {
+        case 'sending':
+          return [...actions, Action.QUEUESEND];
+        case 'receiving':
+          return [...actions, Action.QUEUERECEIVE];
         default:
           throw new Error(
             `unknown permission ${p}, supported permissions is publishing.}
@@ -77,7 +68,7 @@ export class QueueResource extends SecureResource<QueuePermission> {
     }, []);
 
     if (actions.length > 0) {
-      actions = [...actions, Action.QUEUELIST, Action.QUEUEDETAIL]
+      actions = [...actions, Action.QUEUELIST, Action.QUEUEDETAIL];
     }
 
     return actions;
@@ -88,7 +79,7 @@ export class QueueResource extends SecureResource<QueuePermission> {
   }
 
   protected unwrapDetails(resp: ResourceDeclareResponse): {} {
-    throw new Error("details unimplemented for queue");
+    throw new Error('details unimplemented for queue');
   }
 
   /**
@@ -100,9 +91,7 @@ export class QueueResource extends SecureResource<QueuePermission> {
    * @param perms
    * @returns
    */
-  public for(
-    ...perms: QueuePermission[]
-  ): Queue {
+  public for(...perms: QueuePermission[]): Queue {
     this.registerPolicy(...perms);
 
     return queues().queue(this.name);

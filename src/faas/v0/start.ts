@@ -42,11 +42,20 @@ import {
   TriggerMiddleware,
 } from '.';
 
-import { ApiWorkerOptions, CronWorkerOptions, RateWorkerOptions, SubscriptionWorkerOptions } from "../../resources";
+import {
+  ApiWorkerOptions,
+  CronWorkerOptions,
+  RateWorkerOptions,
+  SubscriptionWorkerOptions,
+} from '../../resources';
 
 class FaasWorkerOptions {}
 
-type FaasClientOptions = ApiWorkerOptions | RateWorkerOptions | CronWorkerOptions | FaasWorkerOptions; 
+type FaasClientOptions =
+  | ApiWorkerOptions
+  | RateWorkerOptions
+  | CronWorkerOptions
+  | FaasWorkerOptions;
 
 /**
  *
@@ -56,7 +65,6 @@ export class Faas {
   private eventHandler?: EventMiddleware;
   private anyHandler?: TriggerMiddleware;
   private readonly options: FaasClientOptions;
-
 
   constructor(opts: FaasClientOptions) {
     this.options = opts;
@@ -91,8 +99,6 @@ export class Faas {
   private getEventHandler(): EventMiddleware | TriggerMiddleware | undefined {
     return this.eventHandler || this.anyHandler;
   }
-
-
 
   /**
    * Start the Faas server
@@ -149,7 +155,7 @@ export class Faas {
             return;
           }
 
-          const result = await handler(ctx, async (ctx) => ctx) || ctx;
+          const result = (await handler(ctx, async (ctx) => ctx)) || ctx;
           responseMessage.setTriggerResponse(
             TriggerContext.toGrpcTriggerResponse(result)
           );
@@ -158,7 +164,9 @@ export class Faas {
           console.error(e);
           const triggerResponse = new TriggerResponse();
           responseMessage.setTriggerResponse(triggerResponse);
-          triggerResponse.setData(new TextEncoder().encode('Internal Server Error'));
+          triggerResponse.setData(
+            new TextEncoder().encode('Internal Server Error')
+          );
 
           if (triggerRequest.hasHttp()) {
             const httpResponse = new HttpResponseContext();
@@ -198,17 +206,17 @@ export class Faas {
           opts.setSecurityDisabled(true);
         } else {
           const methodOpts = this.options.opts;
-          Object.keys(methodOpts.security).forEach(k => {
+          Object.keys(methodOpts.security).forEach((k) => {
             const scopes = new ApiWorkerScopes();
             scopes.setScopesList(methodOpts.security[k]);
             opts.getSecurityMap().set(k, scopes);
-          })
+          });
         }
       }
 
       apiWorker.setOptions(opts);
       initRequest.setApi(apiWorker);
-    } else if(this.options instanceof RateWorkerOptions) {
+    } else if (this.options instanceof RateWorkerOptions) {
       const scheduleWorker = new ScheduleWorker();
       scheduleWorker.setKey(this.options.description);
       const rate = new ScheduleRate();
@@ -223,7 +231,7 @@ export class Faas {
       scheduleWorker.setCron(cron);
       initRequest.setSchedule(scheduleWorker);
     } else if (this.options instanceof SubscriptionWorkerOptions) {
-      const subscriptionWorker = new SubscriptionWorker()
+      const subscriptionWorker = new SubscriptionWorker();
       subscriptionWorker.setTopic(this.options.topic);
       initRequest.setSubscription(subscriptionWorker);
     }
@@ -247,8 +255,8 @@ export class Faas {
 let INSTANCE: Faas = undefined;
 
 const getFaasInstance = (): Faas => {
- INSTANCE = INSTANCE || new Faas(new FaasWorkerOptions());
- return INSTANCE;
+  INSTANCE = INSTANCE || new Faas(new FaasWorkerOptions());
+  return INSTANCE;
 };
 
 /**

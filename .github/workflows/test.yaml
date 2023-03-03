@@ -10,25 +10,27 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout
-      uses: actions/checkout@v2
-    - name: Cache Yarn Cache
-      uses: actions/cache@v2
-      with:
-        path: 'node_modules'
-        key: ${{ runner.os }}-modules-${{ hashFiles('yarn.lock') }}
-    - name: Install modules
-      run: yarn --frozen-lockfile
-    - name: License Header Check
-      run: yarn license:header:check
-    - name: OSS License Whitelist Check
-      run: yarn license:check
-    - name: Check sources
-      run: |
-        yarn gen:proto
-        git add .
-        git diff --cached --quiet
-    - name: Build
-      run: yarn build
-    - name: Run tests
-      run: yarn coverage:upload
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Cache Yarn Cache
+        uses: actions/cache@v2
+        with:
+          path: 'node_modules'
+          key: ${{ runner.os }}-modules-${{ hashFiles('yarn.lock') }}
+      - name: Install modules
+        run: yarn --frozen-lockfile
+      - name: License Header Check
+        run: yarn license:header:check
+      - name: OSS License Whitelist Check
+        run: yarn license:check
+      - name: Check sources
+        run: |
+          yarn gen:proto
+          git add .
+          git diff --cached --quiet
+      - name: Check Formatting
+        run: yarn prettier:check
+      - name: Build
+        run: yarn build
+      - name: Run tests
+        run: yarn coverage:upload
