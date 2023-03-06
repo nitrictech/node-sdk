@@ -88,7 +88,7 @@ interface RouteOpts {
   middleware?: HttpMiddleware[] | HttpMiddleware;
 }
 
-class Route<SecurityDefs extends string> {
+export class Route<SecurityDefs extends string> {
   public readonly api: Api<SecurityDefs>;
   public readonly path: string;
   public readonly middleware: HttpMiddleware[];
@@ -237,7 +237,7 @@ interface ApiDetails {
  *
  * Represents an HTTP API, capable of routing and securing incoming HTTP requests to handlers.
  */
-class Api<SecurityDefs extends string> extends Base<ApiDetails> {
+export class Api<SecurityDefs extends string> extends Base<ApiDetails> {
   // public readonly name: string;
   public readonly path: string;
   public readonly middleware?: HttpMiddleware[];
