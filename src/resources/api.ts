@@ -291,6 +291,7 @@ export class Api<SecurityDefs extends string> extends Base<ApiDetails> {
 
     const r = new Route(this, apiRoute, {
       ...options,
+      // join the api level middleware and route level (route options) middleware
       middleware: [...this.middleware, ...routeMiddleware],
     });
     this.routes.push(r);
@@ -316,11 +317,7 @@ export class Api<SecurityDefs extends string> extends Base<ApiDetails> {
     middleware: HttpMiddleware | HttpMiddleware[],
     opts: MethodOptions<SecurityDefs> = {}
   ): Promise<void> {
-    const r = this.route(match, {
-      middleware: this.middleware ?? [],
-    });
-    const routeMiddleware = composeMiddleware(middleware);
-    return r.get(routeMiddleware, opts);
+    return this.route(match).get(composeMiddleware(middleware), opts);
   }
 
   /**
@@ -334,11 +331,7 @@ export class Api<SecurityDefs extends string> extends Base<ApiDetails> {
     middleware: HttpMiddleware | HttpMiddleware[],
     opts: MethodOptions<SecurityDefs> = {}
   ): Promise<void> {
-    const r = this.route(match, {
-      middleware: this.middleware ?? [],
-    });
-    const routeMiddleware = composeMiddleware(middleware);
-    return r.post(routeMiddleware, opts);
+    return this.route(match).post(composeMiddleware(middleware), opts);
   }
 
   /**
@@ -352,11 +345,7 @@ export class Api<SecurityDefs extends string> extends Base<ApiDetails> {
     middleware: HttpMiddleware | HttpMiddleware[],
     opts: MethodOptions<SecurityDefs> = {}
   ): Promise<void> {
-    const r = this.route(match, {
-      middleware: this.middleware ?? [],
-    });
-    const routeMiddleware = composeMiddleware(middleware);
-    return r.put(routeMiddleware, opts);
+    return this.route(match).put(composeMiddleware(middleware), opts);
   }
 
   /**
@@ -370,11 +359,7 @@ export class Api<SecurityDefs extends string> extends Base<ApiDetails> {
     middleware: HttpMiddleware | HttpMiddleware[],
     opts: MethodOptions<SecurityDefs> = {}
   ): Promise<void> {
-    const r = this.route(match, {
-      middleware: this.middleware ?? [],
-    });
-    const routeMiddleware = composeMiddleware(middleware);
-    return r.patch(routeMiddleware, opts);
+    return this.route(match).patch(composeMiddleware(middleware), opts);
   }
 
   /**
@@ -388,11 +373,7 @@ export class Api<SecurityDefs extends string> extends Base<ApiDetails> {
     middleware: HttpMiddleware | HttpMiddleware[],
     opts: MethodOptions<SecurityDefs> = {}
   ): Promise<void> {
-    const r = this.route(match, {
-      middleware: this.middleware ?? [],
-    });
-    const routeMiddleware = composeMiddleware(middleware);
-    return r.delete(routeMiddleware, opts);
+    return this.route(match).delete(composeMiddleware(middleware), opts);
   }
 
   /**
@@ -406,11 +387,7 @@ export class Api<SecurityDefs extends string> extends Base<ApiDetails> {
     middleware: HttpMiddleware | HttpMiddleware[],
     opts: MethodOptions<SecurityDefs> = {}
   ): Promise<void> {
-    const r = this.route(match, {
-      middleware: this.middleware ?? [],
-    });
-    const routeMiddleware = composeMiddleware(middleware);
-    return r.options(routeMiddleware, opts);
+    return this.route(match).options(composeMiddleware(middleware), opts);
   }
 
   /**
