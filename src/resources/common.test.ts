@@ -53,7 +53,7 @@ describe('common', () => {
       const test = res('same');
 
       let detailsSpy;
-      let details: ResourceDetails<{}>;
+      let details: ResourceDetails<any>;
 
       beforeAll(async () => {
         detailsSpy = jest

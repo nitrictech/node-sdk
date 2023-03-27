@@ -65,7 +65,8 @@ export class Bucket {
   }
 
   /**
-   * Retrieve a list of files on the bucket
+   * Retrieve a list of files on the bucket.
+   *
    * @returns An array of file references
    */
   public async files(): Promise<File[]> {
@@ -130,9 +131,10 @@ export class File {
   }
 
   /**
-   * Get a pre-signed download URL for the file
+   * Get a pre-signed download URL for the file.
+   *
    * @param opts the option passed to the signUrl function.
-   * @returns a download URL string
+   * @returns a download URL string.
    */
   public getDownloadUrl(opts?: SignUrlOptions): Promise<string> {
     return this.signUrl(FileMode.Read, opts);
@@ -140,18 +142,21 @@ export class File {
 
   /**
    * Get a pre-signed upload URL for the file.
+   *
    * @param opts the option passed to the signUrl function.
-   * @returns a upload URL string
+   * @returns a upload URL string.
    */
   public getUploadUrl(opts?: SignUrlOptions): Promise<string> {
     return this.signUrl(FileMode.Write, opts);
   }
 
   /**
-   * Create a presigned url for reading or writing for the given file reference
+   * Create a presigned url for reading or writing for the given file reference.
+   *
    * @param mode the mode the url will access the file with. E.g. reading or writing.
+   * @param opts file URL signing options.
    * @param opts.expiry how long the URL should be valid for in seconds.
-   * @deprecated for simplicity we suggest using getUploadUrl or getDownloadUrl
+   * @deprecated for simplicity we suggest using getUploadUrl or getDownloadUrl.
    */
   public async signUrl(
     mode: FileMode,
@@ -183,9 +188,10 @@ export class File {
   }
 
   /**
-   * Write an array of bytes to the file
-   * @param body The file contents to write
-   * @returns A void promise
+   * Write an array of bytes to the file.
+   *
+   * @param body The file contents to write.
+   * @returns A promise that resolves when the write operation completes.
    *
    * Example:
    * ```typescript
@@ -219,8 +225,9 @@ export class File {
   }
 
   /**
-   * Read the contents of this file as an array of bytes
-   * @returns A byte array of the contents of the read blob
+   * Read the contents of this file as an array of bytes.
+   *
+   * @returns A promise that returns a byte array of the contents of the read blob.
    *
    * Example:
    * ```typescript
@@ -248,8 +255,9 @@ export class File {
   }
 
   /**
-   * Delete this file from the bucket
-   * @returns A void promise
+   * Delete this file from the bucket.
+   *
+   * @returns A void promise.
    *
    * Example:
    * ```typescript
@@ -281,7 +289,8 @@ export class File {
 let STORAGE = undefined;
 
 /**
- * Storage
+ * Storage API client.
+ *
  * @returns a Storage API client.
  * @example
  * ```typescript

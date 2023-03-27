@@ -72,6 +72,9 @@ export class Faas {
 
   /**
    * Add an event handler to this Faas server
+   *
+   * @param handlers the functions to call to respond to events
+   * @returns self
    */
   event(...handlers: EventMiddleware[]): Faas {
     this.eventHandler = createHandler(...handlers);
@@ -79,7 +82,10 @@ export class Faas {
   }
 
   /**
-   * Add a http handler to this Faas server
+   * Add an http handler to this Faas server
+   *
+   * @param handlers the functions to call to respond to http requests
+   * @returns self
    */
   http(...handlers: HttpMiddleware[]): Faas {
     this.httpHandler = createHandler(...handlers);
@@ -88,6 +94,8 @@ export class Faas {
 
   /**
    * Get http handler for this server
+   *
+   * @returns the registered HTTP handler for this server
    */
   private getHttpHandler(): HttpMiddleware | TriggerMiddleware | undefined {
     return this.httpHandler || this.anyHandler;
@@ -95,6 +103,8 @@ export class Faas {
 
   /**
    * Get event handler for this server
+   *
+   * @returns the registered event handler for this server
    */
   private getEventHandler(): EventMiddleware | TriggerMiddleware | undefined {
     return this.eventHandler || this.anyHandler;
@@ -102,6 +112,9 @@ export class Faas {
 
   /**
    * Start the Faas server
+   *
+   * @param handlers to use as the default when no other handler is registered for the request type
+   * @returns a promise that resolves when the server terminates
    */
   async start(...handlers: TriggerMiddleware[]): Promise<void> {
     this.anyHandler = handlers.length && createHandler(...handlers);
@@ -261,18 +274,27 @@ const getFaasInstance = (): Faas => {
 
 /**
  * Register a HTTP handler
+ *
+ * @param handlers the functions to call to respond to http requests
+ * @returns the FaaS service factory
  */
 export const http = (...handlers: HttpMiddleware[]): Faas =>
   getFaasInstance().http(...handlers);
 
 /**
  * Register an event handler
+ *
+ * @param handlers the functions to call to respond to events
+ * @returns the FaaS service factory
  */
 export const event = (...handlers: EventMiddleware[]): Faas =>
   getFaasInstance().event(...handlers);
 
 /**
  * Start the FaaS server with a universal handler
+ *
+ * @param handlers default handlers
+ * @returns a promise that resolves when the server terminates
  */
 export const start = async (...handlers: TriggerMiddleware[]): Promise<void> =>
   await getFaasInstance().start(...handlers);

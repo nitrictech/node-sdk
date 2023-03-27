@@ -28,28 +28,36 @@ export abstract class TriggerContext<
   protected response: Resp;
 
   /**
+   * Noop base context http method.
    *
+   * @returns undefined
    */
   public get http(): HttpContext | undefined {
     return undefined;
   }
 
   /**
+   * Noop base context event method.
    *
+   * @returns undefined
    */
   public get event(): EventContext | undefined {
     return undefined;
   }
 
   /**
+   * Return the request object from this context.
    *
+   * @returns the request object.
    */
   get req(): Req {
     return this.request;
   }
 
   /**
+   * Return the response object from this context.
    *
+   * @returns the response object.
    */
   get res(): Resp {
     return this.response;
@@ -154,7 +162,8 @@ export class HttpResponse {
   }
 
   /**
-   * Helper method to encode to JSON string for JSON http responses
+   * Helper method to encode to JSON string for JSON http responses.
+   *
    * @returns HttpContext with body property set with an encoded JSON string and json headers set.
    */
   get json() {

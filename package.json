@@ -50,6 +50,7 @@
     "@typescript-eslint/parser": "^4.22.0",
     "codecov": "^3.8.3",
     "eslint": "^7.24.0",
+    "eslint-plugin-jsdoc": "^40.1.0",
     "glob-run": "^0.1.7",
     "grpc-tools": "^1.11.3",
     "husky": "^6.0.0",

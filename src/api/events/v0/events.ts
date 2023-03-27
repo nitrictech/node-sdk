@@ -25,6 +25,12 @@ import * as grpc from '@grpc/grpc-js';
 import type { NitricEvent } from '../../../types';
 import { fromGrpcError, InvalidArgumentError } from '../../errors';
 
+/**
+ * Construct event and topic service clients.
+ *
+ * @internal
+ * @returns event and topic service clients.
+ */
 function newEventServiceClients(): {
   event: EventServiceClient;
   topic: TopicServiceClient;
@@ -55,7 +61,8 @@ export class Topic {
   }
 
   /**
-   * Publishes an event to a nitric topic
+   * Publishes an event to a nitric topic.
+   *
    * @param event The event to publish
    * @param opts Additional publishing options
    * @returns NitricEvent containing the unique id of the event (if not provided it will be generated)
@@ -152,14 +159,13 @@ export class Eventing {
    * Get a reference to a Topic.
    *
    * @param name Name of the topic, as defined in nitric.yaml.
-   *
+   * @returns a topic resource.
    * @example
    * ```typescript
    * import { Eventing } from "@nitric/sdk";
    * const eventing = new Eventing();
    * const topic = eventing.topic('notifications');
    * ```
-   *
    */
   public topic(name: string): Topic {
     if (!name) {
@@ -172,9 +178,8 @@ export class Eventing {
   /**
    * Retrieve all available topic references by querying for available topics.
    *
-   * @retuns A promise containing the list of available nitric topics
-   *
-   * Example:
+   * @returns A promise containing the list of available nitric topics
+   * @example
    * ```typescript
    * import { Eventing } from "@nitric/sdk";
    *
@@ -202,7 +207,8 @@ export class Eventing {
 let EVENTS = undefined;
 
 /**
- * Events
+ * Events API client.
+ *
  * @returns an Events API client.
  * @example
  * ```typescript

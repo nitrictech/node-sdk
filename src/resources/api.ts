@@ -117,6 +117,10 @@ export class Route<SecurityDefs extends string> {
 
   /**
    * Register a handler function for GET requests to this route
+   *
+   * @param middleware that should be run on any GET request to this route
+   * @param opts the options for this method, such as security definitions
+   * @returns a Promise that resolves if the handler stops running
    */
   async get(
     middleware: HttpMiddleware | HttpMiddleware[],
@@ -127,6 +131,10 @@ export class Route<SecurityDefs extends string> {
 
   /**
    * Register a handler function for POST requests to this route
+   *
+   * @param middleware that should respond to any matching requests to this route and method
+   * @param opts the options for this method, such as security definitions
+   * @returns a Promise that resolves if the handler stops running
    */
   async post(
     middleware: HttpMiddleware | HttpMiddleware[],
@@ -137,6 +145,10 @@ export class Route<SecurityDefs extends string> {
 
   /**
    * Register a handler function for PUT requests to this route
+   *
+   * @param middleware that should respond to any matching requests to this route and method
+   * @param opts the options for this method, such as security definitions
+   * @returns a Promise that resolves if the handler stops running
    */
   async put(
     middleware: HttpMiddleware | HttpMiddleware[],
@@ -147,6 +159,10 @@ export class Route<SecurityDefs extends string> {
 
   /**
    * Register a handler function for PATCH requests to this route
+   *
+   * @param middleware that should respond to any matching requests to this route and method
+   * @param opts the options for this method, such as security definitions
+   * @returns a Promise that resolves if the handler stops running
    */
   async patch(
     middleware: HttpMiddleware | HttpMiddleware[],
@@ -157,6 +173,10 @@ export class Route<SecurityDefs extends string> {
 
   /**
    * Register a handler function for DELETE requests to this route
+   *
+   * @param middleware that should respond to any matching requests to this route and method
+   * @param opts the options for this method, such as security definitions
+   * @returns a Promise that resolves if the handler stops running
    */
   async delete(
     middleware: HttpMiddleware | HttpMiddleware[],
@@ -167,6 +187,10 @@ export class Route<SecurityDefs extends string> {
 
   /**
    * Register a handler function for OPTIONS requests to this route
+   *
+   * @param middleware that should respond to any matching requests to this route and method
+   * @param opts the options for this method, such as security definitions
+   * @returns a Promise that resolves if the handler stops running
    */
   async options(
     middleware: HttpMiddleware | HttpMiddleware[],
@@ -176,9 +200,11 @@ export class Route<SecurityDefs extends string> {
   }
 
   /**
-   * Register a handler function for GET, POST, PATCH, PUT and DELETE requests to this route.
+   * Register a handler function for GET, POST, PATCH, PUT and DELETE requests to this route
    *
-   * Most useful when routing isn't important or you're doing you own internal routing.
+   * @param middleware that should respond to matching requests to this route and all HTTP methods
+   * @param opts the options for this method, such as security definitions
+   * @returns a Promise that resolves if the handler stops running
    */
   async all(
     middleware: HttpMiddleware | HttpMiddleware[],
@@ -308,9 +334,11 @@ export class Api<SecurityDefs extends string> extends Base<ApiDetails> {
 
   /**
    * Registers a new route with a GET handler in a single method.
+   *
    * @param match the route path matcher e.g. '/home'. Supports path params via colon prefix e.g. '/customers/:customerId'
    * @param middleware the middleware/handler to register for calls to GET
-   * @returns {Promise} that resolves when the handler terminates.
+   * @param opts the options for this method, such as security definitions
+   * @returns A Promise that resolves when the handler terminates.
    */
   async get(
     match: string,
@@ -322,9 +350,11 @@ export class Api<SecurityDefs extends string> extends Base<ApiDetails> {
 
   /**
    * Registers a new route with a POST handler in a single method.
+   *
    * @param match the route path matcher e.g. '/home'. Supports path params via colon prefix e.g. '/customers/:customerId'
    * @param middleware the middleware/handler to register for calls to POST
-   * @returns {Promise} that resolves when the handler terminates.
+   * @param opts the options for this method, such as security definitions
+   * @returns A Promise that resolves when the handler terminates.
    */
   async post(
     match: string,
@@ -336,9 +366,11 @@ export class Api<SecurityDefs extends string> extends Base<ApiDetails> {
 
   /**
    * Registers a new route with a PUT handler in a single method.
+   *
    * @param match the route path matcher e.g. '/home'. Supports path params via colon prefix e.g. '/customers/:customerId'
    * @param middleware the middleware/handler to register for calls to PUT
-   * @returns {Promise} that resolves when the handler terminates.
+   * @param opts the options for this method, such as security definitions
+   * @returns A Promise that resolves when the handler terminates.
    */
   async put(
     match: string,
@@ -350,9 +382,11 @@ export class Api<SecurityDefs extends string> extends Base<ApiDetails> {
 
   /**
    * Registers a new route with a PATCH handler in a single method.
+   *
    * @param match the route path matcher e.g. '/home'. Supports path params via colon prefix e.g. '/customers/:customerId'
    * @param middleware the middleware/handler to register for calls to PATCH
-   * @returns {Promise} that resolves when the handler terminates.
+   * @param opts the options for this method, such as security definitions
+   * @returns A Promise that resolves when the handler terminates.
    */
   async patch(
     match: string,
@@ -364,9 +398,11 @@ export class Api<SecurityDefs extends string> extends Base<ApiDetails> {
 
   /**
    * Registers a new route with a DELETE handler in a single method.
+   *
    * @param match the route path matcher e.g. '/home'. Supports path params via colon prefix e.g. '/customers/:customerId'
    * @param middleware the middleware/handler to register for calls to DELETE
-   * @returns {Promise} that resolves when the handler terminates.
+   * @param opts the options for this method, such as security definitions
+   * @returns A Promise that resolves when the handler terminates.
    */
   async delete(
     match: string,
@@ -378,9 +414,11 @@ export class Api<SecurityDefs extends string> extends Base<ApiDetails> {
 
   /**
    * Registers a new route with a OPTIONS handler in a single method.
+   *
    * @param match the route path matcher e.g. '/home'. Supports path params via colon prefix e.g. '/customers/:customerId'
    * @param middleware the middleware/handler to register for calls to DELETE
-   * @returns {Promise} that resolves when the handler terminates.
+   * @param opts the options for this method, such as security definitions
+   * @returns A Promise that resolves when the handler terminates.
    */
   async options(
     match: string,
@@ -391,8 +429,9 @@ export class Api<SecurityDefs extends string> extends Base<ApiDetails> {
   }
 
   /**
-   * Retrieves the Invocation URL of this API at runtime
-   * @returns {Promise} that contains the url of this API
+   * Retrieves the Invocation URL of this API at runtime.
+   *
+   * @returns Promise that returns the URL of this API
    */
   async url(): Promise<string> {
     const {
@@ -417,7 +456,8 @@ export class Api<SecurityDefs extends string> extends Base<ApiDetails> {
   }
 
   /**
-   * Register this api as a required resource for the calling function/container
+   * Register this api as a required resource for the calling function/container.
+   *
    * @returns a promise that resolves when the registration is complete
    */
   protected async register(): Promise<Resource> {
@@ -478,9 +518,9 @@ export class Api<SecurityDefs extends string> extends Base<ApiDetails> {
  * The returned API object can be used to register Routes and Methods, with Handlers.
  * e.g. api.route('/customers').get(getCustomerHandler)
  *
- * @param name
- * @param options
- * @returns
+ * @param name the name of the API
+ * @param options additional options for creating the API
+ * @returns an API resource
  */
 export const api: <Defs extends string>(
   name: string,
@@ -488,8 +528,10 @@ export const api: <Defs extends string>(
 ) => Api<Defs> = make(Api);
 
 /**
- * Create a jwt security definition
- * @returns
+ * Create a JWT security definition.
+ *
+ * @param opts security definition options
+ * @returns the new security definition.
  */
 export const jwt = (
   opts: Omit<JwtSecurityDefinition, 'kind'>

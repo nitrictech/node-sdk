@@ -35,6 +35,7 @@ export class Documents {
 
   /**
    * Gets a Collection instance that refers to the collection at the specified path.
+   *
    * @param name The name of the collection (required)
    * @returns The Collection instance
    */
@@ -47,7 +48,8 @@ export class Documents {
 let DOCUMENTS = undefined;
 
 /**
- * Documents
+ * Documents API client.
+ *
  * @returns a Documents API client.
  * @example
  * ```typescript

@@ -38,10 +38,12 @@ export class CollectionRef<T extends DocumentStructure> {
   }
 
   /**
-   * Return a reference to a subcollection within the documents of this collection.
+   * Return a reference to a sub-collection within the documents of this collection.
    *
-   * Useful when querying subcollection documents across all/many parent documents. E.g. Querying landmarks from multiple cities.
-   * @param name
+   * Useful when querying sub-collection documents across all/many parent documents. E.g. Querying landmarks from multiple cities.
+   *
+   * @param name the name of the collection
+   * @returns a reference to all sub-collections matching the name provided.
    */
   public collection(name: string): CollectionGroupRef<T> {
     return CollectionGroupRef.fromCollectionRef(
@@ -52,7 +54,8 @@ export class CollectionRef<T extends DocumentStructure> {
 
   /**
    * Return a reference to a document in the collection.
-   * @param documentId id the document unique id (required)
+   *
+   * @param id the unique id of the document
    * @returns new collection document reference
    */
   public doc(id: string): DocumentRef<T> {
@@ -60,8 +63,9 @@ export class CollectionRef<T extends DocumentStructure> {
   }
 
   /**
-   * Create a new collection query object
-   * @returns a new collection query object
+   * Create a new collection query object.
+   *
+   * @returns a new collection query object.
    */
   public query(): Query<T> {
     return new Query<T>(this.documentClient, this);

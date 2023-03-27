@@ -41,7 +41,8 @@ export interface FetchResponse<T> {
 }
 
 /**
- * Convenience method to convert ProtobufMap objects to standard JavaScript Maps
+ * Convenience method to convert ProtobufMap objects to standard JavaScript Maps.
+ *
  * @param protoMap map to convert
  * @returns the map
  */
@@ -122,7 +123,7 @@ export class Query<T extends DocumentStructure> {
   /**
    * Set the query paging continuation token.
    *
-   * @param pagingToken
+   * @param pagingToken used to determine where to continue paging from.
    * @returns the Query operation
    */
   public pagingFrom(pagingToken: PagingToken): Query<T> {
@@ -133,7 +134,7 @@ export class Query<T extends DocumentStructure> {
   /**
    * Set the query fetch limit.
    *
-   * @param limit
+   * @param limit the maximum number for results to return.
    * @returns the Query operation
    */
   public limit(limit: number): Query<T> {
@@ -216,6 +217,7 @@ export class Query<T extends DocumentStructure> {
 
   /**
    * Queries the collection and returns a readable stream.
+   *
    * @returns all query results as a stream
    * @example
    * ```typescript
