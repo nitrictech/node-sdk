@@ -31,7 +31,8 @@ export type QueuePermission = 'sending' | 'receiving';
  */
 export class QueueResource extends SecureResource<QueuePermission> {
   /**
-   * Register this queue as a required resource for the calling function/container
+   * Register this queue as a required resource for the calling function/container.
+   *
    * @returns a promise that resolves when the registration is complete
    */
   protected async register(): Promise<Resource> {
@@ -78,18 +79,17 @@ export class QueueResource extends SecureResource<QueuePermission> {
     return ResourceType.QUEUE;
   }
 
-  protected unwrapDetails(resp: ResourceDeclareResponse): {} {
+  protected unwrapDetails(resp: ResourceDeclareResponse): never {
     throw new Error('details unimplemented for queue');
   }
 
   /**
-   * Return a queue reference and register the permissions required by the currently scoped function for this resource.
+   * Return a queue reference and registers the permissions required by the currently scoped function for this resource.
    *
    * e.g. const taskQueue = resources.queue('work').for('sending')
    *
-   * @param perm
-   * @param perms
-   * @returns
+   * @param perms the access that the currently scoped function is requesting to this resource.
+   * @returns a useable queue.
    */
   public for(...perms: QueuePermission[]): Queue {
     this.registerPolicy(...perms);

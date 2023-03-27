@@ -37,7 +37,13 @@ interface FailedMessage {
   message: string;
 }
 
-/** @internal */
+/**
+ * Converts and SDK task representation to a wire representation to be sent to the Nitric Server.
+ *
+ * @internal
+ * @param task to convert
+ * @returns the wire representation of the task
+ */
 function taskToWire(task: Task) {
   const wireTask = new NitricTask();
 
@@ -48,6 +54,11 @@ function taskToWire(task: Task) {
   return wireTask;
 }
 
+/**
+ * Constructs a new queue service client.
+ *
+ * @returns a queue service client.
+ */
 function newQueueServiceClient(): QueueServiceClient {
   return new QueueServiceClient(
     SERVICE_BIND,
@@ -269,7 +280,8 @@ export class ReceivedTask implements Task {
 let QUEUES = undefined;
 
 /**
- * Queues
+ * Queues API Client.
+ *
  * @returns a Queues API client.
  * @example
  * ```typescript

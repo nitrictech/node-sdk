@@ -198,8 +198,7 @@ describe('Query Tests', () => {
     test('Providing an invalid paging token should throw error', async () => {
       const q = documents().collection('test').query();
 
-      //@ts-ignore
-      q.pagingFrom('test');
+      q.pagingFrom('test' as any);
 
       await expect(q.fetch()).rejects.toStrictEqual(
         new InvalidArgumentError('Invalid paging token provided!')
@@ -213,14 +212,13 @@ describe('Query Tests', () => {
       message: 'UNIMPLEMENTED',
     };
     let documentsClient: Documents;
-    let mockStream = new PassThrough();
+    const mockStream = new PassThrough();
     let queryStreamMock;
 
     beforeAll(() => {
       queryStreamMock = jest
         .spyOn(GrpcKeyDocumentsClient.prototype, 'queryStream')
-        // @ts-ignore
-        .mockReturnValueOnce(mockStream);
+        .mockReturnValueOnce(mockStream as any);
       documentsClient = documents();
     });
 
@@ -253,15 +251,14 @@ describe('Query Tests', () => {
 
   describe('Given DocumentServiceClient.QueryStream succeeds', () => {
     let documentsClient: Documents;
-    let mockStream = new PassThrough();
+    const mockStream = new PassThrough();
     let queryStreamMock;
     let mockKey;
 
     beforeAll(() => {
       queryStreamMock = jest
         .spyOn(GrpcKeyDocumentsClient.prototype, 'queryStream')
-        // @ts-ignore
-        .mockReturnValueOnce(mockStream);
+        .mockReturnValueOnce(mockStream as any);
       documentsClient = documents();
     });
 

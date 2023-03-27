@@ -56,6 +56,7 @@ class Subscription {
 export class TopicResource extends SecureResource<TopicPermission> {
   /**
    * Register this topic as a required resource for the calling function/container
+   *
    * @returns a promise that resolves when the registration is complete
    */
   protected async register(): Promise<Resource> {
@@ -100,6 +101,7 @@ export class TopicResource extends SecureResource<TopicPermission> {
 
   /**
    * Register and start a subscription handler that will be called for all events from this topic.
+   *
    * @param mw handler middleware which will be run for every incoming event
    * @returns Promise which resolves when the handler server terminates
    */
@@ -112,7 +114,14 @@ export class TopicResource extends SecureResource<TopicPermission> {
     return ResourceType.TOPIC;
   }
 
-  protected unwrapDetails(resp: ResourceDeclareResponse): {} {
+  /**
+   * Unwraps the response details.
+   *
+   * Not used for topics.
+   *
+   * @param resp {never}
+   */
+  protected unwrapDetails(resp: ResourceDeclareResponse): never {
     throw new Error('details unimplemented for topic');
   }
 
@@ -124,7 +133,7 @@ export class TopicResource extends SecureResource<TopicPermission> {
    * @param perms the required permission set
    * @returns a usable topic reference
    */
-  public for<T>(...perms: TopicPermission[]) {
+  public for<T>(...perms: TopicPermission[]): Topic {
     this.registerPolicy(...perms);
     return events().topic(this.name);
   }

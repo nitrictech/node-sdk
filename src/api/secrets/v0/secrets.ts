@@ -41,10 +41,11 @@ export class Secrets {
   }
 
   /**
-   * Get a reference to a secret
-   * @retuns A Secret reference
+   * Get a reference to a secret.
    *
-   * Example:
+   * @param name the name of the secret
+   * @returns A Secret reference.
+   * @example
    * ```typescript
    * import { secrets } from "@nitric/sdk";
    *
@@ -72,10 +73,10 @@ export class Secret {
   }
 
   /**
-   * Creates a new SecretVersion containing the given value
+   * Creates a new SecretVersion containing the given value.
    *
-   * @param secret - The secret value to store
-   * @returns {Promise<SecretVersion>} a version reference for a secret
+   * @param secret the value to store
+   * @returns A Promise which returns a reference to the newly created version of the secret
    * @example
    * ```typescript
    * import { secrets } from "@nitric/sdk";
@@ -115,8 +116,9 @@ export class Secret {
   }
 
   /**
-   * Returns a reference to the latest version of a secret
-   * @returns {SecretVersion} a reference to the latest version of the secret
+   * Returns a reference to the latest version of a secret.
+   *
+   * @returns a reference to the latest version of the secret
    * @example
    * ```typescript
    * import { secrets } from "@nitric/sdk";
@@ -126,25 +128,25 @@ export class Secret {
    *  const latestVersion = secret.latest();
    * }
    * ```
-   *
    */
   public latest(): SecretVersion {
     return this.version('latest');
   }
 
   /**
-   * Creates a reference to a specific version of a secret
-   * @returns {SecretVersion} a secret version reference, the version may or may not exist
+   * Creates a reference to a specific version of a secret.
+   *
+   * @param version the ID of the version reference to be created.
+   * @returns a secret version reference, the version may or may not exist.
    * @example
    * ```typescript
    * import { secrets } from "@nitric/sdk";
    *
    * const secret = secrets().secret('secret');
-   * // NOTE: Version identifiers can difer between providers
+   * // NOTE: Version identifiers can differ between providers
    * // In most cases 'latest' should be used
    * const latestVersion = secret.version('1');
    * ```
-   *
    */
   public version(version: string): SecretVersion {
     if (!version) {
@@ -179,10 +181,9 @@ class SecretVersion {
   }
 
   /**
-   * Accesses the stored secret value from this version, it can be used to access the underlying secret data
+   * Accesses the stored secret value from this version, it can be used to access the underlying secret data.
    *
-   * @param secret - The secret value to store
-   * @returns {Promise<SecretValue>} Retrieve the SecretValue for this secret version
+   * @returns A Promise that return the stored value in this version of the secret.
    * @example
    * ```typescript
    * import { secrets } from "@nitric/sdk";
@@ -247,7 +248,7 @@ class SecretValue {
   }
 
   /**
-   * @returns {Uint8Array} Value of the secret as a byte array
+   * @returns A Uint8Array (byte array) containing the value of the secret
    * @example
    * ```typescript
    * import { secrets } from "@nitric/sdk";
@@ -265,7 +266,9 @@ class SecretValue {
   };
 
   /**
-   * @returns {string} Secret value as a string
+   * Return the secret value as a string.
+   *
+   * @returns the secret value as a string
    * @example
    * ```typescript
    * import { secrets } from "@nitric/sdk";
@@ -287,8 +290,9 @@ class SecretValue {
 let SECRETS = undefined;
 
 /**
- * Secrets
- * @returns {Secrets} a Secrets API client.
+ * Secrets API Client.
+ *
+ * @returns a Secrets API client.
  * @example
  * ```typescript
  * import { secrets } from "@nitric/sdk";

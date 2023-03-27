@@ -36,7 +36,6 @@ export type EventMiddleware = GenericMiddleware<EventContext>;
  * The handlers are passed to each other via the 'next' argument.
  *
  * @param handlers one or more handler functions to be chained together into a single root function.
- *
  * @returns - A root function composed of a chain of user provided functions
  */
 export const createHandler = <Ctx extends TriggerContext = TriggerContext>(

@@ -53,8 +53,9 @@ const STATUS_CODE_MAP: Record<codes, new (message: string) => Error> = {
 };
 
 /**
- * Translates gRPC service errors to Nitric API errors
- * @param error - Original gRPC service error
+ * Translates gRPC service errors to Nitric API errors.
+ *
+ * @param error the original gRPC service error
  * @returns Nitric API error that maps to the provided service error code
  */
 export const fromGrpcError = (error: ServiceError): Error => {

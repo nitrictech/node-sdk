@@ -37,6 +37,7 @@ export class CollectionResource<
 > extends SecureResource<CollectionPermission> {
   /**
    * Register this collection as a required resource for the calling function/container
+   *
    * @returns a promise that resolves when the registration is complete
    */
   protected async register(): Promise<Resource> {
@@ -94,7 +95,7 @@ export class CollectionResource<
     return ResourceType.COLLECTION;
   }
 
-  protected unwrapDetails(resp: ResourceDetailsResponse): {} {
+  protected unwrapDetails(resp: ResourceDetailsResponse): never {
     throw new Error('details unimplemented for collection');
   }
 
@@ -115,6 +116,14 @@ export class CollectionResource<
 
 const newCollection = make(CollectionResource);
 
+/**
+ * Create a reference to a named queue in this project.
+ *
+ * If the queue hasn't been referenced before, this is a request for a new resource. Otherwise, the existing queue with the same name will be used.
+ *
+ * @param name the name of the queue.
+ * @returns a reference to the queue.
+ */
 export function collection<T extends DocumentStructure>(
   name: string
 ): CollectionResource<T> {

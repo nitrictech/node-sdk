@@ -75,7 +75,7 @@ export class SecretResource extends SecureResource<SecretPermission> {
     return ResourceType.SECRET;
   }
 
-  protected unwrapDetails(resp: ResourceDetailsResponse): {} {
+  protected unwrapDetails(resp: ResourceDetailsResponse): never {
     throw new Error('details unimplemented for secret');
   }
 

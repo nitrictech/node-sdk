@@ -49,7 +49,7 @@ class Rate {
   private readonly faas: Faas;
 
   constructor(schedule: Schedule, rate: string, ...mw: EventMiddleware[]) {
-    const [_, frequency] = rate.split(' ');
+    const [, frequency] = rate.split(' ');
     const normalizedFrequency = frequency.toLocaleLowerCase() as Frequency;
 
     // This will automatically parse the int off of a valid rate expression e.g. "10 minutes" === 10
@@ -116,7 +116,7 @@ class Schedule {
    *
    * @param rate to run the schedule, e.g. '7 days'. All rates accept a number and a frequency. Valid frequencies are 'days', 'hours' or 'minutes'.
    * @param mw the handler/middleware to run on a schedule
-   * @returns {Promise} that resolves when the schedule worker stops running.
+   * @returns A promise that resolves when the schedule worker stops running.
    */
   every = (rate: string, ...mw: EventMiddleware[]): Promise<void> => {
     // handle singular frequencies. e.g. schedule('something').every('day')
@@ -140,7 +140,7 @@ class Schedule {
  * Provides a new schedule, which can be configured with a rate/cron and a callback to run on the schedule.
  *
  * @param description of the schedule, e.g. "Nightly"
- * @returns
+ * @returns a named schedule.
  */
 export const schedule = (description: string): Schedule => {
   return new Schedule(description);

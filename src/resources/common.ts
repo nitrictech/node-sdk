@@ -33,7 +33,7 @@ export interface ResourceDetails<T> {
   details: T;
 }
 
-export abstract class Resource<Detail = {}> {
+export abstract class Resource<Detail = any> {
   /**
    * Unique name for the resource by type within the stack.
    *
@@ -132,7 +132,7 @@ export type newer<T> = (name: string, ...args: any[]) => T;
 /**
  * Provides a new resource instance.
  *
- * @param name the _unique_ name of the resource within the stack
+ * @param T the type of resource to construct
  * @returns the resource
  */
 export const make = <T extends Resource>(
