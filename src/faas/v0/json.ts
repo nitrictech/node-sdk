@@ -36,11 +36,11 @@ export const json = (): HttpMiddleware => (ctx: HttpContext, next) => {
  * @param ctx HttpContext
  * @returns HttpContext with body property set with an encoded JSON string and json headers set.
  */
-export const jsonResponse = (ctx: HttpContext) => (
-  data: string | number | boolean | Record<string, any>
-) => {
-  ctx.res.body = new TextEncoder().encode(JSON.stringify(data));
-  ctx.res.headers['Content-Type'] = ['application/json'];
+export const jsonResponse =
+  (ctx: HttpContext) =>
+  (data: string | number | boolean | Record<string, any>) => {
+    ctx.res.body = new TextEncoder().encode(JSON.stringify(data));
+    ctx.res.headers['Content-Type'] = ['application/json'];
 
-  return ctx;
-};
+    return ctx;
+  };
