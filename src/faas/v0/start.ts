@@ -11,7 +11,6 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import * as grpc from '@grpc/grpc-js';
 import { SERVICE_BIND } from '../../constants';
 
 import { FaasServiceClient } from '@nitric/api/proto/faas/v1/faas_grpc_pb';
@@ -36,11 +35,12 @@ import {
   createHandler,
   EventMiddleware,
   GenericMiddleware,
-  HttpContext,
   HttpMiddleware,
   TriggerContext,
   TriggerMiddleware,
 } from '.';
+
+import newTracerProvider from './traceProvider';
 
 import {
   ApiWorkerOptions,
@@ -48,6 +48,8 @@ import {
   RateWorkerOptions,
   SubscriptionWorkerOptions,
 } from '../../resources';
+
+import * as grpc from '@grpc/grpc-js';
 
 class FaasWorkerOptions {}
 
@@ -117,6 +119,8 @@ export class Faas {
    * @returns a promise that resolves when the server terminates
    */
   async start(...handlers: TriggerMiddleware[]): Promise<void> {
+    const provider = newTracerProvider();
+
     this.anyHandler = handlers.length && createHandler(...handlers);
     if (!this.httpHandler && !this.eventHandler && !this.anyHandler) {
       throw new Error('A handler function must be provided.');
@@ -151,10 +155,12 @@ export class Faas {
           let triggerType = 'Unknown';
           if (ctx.http) {
             triggerType = 'HTTP';
-            handler = this.getHttpHandler() as GenericMiddleware<TriggerContext>;
+            handler =
+              this.getHttpHandler() as GenericMiddleware<TriggerContext>;
           } else if (ctx.event) {
             triggerType = 'Event';
-            handler = this.getEventHandler() as GenericMiddleware<TriggerContext>;
+            handler =
+              this.getEventHandler() as GenericMiddleware<TriggerContext>;
           } else {
             console.error(
               `received an unexpected trigger type, are you using an outdated version of the SDK?`
@@ -261,6 +267,9 @@ export class Faas {
         res();
       });
     });
+
+    // Shutdown the trace provider, flushing the stream and stopping listeners
+    await provider?.shutdown();
   }
 }
 

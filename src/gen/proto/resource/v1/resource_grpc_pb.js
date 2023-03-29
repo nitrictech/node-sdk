@@ -3,7 +3,6 @@
 'use strict';
 var grpc = require('@grpc/grpc-js');
 var proto_resource_v1_resource_pb = require('../../../proto/resource/v1/resource_pb.js');
-var validate_validate_pb = require('../../../validate/validate_pb.js');
 
 function serialize_nitric_resource_v1_ResourceDeclareRequest(arg) {
   if (!(arg instanceof proto_resource_v1_resource_pb.ResourceDeclareRequest)) {
