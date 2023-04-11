@@ -2,7 +2,6 @@
 // file: proto/resource/v1/resource.proto
 
 import * as jspb from "google-protobuf";
-import * as validate_validate_pb from "../../../validate/validate_pb";
 
 export class PolicyResource extends jspb.Message {
   clearPrincipalsList(): void;

@@ -17,7 +17,9 @@ import {
   TopicResponseContext,
   HttpResponseContext,
   HeaderValue,
+  TraceContext,
 } from '@nitric/api/proto/faas/v1/faas_pb';
+import * as api from '@opentelemetry/api';
 import { jsonResponse } from './json';
 
 export abstract class TriggerContext<
@@ -89,9 +91,11 @@ export abstract class TriggerContext<
 
 export abstract class AbstractRequest {
   readonly data: string | Uint8Array;
+  readonly traceContext: api.Context;
 
-  protected constructor(data: string | Uint8Array) {
+  protected constructor(data: string | Uint8Array, traceContext: api.Context) {
     this.data = data;
+    this.traceContext = traceContext;
   }
 
   text(): string {
@@ -122,6 +126,7 @@ interface HttpRequestArgs {
   params: Record<string, string>;
   query: Record<string, string[]>;
   headers: Record<string, string[]>;
+  traceContext?: api.Context;
 }
 
 export class HttpRequest extends AbstractRequest {
@@ -131,8 +136,16 @@ export class HttpRequest extends AbstractRequest {
   public readonly query: Record<string, string[]>;
   public readonly headers: Record<string, string[] | string>;
 
-  constructor({ data, method, path, params, query, headers }: HttpRequestArgs) {
-    super(data);
+  constructor({
+    data,
+    method,
+    path,
+    params,
+    query,
+    headers,
+    traceContext,
+  }: HttpRequestArgs) {
+    super(data, traceContext);
     this.method = method;
     this.path = path;
     this.params = params;
@@ -174,11 +187,27 @@ export class HttpResponse {
 export class EventRequest extends AbstractRequest {
   public readonly topic: string;
 
-  constructor(data: string | Uint8Array, topic: string) {
-    super(data);
+  constructor(
+    data: string | Uint8Array,
+    topic: string,
+    traceContext: api.Context
+  ) {
+    super(data, traceContext);
     this.topic = topic;
   }
 }
+
+// Propagate the context to the root context
+const getTraceContext = (traceContext: TraceContext): api.Context => {
+  const traceContextObject: Record<string, string> = traceContext
+    ? traceContext
+        .getValuesMap()
+        .toObject()
+        .reduce((prev, [k, v]) => (prev[k] = v), {})
+    : {};
+
+  return api.propagation.extract(api.context.active(), traceContextObject);
+};
 
 export class HttpContext extends TriggerContext<HttpRequest, HttpResponse> {
   public get http(): HttpContext {
@@ -189,11 +218,13 @@ export class HttpContext extends TriggerContext<HttpRequest, HttpResponse> {
     const http = trigger.getHttp();
     const ctx = new HttpContext();
 
-    const headers = ((http
-      .getHeadersMap()
-      // getEntryList claims to return [string, faas.HeaderValue][], but really returns [string, string[][]][]
-      // we force the type to match the real return type.
-      .getEntryList() as unknown) as [string, string[][]][]).reduce(
+    const headers = (
+      http
+        .getHeadersMap()
+        // getEntryList claims to return [string, faas.HeaderValue][], but really returns [string, string[][]][]
+        // we force the type to match the real return type.
+        .getEntryList() as unknown as [string, string[][]][]
+    ).reduce(
       (acc, [key, [val]]) => ({
         ...acc,
         [key.toLowerCase()]: val.length === 1 ? val[0] : val,
@@ -201,11 +232,13 @@ export class HttpContext extends TriggerContext<HttpRequest, HttpResponse> {
       {}
     );
 
-    const query = ((http
-      .getQueryParamsMap()
-      // getEntryList claims to return [string, faas.HeaderValue][], but really returns [string, string[][]][]
-      // we force the type to match the real return type.
-      .getEntryList() as unknown) as [string, string[][]][]).reduce(
+    const query = (
+      http
+        .getQueryParamsMap()
+        // getEntryList claims to return [string, faas.HeaderValue][], but really returns [string, string[][]][]
+        // we force the type to match the real return type.
+        .getEntryList() as unknown as [string, string[][]][]
+    ).reduce(
       (acc, [key, [val]]) => ({
         ...acc,
         [key]: val.length === 1 ? val[0] : val,
@@ -259,6 +292,7 @@ export class HttpContext extends TriggerContext<HttpRequest, HttpResponse> {
       // check for old headers if new headers is unpopulated. This is for backwards compatibility.
       headers: Object.keys(headers).length ? headers : oldHeaders,
       method: http.getMethod(),
+      traceContext: getTraceContext(trigger.getTraceContext()),
     });
 
     ctx.response = new HttpResponse({
@@ -330,7 +364,11 @@ export class EventContext extends TriggerContext<EventRequest, EventResponse> {
     const topic = trigger.getTopic();
     const ctx = new EventContext();
 
-    ctx.request = new EventRequest(trigger.getData_asU8(), topic.getTopic());
+    ctx.request = new EventRequest(
+      trigger.getData_asU8(),
+      topic.getTopic(),
+      getTraceContext(trigger.getTraceContext())
+    );
 
     ctx.response = {
       success: true,

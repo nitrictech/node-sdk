@@ -18,6 +18,8 @@ import {
   ClientMessage,
 } from '@nitric/api/proto/faas/v1/faas_pb';
 
+jest.mock('./traceProvider');
+
 // We only need to handle half of the duplex stream
 class MockClientStream<Req, Resp> {
   public receivedMessages: Req[] = [];
@@ -59,6 +61,7 @@ describe('faas.start', () => {
       streamSpy = jest
         .spyOn(FaasServiceClient.prototype, 'triggerStream')
         .mockReturnValueOnce(mockStream as any);
+
       const startPromise = start(f);
       mockStream.emit('end', 'EOF');
 

@@ -13,10 +13,14 @@
 
 var jspb = require('google-protobuf');
 var goog = jspb;
-var global = Function('return this')();
+var global = (function() {
+  if (this) { return this; }
+  if (typeof window !== 'undefined') { return window; }
+  if (typeof global !== 'undefined') { return global; }
+  if (typeof self !== 'undefined') { return self; }
+  return Function('return this')();
+}.call(null));
 
-var validate_validate_pb = require('../../../validate/validate_pb.js');
-goog.object.extend(proto, validate_validate_pb);
 goog.exportSymbol('proto.nitric.resource.v1.Action', null, global);
 goog.exportSymbol('proto.nitric.resource.v1.ApiResource', null, global);
 goog.exportSymbol('proto.nitric.resource.v1.ApiResourceDetails', null, global);

@@ -146,9 +146,8 @@ describe('NitricTriggger.toGrpcTriggerResponse', () => {
     let response: TriggerResponse;
 
     beforeEach(() => {
-      const ctx: TriggerContext = TriggerContext.fromGrpcTriggerRequest(
-        request
-      );
+      const ctx: TriggerContext =
+        TriggerContext.fromGrpcTriggerRequest(request);
       ctx.http.res.body = 'test';
       response = HttpContext.toGrpcTriggerResponse(ctx);
     });
@@ -168,9 +167,8 @@ describe('NitricTriggger.toGrpcTriggerResponse', () => {
     let response: TriggerResponse;
 
     beforeEach(() => {
-      const ctx: TriggerContext = TriggerContext.fromGrpcTriggerRequest(
-        request
-      );
+      const ctx: TriggerContext =
+        TriggerContext.fromGrpcTriggerRequest(request);
       ctx.http.res.body = { any: 'object' };
       response = HttpContext.toGrpcTriggerResponse(ctx);
     });
@@ -190,9 +188,8 @@ describe('NitricTriggger.toGrpcTriggerResponse', () => {
     let response: TriggerResponse;
 
     beforeEach(() => {
-      const ctx: TriggerContext = TriggerContext.fromGrpcTriggerRequest(
-        request
-      );
+      const ctx: TriggerContext =
+        TriggerContext.fromGrpcTriggerRequest(request);
       ctx.http.res.body = new TextEncoder().encode('response text');
       response = HttpContext.toGrpcTriggerResponse(ctx);
     });
@@ -214,9 +211,8 @@ describe('NitricTriggger.toGrpcTriggerResponse', () => {
     let response: TriggerResponse;
 
     beforeEach(() => {
-      const ctx: TriggerContext = TriggerContext.fromGrpcTriggerRequest(
-        request
-      );
+      const ctx: TriggerContext =
+        TriggerContext.fromGrpcTriggerRequest(request);
       ctx.http.res.headers['Content-Type'] = ['application/json'];
       ctx.http.res.body = new TextEncoder().encode(
         '{"json":"which is already text"}'
