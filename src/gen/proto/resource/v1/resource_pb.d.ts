@@ -424,6 +424,7 @@ export interface ResourceTypeMap {
   COLLECTION: 7;
   POLICY: 8;
   SECRET: 9;
+  NOTIFICATION: 10;
 }
 
 export const ResourceType: ResourceTypeMap;

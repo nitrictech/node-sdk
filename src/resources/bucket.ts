@@ -23,10 +23,54 @@ import resourceClient from './client';
 import { storage, Bucket } from '../api/storage';
 import { ActionsList, make, SecureResource } from './common';
 import { fromGrpcError } from '../api/errors';
+import { Faas, BucketNotificationMiddleware } from '../faas';
 
 type BucketPermission = 'reading' | 'writing' | 'deleting';
 
 const everything: BucketPermission[] = ['reading', 'writing', 'deleting'];
+
+export class BucketNotificationWorkerOptions {
+  public readonly bucket: string;
+  public readonly eventType: 1 | 2;
+  public readonly eventFilter: string;
+
+  constructor(resource: string, eventType: string, eventFilter: string) {
+    this.bucket = resource;
+    this.eventType = this.toGrpcEventType(eventType);
+    this.eventFilter = eventFilter;
+  }
+
+  private toGrpcEventType(eventType: string) {
+    switch (eventType.toLowerCase()) {
+      case 'created':
+        return 1;
+      case 'deleted':
+        return 2;
+    }
+    throw Error(`Event Type ${eventType} is unsupported`);
+  }
+}
+
+class BucketNotification {
+  private readonly faas: Faas;
+
+  constructor(
+    name: string,
+    filter: string,
+    ...mw: BucketNotificationMiddleware[]
+  ) {
+    const [eventType, fileFilter] = filter.split(':');
+
+    this.faas = new Faas(
+      new BucketNotificationWorkerOptions(name, eventType, fileFilter)
+    );
+    this.faas.bucketNotification(...mw);
+  }
+
+  private async start(): Promise<void> {
+    return this.faas.start();
+  }
+}
 
 /**
  * Cloud storage bucket resource for large file storage.
@@ -80,6 +124,18 @@ export class BucketResource extends SecureResource<BucketPermission> {
 
   protected resourceType() {
     return ResourceType.BUCKET;
+  }
+
+  /**
+   * Register and start a bucket notification handler that will be called for all events from this topic.
+   *
+   * @param filter the event type and file filter in the form: "type:filter"
+   * @param mw handler middleware which will be run for every incoming event
+   * @returns Promise which resolves when the handler server terminates
+   */
+  on(filter: string, ...mw: BucketNotificationMiddleware[]): Promise<void> {
+    const notification = new BucketNotification(this.name, filter, ...mw);
+    return notification['start']();
   }
 
   protected unwrapDetails(resp: ResourceDetailsResponse): never {
