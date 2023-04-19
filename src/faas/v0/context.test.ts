@@ -19,7 +19,7 @@ import {
   QueryValue,
   TriggerResponse,
 } from '@nitric/api/proto/faas/v1/faas_pb';
-import { TriggerContext, HttpContext, EventContext } from './context';
+import { TriggerContext, HttpContext, EventContext } from '.';
 
 describe('NitricTrigger.fromGrpcTriggerRequest', () => {
   describe('From a HttpTriggerRequest', () => {
