@@ -23,6 +23,7 @@ import {
 } from '@nitric/api/proto/resource/v1/resource_pb';
 import { ActionsList, make, SecureResource } from './common';
 import { fromGrpcError } from '../api/errors';
+import { NitricEvent } from '../types';
 
 type TopicPermission = 'publishing';
 
@@ -37,10 +38,10 @@ export class SubscriptionWorkerOptions {
 /**
  * Creates a subscription worker
  */
-class Subscription {
+class Subscription<T extends NitricEvent = NitricEvent> {
   private readonly faas: Faas;
 
-  constructor(name: string, ...mw: EventMiddleware[]) {
+  constructor(name: string, ...mw: EventMiddleware<T>[]) {
     this.faas = new Faas(new SubscriptionWorkerOptions(name));
     this.faas.event(...mw);
   }
@@ -53,7 +54,9 @@ class Subscription {
 /**
  * Topic resource for pub/sub async messaging.
  */
-export class TopicResource extends SecureResource<TopicPermission> {
+export class TopicResource<
+  T extends NitricEvent = NitricEvent
+> extends SecureResource<TopicPermission> {
   /**
    * Register this topic as a required resource for the calling function/container
    *
@@ -105,8 +108,8 @@ export class TopicResource extends SecureResource<TopicPermission> {
    * @param mw handler middleware which will be run for every incoming event
    * @returns Promise which resolves when the handler server terminates
    */
-  subscribe(...mw: EventMiddleware[]): Promise<void> {
-    const sub = new Subscription(this.name, ...mw);
+  subscribe(...mw: EventMiddleware<T>[]): Promise<void> {
+    const sub = new Subscription<T>(this.name, ...mw);
     return sub['start']();
   }
 
@@ -133,10 +136,14 @@ export class TopicResource extends SecureResource<TopicPermission> {
    * @param perms the required permission set
    * @returns a usable topic reference
    */
-  public for<T>(...perms: TopicPermission[]): Topic {
+  public for(...perms: TopicPermission[]): Topic<T> {
     this.registerPolicy(...perms);
     return events().topic(this.name);
   }
 }
 
-export const topic = make(TopicResource);
+export const topic = make(TopicResource) as <
+  T extends Record<string, any> = Record<string, any>
+>(
+  name: string
+) => TopicResource<NitricEvent<T>>;

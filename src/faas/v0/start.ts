@@ -36,6 +36,7 @@ import {
   EventMiddleware,
   GenericMiddleware,
   HttpMiddleware,
+  ScheduleMiddleware,
   TriggerContext,
   TriggerMiddleware,
 } from '.';
@@ -64,7 +65,7 @@ type FaasClientOptions =
  */
 export class Faas {
   private httpHandler?: HttpMiddleware;
-  private eventHandler?: EventMiddleware;
+  private eventHandler?: EventMiddleware | ScheduleMiddleware;
   private anyHandler?: TriggerMiddleware;
   private readonly options: FaasClientOptions;
 
@@ -78,8 +79,8 @@ export class Faas {
    * @param handlers the functions to call to respond to events
    * @returns self
    */
-  event(...handlers: EventMiddleware[]): Faas {
-    this.eventHandler = createHandler(...handlers);
+  event(...handlers: EventMiddleware[] | ScheduleMiddleware[]): Faas {
+    this.eventHandler = createHandler<any>(...handlers);
     return this;
   }
 

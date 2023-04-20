@@ -27,6 +27,7 @@ import { TraceIdRatioBasedSampler } from '@opentelemetry/sdk-trace-node';
 /**
  * Creates a new node tracer provider
  * If it is a local run, it will output to the console. If it is run on the cloud it will output to localhost:4317
+ *
  * @returns a tracer provider
  */
 const newTracerProvider = (): NodeTracerProvider => {

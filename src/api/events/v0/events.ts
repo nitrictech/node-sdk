@@ -51,7 +51,7 @@ const DEFAULT_PUBLISH_OPTS: PublishOptions = {
   delay: 0,
 };
 
-export class Topic {
+export class Topic<T extends NitricEvent = NitricEvent> {
   eventing: Eventing;
   name: string;
 
@@ -90,9 +90,9 @@ export class Topic {
    * ```
    */
   async publish(
-    event: NitricEvent,
+    event: T,
     opts: PublishOptions = DEFAULT_PUBLISH_OPTS
-  ): Promise<NitricEvent> {
+  ): Promise<T> {
     const { id, payloadType = 'none', payload } = event;
     const publishOpts = {
       ...DEFAULT_PUBLISH_OPTS,
@@ -109,7 +109,7 @@ export class Topic {
     request.setEvent(evt);
     request.setDelay(publishOpts.delay);
 
-    return new Promise<NitricEvent>((resolve, reject) => {
+    return new Promise<T>((resolve, reject) => {
       this.eventing.EventServiceClient.publish(request, (error, response) => {
         if (error) {
           reject(fromGrpcError(error));
@@ -167,7 +167,7 @@ export class Eventing {
    * const topic = eventing.topic('notifications');
    * ```
    */
-  public topic(name: string): Topic {
+  public topic<T extends NitricEvent = NitricEvent>(name: string): Topic<T> {
     if (!name) {
       throw new InvalidArgumentError('A topic name is needed to use a Topic.');
     }

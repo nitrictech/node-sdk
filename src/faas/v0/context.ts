@@ -43,7 +43,7 @@ export abstract class TriggerContext<
    *
    * @returns undefined
    */
-  public get event(): EventContext | undefined {
+  public get event(): EventContext<unknown> | undefined {
     return undefined;
   }
 
@@ -89,7 +89,11 @@ export abstract class TriggerContext<
   }
 }
 
-export abstract class AbstractRequest {
+export type JSONTypes = Record<string, any> | Array<any> | string;
+
+export abstract class AbstractRequest<
+  JSONT extends JSONTypes = Record<string, any>
+> {
   readonly data: string | Uint8Array;
   readonly traceContext: api.Context;
 
@@ -107,7 +111,7 @@ export abstract class AbstractRequest {
     return stringPayload;
   }
 
-  json(): Record<string, any> {
+  json(): JSONT {
     // attempt to deserialize as a JSON object
     return this.text() ? JSON.parse(this.text()) : {};
   }
@@ -184,7 +188,7 @@ export class HttpResponse {
   }
 }
 
-export class EventRequest extends AbstractRequest {
+export class EventRequest<T> extends AbstractRequest<T> {
   public readonly topic: string;
 
   constructor(
@@ -355,12 +359,17 @@ export class HttpContext extends TriggerContext<HttpRequest, HttpResponse> {
   }
 }
 
-export class EventContext extends TriggerContext<EventRequest, EventResponse> {
-  public get event(): EventContext {
+export class EventContext<T> extends TriggerContext<
+  EventRequest<T>,
+  EventResponse
+> {
+  public get event(): EventContext<T> {
     return this;
   }
 
-  static fromGrpcTriggerRequest(trigger: TriggerRequest): EventContext {
+  static fromGrpcTriggerRequest(
+    trigger: TriggerRequest
+  ): EventContext<unknown> {
     const topic = trigger.getTopic();
     const ctx = new EventContext();
 
