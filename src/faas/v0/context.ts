@@ -89,7 +89,7 @@ export abstract class TriggerContext<
   }
 }
 
-type JSONTypes = Record<string, any> | Array<any> | string;
+export type JSONTypes = Record<string, any> | Array<any> | string;
 
 export abstract class AbstractRequest<JSONT extends JSONTypes = Record<string, any>> {
   readonly data: string | Uint8Array;
