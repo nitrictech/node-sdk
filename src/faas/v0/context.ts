@@ -218,13 +218,20 @@ export class EventRequest<T> extends AbstractRequest<T> {
 
 // Propagate the context to the root context
 export const getTraceContext = (traceContext: TraceContext): api.Context => {
-  const traceContextObject = objectFromMap(traceContext.getValuesMap());
+  const traceContextObject = traceContext
+    ? objectFromMap(traceContext.getValuesMap())
+    : {};
 
   return api.propagation.extract(api.context.active(), traceContextObject);
 };
 
 const objectFromMap = (map: jspb.Map<string, string>) => {
-  return map ? map.toObject().reduce((prev, [k, v]) => (prev[k] = v), {}) : {};
+  return map
+    ? map.toObject().reduce((prev, [k, v]) => {
+        prev[k] = v;
+        return prev;
+      }, {})
+    : {};
 };
 
 // HTTP CONTEXT
@@ -488,7 +495,7 @@ export class BucketNotificationRequest extends AbstractRequest {
     super(data, traceContext);
 
     this.key = attributes['key'];
-    this.eventType = this.eventTypeToNotificationType(attributes['eventType']);
+    this.eventType = this.eventTypeToNotificationType(attributes['type']);
   }
 
   private eventTypeToNotificationType = (eventType: string) => {
