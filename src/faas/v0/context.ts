@@ -89,7 +89,9 @@ export abstract class TriggerContext<
   }
 }
 
-export abstract class AbstractRequest<JSONT extends Record<string, any> = Record<string, any>> {
+type JSONTypes = Record<string, any> | Array<any> | string;
+
+export abstract class AbstractRequest<JSONT extends JSONTypes = Record<string, any>> {
   readonly data: string | Uint8Array;
   readonly traceContext: api.Context;
 
