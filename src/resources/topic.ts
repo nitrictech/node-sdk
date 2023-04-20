@@ -54,7 +54,9 @@ class Subscription<T> {
 /**
  * Topic resource for pub/sub async messaging.
  */
-export class TopicResource<T extends NitricEvent = NitricEvent> extends SecureResource<TopicPermission> {
+export class TopicResource<
+  T extends NitricEvent = NitricEvent
+> extends SecureResource<TopicPermission> {
   /**
    * Register this topic as a required resource for the calling function/container
    *
@@ -140,5 +142,8 @@ export class TopicResource<T extends NitricEvent = NitricEvent> extends SecureRe
   }
 }
 
-
-export const topic = make(TopicResource) as <T extends Record<string, any> = Record<string, any>>(name: string) => TopicResource<NitricEvent<T>>;
+export const topic = make(TopicResource) as <
+  T extends Record<string, any> = Record<string, any>
+>(
+  name: string
+) => TopicResource<NitricEvent<T>>;

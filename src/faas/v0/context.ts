@@ -91,7 +91,9 @@ export abstract class TriggerContext<
 
 export type JSONTypes = Record<string, any> | Array<any> | string;
 
-export abstract class AbstractRequest<JSONT extends JSONTypes = Record<string, any>> {
+export abstract class AbstractRequest<
+  JSONT extends JSONTypes = Record<string, any>
+> {
   readonly data: string | Uint8Array;
   readonly traceContext: api.Context;
 
@@ -357,12 +359,17 @@ export class HttpContext extends TriggerContext<HttpRequest, HttpResponse> {
   }
 }
 
-export class EventContext<T> extends TriggerContext<EventRequest<T>, EventResponse> {
+export class EventContext<T> extends TriggerContext<
+  EventRequest<T>,
+  EventResponse
+> {
   public get event(): EventContext<T> {
     return this;
   }
 
-  static fromGrpcTriggerRequest(trigger: TriggerRequest): EventContext<unknown> {
+  static fromGrpcTriggerRequest(
+    trigger: TriggerRequest
+  ): EventContext<unknown> {
     const topic = trigger.getTopic();
     const ctx = new EventContext();
 
