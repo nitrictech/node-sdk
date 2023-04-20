@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { HttpMiddleware, Faas } from '../faas';
+import { HttpMiddleware, Faas, JSONTypes } from '../faas';
 import {
   ApiResource,
   ApiScopes,
@@ -100,10 +100,10 @@ export class Route<SecurityDefs extends string> {
     this.middleware = composeMiddleware(middleware);
   }
 
-  async method(
+  async method<T = JSONTypes>(
     methods: HttpMethod[],
     opts: MethodOptions<SecurityDefs>,
-    ...middleware: HttpMiddleware[]
+    ...middleware: HttpMiddleware<T>[]
   ): Promise<void> {
     const getHandler = new Method(
       this,
@@ -122,8 +122,8 @@ export class Route<SecurityDefs extends string> {
    * @param opts the options for this method, such as security definitions
    * @returns a Promise that resolves if the handler stops running
    */
-  async get(
-    middleware: HttpMiddleware | HttpMiddleware[],
+  async get<T = JSONTypes>(
+    middleware: HttpMiddleware<T> | HttpMiddleware<T>[],
     opts: MethodOptions<SecurityDefs> = {}
   ): Promise<void> {
     return this.method(['GET'], opts, ...composeMiddleware(middleware));
@@ -136,8 +136,8 @@ export class Route<SecurityDefs extends string> {
    * @param opts the options for this method, such as security definitions
    * @returns a Promise that resolves if the handler stops running
    */
-  async post(
-    middleware: HttpMiddleware | HttpMiddleware[],
+  async post<T = JSONTypes>(
+    middleware: HttpMiddleware<T> | HttpMiddleware<T>[],
     opts: MethodOptions<SecurityDefs> = {}
   ): Promise<void> {
     return this.method(['POST'], opts, ...composeMiddleware(middleware));
@@ -150,8 +150,8 @@ export class Route<SecurityDefs extends string> {
    * @param opts the options for this method, such as security definitions
    * @returns a Promise that resolves if the handler stops running
    */
-  async put(
-    middleware: HttpMiddleware | HttpMiddleware[],
+  async put<T = JSONTypes>(
+    middleware: HttpMiddleware<T> | HttpMiddleware<T>[],
     opts: MethodOptions<SecurityDefs> = {}
   ): Promise<void> {
     return this.method(['PUT'], opts, ...composeMiddleware(middleware));
@@ -164,8 +164,8 @@ export class Route<SecurityDefs extends string> {
    * @param opts the options for this method, such as security definitions
    * @returns a Promise that resolves if the handler stops running
    */
-  async patch(
-    middleware: HttpMiddleware | HttpMiddleware[],
+  async patch<T = JSONTypes>(
+    middleware: HttpMiddleware<T> | HttpMiddleware<T>[],
     opts: MethodOptions<SecurityDefs> = {}
   ): Promise<void> {
     return this.method(['PATCH'], opts, ...composeMiddleware(middleware));
@@ -178,8 +178,8 @@ export class Route<SecurityDefs extends string> {
    * @param opts the options for this method, such as security definitions
    * @returns a Promise that resolves if the handler stops running
    */
-  async delete(
-    middleware: HttpMiddleware | HttpMiddleware[],
+  async delete<T = JSONTypes>(
+    middleware: HttpMiddleware<T> | HttpMiddleware<T>[],
     opts: MethodOptions<SecurityDefs> = {}
   ): Promise<void> {
     return this.method(['DELETE'], opts, ...composeMiddleware(middleware));
@@ -192,8 +192,8 @@ export class Route<SecurityDefs extends string> {
    * @param opts the options for this method, such as security definitions
    * @returns a Promise that resolves if the handler stops running
    */
-  async options(
-    middleware: HttpMiddleware | HttpMiddleware[],
+  async options<T = JSONTypes>(
+    middleware: HttpMiddleware<T> | HttpMiddleware<T>[],
     opts: MethodOptions<SecurityDefs> = {}
   ): Promise<void> {
     return this.method(['OPTIONS'], opts, ...composeMiddleware(middleware));
@@ -206,8 +206,8 @@ export class Route<SecurityDefs extends string> {
    * @param opts the options for this method, such as security definitions
    * @returns a Promise that resolves if the handler stops running
    */
-  async all(
-    middleware: HttpMiddleware | HttpMiddleware[],
+  async all<T = JSONTypes>(
+    middleware: HttpMiddleware<T> | HttpMiddleware<T>[],
     opts: MethodOptions<SecurityDefs> = {}
   ): Promise<void> {
     return this.method(
@@ -340,12 +340,12 @@ export class Api<SecurityDefs extends string> extends Base<ApiDetails> {
    * @param opts the options for this method, such as security definitions
    * @returns A Promise that resolves when the handler terminates.
    */
-  async get(
+  async get<T extends JSONTypes = JSONTypes>(
     match: string,
-    middleware: HttpMiddleware | HttpMiddleware[],
+    middleware: HttpMiddleware<T> | HttpMiddleware<T>[],
     opts: MethodOptions<SecurityDefs> = {}
   ): Promise<void> {
-    return this.route(match).get(composeMiddleware(middleware), opts);
+    return this.route(match).get<T>(composeMiddleware(middleware), opts);
   }
 
   /**
@@ -356,9 +356,9 @@ export class Api<SecurityDefs extends string> extends Base<ApiDetails> {
    * @param opts the options for this method, such as security definitions
    * @returns A Promise that resolves when the handler terminates.
    */
-  async post(
+  async post<T extends JSONTypes = JSONTypes>(
     match: string,
-    middleware: HttpMiddleware | HttpMiddleware[],
+    middleware: HttpMiddleware<T> | HttpMiddleware<T>[],
     opts: MethodOptions<SecurityDefs> = {}
   ): Promise<void> {
     return this.route(match).post(composeMiddleware(middleware), opts);
@@ -372,9 +372,9 @@ export class Api<SecurityDefs extends string> extends Base<ApiDetails> {
    * @param opts the options for this method, such as security definitions
    * @returns A Promise that resolves when the handler terminates.
    */
-  async put(
+  async put<T extends JSONTypes = JSONTypes>(
     match: string,
-    middleware: HttpMiddleware | HttpMiddleware[],
+    middleware: HttpMiddleware<T> | HttpMiddleware<T>[],
     opts: MethodOptions<SecurityDefs> = {}
   ): Promise<void> {
     return this.route(match).put(composeMiddleware(middleware), opts);
@@ -388,9 +388,9 @@ export class Api<SecurityDefs extends string> extends Base<ApiDetails> {
    * @param opts the options for this method, such as security definitions
    * @returns A Promise that resolves when the handler terminates.
    */
-  async patch(
+  async patch<T extends JSONTypes = JSONTypes>(
     match: string,
-    middleware: HttpMiddleware | HttpMiddleware[],
+    middleware: HttpMiddleware<T> | HttpMiddleware<T>[],
     opts: MethodOptions<SecurityDefs> = {}
   ): Promise<void> {
     return this.route(match).patch(composeMiddleware(middleware), opts);
@@ -404,9 +404,9 @@ export class Api<SecurityDefs extends string> extends Base<ApiDetails> {
    * @param opts the options for this method, such as security definitions
    * @returns A Promise that resolves when the handler terminates.
    */
-  async delete(
+  async delete<T extends JSONTypes = JSONTypes>(
     match: string,
-    middleware: HttpMiddleware | HttpMiddleware[],
+    middleware: HttpMiddleware<T> | HttpMiddleware<T>[],
     opts: MethodOptions<SecurityDefs> = {}
   ): Promise<void> {
     return this.route(match).delete(composeMiddleware(middleware), opts);
@@ -420,9 +420,9 @@ export class Api<SecurityDefs extends string> extends Base<ApiDetails> {
    * @param opts the options for this method, such as security definitions
    * @returns A Promise that resolves when the handler terminates.
    */
-  async options(
+  async options<T extends JSONTypes = JSONTypes>(
     match: string,
-    middleware: HttpMiddleware | HttpMiddleware[],
+    middleware: HttpMiddleware<T> | HttpMiddleware<T>[],
     opts: MethodOptions<SecurityDefs> = {}
   ): Promise<void> {
     return this.route(match).options(composeMiddleware(middleware), opts);
@@ -539,5 +539,5 @@ export const jwt = (
   return { kind: 'jwt', issuer: opts.issuer, audiences: opts.audiences };
 };
 
-const composeMiddleware = (middleware: HttpMiddleware | HttpMiddleware[]) =>
+const composeMiddleware = <T extends JSONTypes = JSONTypes>(middleware: HttpMiddleware<T> | HttpMiddleware<T>[]) =>
   Array.isArray(middleware) ? middleware : middleware ? [middleware] : [];

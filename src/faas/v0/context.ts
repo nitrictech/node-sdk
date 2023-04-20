@@ -133,7 +133,7 @@ interface HttpRequestArgs {
   traceContext?: api.Context;
 }
 
-export class HttpRequest extends AbstractRequest {
+export class HttpRequest<T> extends AbstractRequest<T> {
   public readonly method: Method | string;
   public readonly path: string;
   public readonly params: Record<string, string>;
@@ -213,12 +213,12 @@ const getTraceContext = (traceContext: TraceContext): api.Context => {
   return api.propagation.extract(api.context.active(), traceContextObject);
 };
 
-export class HttpContext extends TriggerContext<HttpRequest, HttpResponse> {
-  public get http(): HttpContext {
+export class HttpContext<T> extends TriggerContext<HttpRequest<T>, HttpResponse> {
+  public get http(): HttpContext<T> {
     return this;
   }
 
-  static fromGrpcTriggerRequest(trigger: TriggerRequest): HttpContext {
+  static fromGrpcTriggerRequest(trigger: TriggerRequest): HttpContext<unknown> {
     const http = trigger.getHttp();
     const ctx = new HttpContext();
 

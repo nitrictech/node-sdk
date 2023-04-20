@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { TriggerContext, HttpContext, EventContext } from '.';
+import { TriggerContext, HttpContext, EventContext, JSONTypes } from '.';
 
 export type GenericHandler<Ctx> = (ctx: Ctx) => Promise<Ctx> | Ctx;
 
@@ -25,7 +25,7 @@ export type GenericMiddleware<Ctx> = (
 ) => Promise<Ctx | void> | Ctx | void;
 
 export type TriggerMiddleware = GenericMiddleware<TriggerContext>;
-export type HttpMiddleware = GenericMiddleware<HttpContext>;
+export type HttpMiddleware<T extends JSONTypes = JSONTypes> = GenericMiddleware<HttpContext<T>>;
 export type EventMiddleware<T> = GenericMiddleware<EventContext<T>>;
 
 /**
