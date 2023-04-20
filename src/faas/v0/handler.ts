@@ -11,13 +11,16 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+import { NitricEvent } from '../../types';
 import { TriggerContext, HttpContext, EventContext } from '.';
 
 export type GenericHandler<Ctx> = (ctx: Ctx) => Promise<Ctx> | Ctx;
 
 export type TriggerHandler = GenericHandler<TriggerContext>;
 export type HttpHandler = GenericHandler<HttpContext>;
-export type EventHandler = GenericHandler<EventContext>;
+export type EventHandler<T extends NitricEvent = NitricEvent> = GenericHandler<
+  EventContext<T>
+>;
 
 export type GenericMiddleware<Ctx> = (
   ctx: Ctx,
@@ -26,7 +29,8 @@ export type GenericMiddleware<Ctx> = (
 
 export type TriggerMiddleware = GenericMiddleware<TriggerContext>;
 export type HttpMiddleware = GenericMiddleware<HttpContext>;
-export type EventMiddleware = GenericMiddleware<EventContext>;
+export type EventMiddleware<T extends NitricEvent = NitricEvent> = GenericMiddleware<EventContext<T>>;
+export type ScheduleMiddleware = GenericMiddleware<EventContext<undefined>>;
 
 /**
  * createHandler

@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { EventMiddleware, Faas } from '../faas';
+import { EventMiddleware, Faas, ScheduleMiddleware } from '../faas';
 
 type Frequency = 'days' | 'hours' | 'minutes';
 
@@ -48,7 +48,7 @@ class Rate {
   public readonly schedule: Schedule;
   private readonly faas: Faas;
 
-  constructor(schedule: Schedule, rate: string, ...mw: EventMiddleware[]) {
+  constructor(schedule: Schedule, rate: string, ...mw: ScheduleMiddleware[]) {
     const [, frequency] = rate.split(' ');
     const normalizedFrequency = frequency.toLocaleLowerCase() as Frequency;
 
@@ -90,7 +90,7 @@ class Cron {
   public readonly schedule: Schedule;
   private readonly faas: Faas;
 
-  constructor(schedule: Schedule, cron: string, ...mw: EventMiddleware[]) {
+  constructor(schedule: Schedule, cron: string, ...mw: ScheduleMiddleware[]) {
     this.schedule = schedule;
     this.faas = new Faas(new CronWorkerOptions(schedule['description'], cron));
     this.faas.event(...mw);
@@ -118,7 +118,7 @@ class Schedule {
    * @param mw the handler/middleware to run on a schedule
    * @returns A promise that resolves when the schedule worker stops running.
    */
-  every = (rate: string, ...mw: EventMiddleware[]): Promise<void> => {
+  every = (rate: string, ...mw: ScheduleMiddleware[]): Promise<void> => {
     // handle singular frequencies. e.g. schedule('something').every('day')
     if (FREQUENCIES.indexOf(`${rate}s` as Frequency) !== -1) {
       rate = `1 ${rate}s`; // 'day' becomes '1 days'
@@ -129,7 +129,7 @@ class Schedule {
     return r['start']();
   };
 
-  cron = (expression: string, ...mw: EventMiddleware[]): Promise<void> => {
+  cron = (expression: string, ...mw: ScheduleMiddleware[]): Promise<void> => {
     const r = new Cron(this, expression, ...mw);
     // Start the new cron immediately
     return r['start']();

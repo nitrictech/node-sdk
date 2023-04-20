@@ -11,7 +11,9 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-export interface NitricEvent {
+export interface NitricEvent<
+  T extends Record<string, any> = Record<string, any>
+> {
   /**
    * Uniquely identifies the event.
    *
@@ -28,10 +30,10 @@ export interface NitricEvent {
   /**
    * The event's payload data, with details of the event.
    */
-  payload: Record<string, any>;
+  payload: T;
 }
 
-export interface Task {
+export interface Task<T extends Record<string, any> = Record<string, any>> {
   /**
    * Uniquely identifies the task.
    *
