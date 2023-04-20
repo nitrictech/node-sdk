@@ -443,7 +443,7 @@ export class EventRequest extends AbstractRequest {
   }
 }
 
-interface EventResponse {
+export interface EventResponse {
   success: boolean;
 }
 
@@ -490,7 +490,7 @@ export class BucketNotificationContext extends TriggerContext<
   }
 }
 
-enum BucketNotificationType {
+export enum BucketNotificationType {
   Created,
   Deleted,
 }
