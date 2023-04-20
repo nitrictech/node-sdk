@@ -17,7 +17,7 @@ export type GenericHandler<Ctx> = (ctx: Ctx) => Promise<Ctx> | Ctx;
 
 export type TriggerHandler = GenericHandler<TriggerContext>;
 export type HttpHandler = GenericHandler<HttpContext>;
-export type EventHandler = GenericHandler<EventContext>;
+export type EventHandler<T> = GenericHandler<EventContext<T>>;
 
 export type GenericMiddleware<Ctx> = (
   ctx: Ctx,
@@ -26,7 +26,7 @@ export type GenericMiddleware<Ctx> = (
 
 export type TriggerMiddleware = GenericMiddleware<TriggerContext>;
 export type HttpMiddleware = GenericMiddleware<HttpContext>;
-export type EventMiddleware = GenericMiddleware<EventContext>;
+export type EventMiddleware<T> = GenericMiddleware<EventContext<T>>;
 
 /**
  * createHandler
