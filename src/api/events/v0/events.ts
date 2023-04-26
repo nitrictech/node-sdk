@@ -22,7 +22,7 @@ import {
 } from '@nitric/api/proto/event/v1/event_pb';
 import { Struct } from 'google-protobuf/google/protobuf/struct_pb';
 import * as grpc from '@grpc/grpc-js';
-import type { NitricEvent } from '../../../types';
+import { NitricEvent } from '../../../types';
 import { fromGrpcError, InvalidArgumentError } from '../../errors';
 
 /**
@@ -51,7 +51,7 @@ const DEFAULT_PUBLISH_OPTS: PublishOptions = {
   delay: 0,
 };
 
-export class Topic<T extends NitricEvent = NitricEvent> {
+export class Topic<T extends Record<string, any> = Record<string, any>> {
   eventing: Eventing;
   name: string;
 
@@ -90,10 +90,13 @@ export class Topic<T extends NitricEvent = NitricEvent> {
    * ```
    */
   async publish(
-    event: T,
+    event: T | NitricEvent<T>,
     opts: PublishOptions = DEFAULT_PUBLISH_OPTS
-  ): Promise<T> {
-    const { id, payloadType = 'none', payload } = event;
+  ): Promise<NitricEvent<T>> {
+    const nitricEvent = event instanceof NitricEvent
+      ? event
+      : new NitricEvent(event);
+
     const publishOpts = {
       ...DEFAULT_PUBLISH_OPTS,
       ...opts,
@@ -101,20 +104,20 @@ export class Topic<T extends NitricEvent = NitricEvent> {
     const request = new EventPublishRequest();
     const evt = new PbEvent();
 
-    evt.setId(id);
-    evt.setPayload(Struct.fromJavaScript(payload));
-    evt.setPayloadType(payloadType);
+    evt.setId(nitricEvent.id);
+    evt.setPayload(Struct.fromJavaScript(nitricEvent.payload));
+    evt.setPayloadType(nitricEvent.payloadType);
 
     request.setTopic(this.name);
     request.setEvent(evt);
     request.setDelay(publishOpts.delay);
 
-    return new Promise<T>((resolve, reject) => {
+    return new Promise<NitricEvent<T>>((resolve, reject) => {
       this.eventing.EventServiceClient.publish(request, (error, response) => {
         if (error) {
           reject(fromGrpcError(error));
         } else {
-          resolve({ ...event, id: response.getId() });
+          resolve(new NitricEvent(nitricEvent.payload, response.getId(), nitricEvent.payloadType));
         }
       });
     });
@@ -167,7 +170,7 @@ export class Eventing {
    * const topic = eventing.topic('notifications');
    * ```
    */
-  public topic<T extends NitricEvent = NitricEvent>(name: string): Topic<T> {
+  public topic<T extends Record<string, any> = Record<string, any>>(name: string): Topic<T> {
     if (!name) {
       throw new InvalidArgumentError('A topic name is needed to use a Topic.');
     }

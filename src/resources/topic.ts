@@ -38,7 +38,7 @@ export class SubscriptionWorkerOptions {
 /**
  * Creates a subscription worker
  */
-class Subscription<T extends NitricEvent = NitricEvent> {
+class Subscription<T extends Record<string, any> = Record<string, any>> {
   private readonly faas: Faas;
 
   constructor(name: string, ...mw: EventMiddleware<T>[]) {
@@ -55,7 +55,7 @@ class Subscription<T extends NitricEvent = NitricEvent> {
  * Topic resource for pub/sub async messaging.
  */
 export class TopicResource<
-  T extends NitricEvent = NitricEvent
+  T extends Record<string, any> = Record<string, any>
 > extends SecureResource<TopicPermission> {
   /**
    * Register this topic as a required resource for the calling function/container
