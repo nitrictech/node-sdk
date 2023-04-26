@@ -3261,12 +3261,15 @@ type index_BucketNotificationMiddleware = BucketNotificationMiddleware;
 type index_BucketNotificationRequest = BucketNotificationRequest;
 declare const index_BucketNotificationRequest: typeof BucketNotificationRequest;
 type index_BucketNotificationResponse = BucketNotificationResponse;
+type index_BucketNotificationType = BucketNotificationType;
+declare const index_BucketNotificationType: typeof BucketNotificationType;
 type index_EventContext = EventContext;
 declare const index_EventContext: typeof EventContext;
 type index_EventHandler = EventHandler;
 type index_EventMiddleware = EventMiddleware;
 type index_EventRequest = EventRequest;
 declare const index_EventRequest: typeof EventRequest;
+type index_EventResponse = EventResponse;
 type index_Faas = Faas;
 declare const index_Faas: typeof Faas;
 type index_GenericHandler<Ctx> = GenericHandler<Ctx>;
@@ -3279,6 +3282,7 @@ type index_HttpRequest = HttpRequest;
 declare const index_HttpRequest: typeof HttpRequest;
 type index_HttpResponse = HttpResponse;
 declare const index_HttpResponse: typeof HttpResponse;
+type index_Method = Method;
 type index_TriggerContext<Req extends AbstractRequest = AbstractRequest, Resp extends Record<string, any> = any> = TriggerContext<Req, Resp>;
 declare const index_TriggerContext: typeof TriggerContext;
 type index_TriggerHandler = TriggerHandler;
@@ -3298,10 +3302,12 @@ declare namespace index {
     index_BucketNotificationMiddleware as BucketNotificationMiddleware,
     index_BucketNotificationRequest as BucketNotificationRequest,
     index_BucketNotificationResponse as BucketNotificationResponse,
+    index_BucketNotificationType as BucketNotificationType,
     index_EventContext as EventContext,
     index_EventHandler as EventHandler,
     index_EventMiddleware as EventMiddleware,
     index_EventRequest as EventRequest,
+    index_EventResponse as EventResponse,
     index_Faas as Faas,
     index_GenericHandler as GenericHandler,
     index_GenericMiddleware as GenericMiddleware,
@@ -3310,6 +3316,7 @@ declare namespace index {
     index_HttpMiddleware as HttpMiddleware,
     index_HttpRequest as HttpRequest,
     index_HttpResponse as HttpResponse,
+    index_Method as Method,
     index_TriggerContext as TriggerContext,
     index_TriggerHandler as TriggerHandler,
     index_TriggerMiddleware as TriggerMiddleware,
