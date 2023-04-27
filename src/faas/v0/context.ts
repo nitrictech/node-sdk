@@ -465,9 +465,6 @@ export class BucketNotificationContext extends TriggerContext<
 
     const attributes = objectFromMap(notification.getAttributesMap());
 
-    console.log(`Raw Attributes: ${notification.getAttributesMap()}`);
-    console.log(`Attributes: ${attributes}`);
-
     ctx.request = new BucketNotificationRequest(
       trigger.getData_asU8(),
       getTraceContext(trigger.getTraceContext()),
