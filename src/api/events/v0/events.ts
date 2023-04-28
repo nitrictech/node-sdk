@@ -93,9 +93,8 @@ export class Topic<T extends Record<string, any> = Record<string, any>> {
     event: T | NitricEvent<T>,
     opts: PublishOptions = DEFAULT_PUBLISH_OPTS
   ): Promise<NitricEvent<T>> {
-    const nitricEvent = event instanceof NitricEvent
-      ? event
-      : new NitricEvent(event);
+    const nitricEvent =
+      event instanceof NitricEvent ? event : new NitricEvent(event);
 
     const publishOpts = {
       ...DEFAULT_PUBLISH_OPTS,
@@ -117,7 +116,13 @@ export class Topic<T extends Record<string, any> = Record<string, any>> {
         if (error) {
           reject(fromGrpcError(error));
         } else {
-          resolve(new NitricEvent(nitricEvent.payload, response.getId(), nitricEvent.payloadType));
+          resolve(
+            new NitricEvent(
+              nitricEvent.payload,
+              response.getId(),
+              nitricEvent.payloadType
+            )
+          );
         }
       });
     });
@@ -170,7 +175,9 @@ export class Eventing {
    * const topic = eventing.topic('notifications');
    * ```
    */
-  public topic<T extends Record<string, any> = Record<string, any>>(name: string): Topic<T> {
+  public topic<T extends Record<string, any> = Record<string, any>>(
+    name: string
+  ): Topic<T> {
     if (!name) {
       throw new InvalidArgumentError('A topic name is needed to use a Topic.');
     }

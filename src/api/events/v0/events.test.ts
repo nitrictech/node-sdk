@@ -85,9 +85,11 @@ describe('Event Client Tests', () => {
 
       test('Then Eventing.publish should resolve with the provided id', async () => {
         const client = new Eventing();
-        const event = new NitricEvent({test: "test"}, 'test', 'Test Payload');
+        const event = new NitricEvent({ test: 'test' }, 'test', 'Test Payload');
         await expect(
-          client.topic('test').publish(new NitricEvent({test: "test"}, 'test', 'Test Payload'))
+          client
+            .topic('test')
+            .publish(new NitricEvent({ test: 'test' }, 'test', 'Test Payload'))
         ).resolves.toStrictEqual(event);
       });
 

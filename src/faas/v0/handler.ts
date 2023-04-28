@@ -29,8 +29,9 @@ export type GenericMiddleware<Ctx> = (
 
 export type TriggerMiddleware = GenericMiddleware<TriggerContext>;
 export type HttpMiddleware = GenericMiddleware<HttpContext>;
-export type EventMiddleware<T extends Record<string, any> = Record<string, any>> =
-  GenericMiddleware<EventContext<NitricEvent<T>>>;
+export type EventMiddleware<
+  T extends Record<string, any> = Record<string, any>
+> = GenericMiddleware<EventContext<NitricEvent<T>>>;
 export type ScheduleMiddleware = GenericMiddleware<EventContext<undefined>>;
 
 /**
