@@ -11,26 +11,38 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-export interface NitricEvent<
-  T extends Record<string, any> = Record<string, any>
-> {
-  /**
-   * Uniquely identifies the event.
-   *
-   * Within your app you must ensure the ID is unique.
-   * Subscribers can assume events with the same ID are duplicates and avoid reprocessing them
-   */
-  id?: string;
-  /**
-   * An optional description of the event type.
-   *
-   * Can be useful for de-serialization, routing or observability. The format of this value is determined by the producer.
-   */
-  payloadType?: string;
-  /**
-   * The event's payload data, with details of the event.
-   */
-  payload: T;
+// export interface NitricEvent<
+//   T extends Record<string, any> = Record<string, any>
+// > {
+//   /**
+//    * Uniquely identifies the event.
+//    *
+//    * Within your app you must ensure the ID is unique.
+//    * Subscribers can assume events with the same ID are duplicates and avoid reprocessing them
+//    */
+//   id?: string;
+//   /**
+//    * An optional description of the event type.
+//    *
+//    * Can be useful for de-serialization, routing or observability. The format of this value is determined by the producer.
+//    */
+//   payloadType?: string;
+//   /**
+//    * The event's payload data, with details of the event.
+//    */
+//   payload: T;
+// }
+
+export class NitricEvent<T extends Record<string, any> = Record<string, any>> {
+  public readonly payload: T;
+  public readonly id?: string;
+  public readonly payloadType: string;
+
+  constructor(payload: T, id?: string, payloadType?: string) {
+    this.payload = payload;
+    this.id = id;
+    this.payloadType = payloadType || 'none';
+  }
 }
 
 export interface Task<T extends Record<string, any> = Record<string, any>> {
