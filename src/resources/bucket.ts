@@ -24,6 +24,10 @@ import { storage, Bucket } from '../api/storage';
 import { ActionsList, make, SecureResource } from './common';
 import { fromGrpcError } from '../api/errors';
 import { Faas, BucketNotificationMiddleware } from '../faas';
+import {
+  BucketNotificationType,
+  BucketNotificationTypeMap,
+} from '../gen/proto/faas/v1/faas_pb';
 
 type BucketPermission = 'reading' | 'writing' | 'deleting';
 
@@ -31,23 +35,29 @@ const everything: BucketPermission[] = ['reading', 'writing', 'deleting'];
 
 export class BucketNotificationWorkerOptions {
   public readonly bucket: string;
-  public readonly eventType: 1 | 2;
-  public readonly eventFilter: string;
+  public readonly notificationType: 0 | 1 | 2;
+  public readonly notificationPrefixFilter: string;
 
-  constructor(resource: string, eventType: string, eventFilter: string) {
+  constructor(
+    resource: string,
+    notificationType: string,
+    notificationPrefixFilter: string
+  ) {
     this.bucket = resource;
-    this.eventType = this.toGrpcEventType(eventType);
-    this.eventFilter = eventFilter;
+    this.notificationType =
+      BucketNotificationWorkerOptions.toGrpcEvent(notificationType);
+    this.notificationPrefixFilter = notificationPrefixFilter;
   }
 
-  private toGrpcEventType(eventType: string) {
-    switch (eventType.toLowerCase()) {
+  static toGrpcEvent(notificationType: string): 0 | 1 | 2 {
+    switch (notificationType.toLowerCase()) {
       case 'created':
-        return 1;
+        BucketNotificationType.CREATED;
       case 'deleted':
-        return 2;
+        BucketNotificationType.DELETED;
+      default:
+        throw new Error(`notification type ${notificationType} is unsupported`);
     }
-    throw Error(`Event Type ${eventType} is unsupported`);
   }
 }
 
@@ -56,13 +66,18 @@ class BucketNotification {
 
   constructor(
     name: string,
-    filter: string,
+    notificationFilter: string,
     ...mw: BucketNotificationMiddleware[]
   ) {
-    const [eventType, fileFilter] = filter.split(':');
+    const [notificationType, notificationPrefixFilter] =
+      notificationFilter.split(':');
 
     this.faas = new Faas(
-      new BucketNotificationWorkerOptions(name, eventType, fileFilter)
+      new BucketNotificationWorkerOptions(
+        name,
+        notificationType,
+        notificationPrefixFilter
+      )
     );
     this.faas.bucketNotification(...mw);
   }
