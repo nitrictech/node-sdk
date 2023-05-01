@@ -146,4 +146,4 @@ export const topic = make(TopicResource) as <
   T extends Record<string, any> = Record<string, any>
 >(
   name: string
-) => TopicResource<NitricEvent<T>>;
+) => TopicResource<T>;
