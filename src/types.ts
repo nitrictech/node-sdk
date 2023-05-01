@@ -45,30 +45,42 @@ export class NitricEvent<T extends Record<string, any> = Record<string, any>> {
   }
 }
 
-export interface Task<T extends Record<string, any> = Record<string, any>> {
-  /**
-   * Uniquely identifies the task.
-   *
-   * Within your app you must ensure the ID is unique.
-   */
-  id?: string;
-  /**
-   * The ID for the current lease of this task.
-   *
-   * A task may be leased multiple times, resulting in new lease IDs.
-   */
-  leaseId?: string;
-  /**
-   * An optional description of the task type.
-   *
-   * Can be useful for de-serialization, routing or observability. The format of this value is determined by the producer.
-   */
-  payloadType?: string;
-  /**
-   * The task's payload data, with details of the task or work to be done.
-   */
-  payload?: Record<string, any>;
+export class NitricTask<T extends Record<string, any> = Record<string, any>> {
+  public readonly id: string | undefined;
+  public readonly payloadType: string;
+  public readonly payload: T;
+  
+  constructor({ id = undefined, payload, payloadType = 'none' }: {id?: string, payloadType?: string, payload: T}) {
+    this.id = id;
+    this.payload = payload;
+    this.payloadType = payloadType;
+  }
 }
+
+// export interface Task<T extends Record<string, any> = Record<string, any>> {
+//   /**
+//    * Uniquely identifies the task.
+//    *
+//    * Within your app you must ensure the ID is unique.
+//    */
+//   id?: string;
+//   /**
+//    * The ID for the current lease of this task.
+//    *
+//    * A task may be leased multiple times, resulting in new lease IDs.
+//    */
+//   leaseId?: string;
+//   /**
+//    * An optional description of the task type.
+//    *
+//    * Can be useful for de-serialization, routing or observability. The format of this value is determined by the producer.
+//    */
+//   payloadType?: string;
+//   /**
+//    * The task's payload data, with details of the task or work to be done.
+//    */
+//   payload?: Record<string, any>;
+// }
 
 export type WhereQueryOperator =
   | '<'

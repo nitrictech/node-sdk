@@ -29,7 +29,7 @@ export type QueuePermission = 'sending' | 'receiving';
 /**
  * Queue resource for async send/receive messaging
  */
-export class QueueResource extends SecureResource<QueuePermission> {
+export class QueueResource<T extends Record<string, any> = Record<string, any>> extends SecureResource<QueuePermission> {
   /**
    * Register this queue as a required resource for the calling function/container.
    *
@@ -91,11 +91,15 @@ export class QueueResource extends SecureResource<QueuePermission> {
    * @param perms the access that the currently scoped function is requesting to this resource.
    * @returns a useable queue.
    */
-  public for(...perms: QueuePermission[]): Queue {
+  public for(...perms: QueuePermission[]): Queue<T> {
     this.registerPolicy(...perms);
 
     return queues().queue(this.name);
   }
 }
 
-export const queue = make(QueueResource);
+export const queue = make(QueueResource) as <
+  T extends Record<string, any> = Record<string, any>
+>(
+  name: string
+) => QueueResource<T>;
