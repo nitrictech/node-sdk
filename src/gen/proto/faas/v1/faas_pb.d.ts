@@ -288,11 +288,11 @@ export namespace BucketNotificationWorker {
 }
 
 export class BucketNotificationConfig extends jspb.Message {
-  getEventtype(): EventTypeMap[keyof EventTypeMap];
-  setEventtype(value: EventTypeMap[keyof EventTypeMap]): void;
+  getNotificationType(): BucketNotificationTypeMap[keyof BucketNotificationTypeMap];
+  setNotificationType(value: BucketNotificationTypeMap[keyof BucketNotificationTypeMap]): void;
 
-  getEventfilter(): string;
-  setEventfilter(value: string): void;
+  getNotificationPrefixFilter(): string;
+  setNotificationPrefixFilter(value: string): void;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): BucketNotificationConfig.AsObject;
@@ -306,8 +306,8 @@ export class BucketNotificationConfig extends jspb.Message {
 
 export namespace BucketNotificationConfig {
   export type AsObject = {
-    eventtype: EventTypeMap[keyof EventTypeMap],
-    eventfilter: string,
+    notificationType: BucketNotificationTypeMap[keyof BucketNotificationTypeMap],
+    notificationPrefixFilter: string,
   }
 }
 
@@ -327,10 +327,10 @@ export class InitRequest extends jspb.Message {
   getSchedule(): ScheduleWorker | undefined;
   setSchedule(value?: ScheduleWorker): void;
 
-  hasBucketnotification(): boolean;
-  clearBucketnotification(): void;
-  getBucketnotification(): BucketNotificationWorker | undefined;
-  setBucketnotification(value?: BucketNotificationWorker): void;
+  hasBucketNotification(): boolean;
+  clearBucketNotification(): void;
+  getBucketNotification(): BucketNotificationWorker | undefined;
+  setBucketNotification(value?: BucketNotificationWorker): void;
 
   getWorkerCase(): InitRequest.WorkerCase;
   serializeBinary(): Uint8Array;
@@ -348,7 +348,7 @@ export namespace InitRequest {
     api?: ApiWorker.AsObject,
     subscription?: SubscriptionWorker.AsObject,
     schedule?: ScheduleWorker.AsObject,
-    bucketnotification?: BucketNotificationWorker.AsObject,
+    bucketNotification?: BucketNotificationWorker.AsObject,
   }
 
   export enum WorkerCase {
@@ -356,7 +356,7 @@ export namespace InitRequest {
     API = 10,
     SUBSCRIPTION = 11,
     SCHEDULE = 12,
-    BUCKETNOTIFICATION = 13,
+    BUCKET_NOTIFICATION = 13,
   }
 }
 
@@ -556,15 +556,40 @@ export namespace TopicTriggerContext {
   }
 }
 
+export class BucketNotification extends jspb.Message {
+  getKey(): string;
+  setKey(value: string): void;
+
+  getType(): BucketNotificationTypeMap[keyof BucketNotificationTypeMap];
+  setType(value: BucketNotificationTypeMap[keyof BucketNotificationTypeMap]): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): BucketNotification.AsObject;
+  static toObject(includeInstance: boolean, msg: BucketNotification): BucketNotification.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: BucketNotification, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): BucketNotification;
+  static deserializeBinaryFromReader(message: BucketNotification, reader: jspb.BinaryReader): BucketNotification;
+}
+
+export namespace BucketNotification {
+  export type AsObject = {
+    key: string,
+    type: BucketNotificationTypeMap[keyof BucketNotificationTypeMap],
+  }
+}
+
 export class NotificationTriggerContext extends jspb.Message {
-  getType(): NotificationTypeMap[keyof NotificationTypeMap];
-  setType(value: NotificationTypeMap[keyof NotificationTypeMap]): void;
+  getSource(): string;
+  setSource(value: string): void;
 
-  getResource(): string;
-  setResource(value: string): void;
+  hasBucket(): boolean;
+  clearBucket(): void;
+  getBucket(): BucketNotification | undefined;
+  setBucket(value?: BucketNotification): void;
 
-  getAttributesMap(): jspb.Map<string, string>;
-  clearAttributesMap(): void;
+  getNotificationCase(): NotificationTriggerContext.NotificationCase;
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): NotificationTriggerContext.AsObject;
   static toObject(includeInstance: boolean, msg: NotificationTriggerContext): NotificationTriggerContext.AsObject;
@@ -577,9 +602,13 @@ export class NotificationTriggerContext extends jspb.Message {
 
 export namespace NotificationTriggerContext {
   export type AsObject = {
-    type: NotificationTypeMap[keyof NotificationTypeMap],
-    resource: string,
-    attributesMap: Array<[string, string]>,
+    source: string,
+    bucket?: BucketNotification.AsObject,
+  }
+
+  export enum NotificationCase {
+    NOTIFICATION_NOT_SET = 0,
+    BUCKET = 10,
   }
 }
 
@@ -697,17 +726,11 @@ export namespace NotificationResponseContext {
   }
 }
 
-export interface EventTypeMap {
+export interface BucketNotificationTypeMap {
   ALL: 0;
   CREATED: 1;
   DELETED: 2;
 }
 
-export const EventType: EventTypeMap;
-
-export interface NotificationTypeMap {
-  BUCKET: 0;
-}
-
-export const NotificationType: NotificationTypeMap;
+export const BucketNotificationType: BucketNotificationTypeMap;
 

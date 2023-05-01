@@ -301,10 +301,10 @@ export class Faas {
       const notificationWorker = new BucketNotificationWorker();
       notificationWorker.setBucket(this.options.bucket);
       const config = new BucketNotificationConfig();
-      config.setEventfilter(this.options.eventFilter);
-      config.setEventtype(this.options.eventType);
+      config.setNotificationPrefixFilter(this.options.notificationPrefixFilter);
+      config.setNotificationType(this.options.notificationType);
       notificationWorker.setConfig(config);
-      initRequest.setBucketnotification(notificationWorker);
+      initRequest.setBucketNotification(notificationWorker);
     }
     // Original faas workers should return a blank InitRequest for compatibility.
 

@@ -19,6 +19,7 @@ import {
   HttpResponseContext,
   NotificationResponseContext,
   TopicResponseContext,
+  BucketNotificationType as ProtoBucketNotificationType,
 } from '@nitric/api/proto/faas/v1/faas_pb';
 import * as api from '@opentelemetry/api';
 import * as jspb from 'google-protobuf';
@@ -448,15 +449,14 @@ export class BucketNotificationContext extends TriggerContext<
   static fromGrpcTriggerRequest(
     trigger: TriggerRequest
   ): BucketNotificationContext {
-    const notification = trigger.getNotification();
     const ctx = new BucketNotificationContext();
-
-    const attributes = objectFromMap(notification.getAttributesMap());
+    const bucketConfig = trigger.getNotification().getBucket();
 
     ctx.request = new BucketNotificationRequest(
       trigger.getData_asU8(),
       getTraceContext(trigger.getTraceContext()),
-      attributes
+      bucketConfig.getKey(),
+      bucketConfig.getType()
     );
 
     ctx.response = {
@@ -485,24 +485,27 @@ export enum BucketNotificationType {
 
 export class BucketNotificationRequest extends AbstractRequest {
   key: string;
-  eventType: BucketNotificationType;
+  type: BucketNotificationType;
 
   constructor(
     data: string | Uint8Array,
     traceContext: api.Context,
-    attributes: Record<string, string>
+    key: string,
+    type: number
   ) {
     super(data, traceContext);
 
-    this.key = attributes['key'];
-    this.eventType = this.eventTypeToNotificationType(attributes['type']);
+    this.key = key;
+    this.type = this.eventTypeToNotificationType(type);
   }
 
-  private eventTypeToNotificationType = (eventType: string) => {
+  private eventTypeToNotificationType = (
+    eventType: number
+  ): BucketNotificationType => {
     switch (eventType) {
-      case 'created':
+      case ProtoBucketNotificationType.CREATED:
         return BucketNotificationType.Created;
-      case 'deleted':
+      case ProtoBucketNotificationType.DELETED:
         return BucketNotificationType.Deleted;
       default:
         throw new Error(`event type unsupported: ${eventType}`);
