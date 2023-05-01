@@ -49,8 +49,16 @@ export class NitricTask<T extends Record<string, any> = Record<string, any>> {
   public readonly id: string | undefined;
   public readonly payloadType: string;
   public readonly payload: T;
-  
-  constructor({ id = undefined, payload, payloadType = 'none' }: {id?: string, payloadType?: string, payload: T}) {
+
+  constructor({
+    id = undefined,
+    payload,
+    payloadType = 'none',
+  }: {
+    id?: string;
+    payloadType?: string;
+    payload: T;
+  }) {
     this.id = id;
     this.payload = payload;
     this.payloadType = payloadType;

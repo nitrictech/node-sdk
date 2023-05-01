@@ -29,7 +29,9 @@ export type QueuePermission = 'sending' | 'receiving';
 /**
  * Queue resource for async send/receive messaging
  */
-export class QueueResource<T extends Record<string, any> = Record<string, any>> extends SecureResource<QueuePermission> {
+export class QueueResource<
+  T extends Record<string, any> = Record<string, any>
+> extends SecureResource<QueuePermission> {
   /**
    * Register this queue as a required resource for the calling function/container.
    *

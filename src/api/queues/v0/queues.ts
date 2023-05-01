@@ -122,13 +122,17 @@ export class Queue<T extends Record<string, any> = Record<string, any>> {
    */
   public async send(tasks: T[] | NitricTask<T>[]): Promise<FailedMessage<T>[]>;
   public async send(tasks: T | NitricTask<T>): Promise<void>;
-  public async send(tasks: T[] | T | NitricTask<T> | NitricTask<T>[]): Promise<void | FailedMessage<T>[]> {
+  public async send(
+    tasks: T[] | T | NitricTask<T> | NitricTask<T>[]
+  ): Promise<void | FailedMessage<T>[]> {
     return new Promise((resolve, reject) => {
       const request = new QueueSendBatchRequest();
 
       // Convert to NitricTask if not specified
       const tasksArray = Array.isArray(tasks) ? tasks : [tasks];
-      const nitricTasksArray = tasksArray.map(t => t instanceof NitricTask ? t : new NitricTask({ payload: t }))
+      const nitricTasksArray = tasksArray.map((t) =>
+        t instanceof NitricTask ? t : new NitricTask({ payload: t })
+      );
 
       request.setTasksList(nitricTasksArray.map(taskToWire));
       request.setQueue(this.name);
@@ -139,10 +143,10 @@ export class Queue<T extends Record<string, any> = Record<string, any>> {
           return;
         }
         const failedTasks = response.getFailedtasksList().map((m) => ({
-          task: new NitricTask<T>({ 
-            id: m.getTask().getId(), 
-            payloadType: m.getTask().getPayloadType(), 
-            payload: m.getTask().getPayload().toJavaScript() as T 
+          task: new NitricTask<T>({
+            id: m.getTask().getId(),
+            payloadType: m.getTask().getPayloadType(),
+            payload: m.getTask().getPayload().toJavaScript() as T,
           }),
           message: m.getMessage(),
         }));
@@ -214,7 +218,9 @@ export class Queue<T extends Record<string, any> = Record<string, any>> {
   }
 }
 
-export class ReceivedTask<T extends Record<string, any> = Record<string, any>> extends NitricTask<T> {
+export class ReceivedTask<
+  T extends Record<string, any> = Record<string, any>
+> extends NitricTask<T> {
   leaseId: string;
   queue: Queue;
 
@@ -224,7 +230,13 @@ export class ReceivedTask<T extends Record<string, any> = Record<string, any>> e
     payload,
     payloadType,
     queue,
-  }: { id: string; payload: T, payloadType: string, leaseId: string; queue: Queue }) {
+  }: {
+    id: string;
+    payload: T;
+    payloadType: string;
+    leaseId: string;
+    queue: Queue;
+  }) {
     super({ id, payloadType, payload });
     this.leaseId = leaseId;
     this.queue = queue;
