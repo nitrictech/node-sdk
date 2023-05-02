@@ -50,11 +50,11 @@ export class BucketNotificationWorkerOptions {
   }
 
   static toGrpcEvent(notificationType: string): 0 | 1 | 2 {
-    switch (notificationType.toLowerCase()) {
+    switch (notificationType) {
       case 'created':
-        BucketNotificationType.CREATED;
+        return BucketNotificationType.CREATED;
       case 'deleted':
-        BucketNotificationType.DELETED;
+        return BucketNotificationType.DELETED;
       default:
         throw new Error(`notification type ${notificationType} is unsupported`);
     }
