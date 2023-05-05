@@ -12,12 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { Eventing } from './events';
-import { NitricTopic, TopicListResponse, EventPublishResponse } from '@nitric/api/proto/event/v1/event_pb';
-import { 
-  EventServiceClient as GrpcEventServiceClient, 
-  TopicServiceClient as GrpcTopicServiceClient
+import {
+  NitricTopic,
+  TopicListResponse,
+  EventPublishResponse,
+} from '@nitric/api/proto/event/v1/event_pb';
+import {
+  EventServiceClient as GrpcEventServiceClient,
+  TopicServiceClient as GrpcTopicServiceClient,
 } from '@nitric/api/proto/event/v1/event_grpc_pb';
 import { UnimplementedError } from '../../errors';
+import { NitricEvent } from '@nitric/sdk/types';
 
 describe('Event Client Tests', () => {
   describe('Given nitric.interfaces.event.EventServiceClient.publish throws an error', () => {
@@ -50,7 +55,7 @@ describe('Event Client Tests', () => {
             test: 'test',
           },
         })
-      ).rejects.toEqual(new UnimplementedError("UNIMPLEMENTED"));
+      ).rejects.toEqual(new UnimplementedError('UNIMPLEMENTED'));
     });
 
     test('The Grpc client for Eventing.publish should have been called exactly once', () => {
@@ -80,19 +85,12 @@ describe('Event Client Tests', () => {
 
       test('Then Eventing.publish should resolve with the provided id', async () => {
         const client = new Eventing();
+        const event = new NitricEvent({ test: 'test' }, 'test', 'Test Payload');
         await expect(
-          client.topic('test').publish({
-            id: 'test',
-            payloadType: 'Test Payload',
-            payload: {
-              test: 'test',
-            },
-          })
-        ).resolves.toStrictEqual({
-          id: 'test',
-          payload: { test: 'test' },
-          payloadType: 'Test Payload',
-        });
+          client
+            .topic('test')
+            .publish(new NitricEvent({ test: 'test' }, 'test', 'Test Payload'))
+        ).resolves.toStrictEqual(event);
       });
 
       test('The Grpc client for Eventing.publish should have been called exactly once', () => {
@@ -124,7 +122,9 @@ describe('Event Client Tests', () => {
 
     test('Then TopicServiceClient.publish should reject', async () => {
       const eventing = new Eventing();
-      await expect(eventing.topics()).rejects.toEqual(new UnimplementedError("UNIMPLEMENTED"));
+      await expect(eventing.topics()).rejects.toEqual(
+        new UnimplementedError('UNIMPLEMENTED')
+      );
     });
 
     test('The Grpc client for TopicServiceClient.publish should have been called exactly once', () => {

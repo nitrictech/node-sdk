@@ -14,12 +14,12 @@
 
 /**
  * DeadlineExceededError
- * 
+ *
  * Specified deadline was exceeded before the operation could complete
  */
- export class DeadlineExceededError extends Error {
-	constructor (message: string) {
-		super(message);
-		Object.setPrototypeOf(this, DeadlineExceededError.prototype);
-	}
+export class DeadlineExceededError extends Error {
+  constructor(message: string) {
+    super(message);
+    Object.setPrototypeOf(this, DeadlineExceededError.prototype);
+  }
 }

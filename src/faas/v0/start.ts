@@ -11,7 +11,6 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import * as grpc from '@grpc/grpc-js';
 import { SERVICE_BIND } from '../../constants';
 
 import { FaasServiceClient } from '@nitric/api/proto/faas/v1/faas_grpc_pb';
@@ -36,27 +35,39 @@ import {
   createHandler,
   EventMiddleware,
   GenericMiddleware,
-  HttpContext,
   HttpMiddleware,
+  ScheduleMiddleware,
   TriggerContext,
   TriggerMiddleware,
 } from '.';
 
-import { ApiWorkerOptions, CronWorkerOptions, RateWorkerOptions, SubscriptionWorkerOptions } from "../../resources";
+import newTracerProvider from './traceProvider';
+
+import {
+  ApiWorkerOptions,
+  CronWorkerOptions,
+  RateWorkerOptions,
+  SubscriptionWorkerOptions,
+} from '../../resources';
+
+import * as grpc from '@grpc/grpc-js';
 
 class FaasWorkerOptions {}
 
-type FaasClientOptions = ApiWorkerOptions | RateWorkerOptions | CronWorkerOptions | FaasWorkerOptions; 
+type FaasClientOptions =
+  | ApiWorkerOptions
+  | RateWorkerOptions
+  | CronWorkerOptions
+  | FaasWorkerOptions;
 
 /**
  *
  */
 export class Faas {
   private httpHandler?: HttpMiddleware;
-  private eventHandler?: EventMiddleware;
+  private eventHandler?: EventMiddleware | ScheduleMiddleware;
   private anyHandler?: TriggerMiddleware;
   private readonly options: FaasClientOptions;
-
 
   constructor(opts: FaasClientOptions) {
     this.options = opts;
@@ -64,14 +75,20 @@ export class Faas {
 
   /**
    * Add an event handler to this Faas server
+   *
+   * @param handlers the functions to call to respond to events
+   * @returns self
    */
-  event(...handlers: EventMiddleware[]): Faas {
-    this.eventHandler = createHandler(...handlers);
+  event(...handlers: EventMiddleware[] | ScheduleMiddleware[]): Faas {
+    this.eventHandler = createHandler<any>(...handlers);
     return this;
   }
 
   /**
-   * Add a http handler to this Faas server
+   * Add an http handler to this Faas server
+   *
+   * @param handlers the functions to call to respond to http requests
+   * @returns self
    */
   http(...handlers: HttpMiddleware[]): Faas {
     this.httpHandler = createHandler(...handlers);
@@ -80,6 +97,8 @@ export class Faas {
 
   /**
    * Get http handler for this server
+   *
+   * @returns the registered HTTP handler for this server
    */
   private getHttpHandler(): HttpMiddleware | TriggerMiddleware | undefined {
     return this.httpHandler || this.anyHandler;
@@ -87,17 +106,22 @@ export class Faas {
 
   /**
    * Get event handler for this server
+   *
+   * @returns the registered event handler for this server
    */
   private getEventHandler(): EventMiddleware | TriggerMiddleware | undefined {
     return this.eventHandler || this.anyHandler;
   }
 
-
-
   /**
    * Start the Faas server
+   *
+   * @param handlers to use as the default when no other handler is registered for the request type
+   * @returns a promise that resolves when the server terminates
    */
   async start(...handlers: TriggerMiddleware[]): Promise<void> {
+    const provider = newTracerProvider();
+
     this.anyHandler = handlers.length && createHandler(...handlers);
     if (!this.httpHandler && !this.eventHandler && !this.anyHandler) {
       throw new Error('A handler function must be provided.');
@@ -132,10 +156,12 @@ export class Faas {
           let triggerType = 'Unknown';
           if (ctx.http) {
             triggerType = 'HTTP';
-            handler = this.getHttpHandler() as GenericMiddleware<TriggerContext>;
+            handler =
+              this.getHttpHandler() as GenericMiddleware<TriggerContext>;
           } else if (ctx.event) {
             triggerType = 'Event';
-            handler = this.getEventHandler() as GenericMiddleware<TriggerContext>;
+            handler =
+              this.getEventHandler() as GenericMiddleware<TriggerContext>;
           } else {
             console.error(
               `received an unexpected trigger type, are you using an outdated version of the SDK?`
@@ -149,7 +175,7 @@ export class Faas {
             return;
           }
 
-          const result = await handler(ctx, async (ctx) => ctx) || ctx;
+          const result = (await handler(ctx, async (ctx) => ctx)) || ctx;
           responseMessage.setTriggerResponse(
             TriggerContext.toGrpcTriggerResponse(result)
           );
@@ -158,7 +184,9 @@ export class Faas {
           console.error(e);
           const triggerResponse = new TriggerResponse();
           responseMessage.setTriggerResponse(triggerResponse);
-          triggerResponse.setData(new TextEncoder().encode('Internal Server Error'));
+          triggerResponse.setData(
+            new TextEncoder().encode('Internal Server Error')
+          );
 
           if (triggerRequest.hasHttp()) {
             const httpResponse = new HttpResponseContext();
@@ -198,17 +226,17 @@ export class Faas {
           opts.setSecurityDisabled(true);
         } else {
           const methodOpts = this.options.opts;
-          Object.keys(methodOpts.security).forEach(k => {
+          Object.keys(methodOpts.security).forEach((k) => {
             const scopes = new ApiWorkerScopes();
             scopes.setScopesList(methodOpts.security[k]);
             opts.getSecurityMap().set(k, scopes);
-          })
+          });
         }
       }
 
       apiWorker.setOptions(opts);
       initRequest.setApi(apiWorker);
-    } else if(this.options instanceof RateWorkerOptions) {
+    } else if (this.options instanceof RateWorkerOptions) {
       const scheduleWorker = new ScheduleWorker();
       scheduleWorker.setKey(this.options.description);
       const rate = new ScheduleRate();
@@ -223,7 +251,7 @@ export class Faas {
       scheduleWorker.setCron(cron);
       initRequest.setSchedule(scheduleWorker);
     } else if (this.options instanceof SubscriptionWorkerOptions) {
-      const subscriptionWorker = new SubscriptionWorker()
+      const subscriptionWorker = new SubscriptionWorker();
       subscriptionWorker.setTopic(this.options.topic);
       initRequest.setSubscription(subscriptionWorker);
     }
@@ -240,6 +268,9 @@ export class Faas {
         res();
       });
     });
+
+    // Shutdown the trace provider, flushing the stream and stopping listeners
+    await provider?.shutdown();
   }
 }
 
@@ -247,24 +278,33 @@ export class Faas {
 let INSTANCE: Faas = undefined;
 
 const getFaasInstance = (): Faas => {
- INSTANCE = INSTANCE || new Faas(new FaasWorkerOptions());
- return INSTANCE;
+  INSTANCE = INSTANCE || new Faas(new FaasWorkerOptions());
+  return INSTANCE;
 };
 
 /**
  * Register a HTTP handler
+ *
+ * @param handlers the functions to call to respond to http requests
+ * @returns the FaaS service factory
  */
 export const http = (...handlers: HttpMiddleware[]): Faas =>
   getFaasInstance().http(...handlers);
 
 /**
  * Register an event handler
+ *
+ * @param handlers the functions to call to respond to events
+ * @returns the FaaS service factory
  */
 export const event = (...handlers: EventMiddleware[]): Faas =>
   getFaasInstance().event(...handlers);
 
 /**
  * Start the FaaS server with a universal handler
+ *
+ * @param handlers default handlers
+ * @returns a promise that resolves when the server terminates
  */
 export const start = async (...handlers: TriggerMiddleware[]): Promise<void> =>
   await getFaasInstance().start(...handlers);

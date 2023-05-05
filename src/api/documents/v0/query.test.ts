@@ -14,13 +14,13 @@
 import { Struct } from 'google-protobuf/google/protobuf/struct_pb';
 import { PassThrough } from 'stream';
 import { DocumentServiceClient as GrpcKeyDocumentsClient } from '@nitric/api/proto/document/v1/document_grpc_pb';
-import { 
-  DocumentQueryResponse, 
+import {
+  DocumentQueryResponse,
   DocumentQueryStreamResponse,
   Document,
   ExpressionValue,
   Collection,
-  Key
+  Key,
 } from '@nitric/api/proto/document/v1/document_pb';
 import { documents, Documents } from './documents';
 import { DocumentSnapshot } from './document-snapshot';
@@ -126,7 +126,9 @@ describe('Query Tests', () => {
 
     test('Then DocumentRef.Query should reject', async () => {
       const query = documentsClient.collection('test').query();
-      await expect(query.fetch()).rejects.toEqual(new UnimplementedError("UNIMPLEMENTED"));
+      await expect(query.fetch()).rejects.toEqual(
+        new UnimplementedError('UNIMPLEMENTED')
+      );
     });
 
     test('The Grpc client for DocumentServiceClient.Query should have been called exactly once', () => {
@@ -196,8 +198,7 @@ describe('Query Tests', () => {
     test('Providing an invalid paging token should throw error', async () => {
       const q = documents().collection('test').query();
 
-      //@ts-ignore
-      q.pagingFrom('test');
+      q.pagingFrom('test' as any);
 
       await expect(q.fetch()).rejects.toStrictEqual(
         new InvalidArgumentError('Invalid paging token provided!')
@@ -211,14 +212,13 @@ describe('Query Tests', () => {
       message: 'UNIMPLEMENTED',
     };
     let documentsClient: Documents;
-    let mockStream = new PassThrough();
+    const mockStream = new PassThrough();
     let queryStreamMock;
 
     beforeAll(() => {
       queryStreamMock = jest
         .spyOn(GrpcKeyDocumentsClient.prototype, 'queryStream')
-        // @ts-ignore
-        .mockReturnValueOnce(mockStream);
+        .mockReturnValueOnce(mockStream as any);
       documentsClient = documents();
     });
 
@@ -239,7 +239,9 @@ describe('Query Tests', () => {
         });
       });
 
-      await expect(test).resolves.toEqual(new UnimplementedError("UNIMPLEMENTED"));
+      await expect(test).resolves.toEqual(
+        new UnimplementedError('UNIMPLEMENTED')
+      );
     });
 
     test('The Grpc client for DocumentServiceClient.QueryStream should have been called exactly once', () => {
@@ -249,15 +251,14 @@ describe('Query Tests', () => {
 
   describe('Given DocumentServiceClient.QueryStream succeeds', () => {
     let documentsClient: Documents;
-    let mockStream = new PassThrough();
+    const mockStream = new PassThrough();
     let queryStreamMock;
     let mockKey;
 
     beforeAll(() => {
       queryStreamMock = jest
         .spyOn(GrpcKeyDocumentsClient.prototype, 'queryStream')
-        // @ts-ignore
-        .mockReturnValueOnce(mockStream);
+        .mockReturnValueOnce(mockStream as any);
       documentsClient = documents();
     });
 

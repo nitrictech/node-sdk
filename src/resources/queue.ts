@@ -29,9 +29,12 @@ export type QueuePermission = 'sending' | 'receiving';
 /**
  * Queue resource for async send/receive messaging
  */
-export class QueueResource extends SecureResource<QueuePermission> {
+export class QueueResource<
+  T extends Record<string, any> = Record<string, any>
+> extends SecureResource<QueuePermission> {
   /**
-   * Register this queue as a required resource for the calling function/container
+   * Register this queue as a required resource for the calling function/container.
+   *
    * @returns a promise that resolves when the registration is complete
    */
   protected async register(): Promise<Resource> {
@@ -42,32 +45,23 @@ export class QueueResource extends SecureResource<QueuePermission> {
     req.setResource(resource);
 
     return new Promise<Resource>((resolve, reject) => {
-      resourceClient.declare(
-        req,
-        (error) => {
-          if (error) {
-            reject(fromGrpcError(error));
-          } else {
-            resolve(resource);
-          }
+      resourceClient.declare(req, (error) => {
+        if (error) {
+          reject(fromGrpcError(error));
+        } else {
+          resolve(resource);
         }
-      );
+      });
     });
   }
 
   protected permsToActions(...perms: QueuePermission[]): ActionsList {
     let actions: ActionsList = perms.reduce((actions, p) => {
-      switch(p) {
-        case "sending":
-          return [
-            ...actions, 
-            Action.QUEUESEND, 
-          ];
-        case "receiving":
-          return [
-            ...actions,
-            Action.QUEUERECEIVE,
-          ];
+      switch (p) {
+        case 'sending':
+          return [...actions, Action.QUEUESEND];
+        case 'receiving':
+          return [...actions, Action.QUEUERECEIVE];
         default:
           throw new Error(
             `unknown permission ${p}, supported permissions is publishing.}
@@ -77,7 +71,7 @@ export class QueueResource extends SecureResource<QueuePermission> {
     }, []);
 
     if (actions.length > 0) {
-      actions = [...actions, Action.QUEUELIST, Action.QUEUEDETAIL]
+      actions = [...actions, Action.QUEUELIST, Action.QUEUEDETAIL];
     }
 
     return actions;
@@ -87,26 +81,27 @@ export class QueueResource extends SecureResource<QueuePermission> {
     return ResourceType.QUEUE;
   }
 
-  protected unwrapDetails(resp: ResourceDeclareResponse): {} {
-    throw new Error("details unimplemented for queue");
+  protected unwrapDetails(resp: ResourceDeclareResponse): never {
+    throw new Error('details unimplemented for queue');
   }
 
   /**
-   * Return a queue reference and register the permissions required by the currently scoped function for this resource.
+   * Return a queue reference and registers the permissions required by the currently scoped function for this resource.
    *
    * e.g. const taskQueue = resources.queue('work').for('sending')
    *
-   * @param perm
-   * @param perms
-   * @returns
+   * @param perms the access that the currently scoped function is requesting to this resource.
+   * @returns a useable queue.
    */
-  public for(
-    ...perms: QueuePermission[]
-  ): Queue {
+  public for(...perms: QueuePermission[]): Queue<T> {
     this.registerPolicy(...perms);
 
     return queues().queue(this.name);
   }
 }
 
-export const queue = make(QueueResource);
+export const queue = make(QueueResource) as <
+  T extends Record<string, any> = Record<string, any>
+>(
+  name: string
+) => QueueResource<T>;

@@ -33,7 +33,8 @@ const everything: BucketPermission[] = ['reading', 'writing', 'deleting'];
  */
 export class BucketResource extends SecureResource<BucketPermission> {
   /**
-   * Register this bucket as a required resource for the calling function/container
+   * Register this bucket as a required resource for the calling function/container.
+   *
    * @returns a promise that resolves when the registration is complete
    */
   protected async register(): Promise<Resource> {
@@ -81,8 +82,8 @@ export class BucketResource extends SecureResource<BucketPermission> {
     return ResourceType.BUCKET;
   }
 
-  protected unwrapDetails(resp: ResourceDetailsResponse): {} {
-    throw new Error("details unimplemented for bucket");
+  protected unwrapDetails(resp: ResourceDetailsResponse): never {
+    throw new Error('details unimplemented for bucket');
   }
 
   /**

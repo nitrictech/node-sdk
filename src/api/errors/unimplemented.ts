@@ -14,12 +14,12 @@
 
 /**
  * UnimplementedError
- * 
+ *
  * The requested operation was not implemented for the service provider.
  */
- export class UnimplementedError extends Error {
-	constructor (message: string) {
-		super(message);
-		Object.setPrototypeOf(this, UnimplementedError.prototype);
-	}
+export class UnimplementedError extends Error {
+  constructor(message: string) {
+    super(message);
+    Object.setPrototypeOf(this, UnimplementedError.prototype);
+  }
 }

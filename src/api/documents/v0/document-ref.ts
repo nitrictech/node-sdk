@@ -19,7 +19,7 @@ import {
   DocumentSetRequest,
   DocumentDeleteRequest,
 } from '@nitric/api/proto/document/v1/document_pb';
-import { DocumentServiceClient } from '@nitric/api/proto/document/v1/document_grpc_pb'; 
+import { DocumentServiceClient } from '@nitric/api/proto/document/v1/document_grpc_pb';
 import { fromGrpcError, InvalidArgumentError } from '../../errors';
 import { CollectionRef } from './collection-ref';
 import { MAX_COLLECTION_DEPTH } from './constants';
@@ -27,7 +27,7 @@ import { MAX_COLLECTION_DEPTH } from './constants';
 export type DocumentStructure = Record<string, any>;
 
 /**
- * Document Ref
+ * Document Ref.
  *
  * Provides a Document Reference class.
  * Used to create references to collections.
@@ -49,6 +49,7 @@ export class DocumentRef<T extends DocumentStructure> {
 
   /**
    * Return the collection document reference value.
+   *
    * @returns the collection document reference value, or null if not found
    */
   public async get(): Promise<T> {
@@ -78,6 +79,7 @@ export class DocumentRef<T extends DocumentStructure> {
    * Set the document content for this document reference in the database. If the
    * document does not exist an new item will be created, otherwise an
    * existing document will be update with the new value.
+   *
    * @param value content the document content to store (required)
    */
   public async set(value: T): Promise<void> {
@@ -116,7 +118,7 @@ export class DocumentRef<T extends DocumentStructure> {
 
   private toWire(): Key {
     const key = new Key();
-    key.setCollection(this.parent["toWire"]());
+    key.setCollection(this.parent['toWire']());
     key.setId(this.id);
     return key;
   }
@@ -133,6 +135,7 @@ export class DocumentRef<T extends DocumentStructure> {
 
   /**
    * Gets a Collection instance that refers to the collection at the specified path.
+   *
    * @param name The name of the collection (required)
    * @returns The Collection instance
    */

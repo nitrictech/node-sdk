@@ -53,11 +53,11 @@ describe('Registering bucket resources', () => {
         declareSpy.mockClear();
       });
 
-    it('Should throw the error', async () => {
-      await expect(bucket(validName)['registerPromise']).rejects.toEqual(
-        new UnimplementedError('UNIMPLEMENTED')
-      );
-    });
+      it('Should throw the error', async () => {
+        await expect(bucket(validName)['registerPromise']).rejects.toEqual(
+          new UnimplementedError('UNIMPLEMENTED')
+        );
+      });
 
       it('Should call the resource server', () => {
         expect(declareSpy).toBeCalledTimes(1);
@@ -140,8 +140,8 @@ describe('Registering bucket resources', () => {
         it('Should return a bucket reference', () => {
           const ref = bucketResource.for('reading');
           expect(ref).toBeInstanceOf(Bucket);
-        })
-      })
+        });
+      });
     });
   });
 });

@@ -14,12 +14,12 @@
 
 /**
  * NotFoundError
- * 
+ *
  * Requested resource was not found
  */
- export class NotFoundError extends Error {
-	constructor (message: string) {
-		super(message);
-		Object.setPrototypeOf(this, NotFoundError.prototype);
-	}
+export class NotFoundError extends Error {
+  constructor(message: string) {
+    super(message);
+    Object.setPrototypeOf(this, NotFoundError.prototype);
+  }
 }

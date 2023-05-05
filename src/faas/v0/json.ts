@@ -22,8 +22,8 @@ const decodeData = (data: string | Uint8Array): string => {
 
 /**
  * HttpMiddleware that takes a ctx.req containing raw data (string | Uint8Array) and parses it as JSON into ctx.body
- * @param ctx HttpContext containing the raw request data.
- * @returns HttpContext with body property added containing a decoded JSON object from the req data.
+ *
+ * @returns a middleware decorator
  */
 export const json = (): HttpMiddleware => (ctx: HttpContext, next) => {
   (ctx.req as any).body = JSON.parse(decodeData(ctx.req.data));
@@ -31,15 +31,16 @@ export const json = (): HttpMiddleware => (ctx: HttpContext, next) => {
 };
 
 /**
- * Helper method to encode to JSON string for JSON http responses
+ * Helper method to encode to JSON string for JSON http responses.
+ *
  * @param ctx HttpContext
  * @returns HttpContext with body property set with an encoded JSON string and json headers set.
  */
-export const jsonResponse = (ctx: HttpContext) => (
-  data: string | number | boolean | Record<string, any>
-) => {
-  ctx.res.body = new TextEncoder().encode(JSON.stringify(data));
-  ctx.res.headers['Content-Type'] = ['application/json'];
+export const jsonResponse =
+  (ctx: HttpContext) =>
+  (data: string | number | boolean | Record<string, any>) => {
+    ctx.res.body = new TextEncoder().encode(JSON.stringify(data));
+    ctx.res.headers['Content-Type'] = ['application/json'];
 
-  return ctx;
-};
+    return ctx;
+  };

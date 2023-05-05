@@ -15,9 +15,7 @@
 import { ResourceServiceClient } from '@nitric/api/proto/resource/v1/resource_grpc_pb';
 import { UnimplementedError } from '../api/errors';
 import { secret } from '.';
-import { 
-  ResourceDeclareResponse,
-} from '@nitric/api/proto/resource/v1/resource_pb';
+import { ResourceDeclareResponse } from '@nitric/api/proto/resource/v1/resource_pb';
 import { Secret } from '..';
 
 describe('Registering secret resources', () => {
@@ -25,17 +23,17 @@ describe('Registering secret resources', () => {
     describe('When a secret is registered', () => {
       const MOCK_ERROR = {
         code: 2,
-        message: 'UNIMPLEMENTED'
-      }
+        message: 'UNIMPLEMENTED',
+      };
 
-      const validName = 'my-secret'
-      let declareSpy
+      const validName = 'my-secret';
+      let declareSpy;
 
       beforeAll(() => {
         declareSpy = jest
           .spyOn(ResourceServiceClient.prototype, 'declare')
           .mockImplementationOnce((request, callback: any) => {
-            callback(MOCK_ERROR, null)
+            callback(MOCK_ERROR, null);
 
             return null as any;
           });
@@ -79,7 +77,7 @@ describe('Registering secret resources', () => {
       it('Should succeed', async () => {
         await expect(
           secret(validName)['registerPromise']
-        ).resolves.not.toBeNull()
+        ).resolves.not.toBeNull();
       });
 
       it('Should call the resource server', () => {
@@ -102,13 +100,13 @@ describe('Registering secret resources', () => {
           callback(null, response);
           return null as any;
         });
-      
+
       secretResource = secret(secretName);
     });
 
     afterAll(() => {
       jest.resetAllMocks();
-    })
+    });
 
     describe('When registering a secret with the same name', () => {
       let secondSecret;
@@ -131,7 +129,7 @@ describe('Registering secret resources', () => {
       it('Should return a secret reference', () => {
         const ref = secretResource.for('access');
         expect(ref).toBeInstanceOf(Secret);
-      })
-    })
-  })
+      });
+    });
+  });
 });

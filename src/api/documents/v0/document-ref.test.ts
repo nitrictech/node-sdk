@@ -13,7 +13,10 @@
 // limitations under the License.
 import { Struct } from 'google-protobuf/google/protobuf/struct_pb';
 import { DocumentServiceClient as GrpcKeyDocumentsClient } from '@nitric/api/proto/document/v1/document_grpc_pb';
-import { DocumentGetResponse, Document } from '@nitric/api/proto/document/v1/document_pb';
+import {
+  DocumentGetResponse,
+  Document,
+} from '@nitric/api/proto/document/v1/document_pb';
 import { InvalidArgumentError, UnimplementedError } from '../../errors';
 import { Documents, documents } from './documents';
 
@@ -43,7 +46,9 @@ describe('Document Ref Tests', () => {
 
     test('Then DocumentRef.Get should reject', async () => {
       const doc = documentsClient.collection('test').doc('id');
-      await expect(doc.get()).rejects.toEqual(new UnimplementedError("UNIMPLEMENTED"));
+      await expect(doc.get()).rejects.toEqual(
+        new UnimplementedError('UNIMPLEMENTED')
+      );
     });
 
     test('The Grpc client for DocumentServiceClient.Put should have been called exactly once', () => {
@@ -120,7 +125,7 @@ describe('Document Ref Tests', () => {
         doc.set({
           name: 'test',
         })
-      ).rejects.toEqual(new UnimplementedError("UNIMPLEMENTED"));
+      ).rejects.toEqual(new UnimplementedError('UNIMPLEMENTED'));
     });
 
     test('The Grpc client for DocumentServiceClient.Get should have been called exactly once', () => {
@@ -153,7 +158,9 @@ describe('Document Ref Tests', () => {
 
     test('Then DocumentRef.Delete should reject', async () => {
       const doc = documentsClient.collection('test').doc('id');
-      await expect(doc.delete()).rejects.toEqual(new UnimplementedError("UNIMPLEMENTED"));
+      await expect(doc.delete()).rejects.toEqual(
+        new UnimplementedError('UNIMPLEMENTED')
+      );
     });
 
     test('The Grpc client for DocumentServiceClient.Delete should have been called exactly once', () => {

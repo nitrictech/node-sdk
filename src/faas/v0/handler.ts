@@ -11,22 +11,28 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+import { NitricEvent } from '../../types';
 import { TriggerContext, HttpContext, EventContext } from '.';
 
 export type GenericHandler<Ctx> = (ctx: Ctx) => Promise<Ctx> | Ctx;
 
 export type TriggerHandler = GenericHandler<TriggerContext>;
 export type HttpHandler = GenericHandler<HttpContext>;
-export type EventHandler = GenericHandler<EventContext>;
+export type EventHandler<T extends NitricEvent = NitricEvent> = GenericHandler<
+  EventContext<T>
+>;
 
 export type GenericMiddleware<Ctx> = (
   ctx: Ctx,
   next?: GenericHandler<Ctx>
-) => Promise<Ctx|void> | Ctx | void;
+) => Promise<Ctx | void> | Ctx | void;
 
 export type TriggerMiddleware = GenericMiddleware<TriggerContext>;
 export type HttpMiddleware = GenericMiddleware<HttpContext>;
-export type EventMiddleware = GenericMiddleware<EventContext>;
+export type EventMiddleware<
+  T extends Record<string, any> = Record<string, any>
+> = GenericMiddleware<EventContext<NitricEvent<T>>>;
+export type ScheduleMiddleware = GenericMiddleware<EventContext<undefined>>;
 
 /**
  * createHandler
@@ -36,7 +42,6 @@ export type EventMiddleware = GenericMiddleware<EventContext>;
  * The handlers are passed to each other via the 'next' argument.
  *
  * @param handlers one or more handler functions to be chained together into a single root function.
- *
  * @returns - A root function composed of a chain of user provided functions
  */
 export const createHandler = <Ctx extends TriggerContext = TriggerContext>(
@@ -44,23 +49,28 @@ export const createHandler = <Ctx extends TriggerContext = TriggerContext>(
 ): GenericMiddleware<Ctx> => {
   const reversedHandlers = handlers.slice().reverse();
 
-  return async (ctx: Ctx, finalNext: GenericHandler<Ctx> = ctx => ctx) => {
+  return async (ctx: Ctx, finalNext: GenericHandler<Ctx> = (ctx) => ctx) => {
     if (handlers.length < 1) {
-      throw new Error('at least one handler or middleware function must be provided');
+      throw new Error(
+        'at least one handler or middleware function must be provided'
+      );
     }
     if (handlers.some((handler) => typeof handler !== 'function')) {
       throw new Error('all handlers and middleware must be functions');
     }
 
     // Chain the provided handlers together, passing each as 'next' to the following handler in the chain.
-    
-    const composedHandler = reversedHandlers.reduce((next: GenericHandler<Ctx>, h: GenericMiddleware<Ctx>) => {
+
+    const composedHandler = reversedHandlers.reduce(
+      (next: GenericHandler<Ctx>, h: GenericMiddleware<Ctx>) => {
         const nextNext: GenericHandler<Ctx> = async (ctx) => {
           // Actual function written by user that calls next and returns context
           return (await h(ctx, next)) || ctx;
         };
         return nextNext;
-      }, finalNext);
+      },
+      finalNext
+    );
 
     // Call the root user function from this function
     return await composedHandler(ctx);

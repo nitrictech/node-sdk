@@ -58,7 +58,7 @@ describe('Queue Client Tests', () => {
             payloadType: 'test',
             payload: { test: 1 },
           })
-        ).rejects.toEqual(new UnimplementedError("UNIMPLEMENTED"));
+        ).rejects.toEqual(new UnimplementedError('UNIMPLEMENTED'));
       });
 
       it('Then Queue.send should be called once', async () => {
@@ -88,11 +88,13 @@ describe('Queue Client Tests', () => {
       it('Then Queue.Send with an array of tasks should resolve with no failed messages', async () => {
         const queueing = new Queueing();
         await expect(
-          queueing.queue('test').send([{
-            id: 'task',
-            payloadType: 'test',
-            payload: { test: 1 },
-          }])
+          queueing.queue('test').send([
+            {
+              id: 'task',
+              payloadType: 'test',
+              payload: { test: 1 },
+            },
+          ])
         ).resolves.toEqual([]);
       });
 
@@ -139,7 +141,7 @@ describe('Queue Client Tests', () => {
         const queueing = new Queueing();
 
         await expect(queueing.queue('test').receive(1)).rejects.toEqual(
-          new UnimplementedError("UNIMPLEMENTED")
+          new UnimplementedError('UNIMPLEMENTED')
         );
       });
     });
@@ -258,7 +260,9 @@ describe('Queue Client Tests', () => {
           queue: queueing.queue('test'),
         });
 
-        await expect(task.complete()).rejects.toEqual(new UnimplementedError("UNIMPLEMENTED"));
+        await expect(task.complete()).rejects.toEqual(
+          new UnimplementedError('UNIMPLEMENTED')
+        );
       });
 
       it('Then Queue.complete should be called once', async () => {

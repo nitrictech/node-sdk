@@ -17,7 +17,9 @@ import {
   TopicResponseContext,
   HttpResponseContext,
   HeaderValue,
+  TraceContext,
 } from '@nitric/api/proto/faas/v1/faas_pb';
+import * as api from '@opentelemetry/api';
 import { jsonResponse } from './json';
 
 export abstract class TriggerContext<
@@ -28,28 +30,36 @@ export abstract class TriggerContext<
   protected response: Resp;
 
   /**
+   * Noop base context http method.
    *
+   * @returns undefined
    */
   public get http(): HttpContext | undefined {
     return undefined;
   }
 
   /**
+   * Noop base context event method.
    *
+   * @returns undefined
    */
-  public get event(): EventContext | undefined {
+  public get event(): EventContext<unknown> | undefined {
     return undefined;
   }
 
   /**
+   * Return the request object from this context.
    *
+   * @returns the request object.
    */
   get req(): Req {
     return this.request;
   }
 
   /**
+   * Return the response object from this context.
    *
+   * @returns the response object.
    */
   get res(): Resp {
     return this.response;
@@ -79,22 +89,29 @@ export abstract class TriggerContext<
   }
 }
 
-export abstract class AbstractRequest {
-  readonly data: string | Uint8Array;
+export type JSONTypes = Record<string, any> | Array<any> | string;
 
-  protected constructor(data: string | Uint8Array) {
+export abstract class AbstractRequest<
+  JSONT extends JSONTypes = Record<string, any>
+> {
+  readonly data: string | Uint8Array;
+  readonly traceContext: api.Context;
+
+  protected constructor(data: string | Uint8Array, traceContext: api.Context) {
     this.data = data;
+    this.traceContext = traceContext;
   }
 
   text(): string {
-    const stringPayload = typeof this.data === 'string' 
-      ? this.data 
-      : new TextDecoder('utf-8').decode(this.data);
+    const stringPayload =
+      typeof this.data === 'string'
+        ? this.data
+        : new TextDecoder('utf-8').decode(this.data);
 
     return stringPayload;
   }
 
-  json(): Record<string, any> {
+  json(): JSONT {
     // attempt to deserialize as a JSON object
     return this.text() ? JSON.parse(this.text()) : {};
   }
@@ -113,6 +130,7 @@ interface HttpRequestArgs {
   params: Record<string, string>;
   query: Record<string, string[]>;
   headers: Record<string, string[]>;
+  traceContext?: api.Context;
 }
 
 export class HttpRequest extends AbstractRequest {
@@ -122,8 +140,16 @@ export class HttpRequest extends AbstractRequest {
   public readonly query: Record<string, string[]>;
   public readonly headers: Record<string, string[] | string>;
 
-  constructor({ data, method, path, params, query, headers }: HttpRequestArgs) {
-    super(data);
+  constructor({
+    data,
+    method,
+    path,
+    params,
+    query,
+    headers,
+    traceContext,
+  }: HttpRequestArgs) {
+    super(data, traceContext);
     this.method = method;
     this.path = path;
     this.params = params;
@@ -153,7 +179,8 @@ export class HttpResponse {
   }
 
   /**
-   * Helper method to encode to JSON string for JSON http responses
+   * Helper method to encode to JSON string for JSON http responses.
+   *
    * @returns HttpContext with body property set with an encoded JSON string and json headers set.
    */
   get json() {
@@ -161,14 +188,30 @@ export class HttpResponse {
   }
 }
 
-export class EventRequest extends AbstractRequest {
+export class EventRequest<T> extends AbstractRequest<T> {
   public readonly topic: string;
 
-  constructor(data: string | Uint8Array, topic: string) {
-    super(data);
+  constructor(
+    data: string | Uint8Array,
+    topic: string,
+    traceContext: api.Context
+  ) {
+    super(data, traceContext);
     this.topic = topic;
   }
 }
+
+// Propagate the context to the root context
+const getTraceContext = (traceContext: TraceContext): api.Context => {
+  const traceContextObject: Record<string, string> = traceContext
+    ? traceContext
+        .getValuesMap()
+        .toObject()
+        .reduce((prev, [k, v]) => (prev[k] = v), {})
+    : {};
+
+  return api.propagation.extract(api.context.active(), traceContextObject);
+};
 
 export class HttpContext extends TriggerContext<HttpRequest, HttpResponse> {
   public get http(): HttpContext {
@@ -179,11 +222,13 @@ export class HttpContext extends TriggerContext<HttpRequest, HttpResponse> {
     const http = trigger.getHttp();
     const ctx = new HttpContext();
 
-    const headers = ((http
-      .getHeadersMap()
-      // getEntryList claims to return [string, faas.HeaderValue][], but really returns [string, string[][]][]
-      // we force the type to match the real return type.
-      .getEntryList() as unknown) as [string, string[][]][]).reduce(
+    const headers = (
+      http
+        .getHeadersMap()
+        // getEntryList claims to return [string, faas.HeaderValue][], but really returns [string, string[][]][]
+        // we force the type to match the real return type.
+        .getEntryList() as unknown as [string, string[][]][]
+    ).reduce(
       (acc, [key, [val]]) => ({
         ...acc,
         [key.toLowerCase()]: val.length === 1 ? val[0] : val,
@@ -191,11 +236,13 @@ export class HttpContext extends TriggerContext<HttpRequest, HttpResponse> {
       {}
     );
 
-    const query = ((http
-      .getQueryParamsMap()
-      // getEntryList claims to return [string, faas.HeaderValue][], but really returns [string, string[][]][]
-      // we force the type to match the real return type.
-      .getEntryList() as unknown) as [string, string[][]][]).reduce(
+    const query = (
+      http
+        .getQueryParamsMap()
+        // getEntryList claims to return [string, faas.HeaderValue][], but really returns [string, string[][]][]
+        // we force the type to match the real return type.
+        .getEntryList() as unknown as [string, string[][]][]
+    ).reduce(
       (acc, [key, [val]]) => ({
         ...acc,
         [key]: val.length === 1 ? val[0] : val,
@@ -249,6 +296,7 @@ export class HttpContext extends TriggerContext<HttpRequest, HttpResponse> {
       // check for old headers if new headers is unpopulated. This is for backwards compatibility.
       headers: Object.keys(headers).length ? headers : oldHeaders,
       method: http.getMethod(),
+      traceContext: getTraceContext(trigger.getTraceContext()),
     });
 
     ctx.response = new HttpResponse({
@@ -311,16 +359,25 @@ export class HttpContext extends TriggerContext<HttpRequest, HttpResponse> {
   }
 }
 
-export class EventContext extends TriggerContext<EventRequest, EventResponse> {
-  public get event(): EventContext {
+export class EventContext<T> extends TriggerContext<
+  EventRequest<T>,
+  EventResponse
+> {
+  public get event(): EventContext<T> {
     return this;
   }
 
-  static fromGrpcTriggerRequest(trigger: TriggerRequest): EventContext {
+  static fromGrpcTriggerRequest(
+    trigger: TriggerRequest
+  ): EventContext<unknown> {
     const topic = trigger.getTopic();
     const ctx = new EventContext();
 
-    ctx.request = new EventRequest(trigger.getData_asU8(), topic.getTopic());
+    ctx.request = new EventRequest(
+      trigger.getData_asU8(),
+      topic.getTopic(),
+      getTraceContext(trigger.getTraceContext())
+    );
 
     ctx.response = {
       success: true,

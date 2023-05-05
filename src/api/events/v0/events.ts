@@ -22,9 +22,15 @@ import {
 } from '@nitric/api/proto/event/v1/event_pb';
 import { Struct } from 'google-protobuf/google/protobuf/struct_pb';
 import * as grpc from '@grpc/grpc-js';
-import type { NitricEvent } from '../../../types';
+import { NitricEvent } from '../../../types';
 import { fromGrpcError, InvalidArgumentError } from '../../errors';
 
+/**
+ * Construct event and topic service clients.
+ *
+ * @internal
+ * @returns event and topic service clients.
+ */
 function newEventServiceClients(): {
   event: EventServiceClient;
   topic: TopicServiceClient;
@@ -42,10 +48,10 @@ export interface PublishOptions {
 }
 
 const DEFAULT_PUBLISH_OPTS: PublishOptions = {
-  delay: 0
+  delay: 0,
 };
 
-export class Topic {
+export class Topic<T extends Record<string, any> = Record<string, any>> {
   eventing: Eventing;
   name: string;
 
@@ -55,7 +61,8 @@ export class Topic {
   }
 
   /**
-   * Publishes an event to a nitric topic
+   * Publishes an event to a nitric topic.
+   *
    * @param event The event to publish
    * @param opts Additional publishing options
    * @returns NitricEvent containing the unique id of the event (if not provided it will be generated)
@@ -76,14 +83,19 @@ export class Topic {
    *   };
    *   // Publish immediately
    *   await topic.publish(event);
-   * 
+   *
    *   // Publish after 10 seconds delay
    *   await topic.publish(event, { delay: 10 });
    * }
    * ```
    */
-  async publish(event: NitricEvent, opts: PublishOptions = DEFAULT_PUBLISH_OPTS): Promise<NitricEvent> {
-    const { id, payloadType = 'none', payload } = event;
+  async publish(
+    event: T | NitricEvent<T>,
+    opts: PublishOptions = DEFAULT_PUBLISH_OPTS
+  ): Promise<NitricEvent<T>> {
+    const nitricEvent =
+      event instanceof NitricEvent ? event : new NitricEvent(event);
+
     const publishOpts = {
       ...DEFAULT_PUBLISH_OPTS,
       ...opts,
@@ -91,24 +103,30 @@ export class Topic {
     const request = new EventPublishRequest();
     const evt = new PbEvent();
 
-    evt.setId(id);
-    evt.setPayload(Struct.fromJavaScript(payload));
-    evt.setPayloadType(payloadType);
-    
+    evt.setId(nitricEvent.id);
+    evt.setPayload(Struct.fromJavaScript(nitricEvent.payload));
+    evt.setPayloadType(nitricEvent.payloadType);
+
     request.setTopic(this.name);
     request.setEvent(evt);
     request.setDelay(publishOpts.delay);
 
-    return new Promise<NitricEvent>((resolve, reject) => {
+    return new Promise<NitricEvent<T>>((resolve, reject) => {
       this.eventing.EventServiceClient.publish(request, (error, response) => {
         if (error) {
           reject(fromGrpcError(error));
         } else {
-          resolve({ ...event, id: response.getId() });
+          resolve(
+            new NitricEvent(
+              nitricEvent.payload,
+              response.getId(),
+              nitricEvent.payloadType
+            )
+          );
         }
       });
     });
-  };
+  }
 }
 
 /**
@@ -125,8 +143,8 @@ export class Topic {
  */
 export class Eventing {
   private _clients: {
-    event: EventServiceClient,
-    topic: TopicServiceClient,
+    event: EventServiceClient;
+    topic: TopicServiceClient;
   } = undefined;
 
   get EventServiceClient(): EventServiceClient {
@@ -149,29 +167,29 @@ export class Eventing {
    * Get a reference to a Topic.
    *
    * @param name Name of the topic, as defined in nitric.yaml.
-   *
+   * @returns a topic resource.
    * @example
    * ```typescript
    * import { Eventing } from "@nitric/sdk";
    * const eventing = new Eventing();
    * const topic = eventing.topic('notifications');
    * ```
-   *
    */
-  public topic(name: string): Topic {
+  public topic<T extends Record<string, any> = Record<string, any>>(
+    name: string
+  ): Topic<T> {
     if (!name) {
       throw new InvalidArgumentError('A topic name is needed to use a Topic.');
     }
 
     return new Topic(this, name);
-  };
+  }
 
   /**
    * Retrieve all available topic references by querying for available topics.
    *
-   * @retuns A promise containing the list of available nitric topics
-   *
-   * Example:
+   * @returns A promise containing the list of available nitric topics
+   * @example
    * ```typescript
    * import { Eventing } from "@nitric/sdk";
    *
@@ -192,14 +210,15 @@ export class Eventing {
         }
       });
     });
-  };
+  }
 }
 
 // Events client singleton
 let EVENTS = undefined;
 
 /**
- * Events
+ * Events API client.
+ *
  * @returns an Events API client.
  * @example
  * ```typescript

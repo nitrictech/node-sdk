@@ -319,6 +319,25 @@ export namespace InitResponse {
   }
 }
 
+export class TraceContext extends jspb.Message {
+  getValuesMap(): jspb.Map<string, string>;
+  clearValuesMap(): void;
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): TraceContext.AsObject;
+  static toObject(includeInstance: boolean, msg: TraceContext): TraceContext.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: TraceContext, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): TraceContext;
+  static deserializeBinaryFromReader(message: TraceContext, reader: jspb.BinaryReader): TraceContext;
+}
+
+export namespace TraceContext {
+  export type AsObject = {
+    valuesMap: Array<[string, string]>,
+  }
+}
+
 export class TriggerRequest extends jspb.Message {
   getData(): Uint8Array | string;
   getData_asU8(): Uint8Array;
@@ -327,6 +346,11 @@ export class TriggerRequest extends jspb.Message {
 
   getMimeType(): string;
   setMimeType(value: string): void;
+
+  hasTraceContext(): boolean;
+  clearTraceContext(): void;
+  getTraceContext(): TraceContext | undefined;
+  setTraceContext(value?: TraceContext): void;
 
   hasHttp(): boolean;
   clearHttp(): void;
@@ -353,6 +377,7 @@ export namespace TriggerRequest {
   export type AsObject = {
     data: Uint8Array | string,
     mimeType: string,
+    traceContext?: TraceContext.AsObject,
     http?: HttpTriggerContext.AsObject,
     topic?: TopicTriggerContext.AsObject,
   }

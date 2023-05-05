@@ -41,8 +41,10 @@ export class CollectionGroupRef<T extends DocumentStructure> {
   }
 
   /**
-   * Create a CollectionGroupRef referencing a sub-collection of this collection
-   * @param name
+   * Create a CollectionGroupRef referencing a sub-collection of this collection.
+   *
+   * @param name of the sub-collection
+   * @returns a reference to the sub-collection
    */
   public collection<T extends DocumentStructure>(
     name: string
@@ -56,7 +58,8 @@ export class CollectionGroupRef<T extends DocumentStructure> {
   }
 
   /**
-   * Create a new collection query object
+   * Create a new collection query object.
+   *
    * @returns a new collection query object
    */
   public query(): Query<T> {
@@ -88,9 +91,12 @@ export class CollectionGroupRef<T extends DocumentStructure> {
   }
 
   /**
-   * Creates a collection group reference from a collection reference
-   * @param ref
-   * @param dc
+   * Creates a collection group reference from a collection reference.
+   *
+   * @internal
+   * @param ref a collection reference.
+   * @param dc a document service client.
+   * @returns a collection group reference.
    */
   public static fromCollectionRef(
     ref: CollectionRef<any>,
