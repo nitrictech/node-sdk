@@ -230,7 +230,7 @@ interface JwtSecurityDefinition extends BaseSecurityDefinition<'jwt'> {
 // TODO: Union type for multiple security definition mappings
 type SecurityDefinition = JwtSecurityDefinition;
 
-interface ApiOpts<Defs extends string> {
+export interface ApiOpts<Defs extends string> {
   /**
    * The base path for all routes in the API.
    *
