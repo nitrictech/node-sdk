@@ -50,7 +50,7 @@ export class ApiWorkerOptions {
   }
 }
 
-interface MethodOptions<SecurityDefs extends string> {
+export interface MethodOptions<SecurityDefs extends string> {
   /**
    * Optional security definitions for this method
    */
