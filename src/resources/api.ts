@@ -218,17 +218,17 @@ export class Route<SecurityDefs extends string> {
   }
 }
 
-interface BaseSecurityDefinition<T extends string> {
+export interface BaseSecurityDefinition<T extends string> {
   kind: T;
 }
 
-interface JwtSecurityDefinition extends BaseSecurityDefinition<'jwt'> {
+export interface JwtSecurityDefinition extends BaseSecurityDefinition<'jwt'> {
   issuer: string;
   audiences: string[];
 }
 
 // TODO: Union type for multiple security definition mappings
-type SecurityDefinition = JwtSecurityDefinition;
+export type SecurityDefinition = JwtSecurityDefinition;
 
 export interface ApiOpts<Defs extends string> {
   /**
