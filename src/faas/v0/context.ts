@@ -102,6 +102,12 @@ export abstract class AbstractRequest<
     this.traceContext = traceContext;
   }
 
+  /**
+   * Return the request payload as a string.
+   * If the request was a byte array it will converted using UTF-8 text decoding.
+   *
+   * @returns the request payload as a string
+   */
   text(): string {
     const stringPayload =
       typeof this.data === 'string'
@@ -111,9 +117,14 @@ export abstract class AbstractRequest<
     return stringPayload;
   }
 
+  /**
+   * Deserialize the request payload from JSON
+   * 
+   * @returns JSON parsed request body
+   */
   json(): JSONT {
     // attempt to deserialize as a JSON object
-    return this.text() ? JSON.parse(this.text()) : {};
+    return textBody ? JSON.parse(textBody) : undefined;
   }
 }
 

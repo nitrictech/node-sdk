@@ -20,7 +20,6 @@ import {
   Resource,
   ResourceDeclareRequest,
   ResourceDeclareResponse,
-  ResourceDetailsRequest,
   ResourceDetailsResponse,
   ResourceType,
   ResourceTypeMap,
