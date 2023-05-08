@@ -133,7 +133,7 @@ export abstract class AbstractRequest<
   }
 }
 
-interface EventResponse {
+export interface EventResponse {
   success: boolean;
 }
 
@@ -419,25 +419,7 @@ export class EventContext<T> extends TriggerContext<
   }
 }
 
-export class EventRequest extends AbstractRequest {
-  public readonly topic: string;
-
-  constructor(
-    data: string | Uint8Array,
-    topic: string,
-    traceContext: api.Context
-  ) {
-    super(data, traceContext);
-    this.topic = topic;
-  }
-}
-
-export interface EventResponse {
-  success: boolean;
-}
-
 // BUCKET NOTIFICATION CONTEXT
-
 export class BucketNotificationContext extends TriggerContext<
   BucketNotificationRequest,
   BucketNotificationResponse
