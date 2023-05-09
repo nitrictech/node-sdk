@@ -436,7 +436,7 @@ export class BucketNotificationContext extends TriggerContext<
   BucketNotificationRequest,
   BucketNotificationResponse
 > {
-  public get notification(): BucketNotificationContext {
+  public get bucketNotification(): BucketNotificationContext {
     return this;
   }
 
