@@ -6,7 +6,6 @@
   "repository": "https://github.com/nitrictech/node-sdk",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
-  "version": "0.0.1",
   "scripts": {
     "bump": "standard-version",
     "build": "tsup src/index.ts --dts --outDir lib",
