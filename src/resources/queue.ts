@@ -16,7 +16,6 @@ import {
   ResourceDeclareRequest,
   ResourceType,
   Action,
-  ActionMap,
   ResourceDeclareResponse,
 } from '@nitric/api/proto/resource/v1/resource_pb';
 import resourceClient from './client';
