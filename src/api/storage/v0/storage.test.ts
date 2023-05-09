@@ -23,6 +23,8 @@ import {
   File,
 } from '@nitric/api/proto/storage/v1/storage_pb';
 import { UnimplementedError } from '../../errors';
+import { BucketNotificationWorkerOptions, bucket } from '@nitric/sdk/resources';
+import { faas } from '@nitric/sdk';
 
 describe('Storage Client Tests', () => {
   describe('Given nitric.api.storage.StorageClient.Write throws an error', () => {
@@ -419,6 +421,73 @@ describe('Storage Client Tests', () => {
 
     test('The Grpc client for Storage.listFiles should have been called exactly once', () => {
       expect(listFilesMock).toBeCalledTimes(1);
+    });
+  });
+});
+
+jest.mock('../../../faas/index');
+
+describe('bucket notification', () => {
+  const startSpy = jest
+    .spyOn(faas.Faas.prototype, 'start')
+    .mockReturnValue(Promise.resolve());
+  const mockFn = jest.fn();
+
+  afterAll(() => {
+    jest.clearAllMocks();
+  });
+
+  describe('When registering a bucket notification for creating', () => {
+    afterAll(() => {
+      jest.resetAllMocks();
+    });
+
+    beforeAll(async () => {
+      await bucket('test-bucket').on('created:test.png', mockFn);
+    });
+
+    it('should create a new FaasClient', () => {
+      expect(faas.Faas).toBeCalledTimes(1);
+    });
+
+    it('should provide Faas with BucketNotificationWorkerOptions', () => {
+      const expectedOpts = new BucketNotificationWorkerOptions(
+        'test-bucket',
+        'created',
+        'test.png'
+      );
+      expect(faas.Faas).toBeCalledWith(expectedOpts);
+    });
+
+    it('should call FaasClient::start()', () => {
+      expect(startSpy).toBeCalledTimes(1);
+    });
+  });
+
+  describe('When registering a bucket notification for deleting', () => {
+    afterAll(() => {
+      jest.resetAllMocks();
+    });
+
+    beforeAll(async () => {
+      await bucket('test-bucket').on('deleted:test.png', mockFn);
+    });
+
+    it('should create a new FaasClient', () => {
+      expect(faas.Faas).toBeCalledTimes(1);
+    });
+
+    it('should provide Faas with BucketNotificationWorkerOptions', () => {
+      const expectedOpts = new BucketNotificationWorkerOptions(
+        'test-bucket',
+        'deleted',
+        'test.png'
+      );
+      expect(faas.Faas).toBeCalledWith(expectedOpts);
+    });
+
+    it('should call FaasClient::start()', () => {
+      expect(startSpy).toBeCalledTimes(1);
     });
   });
 });

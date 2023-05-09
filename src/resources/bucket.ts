@@ -39,11 +39,11 @@ export class BucketNotificationWorkerOptions {
   public readonly notificationPrefixFilter: string;
 
   constructor(
-    resource: string,
+    bucket: string,
     notificationType: string,
     notificationPrefixFilter: string
   ) {
-    this.bucket = resource;
+    this.bucket = bucket;
     this.notificationType =
       BucketNotificationWorkerOptions.toGrpcEvent(notificationType);
     this.notificationPrefixFilter = notificationPrefixFilter;
@@ -65,7 +65,7 @@ class BucketNotification {
   private readonly faas: Faas;
 
   constructor(
-    name: string,
+    bucket: BucketResource,
     notificationFilter: string,
     ...mw: BucketNotificationMiddleware[]
   ) {
@@ -74,7 +74,7 @@ class BucketNotification {
 
     this.faas = new Faas(
       new BucketNotificationWorkerOptions(
-        name,
+        bucket.name,
         notificationType,
         notificationPrefixFilter
       )
@@ -149,7 +149,7 @@ export class BucketResource extends SecureResource<BucketPermission> {
    * @returns Promise which resolves when the handler server terminates
    */
   on(filter: string, ...mw: BucketNotificationMiddleware[]): Promise<void> {
-    const notification = new BucketNotification(this.name, filter, ...mw);
+    const notification = new BucketNotification(this, filter, ...mw);
     return notification['start']();
   }
 
