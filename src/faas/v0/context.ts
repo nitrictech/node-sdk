@@ -119,11 +119,12 @@ export abstract class AbstractRequest<
 
   /**
    * Deserialize the request payload from JSON
-   * 
+   *
    * @returns JSON parsed request body
    */
   json(): JSONT {
     // attempt to deserialize as a JSON object
+    const textBody = this.text();
     return textBody ? JSON.parse(textBody) : undefined;
   }
 }
