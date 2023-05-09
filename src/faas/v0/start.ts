@@ -29,6 +29,9 @@ import {
   ApiWorker,
   ApiWorkerOptions as ApiWorkerOptionsPb,
   ApiWorkerScopes,
+  NotificationResponseContext,
+  BucketNotificationWorker,
+  BucketNotificationConfig,
 } from '@nitric/api/proto/faas/v1/faas_pb';
 
 import {
@@ -37,6 +40,7 @@ import {
   GenericMiddleware,
   HttpMiddleware,
   ScheduleMiddleware,
+  BucketNotificationMiddleware,
   TriggerContext,
   TriggerMiddleware,
 } from '.';
@@ -48,6 +52,7 @@ import {
   CronWorkerOptions,
   RateWorkerOptions,
   SubscriptionWorkerOptions,
+  BucketNotificationWorkerOptions,
 } from '../../resources';
 
 import * as grpc from '@grpc/grpc-js';
@@ -58,7 +63,8 @@ type FaasClientOptions =
   | ApiWorkerOptions
   | RateWorkerOptions
   | CronWorkerOptions
-  | FaasWorkerOptions;
+  | FaasWorkerOptions
+  | BucketNotificationWorkerOptions;
 
 /**
  *
@@ -66,6 +72,7 @@ type FaasClientOptions =
 export class Faas {
   private httpHandler?: HttpMiddleware;
   private eventHandler?: EventMiddleware | ScheduleMiddleware;
+  private bucketNotificationHandler?: BucketNotificationMiddleware;
   private anyHandler?: TriggerMiddleware;
   private readonly options: FaasClientOptions;
 
@@ -96,6 +103,17 @@ export class Faas {
   }
 
   /**
+   * Add a notification handler to this Faas server
+   *
+   * @param handlers the functions to call to respond to notification requests
+   * @returns self
+   */
+  bucketNotification(...handlers: BucketNotificationMiddleware[]): Faas {
+    this.bucketNotificationHandler = createHandler(...handlers);
+    return this;
+  }
+
+  /**
    * Get http handler for this server
    *
    * @returns the registered HTTP handler for this server
@@ -114,6 +132,18 @@ export class Faas {
   }
 
   /**
+   * Get notification handler for this server
+   *
+   * @returns the registered notification handler for this server
+   */
+  private getBucketNotificationHandler():
+    | BucketNotificationMiddleware
+    | TriggerMiddleware
+    | undefined {
+    return this.bucketNotificationHandler || this.anyHandler;
+  }
+
+  /**
    * Start the Faas server
    *
    * @param handlers to use as the default when no other handler is registered for the request type
@@ -123,7 +153,12 @@ export class Faas {
     const provider = newTracerProvider();
 
     this.anyHandler = handlers.length && createHandler(...handlers);
-    if (!this.httpHandler && !this.eventHandler && !this.anyHandler) {
+    if (
+      !this.httpHandler &&
+      !this.eventHandler &&
+      !this.bucketNotificationHandler &&
+      !this.anyHandler
+    ) {
       throw new Error('A handler function must be provided.');
     }
 
@@ -162,6 +197,10 @@ export class Faas {
             triggerType = 'Event';
             handler =
               this.getEventHandler() as GenericMiddleware<TriggerContext>;
+          } else if (ctx.bucketNotification) {
+            triggerType = 'Notification';
+            handler =
+              this.getBucketNotificationHandler() as GenericMiddleware<TriggerContext>;
           } else {
             console.error(
               `received an unexpected trigger type, are you using an outdated version of the SDK?`
@@ -202,6 +241,10 @@ export class Faas {
             const topicResponse = new TopicResponseContext();
             topicResponse.setSuccess(false);
             triggerResponse.setTopic(topicResponse);
+          } else if (triggerRequest.hasNotification()) {
+            const notificationResponse = new NotificationResponseContext();
+            notificationResponse.setSuccess(false);
+            triggerResponse.setNotification(notificationResponse);
           }
         }
         // Send the response back to the membrane
@@ -254,6 +297,14 @@ export class Faas {
       const subscriptionWorker = new SubscriptionWorker();
       subscriptionWorker.setTopic(this.options.topic);
       initRequest.setSubscription(subscriptionWorker);
+    } else if (this.options instanceof BucketNotificationWorkerOptions) {
+      const notificationWorker = new BucketNotificationWorker();
+      notificationWorker.setBucket(this.options.bucket);
+      const config = new BucketNotificationConfig();
+      config.setNotificationPrefixFilter(this.options.notificationPrefixFilter);
+      config.setNotificationType(this.options.notificationType);
+      notificationWorker.setConfig(config);
+      initRequest.setBucketNotification(notificationWorker);
     }
     // Original faas workers should return a blank InitRequest for compatibility.
 
@@ -299,6 +350,16 @@ export const http = (...handlers: HttpMiddleware[]): Faas =>
  */
 export const event = (...handlers: EventMiddleware[]): Faas =>
   getFaasInstance().event(...handlers);
+
+/**
+ * Register a notification handler
+ *
+ * @param handlers the functions to call to respond to events
+ * @returns the FaaS service factory
+ */
+export const notification = (
+  ...handlers: BucketNotificationMiddleware[]
+): Faas => getFaasInstance().bucketNotification(...handlers);
 
 /**
  * Start the FaaS server with a universal handler

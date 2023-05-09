@@ -160,7 +160,7 @@ describe('subscription', () => {
       expect(faas.Faas).toBeCalledTimes(1);
     });
 
-    it('should provide Faas with ApiWorkerOptions', () => {
+    it('should provide Faas with SubscriptionWorkerOptions', () => {
       const expectedOpts = new SubscriptionWorkerOptions('test-subscribe');
       expect(faas.Faas).toBeCalledWith(expectedOpts);
     });

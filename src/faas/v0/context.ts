@@ -14,12 +14,15 @@
 import {
   TriggerRequest,
   TriggerResponse,
-  TopicResponseContext,
-  HttpResponseContext,
-  HeaderValue,
   TraceContext,
+  HeaderValue,
+  HttpResponseContext,
+  NotificationResponseContext,
+  TopicResponseContext,
+  BucketNotificationType as ProtoBucketNotificationType,
 } from '@nitric/api/proto/faas/v1/faas_pb';
 import * as api from '@opentelemetry/api';
+import * as jspb from 'google-protobuf';
 import { jsonResponse } from './json';
 
 export abstract class TriggerContext<
@@ -44,6 +47,15 @@ export abstract class TriggerContext<
    * @returns undefined
    */
   public get event(): EventContext<unknown> | undefined {
+    return undefined;
+  }
+
+  /**
+   * Noop base context bucketNotification method
+   *
+   * @returns undefined
+   */
+  public get bucketNotification(): BucketNotificationContext | undefined {
     return undefined;
   }
 
@@ -74,6 +86,8 @@ export abstract class TriggerContext<
       return HttpContext.fromGrpcTriggerRequest(trigger);
     } else if (trigger.hasTopic()) {
       return EventContext.fromGrpcTriggerRequest(trigger);
+    } else if (trigger.hasNotification()) {
+      return BucketNotificationContext.fromGrpcTriggerRequest(trigger);
     }
     throw new Error('Unsupported trigger request type');
   }
@@ -83,6 +97,8 @@ export abstract class TriggerContext<
       return HttpContext.toGrpcTriggerResponse(ctx);
     } else if (ctx.event) {
       return EventContext.toGrpcTriggerResponse(ctx);
+    } else if (ctx.bucketNotification) {
+      return BucketNotificationContext.toGrpcTriggerResponse(ctx);
     }
 
     throw new Error('Unsupported trigger context type');
@@ -129,7 +145,7 @@ export abstract class AbstractRequest<
   }
 }
 
-interface EventResponse {
+export interface EventResponse {
   success: boolean;
 }
 
@@ -214,17 +230,24 @@ export class EventRequest<T> extends AbstractRequest<T> {
 }
 
 // Propagate the context to the root context
-const getTraceContext = (traceContext: TraceContext): api.Context => {
-  const traceContextObject: Record<string, string> = traceContext
-    ? traceContext
-        .getValuesMap()
-        .toObject()
-        .reduce((prev, [k, v]) => (prev[k] = v), {})
+export const getTraceContext = (traceContext: TraceContext): api.Context => {
+  const traceContextObject = traceContext
+    ? objectFromMap(traceContext.getValuesMap())
     : {};
 
   return api.propagation.extract(api.context.active(), traceContextObject);
 };
 
+const objectFromMap = (map: jspb.Map<string, string>) => {
+  return map
+    ? map.toObject().reduce((prev, [k, v]) => {
+        prev[k] = v;
+        return prev;
+      }, {})
+    : {};
+};
+
+// HTTP CONTEXT
 export class HttpContext extends TriggerContext<HttpRequest, HttpResponse> {
   public get http(): HttpContext {
     return this;
@@ -406,4 +429,84 @@ export class EventContext<T> extends TriggerContext<
     triggerResponse.setTopic(topicResponse);
     return triggerResponse;
   }
+}
+
+// BUCKET NOTIFICATION CONTEXT
+export class BucketNotificationContext extends TriggerContext<
+  BucketNotificationRequest,
+  BucketNotificationResponse
+> {
+  public get notification(): BucketNotificationContext {
+    return this;
+  }
+
+  static fromGrpcTriggerRequest(
+    trigger: TriggerRequest
+  ): BucketNotificationContext {
+    const ctx = new BucketNotificationContext();
+    const bucketConfig = trigger.getNotification().getBucket();
+
+    ctx.request = new BucketNotificationRequest(
+      trigger.getData_asU8(),
+      getTraceContext(trigger.getTraceContext()),
+      bucketConfig.getKey(),
+      bucketConfig.getType()
+    );
+
+    ctx.response = {
+      success: true,
+    };
+
+    return ctx;
+  }
+
+  static toGrpcTriggerResponse(
+    ctx: TriggerContext<AbstractRequest, any>
+  ): TriggerResponse {
+    const notifyCtx = ctx.bucketNotification;
+    const triggerResponse = new TriggerResponse();
+    const notificationResponse = new NotificationResponseContext();
+    notificationResponse.setSuccess(notifyCtx.res.success);
+    triggerResponse.setNotification(notificationResponse);
+    return triggerResponse;
+  }
+}
+
+export enum BucketNotificationType {
+  Created,
+  Deleted,
+}
+
+export class BucketNotificationRequest extends AbstractRequest {
+  key: string;
+  type: BucketNotificationType;
+
+  constructor(
+    data: string | Uint8Array,
+    traceContext: api.Context,
+    key: string,
+    type: number
+  ) {
+    super(data, traceContext);
+
+    this.key = key;
+    this.type = this.eventTypeToNotificationType(type);
+  }
+
+  private eventTypeToNotificationType = (
+    eventType: number
+  ): BucketNotificationType => {
+    switch (eventType) {
+      case ProtoBucketNotificationType.CREATED:
+        return BucketNotificationType.Created;
+      case ProtoBucketNotificationType.DELETED:
+        return BucketNotificationType.Deleted;
+      default:
+        throw new Error(`event type unsupported: ${eventType}`);
+    }
+  };
+}
+
+export interface BucketNotificationResponse {
+  success: boolean;
 }

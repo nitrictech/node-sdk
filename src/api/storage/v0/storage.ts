@@ -56,7 +56,7 @@ export class Storage {
  * A reference to a storage bucket.
  */
 export class Bucket {
-  storage: Storage;
+  private storage: Storage;
   name: string;
 
   constructor(storage: Storage, name: string) {

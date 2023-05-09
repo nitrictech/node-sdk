@@ -23,10 +23,69 @@ import resourceClient from './client';
 import { storage, Bucket } from '../api/storage';
 import { ActionsList, make, SecureResource } from './common';
 import { fromGrpcError } from '../api/errors';
+import { Faas, BucketNotificationMiddleware } from '../faas';
+import {
+  BucketNotificationType,
+  BucketNotificationTypeMap,
+} from '../gen/proto/faas/v1/faas_pb';
 
 type BucketPermission = 'reading' | 'writing' | 'deleting';
 
 const everything: BucketPermission[] = ['reading', 'writing', 'deleting'];
+
+export class BucketNotificationWorkerOptions {
+  public readonly bucket: string;
+  public readonly notificationType: 0 | 1 | 2;
+  public readonly notificationPrefixFilter: string;
+
+  constructor(
+    bucket: string,
+    notificationType: string,
+    notificationPrefixFilter: string
+  ) {
+    this.bucket = bucket;
+    this.notificationType =
+      BucketNotificationWorkerOptions.toGrpcEvent(notificationType);
+    this.notificationPrefixFilter = notificationPrefixFilter;
+  }
+
+  static toGrpcEvent(notificationType: string): 0 | 1 | 2 {
+    switch (notificationType) {
+      case 'created':
+        return BucketNotificationType.CREATED;
+      case 'deleted':
+        return BucketNotificationType.DELETED;
+      default:
+        throw new Error(`notification type ${notificationType} is unsupported`);
+    }
+  }
+}
+
+class BucketNotification {
+  private readonly faas: Faas;
+
+  constructor(
+    bucket: BucketResource,
+    notificationFilter: string,
+    ...mw: BucketNotificationMiddleware[]
+  ) {
+    const [notificationType, notificationPrefixFilter] =
+      notificationFilter.split(':');
+
+    this.faas = new Faas(
+      new BucketNotificationWorkerOptions(
+        bucket.name,
+        notificationType,
+        notificationPrefixFilter
+      )
+    );
+    this.faas.bucketNotification(...mw);
+  }
+
+  private async start(): Promise<void> {
+    return this.faas.start();
+  }
+}
 
 /**
  * Cloud storage bucket resource for large file storage.
@@ -80,6 +139,18 @@ export class BucketResource extends SecureResource<BucketPermission> {
 
   protected resourceType() {
     return ResourceType.BUCKET;
+  }
+
+  /**
+   * Register and start a bucket notification handler that will be called for all events from this topic.
+   *
+   * @param filter the event type and file filter in the form: "type:filter"
+   * @param mw handler middleware which will be run for every incoming event
+   * @returns Promise which resolves when the handler server terminates
+   */
+  on(filter: string, ...mw: BucketNotificationMiddleware[]): Promise<void> {
+    const notification = new BucketNotification(this, filter, ...mw);
+    return notification['start']();
   }
 
   protected unwrapDetails(resp: ResourceDetailsResponse): never {
