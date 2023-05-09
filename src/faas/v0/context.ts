@@ -51,11 +51,11 @@ export abstract class TriggerContext<
   }
 
   /**
-   * Noop base context noficiation method
+   * Noop base context bucketNotification method
    *
    * @returns undefined
    */
-  public get notification(): BucketNotificationContext | undefined {
+  public get bucketNotification(): BucketNotificationContext | undefined {
     return undefined;
   }
 
@@ -97,7 +97,7 @@ export abstract class TriggerContext<
       return HttpContext.toGrpcTriggerResponse(ctx);
     } else if (ctx.event) {
       return EventContext.toGrpcTriggerResponse(ctx);
-    } else if (ctx.notification) {
+    } else if (ctx.bucketNotification) {
       return BucketNotificationContext.toGrpcTriggerResponse(ctx);
     }
 
@@ -463,7 +463,7 @@ export class BucketNotificationContext extends TriggerContext<
   static toGrpcTriggerResponse(
     ctx: TriggerContext<AbstractRequest, any>
   ): TriggerResponse {
-    const notifyCtx = ctx.notification;
+    const notifyCtx = ctx.bucketNotification;
     const triggerResponse = new TriggerResponse();
     const notificationResponse = new NotificationResponseContext();
     notificationResponse.setSuccess(notifyCtx.res.success);

@@ -197,7 +197,7 @@ export class Faas {
             triggerType = 'Event';
             handler =
               this.getEventHandler() as GenericMiddleware<TriggerContext>;
-          } else if (ctx.notification) {
+          } else if (ctx.bucketNotification) {
             triggerType = 'Notification';
             handler =
               this.getBucketNotificationHandler() as GenericMiddleware<TriggerContext>;
