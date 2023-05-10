@@ -24,6 +24,14 @@ import {
 import * as api from '@opentelemetry/api';
 import * as jspb from 'google-protobuf';
 import { jsonResponse } from './json';
+import { Bucket, File } from '@nitric/sdk/api';
+import {
+  ApiWorkerOptions,
+  BucketNotificationWorkerOptions,
+  SubscriptionWorkerOptions,
+  bucket,
+} from '@nitric/sdk';
+import { FaasWorkerOptions } from './start';
 
 export abstract class TriggerContext<
   Req extends AbstractRequest = AbstractRequest,
@@ -79,15 +87,25 @@ export abstract class TriggerContext<
 
   // Instantiate a concrete TriggerContext from the gRPC trigger model
   static fromGrpcTriggerRequest(
-    trigger: TriggerRequest
+    trigger: TriggerRequest,
+    options?: FaasWorkerOptions
   ): TriggerContext<any, any> {
     // create context
     if (trigger.hasHttp()) {
-      return HttpContext.fromGrpcTriggerRequest(trigger);
+      return HttpContext.fromGrpcTriggerRequest(
+        trigger,
+        options as ApiWorkerOptions
+      );
     } else if (trigger.hasTopic()) {
-      return EventContext.fromGrpcTriggerRequest(trigger);
+      return EventContext.fromGrpcTriggerRequest(
+        trigger,
+        options as SubscriptionWorkerOptions
+      );
     } else if (trigger.hasNotification()) {
-      return BucketNotificationContext.fromGrpcTriggerRequest(trigger);
+      return BucketNotificationContext.fromGrpcTriggerRequest(
+        trigger,
+        options as BucketNotificationWorkerOptions
+      );
     }
     throw new Error('Unsupported trigger request type');
   }
@@ -253,7 +271,10 @@ export class HttpContext extends TriggerContext<HttpRequest, HttpResponse> {
     return this;
   }
 
-  static fromGrpcTriggerRequest(trigger: TriggerRequest): HttpContext {
+  static fromGrpcTriggerRequest(
+    trigger: TriggerRequest,
+    options: ApiWorkerOptions
+  ): HttpContext {
     const http = trigger.getHttp();
     const ctx = new HttpContext();
 
@@ -403,7 +424,8 @@ export class EventContext<T> extends TriggerContext<
   }
 
   static fromGrpcTriggerRequest(
-    trigger: TriggerRequest
+    trigger: TriggerRequest,
+    options: SubscriptionWorkerOptions
   ): EventContext<unknown> {
     const topic = trigger.getTopic();
     const ctx = new EventContext();
@@ -441,7 +463,8 @@ export class BucketNotificationContext extends TriggerContext<
   }
 
   static fromGrpcTriggerRequest(
-    trigger: TriggerRequest
+    trigger: TriggerRequest,
+    options: BucketNotificationWorkerOptions
   ): BucketNotificationContext {
     const ctx = new BucketNotificationContext();
     const bucketConfig = trigger.getNotification().getBucket();
@@ -449,6 +472,7 @@ export class BucketNotificationContext extends TriggerContext<
     ctx.request = new BucketNotificationRequest(
       trigger.getData_asU8(),
       getTraceContext(trigger.getTraceContext()),
+      options.bucket,
       bucketConfig.getKey(),
       bucketConfig.getType()
     );
@@ -478,18 +502,22 @@ export enum BucketNotificationType {
 }
 
 export class BucketNotificationRequest extends AbstractRequest {
-  key: string;
+  file: File;
   type: BucketNotificationType;
 
   constructor(
     data: string | Uint8Array,
     traceContext: api.Context,
+    bucketName: string,
     key: string,
     type: number
   ) {
     super(data, traceContext);
 
-    this.key = key;
+    // Get reference to the bucket
+    const notificationBucket = bucket(bucketName);
+
+    this.file = notificationBucket.for().file(key);
     this.type = this.eventTypeToNotificationType(type);
   }
 

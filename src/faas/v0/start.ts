@@ -57,7 +57,7 @@ import {
 
 import * as grpc from '@grpc/grpc-js';
 
-class FaasWorkerOptions {}
+export class FaasWorkerOptions {}
 
 type FaasClientOptions =
   | ApiWorkerOptions
@@ -185,7 +185,10 @@ export class Faas {
         responseMessage.setId(message.getId());
 
         try {
-          const ctx = TriggerContext.fromGrpcTriggerRequest(triggerRequest);
+          const ctx = TriggerContext.fromGrpcTriggerRequest(
+            triggerRequest,
+            this.options
+          );
 
           let handler: GenericMiddleware<TriggerContext> = undefined;
           let triggerType = 'Unknown';

@@ -22,6 +22,8 @@ import {
 } from '@nitric/api/proto/storage/v1/storage_pb';
 import * as grpc from '@grpc/grpc-js';
 import { fromGrpcError, InvalidArgumentError } from '../../errors';
+import { BucketNotificationMiddleware } from '@nitric/sdk/faas';
+import { BucketNotification } from '@nitric/sdk/resources';
 
 /**
  * Nitric storage client, facilitates writing and reading from blob storage (buckets).
@@ -96,6 +98,28 @@ export class Bucket {
       );
     }
     return new File(this.storage, this, name);
+  }
+
+  /**
+   * Register and start a bucket notification handler that will be called for all matching notification events on this bucket
+   *
+   * @param notificationType the notification type that should trigger the middleware, either 'write' or 'delete'
+   * @param notificationPrefixFilter the file name prefix that files must match to trigger a notification
+   * @param middleware handler middleware which will be run for every incoming event
+   * @returns Promise which resolves when the handler server terminates
+   */
+  on(
+    notificationType: string,
+    notificationPrefixFilter: string,
+    ...middleware: BucketNotificationMiddleware[]
+  ): Promise<void> {
+    const notification = new BucketNotification(
+      this.name,
+      notificationType,
+      notificationPrefixFilter,
+      ...middleware
+    );
+    return notification['start']();
   }
 }
 

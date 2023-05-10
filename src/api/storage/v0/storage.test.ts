@@ -443,7 +443,7 @@ describe('bucket notification', () => {
     });
 
     beforeAll(async () => {
-      await bucket('test-bucket').on('created:test.png', mockFn);
+      await bucket('test-bucket').on('write', 'test.png', mockFn);
     });
 
     it('should create a new FaasClient', () => {
@@ -453,7 +453,7 @@ describe('bucket notification', () => {
     it('should provide Faas with BucketNotificationWorkerOptions', () => {
       const expectedOpts = new BucketNotificationWorkerOptions(
         'test-bucket',
-        'created',
+        'write',
         'test.png'
       );
       expect(faas.Faas).toBeCalledWith(expectedOpts);
@@ -470,7 +470,7 @@ describe('bucket notification', () => {
     });
 
     beforeAll(async () => {
-      await bucket('test-bucket').on('deleted:test.png', mockFn);
+      await bucket('test-bucket').on('delete', 'test.png', mockFn);
     });
 
     it('should create a new FaasClient', () => {
@@ -480,7 +480,7 @@ describe('bucket notification', () => {
     it('should provide Faas with BucketNotificationWorkerOptions', () => {
       const expectedOpts = new BucketNotificationWorkerOptions(
         'test-bucket',
-        'deleted',
+        'delete',
         'test.png'
       );
       expect(faas.Faas).toBeCalledWith(expectedOpts);
