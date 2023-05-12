@@ -23,7 +23,11 @@ import resourceClient from './client';
 import { storage, Bucket } from '../api/storage';
 import { ActionsList, make, SecureResource } from './common';
 import { fromGrpcError } from '../api/errors';
-import { Faas, BucketNotificationMiddleware } from '../faas';
+import {
+  Faas,
+  BucketNotificationMiddleware,
+  FileNotificationMiddleware,
+} from '../faas';
 import { BucketNotificationType } from '../gen/proto/faas/v1/faas_pb';
 
 type BucketPermission = 'reading' | 'writing' | 'deleting';
@@ -58,6 +62,20 @@ export class BucketNotificationWorkerOptions {
   }
 }
 
+export class FileNotificationWorkerOptions extends BucketNotificationWorkerOptions {
+  public readonly bucketRef: Bucket;
+
+  constructor(
+    bucketRef: Bucket,
+    notificationType: string,
+    notificationPrefixFilter: string
+  ) {
+    super(bucketRef.name, notificationType, notificationPrefixFilter);
+
+    this.bucketRef = bucketRef;
+  }
+}
+
 export class BucketNotification {
   private readonly faas: Faas;
 
@@ -69,6 +87,30 @@ export class BucketNotification {
   ) {
     this.faas = new Faas(
       new BucketNotificationWorkerOptions(
+        bucket,
+        notificationType,
+        notificationPrefixFilter
+      )
+    );
+    this.faas.bucketNotification(...middleware);
+  }
+
+  private async start(): Promise<void> {
+    return this.faas.start();
+  }
+}
+
+export class FileNotification {
+  private readonly faas: Faas;
+
+  constructor(
+    bucket: Bucket,
+    notificationType: string,
+    notificationPrefixFilter,
+    ...middleware: FileNotificationMiddleware[]
+  ) {
+    this.faas = new Faas(
+      new FileNotificationWorkerOptions(
         bucket,
         notificationType,
         notificationPrefixFilter

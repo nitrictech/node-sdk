@@ -22,8 +22,11 @@ import {
 } from '@nitric/api/proto/storage/v1/storage_pb';
 import * as grpc from '@grpc/grpc-js';
 import { fromGrpcError, InvalidArgumentError } from '../../errors';
-import { BucketNotificationMiddleware } from '@nitric/sdk/faas';
-import { BucketNotification } from '@nitric/sdk/resources';
+import {
+  BucketNotificationMiddleware,
+  FileNotificationMiddleware,
+} from '@nitric/sdk/faas';
+import { BucketNotification, FileNotification } from '@nitric/sdk/resources';
 
 /**
  * Nitric storage client, facilitates writing and reading from blob storage (buckets).
@@ -111,10 +114,10 @@ export class Bucket {
   on(
     notificationType: string,
     notificationPrefixFilter: string,
-    ...middleware: BucketNotificationMiddleware[]
+    ...middleware: FileNotificationMiddleware[]
   ): Promise<void> {
-    const notification = new BucketNotification(
-      this.name,
+    const notification = new FileNotification(
+      this,
       notificationType,
       notificationPrefixFilter,
       ...middleware
