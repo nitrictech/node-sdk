@@ -450,11 +450,7 @@ describe('bucket notification', () => {
     });
 
     beforeAll(async () => {
-      await bucket('test-bucket').on(
-        BucketNotificationType.Write,
-        'test.png',
-        mockFn
-      );
+      await bucket('test-bucket').on('write', 'test.png', mockFn);
     });
 
     it('should create a new FaasClient', () => {
@@ -464,7 +460,7 @@ describe('bucket notification', () => {
     it('should provide Faas with BucketNotificationWorkerOptions', () => {
       const expectedOpts = new BucketNotificationWorkerOptions(
         'test-bucket',
-        BucketNotificationType.Write,
+        'write',
         'test.png'
       );
       expect(faas.Faas).toBeCalledWith(expectedOpts);
@@ -481,11 +477,7 @@ describe('bucket notification', () => {
     });
 
     beforeAll(async () => {
-      await bucket('test-bucket').on(
-        BucketNotificationType.Delete,
-        'test.png',
-        mockFn
-      );
+      await bucket('test-bucket').on('delete', 'test.png', mockFn);
     });
 
     it('should create a new FaasClient', () => {
@@ -495,7 +487,7 @@ describe('bucket notification', () => {
     it('should provide Faas with BucketNotificationWorkerOptions', () => {
       const expectedOpts = new BucketNotificationWorkerOptions(
         'test-bucket',
-        BucketNotificationType.Delete,
+        'delete',
         'test.png'
       );
       expect(faas.Faas).toBeCalledWith(expectedOpts);
@@ -526,7 +518,7 @@ describe('file notification', () => {
     let bucketResource: Bucket;
     beforeAll(async () => {
       bucketResource = bucket('test-bucket-create').for('reading');
-      await bucketResource.on(BucketNotificationType.Write, 'test.png', mockFn);
+      await bucketResource.on('write', 'test.png', mockFn);
     });
 
     afterAll(() => {
@@ -544,7 +536,7 @@ describe('file notification', () => {
     it('should provide Faas with FileNotificationWorkerOptions', () => {
       const expectedOpts = new FileNotificationWorkerOptions(
         bucketResource,
-        BucketNotificationType.Write,
+        'write',
         'test.png'
       );
       expect(faas.Faas).toBeCalledWith(expectedOpts);
@@ -559,11 +551,7 @@ describe('file notification', () => {
     let bucketResource: Bucket;
     beforeAll(async () => {
       bucketResource = bucket('test-bucket-delete').for('reading');
-      await bucketResource.on(
-        BucketNotificationType.Delete,
-        'test.png',
-        mockFn
-      );
+      await bucketResource.on('delete', 'test.png', mockFn);
     });
 
     afterAll(() => {
@@ -581,7 +569,7 @@ describe('file notification', () => {
     it('should provide Faas with FileNotificationWorkerOptions', () => {
       const expectedOpts = new FileNotificationWorkerOptions(
         bucketResource,
-        BucketNotificationType.Delete,
+        'delete',
         'test.png'
       );
       expect(faas.Faas).toBeCalledWith(expectedOpts);
