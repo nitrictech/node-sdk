@@ -17,6 +17,7 @@ import {
   HttpContext,
   EventContext,
   BucketNotificationContext,
+  FileNotificationContext,
 } from '.';
 
 export type GenericHandler<Ctx> = (ctx: Ctx) => Promise<Ctx> | Ctx;
@@ -40,6 +41,8 @@ export type EventMiddleware<
 export type ScheduleMiddleware = GenericMiddleware<EventContext<undefined>>;
 export type BucketNotificationMiddleware =
   GenericMiddleware<BucketNotificationContext>;
+export type FileNotificationMiddleware =
+  GenericMiddleware<FileNotificationContext>;
 
 /**
  * createHandler

@@ -41,9 +41,9 @@ export class SubscriptionWorkerOptions {
 class Subscription<T extends Record<string, any> = Record<string, any>> {
   private readonly faas: Faas;
 
-  constructor(name: string, ...mw: EventMiddleware<T>[]) {
+  constructor(name: string, ...middleware: EventMiddleware<T>[]) {
     this.faas = new Faas(new SubscriptionWorkerOptions(name));
-    this.faas.event(...mw);
+    this.faas.event(...middleware);
   }
 
   private async start(): Promise<void> {
@@ -105,11 +105,11 @@ export class TopicResource<
   /**
    * Register and start a subscription handler that will be called for all events from this topic.
    *
-   * @param mw handler middleware which will be run for every incoming event
+   * @param middleware handler middleware which will be run for every incoming event
    * @returns Promise which resolves when the handler server terminates
    */
-  subscribe(...mw: EventMiddleware<T>[]): Promise<void> {
-    const sub = new Subscription<T>(this.name, ...mw);
+  subscribe(...middleware: EventMiddleware<T>[]): Promise<void> {
+    const sub = new Subscription<T>(this.name, ...middleware);
     return sub['start']();
   }
 

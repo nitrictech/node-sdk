@@ -43,6 +43,7 @@ import {
   BucketNotificationMiddleware,
   TriggerContext,
   TriggerMiddleware,
+  FileNotificationMiddleware,
 } from '.';
 
 import newTracerProvider from './traceProvider';
@@ -57,7 +58,7 @@ import {
 
 import * as grpc from '@grpc/grpc-js';
 
-class FaasWorkerOptions {}
+export class FaasWorkerOptions {}
 
 type FaasClientOptions =
   | ApiWorkerOptions
@@ -72,7 +73,9 @@ type FaasClientOptions =
 export class Faas {
   private httpHandler?: HttpMiddleware;
   private eventHandler?: EventMiddleware | ScheduleMiddleware;
-  private bucketNotificationHandler?: BucketNotificationMiddleware;
+  private bucketNotificationHandler?:
+    | BucketNotificationMiddleware
+    | FileNotificationMiddleware;
   private anyHandler?: TriggerMiddleware;
   private readonly options: FaasClientOptions;
 
@@ -108,7 +111,9 @@ export class Faas {
    * @param handlers the functions to call to respond to notification requests
    * @returns self
    */
-  bucketNotification(...handlers: BucketNotificationMiddleware[]): Faas {
+  bucketNotification(
+    ...handlers: BucketNotificationMiddleware[] | FileNotificationMiddleware[]
+  ): Faas {
     this.bucketNotificationHandler = createHandler(...handlers);
     return this;
   }
@@ -138,6 +143,7 @@ export class Faas {
    */
   private getBucketNotificationHandler():
     | BucketNotificationMiddleware
+    | FileNotificationMiddleware
     | TriggerMiddleware
     | undefined {
     return this.bucketNotificationHandler || this.anyHandler;
@@ -185,7 +191,10 @@ export class Faas {
         responseMessage.setId(message.getId());
 
         try {
-          const ctx = TriggerContext.fromGrpcTriggerRequest(triggerRequest);
+          const ctx = TriggerContext.fromGrpcTriggerRequest(
+            triggerRequest,
+            this.options
+          );
 
           let handler: GenericMiddleware<TriggerContext> = undefined;
           let triggerType = 'Unknown';

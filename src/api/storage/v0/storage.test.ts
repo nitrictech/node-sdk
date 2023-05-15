@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { FileMode, Storage } from './storage';
+import { Bucket, FileMode, Storage } from './storage';
 import { StorageServiceClient as GrpcStorageClient } from '@nitric/api/proto/storage/v1/storage_grpc_pb';
 import {
   StorageWriteResponse,
@@ -23,8 +23,15 @@ import {
   File,
 } from '@nitric/api/proto/storage/v1/storage_pb';
 import { UnimplementedError } from '../../errors';
-import { BucketNotificationWorkerOptions, bucket } from '@nitric/sdk/resources';
+import {
+  BucketNotificationType,
+  BucketNotificationWorkerOptions,
+  FileNotificationWorkerOptions,
+  bucket,
+} from '@nitric/sdk/resources';
 import { faas } from '@nitric/sdk';
+import { ResourceServiceClient } from '@nitric/sdk/gen/proto/resource/v1/resource_grpc_pb';
+import { ResourceDeclareResponse } from '@nitric/sdk/gen/proto/resource/v1/resource_pb';
 
 describe('Storage Client Tests', () => {
   describe('Given nitric.api.storage.StorageClient.Write throws an error', () => {
@@ -443,7 +450,11 @@ describe('bucket notification', () => {
     });
 
     beforeAll(async () => {
-      await bucket('test-bucket').on('created:test.png', mockFn);
+      await bucket('test-bucket').on(
+        BucketNotificationType.Write,
+        'test.png',
+        mockFn
+      );
     });
 
     it('should create a new FaasClient', () => {
@@ -453,7 +464,7 @@ describe('bucket notification', () => {
     it('should provide Faas with BucketNotificationWorkerOptions', () => {
       const expectedOpts = new BucketNotificationWorkerOptions(
         'test-bucket',
-        'created',
+        BucketNotificationType.Write,
         'test.png'
       );
       expect(faas.Faas).toBeCalledWith(expectedOpts);
@@ -470,7 +481,11 @@ describe('bucket notification', () => {
     });
 
     beforeAll(async () => {
-      await bucket('test-bucket').on('deleted:test.png', mockFn);
+      await bucket('test-bucket').on(
+        BucketNotificationType.Delete,
+        'test.png',
+        mockFn
+      );
     });
 
     it('should create a new FaasClient', () => {
@@ -480,7 +495,93 @@ describe('bucket notification', () => {
     it('should provide Faas with BucketNotificationWorkerOptions', () => {
       const expectedOpts = new BucketNotificationWorkerOptions(
         'test-bucket',
-        'deleted',
+        BucketNotificationType.Delete,
+        'test.png'
+      );
+      expect(faas.Faas).toBeCalledWith(expectedOpts);
+    });
+
+    it('should call FaasClient::start()', () => {
+      expect(startSpy).toBeCalledTimes(1);
+    });
+  });
+});
+
+describe('file notification', () => {
+  const startSpy = jest
+    .spyOn(faas.Faas.prototype, 'start')
+    .mockReturnValue(Promise.resolve());
+
+  const existsSpy = jest
+    .spyOn(ResourceServiceClient.prototype, 'declare')
+    .mockImplementation((_, callback: any) => {
+      const response = new ResourceDeclareResponse();
+      callback(null, response);
+      return null as any;
+    });
+
+  const mockFn = jest.fn();
+
+  describe('When registering a file notification for creating', () => {
+    let bucketResource: Bucket;
+    beforeAll(async () => {
+      bucketResource = bucket('test-bucket-create').for('reading');
+      await bucketResource.on(BucketNotificationType.Write, 'test.png', mockFn);
+    });
+
+    afterAll(() => {
+      jest.resetAllMocks();
+    });
+
+    it('should declare the new resource', () => {
+      expect(existsSpy).toBeCalledTimes(1);
+    });
+
+    it('should create a new FaasClient', () => {
+      expect(faas.Faas).toBeCalledTimes(1);
+    });
+
+    it('should provide Faas with FileNotificationWorkerOptions', () => {
+      const expectedOpts = new FileNotificationWorkerOptions(
+        bucketResource,
+        BucketNotificationType.Write,
+        'test.png'
+      );
+      expect(faas.Faas).toBeCalledWith(expectedOpts);
+    });
+
+    it('should call FaasClient::start()', () => {
+      expect(startSpy).toBeCalledTimes(1);
+    });
+  });
+
+  describe('When registering a file notification for deleting', () => {
+    let bucketResource: Bucket;
+    beforeAll(async () => {
+      bucketResource = bucket('test-bucket-delete').for('reading');
+      await bucketResource.on(
+        BucketNotificationType.Delete,
+        'test.png',
+        mockFn
+      );
+    });
+
+    afterAll(() => {
+      jest.resetAllMocks();
+    });
+
+    it('should declare the new resource', () => {
+      expect(existsSpy).toBeCalledTimes(1);
+    });
+
+    it('should create a new FaasClient', () => {
+      expect(faas.Faas).toBeCalledTimes(1);
+    });
+
+    it('should provide Faas with FileNotificationWorkerOptions', () => {
+      const expectedOpts = new FileNotificationWorkerOptions(
+        bucketResource,
+        BucketNotificationType.Delete,
         'test.png'
       );
       expect(faas.Faas).toBeCalledWith(expectedOpts);
