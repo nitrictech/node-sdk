@@ -34,10 +34,7 @@ type BucketPermission = 'reading' | 'writing' | 'deleting';
 
 const everything: BucketPermission[] = ['reading', 'writing', 'deleting'];
 
-export enum BucketNotificationType {
-  Write,
-  Delete,
-}
+export type BucketNotificationType = 'write' | 'delete';
 
 export class BucketNotificationWorkerOptions {
   public readonly bucket: string;
@@ -57,9 +54,9 @@ export class BucketNotificationWorkerOptions {
 
   static toGrpcEvent(notificationType: BucketNotificationType): 0 | 1 | 2 {
     switch (notificationType) {
-      case BucketNotificationType.Write:
+      case 'write':
         return ProtoBucketNotificationType.CREATED;
-      case BucketNotificationType.Delete:
+      case 'delete':
         return ProtoBucketNotificationType.DELETED;
       default:
         throw new Error(`notification type ${notificationType} is unsupported`);
