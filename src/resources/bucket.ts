@@ -28,11 +28,16 @@ import {
   BucketNotificationMiddleware,
   FileNotificationMiddleware,
 } from '../faas';
-import { BucketNotificationType } from '../gen/proto/faas/v1/faas_pb';
+import { BucketNotificationType as ProtoBucketNotificationType } from '../gen/proto/faas/v1/faas_pb';
 
 type BucketPermission = 'reading' | 'writing' | 'deleting';
 
 const everything: BucketPermission[] = ['reading', 'writing', 'deleting'];
+
+export enum BucketNotificationType {
+  Write,
+  Delete,
+}
 
 export class BucketNotificationWorkerOptions {
   public readonly bucket: string;
@@ -41,7 +46,7 @@ export class BucketNotificationWorkerOptions {
 
   constructor(
     bucket: string,
-    notificationType: string,
+    notificationType: BucketNotificationType,
     notificationPrefixFilter: string
   ) {
     this.bucket = bucket;
@@ -50,12 +55,12 @@ export class BucketNotificationWorkerOptions {
     this.notificationPrefixFilter = notificationPrefixFilter;
   }
 
-  static toGrpcEvent(notificationType: string): 0 | 1 | 2 {
+  static toGrpcEvent(notificationType: BucketNotificationType): 0 | 1 | 2 {
     switch (notificationType) {
-      case 'write':
-        return BucketNotificationType.CREATED;
-      case 'delete':
-        return BucketNotificationType.DELETED;
+      case BucketNotificationType.Write:
+        return ProtoBucketNotificationType.CREATED;
+      case BucketNotificationType.Delete:
+        return ProtoBucketNotificationType.DELETED;
       default:
         throw new Error(`notification type ${notificationType} is unsupported`);
     }
@@ -67,7 +72,7 @@ export class FileNotificationWorkerOptions extends BucketNotificationWorkerOptio
 
   constructor(
     bucketRef: Bucket,
-    notificationType: string,
+    notificationType: BucketNotificationType,
     notificationPrefixFilter: string
   ) {
     super(bucketRef.name, notificationType, notificationPrefixFilter);
@@ -81,7 +86,7 @@ export class BucketNotification {
 
   constructor(
     bucket: string,
-    notificationType: string,
+    notificationType: BucketNotificationType,
     notificationPrefixFilter,
     ...middleware: BucketNotificationMiddleware[]
   ) {
@@ -105,7 +110,7 @@ export class FileNotification {
 
   constructor(
     bucket: Bucket,
-    notificationType: string,
+    notificationType: BucketNotificationType,
     notificationPrefixFilter,
     ...middleware: FileNotificationMiddleware[]
   ) {
@@ -161,7 +166,7 @@ export class BucketResource extends SecureResource<BucketPermission> {
    * @returns Promise which resolves when the handler server terminates
    */
   on(
-    notificationType: string,
+    notificationType: BucketNotificationType,
     notificationPrefixFilter: string,
     ...middleware: BucketNotificationMiddleware[]
   ): Promise<void> {

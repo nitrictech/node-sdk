@@ -26,7 +26,11 @@ import {
   BucketNotificationMiddleware,
   FileNotificationMiddleware,
 } from '@nitric/sdk/faas';
-import { BucketNotification, FileNotification } from '@nitric/sdk/resources';
+import {
+  BucketNotification,
+  BucketNotificationType,
+  FileNotification,
+} from '@nitric/sdk/resources';
 
 /**
  * Nitric storage client, facilitates writing and reading from blob storage (buckets).
@@ -112,7 +116,7 @@ export class Bucket {
    * @returns Promise which resolves when the handler server terminates
    */
   on(
-    notificationType: string,
+    notificationType: BucketNotificationType,
     notificationPrefixFilter: string,
     ...middleware: FileNotificationMiddleware[]
   ): Promise<void> {
