@@ -39,6 +39,9 @@ describe('NitricTrigger.fromGrpcTriggerRequest', () => {
       const testQuery = new QueryValue();
       testQuery.addValue('test');
       ctx.getQueryParamsMap().set('test', testQuery);
+      const testEncodedQuery = new QueryValue();
+      testEncodedQuery.addValue(encodeURIComponent('/path/here'));
+      ctx.getQueryParamsMap().set('test-encoded', testEncodedQuery);
       const request = new TriggerRequest();
       request.setData('Hello World');
       request.setHttp(ctx);
@@ -69,6 +72,7 @@ describe('NitricTrigger.fromGrpcTriggerRequest', () => {
 
     it('should have the provided query params', () => {
       expect(trigger.http.req.query['test']).toBe('test');
+      expect(trigger.http.req.query['test-encoded']).toBe('/path/here');
     });
 
     it('should allow json response', () => {

@@ -302,7 +302,10 @@ export class HttpContext extends TriggerContext<HttpRequest, HttpResponse> {
     ).reduce(
       (acc, [key, [val]]) => ({
         ...acc,
-        [key]: val.length === 1 ? val[0] : val,
+        [key]:
+          val.length === 1
+            ? decodeURIComponent(val[0])
+            : val.map((v) => decodeURIComponent(v)),
       }),
       {}
     );
@@ -326,7 +329,7 @@ export class HttpContext extends TriggerContext<HttpRequest, HttpResponse> {
       .reduce(
         (acc, [key, val]) => ({
           ...acc,
-          [key]: val,
+          [key]: decodeURIComponent(val),
         }),
         {}
       );
