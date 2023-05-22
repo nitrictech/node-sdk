@@ -23,10 +23,108 @@ import resourceClient from './client';
 import { storage, Bucket } from '../api/storage';
 import { ActionsList, make, SecureResource } from './common';
 import { fromGrpcError } from '../api/errors';
+import {
+  Faas,
+  BucketNotificationMiddleware,
+  FileNotificationMiddleware,
+} from '../faas';
+import { BucketNotificationType as ProtoBucketNotificationType } from '../gen/proto/faas/v1/faas_pb';
 
 type BucketPermission = 'reading' | 'writing' | 'deleting';
 
 const everything: BucketPermission[] = ['reading', 'writing', 'deleting'];
+
+export type BucketNotificationType = 'write' | 'delete';
+
+export class BucketNotificationWorkerOptions {
+  public readonly bucket: string;
+  public readonly notificationType: 0 | 1 | 2;
+  public readonly notificationPrefixFilter: string;
+
+  constructor(
+    bucket: string,
+    notificationType: BucketNotificationType,
+    notificationPrefixFilter: string
+  ) {
+    this.bucket = bucket;
+    this.notificationType =
+      BucketNotificationWorkerOptions.toGrpcEvent(notificationType);
+    this.notificationPrefixFilter = notificationPrefixFilter;
+  }
+
+  static toGrpcEvent(notificationType: BucketNotificationType): 0 | 1 | 2 {
+    switch (notificationType) {
+      case 'write':
+        return ProtoBucketNotificationType.CREATED;
+      case 'delete':
+        return ProtoBucketNotificationType.DELETED;
+      default:
+        throw new Error(`notification type ${notificationType} is unsupported`);
+    }
+  }
+}
+
+export class FileNotificationWorkerOptions extends BucketNotificationWorkerOptions {
+  public readonly bucketRef: Bucket;
+
+  constructor(
+    bucketRef: Bucket,
+    notificationType: BucketNotificationType,
+    notificationPrefixFilter: string
+  ) {
+    super(bucketRef.name, notificationType, notificationPrefixFilter);
+
+    this.bucketRef = bucketRef;
+  }
+}
+
+export class BucketNotification {
+  private readonly faas: Faas;
+
+  constructor(
+    bucket: string,
+    notificationType: BucketNotificationType,
+    notificationPrefixFilter,
+    ...middleware: BucketNotificationMiddleware[]
+  ) {
+    this.faas = new Faas(
+      new BucketNotificationWorkerOptions(
+        bucket,
+        notificationType,
+        notificationPrefixFilter
+      )
+    );
+    this.faas.bucketNotification(...middleware);
+  }
+
+  private async start(): Promise<void> {
+    return this.faas.start();
+  }
+}
+
+export class FileNotification {
+  private readonly faas: Faas;
+
+  constructor(
+    bucket: Bucket,
+    notificationType: BucketNotificationType,
+    notificationPrefixFilter,
+    ...middleware: FileNotificationMiddleware[]
+  ) {
+    this.faas = new Faas(
+      new FileNotificationWorkerOptions(
+        bucket,
+        notificationType,
+        notificationPrefixFilter
+      )
+    );
+    this.faas.bucketNotification(...middleware);
+  }
+
+  private async start(): Promise<void> {
+    return this.faas.start();
+  }
+}
 
 /**
  * Cloud storage bucket resource for large file storage.
@@ -46,17 +144,36 @@ export class BucketResource extends SecureResource<BucketPermission> {
     req.setResource(resource);
 
     return new Promise<Resource>((resolve, reject) => {
-      resourceClient.declare(
-        req,
-        (error, response: ResourceDeclareResponse) => {
-          if (error) {
-            reject(fromGrpcError(error));
-          } else {
-            resolve(resource);
-          }
+      resourceClient.declare(req, (error, _: ResourceDeclareResponse) => {
+        if (error) {
+          reject(fromGrpcError(error));
+        } else {
+          resolve(resource);
         }
-      );
+      });
     });
+  }
+
+  /**
+   * Register and start a bucket notification handler that will be called for all matching notification events on this bucket
+   *
+   * @param notificationType the notification type that should trigger the middleware, either 'write' or 'delete'
+   * @param notificationPrefixFilter the file name prefix that files must match to trigger a notification
+   * @param middleware handler middleware which will be run for every incoming event
+   * @returns Promise which resolves when the handler server terminates
+   */
+  on(
+    notificationType: BucketNotificationType,
+    notificationPrefixFilter: string,
+    ...middleware: BucketNotificationMiddleware[]
+  ): Promise<void> {
+    const notification = new BucketNotification(
+      this.name,
+      notificationType,
+      notificationPrefixFilter,
+      ...middleware
+    );
+    return notification['start']();
   }
 
   protected permsToActions(...perms: BucketPermission[]): ActionsList {

@@ -5,21 +5,20 @@
 </p>
 
 <p align="center">
-  Build <a href="https://nitric.io">nitric</a> applications with Node.js
+  Build <a href="https://nitric.io">Nitric</a> applications with Node.js
 </p>
 
 <p align="center">
-  <img alt="Tests" src="https://github.com/nitrictech/node-sdk/actions/workflows/test.yaml/badge.svg?branch=main">
   <a href="https://codecov.io/gh/nitrictech/node-sdk">
-    <img alt="codecov" src="https://codecov.io/gh/nitrictech/node-sdk/branch/main/graph/badge.svg?token=N46TTGPE4G">
+    <img alt="codecov" src="https://img.shields.io/codecov/c/github/nitrictech/node-sdk?style=for-the-badge">
   </a>
   <a href="https://npmjs.org/package/@nitric/sdk">
-    <img alt="Version" src="https://img.shields.io/npm/v/@nitric/sdk.svg">
+    <img alt="Version" src="https://img.shields.io/npm/v/@nitric/sdk.svg?style=for-the-badge">
   </a>
   <a href="https://npmjs.org/package/@nitric/sdk">
-    <img alt="Downloads/week" src="https://img.shields.io/npm/dw/@nitric/sdk.svg">
+    <img alt="Downloads/week" src="https://img.shields.io/npm/dw/@nitric/sdk.svg?style=for-the-badge">
   </a>
-  <a href="https://discord.gg/Webemece5C"><img alt="Discord" src="https://img.shields.io/discord/955259353043173427?label=discord"></a>
+  <a href="https://discord.gg/Webemece5C"><img alt="Discord" src="https://img.shields.io/discord/955259353043173427?label=discord&style=for-the-badge"></a>
 </p>
 
 The NodeJS SDK supports the use of the Nitric framework with NodeJS 12+. For more information, check out the main [Nitric repo](https://github.com/nitrictech/nitric).

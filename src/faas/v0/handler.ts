@@ -12,7 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { NitricEvent } from '../../types';
-import { TriggerContext, HttpContext, EventContext } from '.';
+import {
+  TriggerContext,
+  HttpContext,
+  EventContext,
+  BucketNotificationContext,
+  FileNotificationContext,
+} from '.';
 
 export type GenericHandler<Ctx> = (ctx: Ctx) => Promise<Ctx> | Ctx;
 
@@ -33,6 +39,10 @@ export type EventMiddleware<
   T extends Record<string, any> = Record<string, any>
 > = GenericMiddleware<EventContext<NitricEvent<T>>>;
 export type ScheduleMiddleware = GenericMiddleware<EventContext<undefined>>;
+export type BucketNotificationMiddleware =
+  GenericMiddleware<BucketNotificationContext>;
+export type FileNotificationMiddleware =
+  GenericMiddleware<FileNotificationContext>;
 
 /**
  * createHandler

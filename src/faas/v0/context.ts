@@ -14,13 +14,25 @@
 import {
   TriggerRequest,
   TriggerResponse,
-  TopicResponseContext,
-  HttpResponseContext,
-  HeaderValue,
   TraceContext,
+  HeaderValue,
+  HttpResponseContext,
+  NotificationResponseContext,
+  TopicResponseContext,
+  BucketNotificationType as ProtoBucketNotificationType,
 } from '@nitric/api/proto/faas/v1/faas_pb';
 import * as api from '@opentelemetry/api';
+import * as jspb from 'google-protobuf';
 import { jsonResponse } from './json';
+import { Bucket, File } from '@nitric/sdk/api';
+import {
+  ApiWorkerOptions,
+  BucketNotificationWorkerOptions,
+  FileNotificationWorkerOptions,
+  SubscriptionWorkerOptions,
+  bucket,
+} from '@nitric/sdk';
+import { FaasWorkerOptions } from './start';
 
 export abstract class TriggerContext<
   Req extends AbstractRequest = AbstractRequest,
@@ -48,6 +60,15 @@ export abstract class TriggerContext<
   }
 
   /**
+   * Noop base context bucketNotification method
+   *
+   * @returns undefined
+   */
+  public get bucketNotification(): BucketNotificationContext | undefined {
+    return undefined;
+  }
+
+  /**
    * Return the request object from this context.
    *
    * @returns the request object.
@@ -67,13 +88,25 @@ export abstract class TriggerContext<
 
   // Instantiate a concrete TriggerContext from the gRPC trigger model
   static fromGrpcTriggerRequest(
-    trigger: TriggerRequest
+    trigger: TriggerRequest,
+    options?: FaasWorkerOptions
   ): TriggerContext<any, any> {
     // create context
     if (trigger.hasHttp()) {
       return HttpContext.fromGrpcTriggerRequest(trigger);
     } else if (trigger.hasTopic()) {
       return EventContext.fromGrpcTriggerRequest(trigger);
+    } else if (trigger.hasNotification()) {
+      if (options instanceof FileNotificationWorkerOptions) {
+        return FileNotificationContext.fromGrpcTriggerRequest(
+          trigger,
+          options as FileNotificationWorkerOptions
+        );
+      }
+      return BucketNotificationContext.fromGrpcTriggerRequest(
+        trigger,
+        options as BucketNotificationWorkerOptions
+      );
     }
     throw new Error('Unsupported trigger request type');
   }
@@ -83,6 +116,8 @@ export abstract class TriggerContext<
       return HttpContext.toGrpcTriggerResponse(ctx);
     } else if (ctx.event) {
       return EventContext.toGrpcTriggerResponse(ctx);
+    } else if (ctx.bucketNotification) {
+      return BucketNotificationContext.toGrpcTriggerResponse(ctx);
     }
 
     throw new Error('Unsupported trigger context type');
@@ -102,6 +137,12 @@ export abstract class AbstractRequest<
     this.traceContext = traceContext;
   }
 
+  /**
+   * Return the request payload as a string.
+   * If the request was a byte array it will converted using UTF-8 text decoding.
+   *
+   * @returns the request payload as a string
+   */
   text(): string {
     const stringPayload =
       typeof this.data === 'string'
@@ -111,13 +152,19 @@ export abstract class AbstractRequest<
     return stringPayload;
   }
 
+  /**
+   * Deserialize the request payload from JSON
+   *
+   * @returns JSON parsed request body
+   */
   json(): JSONT {
     // attempt to deserialize as a JSON object
-    return this.text() ? JSON.parse(this.text()) : {};
+    const textBody = this.text();
+    return textBody ? JSON.parse(textBody) : undefined;
   }
 }
 
-interface EventResponse {
+export interface EventResponse {
   success: boolean;
 }
 
@@ -202,23 +249,33 @@ export class EventRequest<T> extends AbstractRequest<T> {
 }
 
 // Propagate the context to the root context
-const getTraceContext = (traceContext: TraceContext): api.Context => {
-  const traceContextObject: Record<string, string> = traceContext
-    ? traceContext
-        .getValuesMap()
-        .toObject()
-        .reduce((prev, [k, v]) => (prev[k] = v), {})
+export const getTraceContext = (traceContext: TraceContext): api.Context => {
+  const traceContextObject = traceContext
+    ? objectFromMap(traceContext.getValuesMap())
     : {};
 
   return api.propagation.extract(api.context.active(), traceContextObject);
 };
 
+const objectFromMap = (map: jspb.Map<string, string>) => {
+  return map
+    ? map.toObject().reduce((prev, [k, v]) => {
+        prev[k] = v;
+        return prev;
+      }, {})
+    : {};
+};
+
+// HTTP CONTEXT
 export class HttpContext extends TriggerContext<HttpRequest, HttpResponse> {
   public get http(): HttpContext {
     return this;
   }
 
-  static fromGrpcTriggerRequest(trigger: TriggerRequest): HttpContext {
+  static fromGrpcTriggerRequest(
+    trigger: TriggerRequest,
+    options?: ApiWorkerOptions
+  ): HttpContext {
     const http = trigger.getHttp();
     const ctx = new HttpContext();
 
@@ -245,7 +302,10 @@ export class HttpContext extends TriggerContext<HttpRequest, HttpResponse> {
     ).reduce(
       (acc, [key, [val]]) => ({
         ...acc,
-        [key]: val.length === 1 ? val[0] : val,
+        [key]:
+          val.length === 1
+            ? decodeURIComponent(val[0])
+            : val.map((v) => decodeURIComponent(v)),
       }),
       {}
     );
@@ -269,7 +329,7 @@ export class HttpContext extends TriggerContext<HttpRequest, HttpResponse> {
       .reduce(
         (acc, [key, val]) => ({
           ...acc,
-          [key]: val,
+          [key]: decodeURIComponent(val),
         }),
         {}
       );
@@ -368,7 +428,8 @@ export class EventContext<T> extends TriggerContext<
   }
 
   static fromGrpcTriggerRequest(
-    trigger: TriggerRequest
+    trigger: TriggerRequest,
+    options?: SubscriptionWorkerOptions
   ): EventContext<unknown> {
     const topic = trigger.getTopic();
     const ctx = new EventContext();
@@ -394,4 +455,143 @@ export class EventContext<T> extends TriggerContext<
     triggerResponse.setTopic(topicResponse);
     return triggerResponse;
   }
+}
+
+// BUCKET NOTIFICATION CONTEXT
+export class BucketNotificationContext extends TriggerContext<
+  BucketNotificationRequest,
+  BucketNotificationResponse
+> {
+  public get bucketNotification(): BucketNotificationContext {
+    return this;
+  }
+
+  static fromGrpcTriggerRequest(
+    trigger: TriggerRequest,
+    options?: BucketNotificationWorkerOptions
+  ): BucketNotificationContext {
+    const ctx = new BucketNotificationContext();
+    const bucketConfig = trigger.getNotification().getBucket();
+
+    ctx.request = new BucketNotificationRequest(
+      trigger.getData_asU8(),
+      getTraceContext(trigger.getTraceContext()),
+      bucketConfig.getKey(),
+      bucketConfig.getType()
+    );
+
+    ctx.response = {
+      success: true,
+    };
+
+    return ctx;
+  }
+
+  static toGrpcTriggerResponse(
+    ctx: TriggerContext<AbstractRequest, any>
+  ): TriggerResponse {
+    const notifyCtx = ctx.bucketNotification;
+    const triggerResponse = new TriggerResponse();
+    const notificationResponse = new NotificationResponseContext();
+    notificationResponse.setSuccess(notifyCtx.res.success);
+    triggerResponse.setNotification(notificationResponse);
+    return triggerResponse;
+  }
+}
+
+export enum BucketNotificationType {
+  Created,
+  Deleted,
+}
+
+export class BucketNotificationRequest extends AbstractRequest {
+  public readonly key: string;
+  public readonly notificationType: BucketNotificationType;
+
+  constructor(
+    data: string | Uint8Array,
+    traceContext: api.Context,
+    key: string,
+    notificationType: number
+  ) {
+    super(data, traceContext);
+
+    // Get reference to the bucket
+    this.key = key;
+    this.notificationType = this.eventTypeToNotificationType(notificationType);
+  }
+
+  private eventTypeToNotificationType = (
+    eventType: number
+  ): BucketNotificationType => {
+    switch (eventType) {
+      case ProtoBucketNotificationType.CREATED:
+        return BucketNotificationType.Created;
+      case ProtoBucketNotificationType.DELETED:
+        return BucketNotificationType.Deleted;
+      default:
+        throw new Error(`event type unsupported: ${eventType}`);
+    }
+  };
+}
+
+export class FileNotificationContext extends TriggerContext<
+  FileNotificationRequest,
+  BucketNotificationResponse
+> {
+  public get bucketNotification(): FileNotificationContext {
+    return this;
+  }
+
+  static fromGrpcTriggerRequest(
+    trigger: TriggerRequest,
+    options: FileNotificationWorkerOptions
+  ): BucketNotificationContext {
+    const ctx = new FileNotificationContext();
+    const bucketConfig = trigger.getNotification().getBucket();
+
+    ctx.request = new FileNotificationRequest(
+      trigger.getData_asU8(),
+      getTraceContext(trigger.getTraceContext()),
+      bucketConfig.getKey(),
+      bucketConfig.getType(),
+      options.bucketRef
+    );
+
+    ctx.response = {
+      success: true,
+    };
+
+    return ctx;
+  }
+
+  static toGrpcTriggerResponse(
+    ctx: TriggerContext<AbstractRequest, any>
+  ): TriggerResponse {
+    const notifyCtx = ctx.bucketNotification;
+    const triggerResponse = new TriggerResponse();
+    const notificationResponse = new NotificationResponseContext();
+    notificationResponse.setSuccess(notifyCtx.res.success);
+    triggerResponse.setNotification(notificationResponse);
+    return triggerResponse;
+  }
+}
+export class FileNotificationRequest extends BucketNotificationRequest {
+  public readonly file: File;
+
+  constructor(
+    data: string | Uint8Array,
+    traceContext: api.Context,
+    key: string,
+    notificationType: number,
+    bucket: Bucket
+  ) {
+    super(data, traceContext, key, notificationType);
+
+    this.file = bucket.file(key);
+  }
+}
+
+export interface BucketNotificationResponse {
+  success: boolean;
 }

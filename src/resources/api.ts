@@ -20,7 +20,6 @@ import {
   Resource,
   ResourceDeclareRequest,
   ResourceDeclareResponse,
-  ResourceDetailsRequest,
   ResourceDetailsResponse,
   ResourceType,
   ResourceTypeMap,
@@ -28,7 +27,7 @@ import {
 import { fromGrpcError } from '../api/errors';
 import resourceClient from './client';
 import { HttpMethod } from '../types';
-import { make, newer, Resource as Base } from './common';
+import { make, Resource as Base } from './common';
 import path from 'path';
 
 export class ApiWorkerOptions {
@@ -50,7 +49,7 @@ export class ApiWorkerOptions {
   }
 }
 
-interface MethodOptions<SecurityDefs extends string> {
+export interface MethodOptions<SecurityDefs extends string> {
   /**
    * Optional security definitions for this method
    */
@@ -81,7 +80,7 @@ class Method<SecurityDefs extends string> {
   }
 }
 
-interface RouteOpts {
+export interface RouteOptions {
   /**
    * Optional middleware to apply to all methods for the route. Useful for universal middleware such as CORS or Auth.
    */
@@ -93,22 +92,26 @@ export class Route<SecurityDefs extends string> {
   public readonly path: string;
   public readonly middleware: HttpMiddleware[];
 
-  constructor(api: Api<SecurityDefs>, path: string, opts: RouteOpts = {}) {
+  constructor(
+    api: Api<SecurityDefs>,
+    path: string,
+    options: RouteOptions = {}
+  ) {
     this.api = api;
     this.path = path;
-    const { middleware = [] } = opts;
+    const { middleware = [] } = options;
     this.middleware = composeMiddleware(middleware);
   }
 
   async method(
     methods: HttpMethod[],
-    opts: MethodOptions<SecurityDefs>,
+    options: MethodOptions<SecurityDefs>,
     ...middleware: HttpMiddleware[]
   ): Promise<void> {
     const getHandler = new Method(
       this,
       methods,
-      opts,
+      options,
       ...this.middleware,
       ...middleware
     );
@@ -119,118 +122,118 @@ export class Route<SecurityDefs extends string> {
    * Register a handler function for GET requests to this route
    *
    * @param middleware that should be run on any GET request to this route
-   * @param opts the options for this method, such as security definitions
+   * @param options for this method, such as security definitions
    * @returns a Promise that resolves if the handler stops running
    */
   async get(
     middleware: HttpMiddleware | HttpMiddleware[],
-    opts: MethodOptions<SecurityDefs> = {}
+    options: MethodOptions<SecurityDefs> = {}
   ): Promise<void> {
-    return this.method(['GET'], opts, ...composeMiddleware(middleware));
+    return this.method(['GET'], options, ...composeMiddleware(middleware));
   }
 
   /**
    * Register a handler function for POST requests to this route
    *
    * @param middleware that should respond to any matching requests to this route and method
-   * @param opts the options for this method, such as security definitions
+   * @param options for this method, such as security definitions
    * @returns a Promise that resolves if the handler stops running
    */
   async post(
     middleware: HttpMiddleware | HttpMiddleware[],
-    opts: MethodOptions<SecurityDefs> = {}
+    options: MethodOptions<SecurityDefs> = {}
   ): Promise<void> {
-    return this.method(['POST'], opts, ...composeMiddleware(middleware));
+    return this.method(['POST'], options, ...composeMiddleware(middleware));
   }
 
   /**
    * Register a handler function for PUT requests to this route
    *
    * @param middleware that should respond to any matching requests to this route and method
-   * @param opts the options for this method, such as security definitions
+   * @param options for this method, such as security definitions
    * @returns a Promise that resolves if the handler stops running
    */
   async put(
     middleware: HttpMiddleware | HttpMiddleware[],
-    opts: MethodOptions<SecurityDefs> = {}
+    options: MethodOptions<SecurityDefs> = {}
   ): Promise<void> {
-    return this.method(['PUT'], opts, ...composeMiddleware(middleware));
+    return this.method(['PUT'], options, ...composeMiddleware(middleware));
   }
 
   /**
    * Register a handler function for PATCH requests to this route
    *
    * @param middleware that should respond to any matching requests to this route and method
-   * @param opts the options for this method, such as security definitions
+   * @param options for this method, such as security definitions
    * @returns a Promise that resolves if the handler stops running
    */
   async patch(
     middleware: HttpMiddleware | HttpMiddleware[],
-    opts: MethodOptions<SecurityDefs> = {}
+    options: MethodOptions<SecurityDefs> = {}
   ): Promise<void> {
-    return this.method(['PATCH'], opts, ...composeMiddleware(middleware));
+    return this.method(['PATCH'], options, ...composeMiddleware(middleware));
   }
 
   /**
    * Register a handler function for DELETE requests to this route
    *
    * @param middleware that should respond to any matching requests to this route and method
-   * @param opts the options for this method, such as security definitions
+   * @param options for this method, such as security definitions
    * @returns a Promise that resolves if the handler stops running
    */
   async delete(
     middleware: HttpMiddleware | HttpMiddleware[],
-    opts: MethodOptions<SecurityDefs> = {}
+    options: MethodOptions<SecurityDefs> = {}
   ): Promise<void> {
-    return this.method(['DELETE'], opts, ...composeMiddleware(middleware));
+    return this.method(['DELETE'], options, ...composeMiddleware(middleware));
   }
 
   /**
    * Register a handler function for OPTIONS requests to this route
    *
    * @param middleware that should respond to any matching requests to this route and method
-   * @param opts the options for this method, such as security definitions
+   * @param options for this method, such as security definitions
    * @returns a Promise that resolves if the handler stops running
    */
   async options(
     middleware: HttpMiddleware | HttpMiddleware[],
-    opts: MethodOptions<SecurityDefs> = {}
+    options: MethodOptions<SecurityDefs> = {}
   ): Promise<void> {
-    return this.method(['OPTIONS'], opts, ...composeMiddleware(middleware));
+    return this.method(['OPTIONS'], options, ...composeMiddleware(middleware));
   }
 
   /**
    * Register a handler function for GET, POST, PATCH, PUT and DELETE requests to this route
    *
    * @param middleware that should respond to matching requests to this route and all HTTP methods
-   * @param opts the options for this method, such as security definitions
+   * @param options for this method, such as security definitions
    * @returns a Promise that resolves if the handler stops running
    */
   async all(
     middleware: HttpMiddleware | HttpMiddleware[],
-    opts: MethodOptions<SecurityDefs> = {}
+    options: MethodOptions<SecurityDefs> = {}
   ): Promise<void> {
     return this.method(
       ['GET', 'POST', 'PATCH', 'PUT', 'DELETE', 'OPTIONS'],
-      opts,
+      options,
       ...composeMiddleware(middleware)
     );
   }
 }
 
-interface BaseSecurityDefinition<T extends string> {
+export interface BaseSecurityDefinition<T extends string> {
   kind: T;
 }
 
-interface JwtSecurityDefinition extends BaseSecurityDefinition<'jwt'> {
+export interface JwtSecurityDefinition extends BaseSecurityDefinition<'jwt'> {
   issuer: string;
   audiences: string[];
 }
 
 // TODO: Union type for multiple security definition mappings
-type SecurityDefinition = JwtSecurityDefinition;
+export type SecurityDefinition = JwtSecurityDefinition;
 
-interface ApiOpts<Defs extends string> {
+export interface ApiOptions<Defs extends string> {
   /**
    * The base path for all routes in the API.
    *
@@ -249,7 +252,7 @@ interface ApiOpts<Defs extends string> {
   securityDefinitions?: Record<Defs, SecurityDefinition>;
 
   /**
-   * Optional root level secruity for the API
+   * Optional root level security for the API
    */
   security?: Record<Defs, string[]>;
 }
@@ -274,7 +277,7 @@ export class Api<SecurityDefs extends string> extends Base<ApiDetails> {
   >;
   private readonly security?: Record<SecurityDefs, string[]>;
 
-  constructor(name: string, options: ApiOpts<SecurityDefs> = {}) {
+  constructor(name: string, options: ApiOptions<SecurityDefs> = {}) {
     super(name);
     const {
       middleware,
@@ -307,7 +310,7 @@ export class Api<SecurityDefs extends string> extends Base<ApiDetails> {
    * @param options route options such as setting middleware which applies to all methods in the route
    * @returns the route object, which can be used to register method handlers
    */
-  route(match: string, options?: RouteOpts): Route<SecurityDefs> {
+  route(match: string, options?: RouteOptions): Route<SecurityDefs> {
     // ensure path seperator is always foward slash (for windows)
     const apiRoute = path.join(this.path, match).split(path.sep).join('/');
 
@@ -337,15 +340,15 @@ export class Api<SecurityDefs extends string> extends Base<ApiDetails> {
    *
    * @param match the route path matcher e.g. '/home'. Supports path params via colon prefix e.g. '/customers/:customerId'
    * @param middleware the middleware/handler to register for calls to GET
-   * @param opts the options for this method, such as security definitions
+   * @param options for this method, such as security definitions
    * @returns A Promise that resolves when the handler terminates.
    */
   async get(
     match: string,
     middleware: HttpMiddleware | HttpMiddleware[],
-    opts: MethodOptions<SecurityDefs> = {}
+    options: MethodOptions<SecurityDefs> = {}
   ): Promise<void> {
-    return this.route(match).get(composeMiddleware(middleware), opts);
+    return this.route(match).get(composeMiddleware(middleware), options);
   }
 
   /**
@@ -353,15 +356,15 @@ export class Api<SecurityDefs extends string> extends Base<ApiDetails> {
    *
    * @param match the route path matcher e.g. '/home'. Supports path params via colon prefix e.g. '/customers/:customerId'
    * @param middleware the middleware/handler to register for calls to POST
-   * @param opts the options for this method, such as security definitions
+   * @param options for this method, such as security definitions
    * @returns A Promise that resolves when the handler terminates.
    */
   async post(
     match: string,
     middleware: HttpMiddleware | HttpMiddleware[],
-    opts: MethodOptions<SecurityDefs> = {}
+    options: MethodOptions<SecurityDefs> = {}
   ): Promise<void> {
-    return this.route(match).post(composeMiddleware(middleware), opts);
+    return this.route(match).post(composeMiddleware(middleware), options);
   }
 
   /**
@@ -369,15 +372,15 @@ export class Api<SecurityDefs extends string> extends Base<ApiDetails> {
    *
    * @param match the route path matcher e.g. '/home'. Supports path params via colon prefix e.g. '/customers/:customerId'
    * @param middleware the middleware/handler to register for calls to PUT
-   * @param opts the options for this method, such as security definitions
+   * @param options for this method, such as security definitions
    * @returns A Promise that resolves when the handler terminates.
    */
   async put(
     match: string,
     middleware: HttpMiddleware | HttpMiddleware[],
-    opts: MethodOptions<SecurityDefs> = {}
+    options: MethodOptions<SecurityDefs> = {}
   ): Promise<void> {
-    return this.route(match).put(composeMiddleware(middleware), opts);
+    return this.route(match).put(composeMiddleware(middleware), options);
   }
 
   /**
@@ -385,15 +388,15 @@ export class Api<SecurityDefs extends string> extends Base<ApiDetails> {
    *
    * @param match the route path matcher e.g. '/home'. Supports path params via colon prefix e.g. '/customers/:customerId'
    * @param middleware the middleware/handler to register for calls to PATCH
-   * @param opts the options for this method, such as security definitions
+   * @param options for this method, such as security definitions
    * @returns A Promise that resolves when the handler terminates.
    */
   async patch(
     match: string,
     middleware: HttpMiddleware | HttpMiddleware[],
-    opts: MethodOptions<SecurityDefs> = {}
+    options: MethodOptions<SecurityDefs> = {}
   ): Promise<void> {
-    return this.route(match).patch(composeMiddleware(middleware), opts);
+    return this.route(match).patch(composeMiddleware(middleware), options);
   }
 
   /**
@@ -401,15 +404,15 @@ export class Api<SecurityDefs extends string> extends Base<ApiDetails> {
    *
    * @param match the route path matcher e.g. '/home'. Supports path params via colon prefix e.g. '/customers/:customerId'
    * @param middleware the middleware/handler to register for calls to DELETE
-   * @param opts the options for this method, such as security definitions
+   * @param options for this method, such as security definitions
    * @returns A Promise that resolves when the handler terminates.
    */
   async delete(
     match: string,
     middleware: HttpMiddleware | HttpMiddleware[],
-    opts: MethodOptions<SecurityDefs> = {}
+    options: MethodOptions<SecurityDefs> = {}
   ): Promise<void> {
-    return this.route(match).delete(composeMiddleware(middleware), opts);
+    return this.route(match).delete(composeMiddleware(middleware), options);
   }
 
   /**
@@ -417,15 +420,15 @@ export class Api<SecurityDefs extends string> extends Base<ApiDetails> {
    *
    * @param match the route path matcher e.g. '/home'. Supports path params via colon prefix e.g. '/customers/:customerId'
    * @param middleware the middleware/handler to register for calls to DELETE
-   * @param opts the options for this method, such as security definitions
+   * @param options for this method, such as security definitions
    * @returns A Promise that resolves when the handler terminates.
    */
   async options(
     match: string,
     middleware: HttpMiddleware | HttpMiddleware[],
-    opts: MethodOptions<SecurityDefs> = {}
+    options: MethodOptions<SecurityDefs> = {}
   ): Promise<void> {
-    return this.route(match).options(composeMiddleware(middleware), opts);
+    return this.route(match).options(composeMiddleware(middleware), options);
   }
 
   /**
@@ -498,16 +501,13 @@ export class Api<SecurityDefs extends string> extends Base<ApiDetails> {
     req.setResource(resource);
 
     return new Promise<Resource>((resolve, reject) => {
-      resourceClient.declare(
-        req,
-        (error, response: ResourceDeclareResponse) => {
-          if (error) {
-            reject(fromGrpcError(error));
-          } else {
-            resolve(resource);
-          }
+      resourceClient.declare(req, (error, _: ResourceDeclareResponse) => {
+        if (error) {
+          reject(fromGrpcError(error));
+        } else {
+          resolve(resource);
         }
-      );
+      });
     });
   }
 }
@@ -524,19 +524,19 @@ export class Api<SecurityDefs extends string> extends Base<ApiDetails> {
  */
 export const api: <Defs extends string>(
   name: string,
-  options?: ApiOpts<Defs>
+  options?: ApiOptions<Defs>
 ) => Api<Defs> = make(Api);
 
 /**
  * Create a JWT security definition.
  *
- * @param opts security definition options
+ * @param options security definition options
  * @returns the new security definition.
  */
 export const jwt = (
-  opts: Omit<JwtSecurityDefinition, 'kind'>
+  options: Omit<JwtSecurityDefinition, 'kind'>
 ): JwtSecurityDefinition => {
-  return { kind: 'jwt', issuer: opts.issuer, audiences: opts.audiences };
+  return { kind: 'jwt', issuer: options.issuer, audiences: options.audiences };
 };
 
 const composeMiddleware = (middleware: HttpMiddleware | HttpMiddleware[]) =>

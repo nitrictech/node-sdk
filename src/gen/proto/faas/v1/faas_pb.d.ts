@@ -261,6 +261,56 @@ export namespace ScheduleCron {
   }
 }
 
+export class BucketNotificationWorker extends jspb.Message {
+  getBucket(): string;
+  setBucket(value: string): void;
+
+  hasConfig(): boolean;
+  clearConfig(): void;
+  getConfig(): BucketNotificationConfig | undefined;
+  setConfig(value?: BucketNotificationConfig): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): BucketNotificationWorker.AsObject;
+  static toObject(includeInstance: boolean, msg: BucketNotificationWorker): BucketNotificationWorker.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: BucketNotificationWorker, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): BucketNotificationWorker;
+  static deserializeBinaryFromReader(message: BucketNotificationWorker, reader: jspb.BinaryReader): BucketNotificationWorker;
+}
+
+export namespace BucketNotificationWorker {
+  export type AsObject = {
+    bucket: string,
+    config?: BucketNotificationConfig.AsObject,
+  }
+}
+
+export class BucketNotificationConfig extends jspb.Message {
+  getNotificationType(): BucketNotificationTypeMap[keyof BucketNotificationTypeMap];
+  setNotificationType(value: BucketNotificationTypeMap[keyof BucketNotificationTypeMap]): void;
+
+  getNotificationPrefixFilter(): string;
+  setNotificationPrefixFilter(value: string): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): BucketNotificationConfig.AsObject;
+  static toObject(includeInstance: boolean, msg: BucketNotificationConfig): BucketNotificationConfig.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: BucketNotificationConfig, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): BucketNotificationConfig;
+  static deserializeBinaryFromReader(message: BucketNotificationConfig, reader: jspb.BinaryReader): BucketNotificationConfig;
+}
+
+export namespace BucketNotificationConfig {
+  export type AsObject = {
+    notificationType: BucketNotificationTypeMap[keyof BucketNotificationTypeMap],
+    notificationPrefixFilter: string,
+  }
+}
+
 export class InitRequest extends jspb.Message {
   hasApi(): boolean;
   clearApi(): void;
@@ -276,6 +326,11 @@ export class InitRequest extends jspb.Message {
   clearSchedule(): void;
   getSchedule(): ScheduleWorker | undefined;
   setSchedule(value?: ScheduleWorker): void;
+
+  hasBucketNotification(): boolean;
+  clearBucketNotification(): void;
+  getBucketNotification(): BucketNotificationWorker | undefined;
+  setBucketNotification(value?: BucketNotificationWorker): void;
 
   getWorkerCase(): InitRequest.WorkerCase;
   serializeBinary(): Uint8Array;
@@ -293,6 +348,7 @@ export namespace InitRequest {
     api?: ApiWorker.AsObject,
     subscription?: SubscriptionWorker.AsObject,
     schedule?: ScheduleWorker.AsObject,
+    bucketNotification?: BucketNotificationWorker.AsObject,
   }
 
   export enum WorkerCase {
@@ -300,6 +356,7 @@ export namespace InitRequest {
     API = 10,
     SUBSCRIPTION = 11,
     SCHEDULE = 12,
+    BUCKET_NOTIFICATION = 13,
   }
 }
 
@@ -362,6 +419,11 @@ export class TriggerRequest extends jspb.Message {
   getTopic(): TopicTriggerContext | undefined;
   setTopic(value?: TopicTriggerContext): void;
 
+  hasNotification(): boolean;
+  clearNotification(): void;
+  getNotification(): NotificationTriggerContext | undefined;
+  setNotification(value?: NotificationTriggerContext): void;
+
   getContextCase(): TriggerRequest.ContextCase;
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): TriggerRequest.AsObject;
@@ -380,12 +442,14 @@ export namespace TriggerRequest {
     traceContext?: TraceContext.AsObject,
     http?: HttpTriggerContext.AsObject,
     topic?: TopicTriggerContext.AsObject,
+    notification?: NotificationTriggerContext.AsObject,
   }
 
   export enum ContextCase {
     CONTEXT_NOT_SET = 0,
     HTTP = 3,
     TOPIC = 4,
+    NOTIFICATION = 5,
   }
 }
 
@@ -492,6 +556,62 @@ export namespace TopicTriggerContext {
   }
 }
 
+export class BucketNotification extends jspb.Message {
+  getKey(): string;
+  setKey(value: string): void;
+
+  getType(): BucketNotificationTypeMap[keyof BucketNotificationTypeMap];
+  setType(value: BucketNotificationTypeMap[keyof BucketNotificationTypeMap]): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): BucketNotification.AsObject;
+  static toObject(includeInstance: boolean, msg: BucketNotification): BucketNotification.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: BucketNotification, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): BucketNotification;
+  static deserializeBinaryFromReader(message: BucketNotification, reader: jspb.BinaryReader): BucketNotification;
+}
+
+export namespace BucketNotification {
+  export type AsObject = {
+    key: string,
+    type: BucketNotificationTypeMap[keyof BucketNotificationTypeMap],
+  }
+}
+
+export class NotificationTriggerContext extends jspb.Message {
+  getSource(): string;
+  setSource(value: string): void;
+
+  hasBucket(): boolean;
+  clearBucket(): void;
+  getBucket(): BucketNotification | undefined;
+  setBucket(value?: BucketNotification): void;
+
+  getNotificationCase(): NotificationTriggerContext.NotificationCase;
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): NotificationTriggerContext.AsObject;
+  static toObject(includeInstance: boolean, msg: NotificationTriggerContext): NotificationTriggerContext.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: NotificationTriggerContext, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): NotificationTriggerContext;
+  static deserializeBinaryFromReader(message: NotificationTriggerContext, reader: jspb.BinaryReader): NotificationTriggerContext;
+}
+
+export namespace NotificationTriggerContext {
+  export type AsObject = {
+    source: string,
+    bucket?: BucketNotification.AsObject,
+  }
+
+  export enum NotificationCase {
+    NOTIFICATION_NOT_SET = 0,
+    BUCKET = 10,
+  }
+}
+
 export class TriggerResponse extends jspb.Message {
   getData(): Uint8Array | string;
   getData_asU8(): Uint8Array;
@@ -507,6 +627,11 @@ export class TriggerResponse extends jspb.Message {
   clearTopic(): void;
   getTopic(): TopicResponseContext | undefined;
   setTopic(value?: TopicResponseContext): void;
+
+  hasNotification(): boolean;
+  clearNotification(): void;
+  getNotification(): NotificationResponseContext | undefined;
+  setNotification(value?: NotificationResponseContext): void;
 
   getContextCase(): TriggerResponse.ContextCase;
   serializeBinary(): Uint8Array;
@@ -524,12 +649,14 @@ export namespace TriggerResponse {
     data: Uint8Array | string,
     http?: HttpResponseContext.AsObject,
     topic?: TopicResponseContext.AsObject,
+    notification?: NotificationResponseContext.AsObject,
   }
 
   export enum ContextCase {
     CONTEXT_NOT_SET = 0,
     HTTP = 10,
     TOPIC = 11,
+    NOTIFICATION = 12,
   }
 }
 
@@ -578,4 +705,32 @@ export namespace TopicResponseContext {
     success: boolean,
   }
 }
+
+export class NotificationResponseContext extends jspb.Message {
+  getSuccess(): boolean;
+  setSuccess(value: boolean): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): NotificationResponseContext.AsObject;
+  static toObject(includeInstance: boolean, msg: NotificationResponseContext): NotificationResponseContext.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: NotificationResponseContext, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): NotificationResponseContext;
+  static deserializeBinaryFromReader(message: NotificationResponseContext, reader: jspb.BinaryReader): NotificationResponseContext;
+}
+
+export namespace NotificationResponseContext {
+  export type AsObject = {
+    success: boolean,
+  }
+}
+
+export interface BucketNotificationTypeMap {
+  ALL: 0;
+  CREATED: 1;
+  DELETED: 2;
+}
+
+export const BucketNotificationType: BucketNotificationTypeMap;
 

@@ -48,7 +48,11 @@ class Rate {
   public readonly schedule: Schedule;
   private readonly faas: Faas;
 
-  constructor(schedule: Schedule, rate: string, ...mw: ScheduleMiddleware[]) {
+  constructor(
+    schedule: Schedule,
+    rate: string,
+    ...middleware: ScheduleMiddleware[]
+  ) {
     const [, frequency] = rate.split(' ');
     const normalizedFrequency = frequency.toLocaleLowerCase() as Frequency;
 
@@ -75,7 +79,7 @@ class Rate {
         normalizedFrequency
       )
     );
-    this.faas.event(...mw);
+    this.faas.event(...middleware);
   }
 
   private async start(): Promise<void> {
@@ -90,10 +94,14 @@ class Cron {
   public readonly schedule: Schedule;
   private readonly faas: Faas;
 
-  constructor(schedule: Schedule, cron: string, ...mw: ScheduleMiddleware[]) {
+  constructor(
+    schedule: Schedule,
+    cron: string,
+    ...middleware: ScheduleMiddleware[]
+  ) {
     this.schedule = schedule;
     this.faas = new Faas(new CronWorkerOptions(schedule['description'], cron));
-    this.faas.event(...mw);
+    this.faas.event(...middleware);
   }
 
   private async start(): Promise<void> {
@@ -115,22 +123,28 @@ class Schedule {
    * Run this schedule on the provided frequency.
    *
    * @param rate to run the schedule, e.g. '7 days'. All rates accept a number and a frequency. Valid frequencies are 'days', 'hours' or 'minutes'.
-   * @param mw the handler/middleware to run on a schedule
+   * @param middleware the handler/middleware to run on a schedule
    * @returns A promise that resolves when the schedule worker stops running.
    */
-  every = (rate: string, ...mw: ScheduleMiddleware[]): Promise<void> => {
+  every = (
+    rate: string,
+    ...middleware: ScheduleMiddleware[]
+  ): Promise<void> => {
     // handle singular frequencies. e.g. schedule('something').every('day')
     if (FREQUENCIES.indexOf(`${rate}s` as Frequency) !== -1) {
       rate = `1 ${rate}s`; // 'day' becomes '1 days'
     }
 
-    const r = new Rate(this, rate, ...mw);
+    const r = new Rate(this, rate, ...middleware);
     // Start the new rate immediately
     return r['start']();
   };
 
-  cron = (expression: string, ...mw: ScheduleMiddleware[]): Promise<void> => {
-    const r = new Cron(this, expression, ...mw);
+  cron = (
+    expression: string,
+    ...middleware: ScheduleMiddleware[]
+  ): Promise<void> => {
+    const r = new Cron(this, expression, ...middleware);
     // Start the new cron immediately
     return r['start']();
   };

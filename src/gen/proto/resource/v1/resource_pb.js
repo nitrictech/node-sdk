@@ -3191,7 +3191,8 @@ proto.nitric.resource.v1.ResourceType = {
   SUBSCRIPTION: 6,
   COLLECTION: 7,
   POLICY: 8,
-  SECRET: 9
+  SECRET: 9,
+  NOTIFICATION: 10
 };
 
 /**
