@@ -157,20 +157,20 @@ export class BucketResource extends SecureResource<BucketPermission> {
   /**
    * Register and start a bucket notification handler that will be called for all matching notification events on this bucket
    *
-   * @param notificationType the notification type that should trigger the middleware, either 'write' or 'delete'
-   * @param notificationPrefixFilter the file name prefix that files must match to trigger a notification
+   * @param trigger the notification type that should trigger the middleware, either 'write' or 'delete'
+   * @param keyMatch the file keys (paths) filter to use when determining which files notification this handler should receive.
    * @param middleware handler middleware which will be run for every incoming event
    * @returns Promise which resolves when the handler server terminates
    */
   on(
-    notificationType: BucketNotificationType,
-    notificationPrefixFilter: string,
+    trigger: BucketNotificationType,
+    keyMatch: string,
     ...middleware: BucketNotificationMiddleware[]
   ): Promise<void> {
     const notification = new BucketNotification(
       this.name,
-      notificationType,
-      notificationPrefixFilter,
+      trigger,
+      keyMatch,
       ...middleware
     );
     return notification['start']();
