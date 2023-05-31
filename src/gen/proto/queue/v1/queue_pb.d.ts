@@ -75,7 +75,7 @@ export namespace QueueSendBatchRequest {
 
 export class QueueSendBatchResponse extends jspb.Message {
   clearFailedtasksList(): void;
-  getFailedtasksList(): Array<FailedTask>;
+  getFailedTasksList(): Array<FailedTask>;
   setFailedtasksList(value: Array<FailedTask>): void;
   addFailedtasks(value?: FailedTask, index?: number): FailedTask;
 

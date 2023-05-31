@@ -29,6 +29,7 @@ import {
   ApiWorkerOptions,
   BucketNotificationWorkerOptions,
   FileNotificationWorkerOptions,
+  NitricEvent,
   SubscriptionWorkerOptions,
   bucket,
 } from '@nitric/sdk';
@@ -138,6 +139,17 @@ export abstract class AbstractRequest<
   }
 
   /**
+   * Deserialize the request payload from JSON
+   *
+   * @returns JSON parsed request body
+   */
+  protected _json(): JSONT {
+    // attempt to deserialize as a JSON object
+    const textBody = this.text();
+    return textBody ? JSON.parse(textBody) : undefined;
+  }
+
+  /**
    * Return the request payload as a string.
    * If the request was a byte array it will converted using UTF-8 text decoding.
    *
@@ -150,17 +162,6 @@ export abstract class AbstractRequest<
         : new TextDecoder('utf-8').decode(this.data);
 
     return stringPayload;
-  }
-
-  /**
-   * Deserialize the request payload from JSON
-   *
-   * @returns JSON parsed request body
-   */
-  json(): JSONT {
-    // attempt to deserialize as a JSON object
-    const textBody = this.text();
-    return textBody ? JSON.parse(textBody) : undefined;
   }
 }
 
@@ -203,6 +204,15 @@ export class HttpRequest extends AbstractRequest {
     this.query = query;
     this.headers = headers;
   }
+
+  /**
+   * Deserialize the request payload from JSON
+   *
+   * @returns JSON parsed request body
+   */
+  json() {
+    return this._json();
+  }
 }
 
 interface HttpResponseArgs {
@@ -235,8 +245,17 @@ export class HttpResponse {
   }
 }
 
-export class EventRequest<T> extends AbstractRequest<T> {
+export class EventRequest<T> extends AbstractRequest<NitricEvent<T>> {
   public readonly topic: string;
+
+  /**
+   * Deserialize the request payload from JSON
+   *
+   * @returns JSON parsed request body
+   */
+  json(): T {
+    return this._json().payload;
+  }
 
   constructor(
     data: string | Uint8Array,

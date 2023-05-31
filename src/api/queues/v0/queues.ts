@@ -14,14 +14,12 @@
 import { QueueServiceClient } from '@nitric/api/proto/queue/v1/queue_grpc_pb';
 import {
   NitricTask as NitricTaskPb,
-  QueueSendRequest,
   QueueSendBatchRequest,
   QueueReceiveRequest,
   QueueCompleteRequest,
 } from '@nitric/api/proto/queue/v1/queue_pb';
 import { SERVICE_BIND } from '../../../constants';
 import * as grpc from '@grpc/grpc-js';
-import { NitricTask } from '../../../types';
 import { Struct } from 'google-protobuf/google/protobuf/struct_pb';
 import {
   fromGrpcError,
@@ -33,7 +31,7 @@ import {
  * A message that has failed to be enqueued
  */
 interface FailedMessage<T> {
-  task: NitricTask<T>;
+  task: T;
   message: string;
 }
 
@@ -44,13 +42,9 @@ interface FailedMessage<T> {
  * @param task to convert
  * @returns the wire representation of the task
  */
-function taskToWire(task: NitricTask) {
+function taskToWire(task: Record<string, any>) {
   const wireTask = new NitricTaskPb();
-
-  wireTask.setId(task.id);
-  wireTask.setPayloadType(task.payloadType);
-  wireTask.setPayload(Struct.fromJavaScript(task.payload));
-
+  wireTask.setPayload(Struct.fromJavaScript(task));
   return wireTask;
 }
 
@@ -105,36 +99,17 @@ export class Queue<T extends Record<string, any> = Record<string, any>> {
    *
    * @param tasks one or more tasks to push to the queue
    * @returns A void promise for a single task or a list of failed tasks when sending an array of tasks.
-   *
-   * Example:
-   * ```typescript
-   * import { Queueing } from "@nitric/sdk";
-   *
-   * const queueing = new Queueing();
-   * const queue = queueing.queue("my-queue")
-   * await queue.send({
-   *   id: "1234";
-   *   payloadType: "my-payload";
-   *   payload: {
-   *     value: "test"
-   *   };
-   * });
    */
-  public async send(tasks: T[] | NitricTask<T>[]): Promise<FailedMessage<T>[]>;
-  public async send(tasks: T | NitricTask<T>): Promise<void>;
-  public async send(
-    tasks: T[] | T | NitricTask<T> | NitricTask<T>[]
-  ): Promise<void | FailedMessage<T>[]> {
+  public async send(tasks: T[]): Promise<FailedMessage<T>[]>;
+  public async send(tasks: T): Promise<void>;
+  public async send(tasks: T[] | T): Promise<void | FailedMessage<T>[]> {
     return new Promise((resolve, reject) => {
       const request = new QueueSendBatchRequest();
 
       // Convert to NitricTask if not specified
       const tasksArray = Array.isArray(tasks) ? tasks : [tasks];
-      const nitricTasksArray = tasksArray.map((t) =>
-        t instanceof NitricTask ? t : new NitricTask({ payload: t })
-      );
 
-      request.setTasksList(nitricTasksArray.map(taskToWire));
+      request.setTasksList(tasksArray.map(taskToWire));
       request.setQueue(this.name);
 
       this.queueing.QueueServiceClient.sendBatch(request, (error, response) => {
@@ -142,12 +117,8 @@ export class Queue<T extends Record<string, any> = Record<string, any>> {
           reject(fromGrpcError(error));
           return;
         }
-        const failedTasks = response.getFailedtasksList().map((m) => ({
-          task: new NitricTask<T>({
-            id: m.getTask().getId(),
-            payloadType: m.getTask().getPayloadType(),
-            payload: m.getTask().getPayload().toJavaScript() as T,
-          }),
+        const failedTasks = response.getFailedTasksList().map((m) => ({
+          task: m.getTask().getPayload().toJavaScript() as T,
           message: m.getMessage(),
         }));
         if (!Array.isArray(tasks)) {
@@ -204,9 +175,7 @@ export class Queue<T extends Record<string, any> = Record<string, any>> {
           resolve(
             response.getTasksList().map((m) => {
               return new ReceivedTask({
-                id: m.getId(),
                 payload: m.getPayload().toJavaScript() as T,
-                payloadType: m.getPayloadType(),
                 leaseId: m.getLeaseId(),
                 queue: this,
               });
@@ -218,48 +187,27 @@ export class Queue<T extends Record<string, any> = Record<string, any>> {
   }
 }
 
-export class ReceivedTask<
-  T extends Record<string, any> = Record<string, any>
-> extends NitricTask<T> {
+export class ReceivedTask<T extends Record<string, any> = Record<string, any>> {
   leaseId: string;
   queue: Queue;
+  payload: T;
 
   constructor({
-    id,
     leaseId,
     payload,
-    payloadType,
     queue,
   }: {
-    id: string;
     payload: T;
-    payloadType: string;
     leaseId: string;
     queue: Queue;
   }) {
-    super({ id, payloadType, payload });
+    this.payload = payload;
     this.leaseId = leaseId;
     this.queue = queue;
   }
 
   /**
    * Marks a queue item as successfully completed and removes it from the queue.
-   *
-   * @returns A void promise
-   *
-   * Example:
-   * ```typescript
-   * import { Queueing } from "@nitric/sdk"
-   *
-   * const queueing = new Queueing();
-   *
-   * const [task] = await queueing.queue("my-queue").receive();
-   *
-   * // do something with task
-   *
-   * // complete the task
-   * await task.complete();
-   * ```
    */
   public async complete(): Promise<void> {
     try {
@@ -290,20 +238,6 @@ let QUEUES = undefined;
  * Queues API Client.
  *
  * @returns a Queues API client.
- * @example
- * ```typescript
- * import { queues } from "@nitric/sdk";
- *
- * async function publishToQueue() {
- *  await queues()
- *  .queue('my-queue')
- *  .send({
- *    payload: {
- *      example: 'payload',
- *    },
- *  });
- * }
- * ```
  */
 export const queues = (): Queueing => {
   if (!QUEUES) {

@@ -90,12 +90,9 @@ export class Topic<T extends Record<string, any> = Record<string, any>> {
    * ```
    */
   async publish(
-    event: T | NitricEvent<T>,
+    event: T,
     opts: PublishOptions = DEFAULT_PUBLISH_OPTS
-  ): Promise<NitricEvent<T>> {
-    const nitricEvent =
-      event instanceof NitricEvent ? event : new NitricEvent(event);
-
+  ): Promise<void> {
     const publishOpts = {
       ...DEFAULT_PUBLISH_OPTS,
       ...opts,
@@ -103,26 +100,18 @@ export class Topic<T extends Record<string, any> = Record<string, any>> {
     const request = new EventPublishRequest();
     const evt = new PbEvent();
 
-    evt.setId(nitricEvent.id);
-    evt.setPayload(Struct.fromJavaScript(nitricEvent.payload));
-    evt.setPayloadType(nitricEvent.payloadType);
+    evt.setPayload(Struct.fromJavaScript(event));
 
     request.setTopic(this.name);
     request.setEvent(evt);
     request.setDelay(publishOpts.delay);
 
-    return new Promise<NitricEvent<T>>((resolve, reject) => {
+    return new Promise<void>((resolve, reject) => {
       this.eventing.EventServiceClient.publish(request, (error, response) => {
         if (error) {
           reject(fromGrpcError(error));
         } else {
-          resolve(
-            new NitricEvent(
-              nitricEvent.payload,
-              response.getId(),
-              nitricEvent.payloadType
-            )
-          );
+          resolve();
         }
       });
     });
