@@ -13,9 +13,16 @@
 // limitations under the License.
 import { EventMiddleware, Faas, ScheduleMiddleware } from '../faas';
 
-type Frequency = 'days' | 'hours' | 'minutes';
+const Frequencies = [
+  'day',
+  'days',
+  'hour',
+  'hours',
+  'minute',
+  'minutes',
+] as const;
 
-const FREQUENCIES: Frequency[] = ['days', 'hours', 'minutes'];
+type Frequency = (typeof Frequencies)[number];
 
 export class RateWorkerOptions {
   public readonly description: string;
@@ -65,9 +72,11 @@ class Rate {
       );
     }
 
-    if (!FREQUENCIES.includes(normalizedFrequency)) {
+    if (!Frequencies.includes(normalizedFrequency)) {
       throw new Error(
-        `invalid rate expression, frequency must be one of ${FREQUENCIES}, received ${frequency}`
+        `invalid rate expression, frequency must one of [${Frequencies.join(
+          ', '
+        )}] received ${frequency}`
       );
     }
 
@@ -131,7 +140,7 @@ class Schedule {
     ...middleware: ScheduleMiddleware[]
   ): Promise<void> => {
     // handle singular frequencies. e.g. schedule('something').every('day')
-    if (FREQUENCIES.indexOf(`${rate}s` as Frequency) !== -1) {
+    if (Frequencies.indexOf(`${rate}s` as Frequency) !== -1) {
       rate = `1 ${rate}s`; // 'day' becomes '1 days'
     }
 
