@@ -13,14 +13,7 @@
 // limitations under the License.
 import { EventMiddleware, Faas, ScheduleMiddleware } from '../faas';
 
-const Frequencies = [
-  'day',
-  'days',
-  'hour',
-  'hours',
-  'minute',
-  'minutes',
-] as const;
+const Frequencies = ['days', 'hours', 'minutes'] as const;
 
 export type Frequency = (typeof Frequencies)[number];
 
@@ -139,12 +132,20 @@ class Schedule {
     rate: string,
     ...middleware: ScheduleMiddleware[]
   ): Promise<void> => {
-    // handle singular frequencies. e.g. schedule('something').every('day')
+    // handle singular frequencies without a value, e.g. schedule('something').every('day')
     if (Frequencies.indexOf(`${rate}s` as Frequency) !== -1) {
       rate = `1 ${rate}s`; // 'day' becomes '1 days'
     }
 
-    const r = new Rate(this, rate, ...middleware);
+    // handle singular frequencies with a value, e.g. schedule('something').every('1 day')
+    const rateParts = rate.split(' ');
+    const value = rateParts[0];
+    let unit = rateParts[1];
+    if (Frequencies.indexOf(`${unit}s` as Frequency) !== -1) {
+      unit = `${unit}s`; // 'day' becomes 'days'
+    }
+
+    const r = new Rate(this, `${value} ${unit}`, ...middleware);
     // Start the new rate immediately
     return r['start']();
   };
