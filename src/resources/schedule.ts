@@ -22,7 +22,7 @@ const Frequencies = [
   'minutes',
 ] as const;
 
-type Frequency = (typeof Frequencies)[number];
+export type Frequency = (typeof Frequencies)[number];
 
 export class RateWorkerOptions {
   public readonly description: string;
@@ -131,7 +131,7 @@ class Schedule {
   /**
    * Run this schedule on the provided frequency.
    *
-   * @param rate to run the schedule, e.g. '7 days'. All rates accept a number and a frequency. Valid frequencies are 'days', 'hours' or 'minutes'.
+   * @param rate to run the schedule, e.g. '7 days'. All rates accept a number and a frequency. Valid frequencies are 'day/days', 'hour/hours' or 'minute/minutes'.
    * @param middleware the handler/middleware to run on a schedule
    * @returns A promise that resolves when the schedule worker stops running.
    */
