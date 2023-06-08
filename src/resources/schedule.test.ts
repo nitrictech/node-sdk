@@ -12,8 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import * as faas from '../faas/index';
-import { schedule, RateWorkerOptions } from '.';
-
+import { schedule, RateWorkerOptions, Frequency } from '.';
 jest.mock('../faas/index');
 
 describe('Schedule', () => {
@@ -83,7 +82,7 @@ describe('Schedule', () => {
     });
   });
 
-  ['day', 'hour', 'minute'].forEach((rate) => {
+  ['day', 'hour', 'minute'].forEach((rate: Frequency) => {
     describe(`when create a new schedule with rate ${rate}`, () => {
       afterAll(() => {
         jest.resetAllMocks();
@@ -101,8 +100,33 @@ describe('Schedule', () => {
         const expectedOpts = new RateWorkerOptions(
           'main',
           1,
-          `${rate}s` as any
+          `${rate}s` as Frequency
         );
+        expect(faas.Faas).toBeCalledWith(expectedOpts);
+      });
+
+      it('should call FaasClient::start()', () => {
+        expect(startSpy).toBeCalledTimes(1);
+      });
+    });
+  });
+
+  ['days', 'hours', 'minutes'].forEach((rate: Frequency) => {
+    describe(`when create a new schedule with rate ${rate}`, () => {
+      afterAll(() => {
+        jest.resetAllMocks();
+      });
+
+      beforeAll(async () => {
+        await schedule('main').every(`7 ${rate}`, mockFn);
+      });
+
+      it('should create a new FaasClient', () => {
+        expect(faas.Faas).toBeCalledTimes(1);
+      });
+
+      it('should provide Faas with ApiWorkerOptions', () => {
+        const expectedOpts = new RateWorkerOptions('main', 7, rate);
         expect(faas.Faas).toBeCalledWith(expectedOpts);
       });
 

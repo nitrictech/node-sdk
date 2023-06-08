@@ -13,9 +13,9 @@
 // limitations under the License.
 import { EventMiddleware, Faas, ScheduleMiddleware } from '../faas';
 
-type Frequency = 'days' | 'hours' | 'minutes';
+const Frequencies = ['days', 'hours', 'minutes'] as const;
 
-const FREQUENCIES: Frequency[] = ['days', 'hours', 'minutes'];
+export type Frequency = (typeof Frequencies)[number];
 
 export class RateWorkerOptions {
   public readonly description: string;
@@ -65,9 +65,11 @@ class Rate {
       );
     }
 
-    if (!FREQUENCIES.includes(normalizedFrequency)) {
+    if (!Frequencies.includes(normalizedFrequency)) {
       throw new Error(
-        `invalid rate expression, frequency must be one of ${FREQUENCIES}, received ${frequency}`
+        `invalid rate expression, frequency must one of [${Frequencies.join(
+          ', '
+        )}] received ${frequency}`
       );
     }
 
@@ -122,7 +124,7 @@ class Schedule {
   /**
    * Run this schedule on the provided frequency.
    *
-   * @param rate to run the schedule, e.g. '7 days'. All rates accept a number and a frequency. Valid frequencies are 'days', 'hours' or 'minutes'.
+   * @param rate to run the schedule, e.g. '7 days'. All rates accept a number and a frequency. Valid frequencies are 'day/days', 'hour/hours' or 'minute/minutes'.
    * @param middleware the handler/middleware to run on a schedule
    * @returns A promise that resolves when the schedule worker stops running.
    */
@@ -130,12 +132,20 @@ class Schedule {
     rate: string,
     ...middleware: ScheduleMiddleware[]
   ): Promise<void> => {
-    // handle singular frequencies. e.g. schedule('something').every('day')
-    if (FREQUENCIES.indexOf(`${rate}s` as Frequency) !== -1) {
+    // handle singular frequencies without a value, e.g. schedule('something').every('day')
+    if (Frequencies.indexOf(`${rate}s` as Frequency) !== -1) {
       rate = `1 ${rate}s`; // 'day' becomes '1 days'
     }
 
-    const r = new Rate(this, rate, ...middleware);
+    // handle singular frequencies with a value, e.g. schedule('something').every('1 day')
+    const rateParts = rate.split(' ');
+    const value = rateParts[0];
+    let unit = rateParts[1];
+    if (Frequencies.indexOf(`${unit}s` as Frequency) !== -1) {
+      unit = `${unit}s`; // 'day' becomes 'days'
+    }
+
+    const r = new Rate(this, `${value} ${unit}`, ...middleware);
     // Start the new rate immediately
     return r['start']();
   };
