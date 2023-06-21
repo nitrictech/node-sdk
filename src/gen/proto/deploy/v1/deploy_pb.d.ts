@@ -459,6 +459,56 @@ export namespace TopicSubscription {
   }
 }
 
+export class HttpTarget extends jspb.Message {
+  hasExecutionUnit(): boolean;
+  clearExecutionUnit(): void;
+  getExecutionUnit(): string;
+  setExecutionUnit(value: string): void;
+
+  getTargetCase(): HttpTarget.TargetCase;
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): HttpTarget.AsObject;
+  static toObject(includeInstance: boolean, msg: HttpTarget): HttpTarget.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: HttpTarget, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): HttpTarget;
+  static deserializeBinaryFromReader(message: HttpTarget, reader: jspb.BinaryReader): HttpTarget;
+}
+
+export namespace HttpTarget {
+  export type AsObject = {
+    executionUnit: string,
+  }
+
+  export enum TargetCase {
+    TARGET_NOT_SET = 0,
+    EXECUTION_UNIT = 1,
+  }
+}
+
+export class Http extends jspb.Message {
+  hasTarget(): boolean;
+  clearTarget(): void;
+  getTarget(): HttpTarget | undefined;
+  setTarget(value?: HttpTarget): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): Http.AsObject;
+  static toObject(includeInstance: boolean, msg: Http): Http.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: Http, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): Http;
+  static deserializeBinaryFromReader(message: Http, reader: jspb.BinaryReader): Http;
+}
+
+export namespace Http {
+  export type AsObject = {
+    target?: HttpTarget.AsObject,
+  }
+}
+
 export class Api extends jspb.Message {
   hasOpenapi(): boolean;
   clearOpenapi(): void;
@@ -484,6 +534,68 @@ export namespace Api {
   export enum DocumentCase {
     DOCUMENT_NOT_SET = 0,
     OPENAPI = 1,
+  }
+}
+
+export class Websocket extends jspb.Message {
+  hasConnectTarget(): boolean;
+  clearConnectTarget(): void;
+  getConnectTarget(): WebsocketTarget | undefined;
+  setConnectTarget(value?: WebsocketTarget): void;
+
+  hasDisconnectTarget(): boolean;
+  clearDisconnectTarget(): void;
+  getDisconnectTarget(): WebsocketTarget | undefined;
+  setDisconnectTarget(value?: WebsocketTarget): void;
+
+  hasMessageTarget(): boolean;
+  clearMessageTarget(): void;
+  getMessageTarget(): WebsocketTarget | undefined;
+  setMessageTarget(value?: WebsocketTarget): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): Websocket.AsObject;
+  static toObject(includeInstance: boolean, msg: Websocket): Websocket.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: Websocket, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): Websocket;
+  static deserializeBinaryFromReader(message: Websocket, reader: jspb.BinaryReader): Websocket;
+}
+
+export namespace Websocket {
+  export type AsObject = {
+    connectTarget?: WebsocketTarget.AsObject,
+    disconnectTarget?: WebsocketTarget.AsObject,
+    messageTarget?: WebsocketTarget.AsObject,
+  }
+}
+
+export class WebsocketTarget extends jspb.Message {
+  hasExecutionUnit(): boolean;
+  clearExecutionUnit(): void;
+  getExecutionUnit(): string;
+  setExecutionUnit(value: string): void;
+
+  getTargetCase(): WebsocketTarget.TargetCase;
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): WebsocketTarget.AsObject;
+  static toObject(includeInstance: boolean, msg: WebsocketTarget): WebsocketTarget.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: WebsocketTarget, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): WebsocketTarget;
+  static deserializeBinaryFromReader(message: WebsocketTarget, reader: jspb.BinaryReader): WebsocketTarget;
+}
+
+export namespace WebsocketTarget {
+  export type AsObject = {
+    executionUnit: string,
+  }
+
+  export enum TargetCase {
+    TARGET_NOT_SET = 0,
+    EXECUTION_UNIT = 1,
   }
 }
 
@@ -593,6 +705,16 @@ export class Resource extends jspb.Message {
   getSecret(): Secret | undefined;
   setSecret(value?: Secret): void;
 
+  hasWebsocket(): boolean;
+  clearWebsocket(): void;
+  getWebsocket(): Websocket | undefined;
+  setWebsocket(value?: Websocket): void;
+
+  hasHttp(): boolean;
+  clearHttp(): void;
+  getHttp(): Http | undefined;
+  setHttp(value?: Http): void;
+
   getConfigCase(): Resource.ConfigCase;
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): Resource.AsObject;
@@ -617,6 +739,8 @@ export namespace Resource {
     schedule?: Schedule.AsObject,
     collection?: Collection.AsObject,
     secret?: Secret.AsObject,
+    websocket?: Websocket.AsObject,
+    http?: Http.AsObject,
   }
 
   export enum ConfigCase {
@@ -630,6 +754,8 @@ export namespace Resource {
     SCHEDULE = 16,
     COLLECTION = 17,
     SECRET = 18,
+    WEBSOCKET = 19,
+    HTTP = 20,
   }
 }
 

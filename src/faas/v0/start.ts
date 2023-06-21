@@ -32,6 +32,7 @@ import {
   NotificationResponseContext,
   BucketNotificationWorker,
   BucketNotificationConfig,
+  HttpWorker,
 } from '@nitric/api/proto/faas/v1/faas_pb';
 
 import {
@@ -57,6 +58,7 @@ import {
 } from '../../resources';
 
 import * as grpc from '@grpc/grpc-js';
+import { HttpWorkerOptions } from '@nitric/sdk/resources/http';
 
 export class FaasWorkerOptions {}
 
@@ -65,6 +67,7 @@ type FaasClientOptions =
   | RateWorkerOptions
   | CronWorkerOptions
   | FaasWorkerOptions
+  | HttpWorkerOptions
   | BucketNotificationWorkerOptions;
 
 /**
@@ -160,6 +163,7 @@ export class Faas {
 
     this.anyHandler = handlers.length && createHandler(...handlers);
     if (
+      !(this.options instanceof HttpWorkerOptions) &&
       !this.httpHandler &&
       !this.eventHandler &&
       !this.bucketNotificationHandler &&
@@ -176,6 +180,14 @@ export class Faas {
 
     // Begin Bi-Di streaming
     const faasStream = faasClient.triggerStream();
+
+    // Start Node application that HTTP proxy sits on
+    if (
+      this.options instanceof HttpWorkerOptions &&
+      process.env.NITRIC_ENVIRONMENT !== 'build'
+    ) {
+      this.options.app.listen(this.options.port, this.options.callback);
+    }
 
     faasStream.on('data', async (message: ServerMessage) => {
       // We have an init response from the membrane
@@ -314,6 +326,10 @@ export class Faas {
       config.setNotificationType(this.options.notificationType);
       notificationWorker.setConfig(config);
       initRequest.setBucketNotification(notificationWorker);
+    } else if (this.options instanceof HttpWorkerOptions) {
+      const httpWorker = new HttpWorker();
+      httpWorker.setPort(this.options.port);
+      initRequest.setHttpWorker(httpWorker);
     }
     // Original faas workers should return a blank InitRequest for compatibility.
 
