@@ -51,9 +51,10 @@ export const http = (
   port: number,
   callback?: () => void
 ) => {
+  const unknownApp = app as any;
+
   const nodeApp =
-    !!(app as NodeApplication).listen &&
-    typeof (app as NodeApplication).listen === 'function'
+    !!unknownApp.listen && typeof unknownApp.listen === 'function'
       ? (app as NodeApplication)
       : { listen: app as ListenerFunction };
 
