@@ -2450,7 +2450,7 @@ proto.nitric.faas.v1.HttpWorker.prototype.toObject = function(opt_includeInstanc
  */
 proto.nitric.faas.v1.HttpWorker.toObject = function(includeInstance, msg) {
   var f, obj = {
-    port: jspb.Message.getFieldWithDefault(msg, 2, 0)
+    port: jspb.Message.getFieldWithDefault(msg, 1, 0)
   };
 
   if (includeInstance) {
@@ -2487,7 +2487,7 @@ proto.nitric.faas.v1.HttpWorker.deserializeBinaryFromReader = function(msg, read
     }
     var field = reader.getFieldNumber();
     switch (field) {
-    case 2:
+    case 1:
       var value = /** @type {number} */ (reader.readInt32());
       msg.setPort(value);
       break;
@@ -2523,7 +2523,7 @@ proto.nitric.faas.v1.HttpWorker.serializeBinaryToWriter = function(message, writ
   f = message.getPort();
   if (f !== 0) {
     writer.writeInt32(
-      2,
+      1,
       f
     );
   }
@@ -2531,11 +2531,11 @@ proto.nitric.faas.v1.HttpWorker.serializeBinaryToWriter = function(message, writ
 
 
 /**
- * optional int32 port = 2;
+ * optional int32 port = 1;
  * @return {number}
  */
 proto.nitric.faas.v1.HttpWorker.prototype.getPort = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 2, 0));
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 1, 0));
 };
 
 
@@ -2544,7 +2544,7 @@ proto.nitric.faas.v1.HttpWorker.prototype.getPort = function() {
  * @return {!proto.nitric.faas.v1.HttpWorker} returns this
  */
 proto.nitric.faas.v1.HttpWorker.prototype.setPort = function(value) {
-  return jspb.Message.setProto3IntField(this, 2, value);
+  return jspb.Message.setProto3IntField(this, 1, value);
 };
 
 
