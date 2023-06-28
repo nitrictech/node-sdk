@@ -20,7 +20,6 @@ describe('HTTP Proxy', () => {
     .spyOn(faas.Faas.prototype, 'start')
     .mockReturnValue(Promise.resolve());
 
-  const mockCallback = jest.fn();
   const mockApp = {
     listen: () => {},
   };
@@ -29,7 +28,7 @@ describe('HTTP Proxy', () => {
     jest.clearAllMocks();
   });
 
-  describe('when creating a new http proxy', () => {
+  describe('when creating a new http proxy with an app', () => {
     let error = undefined;
     afterAll(() => {
       jest.resetAllMocks();
@@ -48,13 +47,15 @@ describe('HTTP Proxy', () => {
     });
   });
 
-  describe(`when creating a new http proxy`, () => {
+  describe(`when creating a new http proxy with an app and callback`, () => {
+    const fakeCallback = () => {};
+
     afterAll(() => {
       jest.resetAllMocks();
     });
 
     beforeAll(async () => {
-      http(mockApp, 1234, mockCallback);
+      http(mockApp, 1234, fakeCallback);
     });
 
     it('should create a new FaasClient', () => {
@@ -62,7 +63,37 @@ describe('HTTP Proxy', () => {
     });
 
     it('should provide Faas with HttpWorkerOptions', () => {
-      const expectedOpts = new HttpWorkerOptions(mockApp, 1234, mockCallback);
+      const expectedOpts = new HttpWorkerOptions(mockApp, 1234, fakeCallback);
+      expect(faas.Faas).toBeCalledWith(expectedOpts);
+    });
+
+    it('should call FaasClient::start()', () => {
+      expect(startSpy).toBeCalledTimes(1);
+    });
+  });
+
+  describe(`when creating a new http proxy with a bootstrap function`, () => {
+    const fakeFunc = () => {};
+    const fakeCallback = () => {};
+
+    afterAll(() => {
+      jest.resetAllMocks();
+    });
+
+    beforeAll(async () => {
+      http(fakeFunc, 1234, fakeCallback);
+    });
+
+    it('should create a new FaasClient', () => {
+      expect(faas.Faas).toBeCalledTimes(1);
+    });
+
+    it('should provide Faas with HttpWorkerOptions', () => {
+      const expectedOpts = new HttpWorkerOptions(
+        { listen: fakeFunc },
+        1234,
+        fakeCallback
+      );
       expect(faas.Faas).toBeCalledWith(expectedOpts);
     });
 
