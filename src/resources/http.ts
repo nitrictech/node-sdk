@@ -47,9 +47,13 @@ class HttpWorker {
 }
 
 export const http = (
-  app: NodeApplication,
+  app: NodeApplication | ListenerFunction,
   port: number,
   callback?: () => void
 ) => {
-  new HttpWorker(app, port, callback);
+  new HttpWorker(
+    app instanceof Function ? { listen: app } : app,
+    port,
+    callback
+  );
 };
