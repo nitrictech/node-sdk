@@ -52,7 +52,7 @@ export const http = (
   callback?: () => void
 ) => {
   const nodeApp =
-    app.hasOwnProperty('listen') &&
+    !!(app as NodeApplication).listen &&
     typeof (app as NodeApplication).listen === 'function'
       ? (app as NodeApplication)
       : { listen: app as ListenerFunction };
