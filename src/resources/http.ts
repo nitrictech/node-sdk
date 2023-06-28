@@ -51,9 +51,11 @@ export const http = (
   port: number,
   callback?: () => void
 ) => {
-  new HttpWorker(
-    app instanceof Function ? { listen: app } : app,
-    port,
-    callback
-  );
+  const nodeApp =
+    app.hasOwnProperty('listen') &&
+    typeof (app as NodeApplication).listen === 'function'
+      ? (app as NodeApplication)
+      : { listen: app as ListenerFunction };
+
+  new HttpWorker(nodeApp, port, callback);
 };
