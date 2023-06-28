@@ -199,6 +199,9 @@ export class StorageListFilesRequest extends jspb.Message {
   getBucketName(): string;
   setBucketName(value: string): void;
 
+  getPrefix(): string;
+  setPrefix(value: string): void;
+
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): StorageListFilesRequest.AsObject;
   static toObject(includeInstance: boolean, msg: StorageListFilesRequest): StorageListFilesRequest.AsObject;
@@ -212,6 +215,7 @@ export class StorageListFilesRequest extends jspb.Message {
 export namespace StorageListFilesRequest {
   export type AsObject = {
     bucketName: string,
+    prefix: string,
   }
 }
 

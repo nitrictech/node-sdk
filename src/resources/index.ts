@@ -18,3 +18,4 @@ export * from './collection';
 export * from './bucket';
 export * from './schedule';
 export * from './secret';
+export * from './http';

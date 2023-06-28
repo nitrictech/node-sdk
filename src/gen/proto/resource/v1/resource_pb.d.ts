@@ -351,6 +351,26 @@ export namespace ApiResourceDetails {
   }
 }
 
+export class WebsocketResourceDetails extends jspb.Message {
+  getUrl(): string;
+  setUrl(value: string): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): WebsocketResourceDetails.AsObject;
+  static toObject(includeInstance: boolean, msg: WebsocketResourceDetails): WebsocketResourceDetails.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: WebsocketResourceDetails, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): WebsocketResourceDetails;
+  static deserializeBinaryFromReader(message: WebsocketResourceDetails, reader: jspb.BinaryReader): WebsocketResourceDetails;
+}
+
+export namespace WebsocketResourceDetails {
+  export type AsObject = {
+    url: string,
+  }
+}
+
 export class ResourceDetailsRequest extends jspb.Message {
   hasResource(): boolean;
   clearResource(): void;
@@ -388,6 +408,11 @@ export class ResourceDetailsResponse extends jspb.Message {
   getApi(): ApiResourceDetails | undefined;
   setApi(value?: ApiResourceDetails): void;
 
+  hasWebsocket(): boolean;
+  clearWebsocket(): void;
+  getWebsocket(): WebsocketResourceDetails | undefined;
+  setWebsocket(value?: WebsocketResourceDetails): void;
+
   getDetailsCase(): ResourceDetailsResponse.DetailsCase;
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): ResourceDetailsResponse.AsObject;
@@ -405,11 +430,13 @@ export namespace ResourceDetailsResponse {
     provider: string,
     service: string,
     api?: ApiResourceDetails.AsObject,
+    websocket?: WebsocketResourceDetails.AsObject,
   }
 
   export enum DetailsCase {
     DETAILS_NOT_SET = 0,
     API = 10,
+    WEBSOCKET = 11,
   }
 }
 
@@ -425,6 +452,8 @@ export interface ResourceTypeMap {
   POLICY: 8;
   SECRET: 9;
   NOTIFICATION: 10;
+  WEBSOCKET: 11;
+  HTTP: 12;
 }
 
 export const ResourceType: ResourceTypeMap;
@@ -448,6 +477,7 @@ export interface ActionMap {
   COLLECTIONLIST: 404;
   SECRETPUT: 500;
   SECRETACCESS: 501;
+  WEBSOCKETMANAGE: 600;
 }
 
 export const Action: ActionMap;
