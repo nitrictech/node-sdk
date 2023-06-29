@@ -48,7 +48,6 @@ class HttpWorker {
 
 export const http = (
   app: NodeApplication | ListenerFunction,
-  port: number,
   callback?: () => void
 ) => {
   const unknownApp = app as any;
@@ -57,6 +56,14 @@ export const http = (
     !!unknownApp.listen && typeof unknownApp.listen === 'function'
       ? (app as NodeApplication)
       : { listen: app as ListenerFunction };
+
+  const port = Number.parseInt(process.env.NITRIC_HOST_PROXY_PORT);
+
+  if (Number.isNaN(port)) {
+    throw new Error(
+      'Invalid http proxy port provided. Have you set the env var `NITRIC_HOST_PROXY_PORT` correctly?'
+    );
+  }
 
   new HttpWorker(nodeApp, port, callback);
 };
