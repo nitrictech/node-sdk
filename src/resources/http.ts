@@ -57,11 +57,11 @@ export const http = (
       ? (app as NodeApplication)
       : { listen: app as ListenerFunction };
 
-  const port = Number.parseInt(process.env.NITRIC_HOST_PROXY_PORT);
+  const port = Number.parseInt(process.env.NITRIC_HTTP_PROXY_PORT);
 
   if (Number.isNaN(port)) {
     throw new Error(
-      'Invalid http proxy port provided. Have you set the env var `NITRIC_HOST_PROXY_PORT` correctly?'
+      'Invalid http proxy port provided. Have you set the env var `NITRIC_HTTP_PROXY_PORT` correctly?'
     );
   }
 
