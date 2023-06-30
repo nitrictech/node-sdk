@@ -69,6 +69,7 @@ export const http = (
           'Unable to find open port. Try setting the env var `NITRIC_HTTP_PROXY_PORT`'
         );
       }
+
       new HttpWorker(nodeApp, port, callback);
     });
 
