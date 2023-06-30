@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import portfinder from 'portfinder';
 import { Faas } from '../faas';
 
 type ListenerFunction =
@@ -60,9 +61,18 @@ export const http = (
   const port = Number.parseInt(process.env.NITRIC_HTTP_PROXY_PORT);
 
   if (Number.isNaN(port)) {
-    throw new Error(
-      'Invalid http proxy port provided. Have you set the env var `NITRIC_HTTP_PROXY_PORT` correctly?'
-    );
+    // If port isn't set and the nitric environment is not run or cloud
+    console.log('NITRIC_HTTP_PROXY_PORT not set. Finding open port...');
+    portfinder.getPort((err, port) => {
+      if (err) {
+        throw new Error(
+          'Unable to find open port. Try setting the env var `NITRIC_HTTP_PROXY_PORT`'
+        );
+      }
+      new HttpWorker(nodeApp, port, callback);
+    });
+
+    return;
   }
 
   new HttpWorker(nodeApp, port, callback);
