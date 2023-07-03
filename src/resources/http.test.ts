@@ -13,6 +13,19 @@
 // limitations under the License.
 import * as faas from '../faas/index';
 import { HttpWorkerOptions, http } from '.';
+
+jest.mock('portfinder', () => {
+  const originalModule = jest.requireActual('portfinder');
+
+  return {
+    __esmodule: true,
+    ...originalModule,
+    getPort: (callback: (err, port) => void) => {
+      callback('', 1234);
+    },
+  };
+});
+
 jest.mock('../faas/index');
 
 describe('HTTP Proxy', () => {
@@ -36,7 +49,7 @@ describe('HTTP Proxy', () => {
 
     beforeAll(() => {
       try {
-        http(mockApp, 1234);
+        http(mockApp);
       } catch (err) {
         error = err;
       }
@@ -55,7 +68,7 @@ describe('HTTP Proxy', () => {
     });
 
     beforeAll(async () => {
-      http(mockApp, 1234, fakeCallback);
+      http(mockApp, fakeCallback);
     });
 
     it('should create a new FaasClient', () => {
@@ -81,7 +94,7 @@ describe('HTTP Proxy', () => {
     });
 
     beforeAll(async () => {
-      http(fakeFunc, 1234, fakeCallback);
+      http(fakeFunc, fakeCallback);
     });
 
     it('should create a new FaasClient', () => {
