@@ -1546,7 +1546,8 @@ proto.nitric.storage.v1.StorageListFilesRequest.prototype.toObject = function(op
  */
 proto.nitric.storage.v1.StorageListFilesRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    bucketName: jspb.Message.getFieldWithDefault(msg, 1, "")
+    bucketName: jspb.Message.getFieldWithDefault(msg, 1, ""),
+    prefix: jspb.Message.getFieldWithDefault(msg, 2, "")
   };
 
   if (includeInstance) {
@@ -1587,6 +1588,10 @@ proto.nitric.storage.v1.StorageListFilesRequest.deserializeBinaryFromReader = fu
       var value = /** @type {string} */ (reader.readString());
       msg.setBucketName(value);
       break;
+    case 2:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setPrefix(value);
+      break;
     default:
       reader.skipField();
       break;
@@ -1623,6 +1628,13 @@ proto.nitric.storage.v1.StorageListFilesRequest.serializeBinaryToWriter = functi
       f
     );
   }
+  f = message.getPrefix();
+  if (f.length > 0) {
+    writer.writeString(
+      2,
+      f
+    );
+  }
 };
 
 
@@ -1641,6 +1653,24 @@ proto.nitric.storage.v1.StorageListFilesRequest.prototype.getBucketName = functi
  */
 proto.nitric.storage.v1.StorageListFilesRequest.prototype.setBucketName = function(value) {
   return jspb.Message.setProto3StringField(this, 1, value);
+};
+
+
+/**
+ * optional string prefix = 2;
+ * @return {string}
+ */
+proto.nitric.storage.v1.StorageListFilesRequest.prototype.getPrefix = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 2, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.nitric.storage.v1.StorageListFilesRequest} returns this
+ */
+proto.nitric.storage.v1.StorageListFilesRequest.prototype.setPrefix = function(value) {
+  return jspb.Message.setProto3StringField(this, 2, value);
 };
 
 

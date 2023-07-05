@@ -261,6 +261,26 @@ export namespace ScheduleCron {
   }
 }
 
+export class HttpWorker extends jspb.Message {
+  getPort(): number;
+  setPort(value: number): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): HttpWorker.AsObject;
+  static toObject(includeInstance: boolean, msg: HttpWorker): HttpWorker.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: HttpWorker, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): HttpWorker;
+  static deserializeBinaryFromReader(message: HttpWorker, reader: jspb.BinaryReader): HttpWorker;
+}
+
+export namespace HttpWorker {
+  export type AsObject = {
+    port: number,
+  }
+}
+
 export class BucketNotificationWorker extends jspb.Message {
   getBucket(): string;
   setBucket(value: string): void;
@@ -311,6 +331,30 @@ export namespace BucketNotificationConfig {
   }
 }
 
+export class WebsocketWorker extends jspb.Message {
+  getSocket(): string;
+  setSocket(value: string): void;
+
+  getEvent(): WebsocketEventMap[keyof WebsocketEventMap];
+  setEvent(value: WebsocketEventMap[keyof WebsocketEventMap]): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): WebsocketWorker.AsObject;
+  static toObject(includeInstance: boolean, msg: WebsocketWorker): WebsocketWorker.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: WebsocketWorker, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): WebsocketWorker;
+  static deserializeBinaryFromReader(message: WebsocketWorker, reader: jspb.BinaryReader): WebsocketWorker;
+}
+
+export namespace WebsocketWorker {
+  export type AsObject = {
+    socket: string,
+    event: WebsocketEventMap[keyof WebsocketEventMap],
+  }
+}
+
 export class InitRequest extends jspb.Message {
   hasApi(): boolean;
   clearApi(): void;
@@ -332,6 +376,16 @@ export class InitRequest extends jspb.Message {
   getBucketNotification(): BucketNotificationWorker | undefined;
   setBucketNotification(value?: BucketNotificationWorker): void;
 
+  hasWebsocket(): boolean;
+  clearWebsocket(): void;
+  getWebsocket(): WebsocketWorker | undefined;
+  setWebsocket(value?: WebsocketWorker): void;
+
+  hasHttpWorker(): boolean;
+  clearHttpWorker(): void;
+  getHttpWorker(): HttpWorker | undefined;
+  setHttpWorker(value?: HttpWorker): void;
+
   getWorkerCase(): InitRequest.WorkerCase;
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): InitRequest.AsObject;
@@ -349,6 +403,8 @@ export namespace InitRequest {
     subscription?: SubscriptionWorker.AsObject,
     schedule?: ScheduleWorker.AsObject,
     bucketNotification?: BucketNotificationWorker.AsObject,
+    websocket?: WebsocketWorker.AsObject,
+    httpWorker?: HttpWorker.AsObject,
   }
 
   export enum WorkerCase {
@@ -357,6 +413,8 @@ export namespace InitRequest {
     SUBSCRIPTION = 11,
     SCHEDULE = 12,
     BUCKET_NOTIFICATION = 13,
+    WEBSOCKET = 14,
+    HTTP_WORKER = 15,
   }
 }
 
@@ -424,6 +482,11 @@ export class TriggerRequest extends jspb.Message {
   getNotification(): NotificationTriggerContext | undefined;
   setNotification(value?: NotificationTriggerContext): void;
 
+  hasWebsocket(): boolean;
+  clearWebsocket(): void;
+  getWebsocket(): WebsocketTriggerContext | undefined;
+  setWebsocket(value?: WebsocketTriggerContext): void;
+
   getContextCase(): TriggerRequest.ContextCase;
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): TriggerRequest.AsObject;
@@ -443,6 +506,7 @@ export namespace TriggerRequest {
     http?: HttpTriggerContext.AsObject,
     topic?: TopicTriggerContext.AsObject,
     notification?: NotificationTriggerContext.AsObject,
+    websocket?: WebsocketTriggerContext.AsObject,
   }
 
   export enum ContextCase {
@@ -450,6 +514,7 @@ export namespace TriggerRequest {
     HTTP = 3,
     TOPIC = 4,
     NOTIFICATION = 5,
+    WEBSOCKET = 6,
   }
 }
 
@@ -612,6 +677,34 @@ export namespace NotificationTriggerContext {
   }
 }
 
+export class WebsocketTriggerContext extends jspb.Message {
+  getSocket(): string;
+  setSocket(value: string): void;
+
+  getEvent(): WebsocketEventMap[keyof WebsocketEventMap];
+  setEvent(value: WebsocketEventMap[keyof WebsocketEventMap]): void;
+
+  getConnectionid(): string;
+  setConnectionid(value: string): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): WebsocketTriggerContext.AsObject;
+  static toObject(includeInstance: boolean, msg: WebsocketTriggerContext): WebsocketTriggerContext.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: WebsocketTriggerContext, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): WebsocketTriggerContext;
+  static deserializeBinaryFromReader(message: WebsocketTriggerContext, reader: jspb.BinaryReader): WebsocketTriggerContext;
+}
+
+export namespace WebsocketTriggerContext {
+  export type AsObject = {
+    socket: string,
+    event: WebsocketEventMap[keyof WebsocketEventMap],
+    connectionid: string,
+  }
+}
+
 export class TriggerResponse extends jspb.Message {
   getData(): Uint8Array | string;
   getData_asU8(): Uint8Array;
@@ -633,6 +726,11 @@ export class TriggerResponse extends jspb.Message {
   getNotification(): NotificationResponseContext | undefined;
   setNotification(value?: NotificationResponseContext): void;
 
+  hasWebsocket(): boolean;
+  clearWebsocket(): void;
+  getWebsocket(): WebsocketResponseContext | undefined;
+  setWebsocket(value?: WebsocketResponseContext): void;
+
   getContextCase(): TriggerResponse.ContextCase;
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): TriggerResponse.AsObject;
@@ -650,6 +748,7 @@ export namespace TriggerResponse {
     http?: HttpResponseContext.AsObject,
     topic?: TopicResponseContext.AsObject,
     notification?: NotificationResponseContext.AsObject,
+    websocket?: WebsocketResponseContext.AsObject,
   }
 
   export enum ContextCase {
@@ -657,6 +756,7 @@ export namespace TriggerResponse {
     HTTP = 10,
     TOPIC = 11,
     NOTIFICATION = 12,
+    WEBSOCKET = 13,
   }
 }
 
@@ -726,6 +826,26 @@ export namespace NotificationResponseContext {
   }
 }
 
+export class WebsocketResponseContext extends jspb.Message {
+  getSuccess(): boolean;
+  setSuccess(value: boolean): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): WebsocketResponseContext.AsObject;
+  static toObject(includeInstance: boolean, msg: WebsocketResponseContext): WebsocketResponseContext.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: WebsocketResponseContext, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): WebsocketResponseContext;
+  static deserializeBinaryFromReader(message: WebsocketResponseContext, reader: jspb.BinaryReader): WebsocketResponseContext;
+}
+
+export namespace WebsocketResponseContext {
+  export type AsObject = {
+    success: boolean,
+  }
+}
+
 export interface BucketNotificationTypeMap {
   ALL: 0;
   CREATED: 1;
@@ -733,4 +853,12 @@ export interface BucketNotificationTypeMap {
 }
 
 export const BucketNotificationType: BucketNotificationTypeMap;
+
+export interface WebsocketEventMap {
+  CONNECT: 0;
+  DISCONNECT: 1;
+  MESSAGE: 2;
+}
+
+export const WebsocketEvent: WebsocketEventMap;
 

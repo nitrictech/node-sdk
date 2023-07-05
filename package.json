@@ -1,7 +1,7 @@
 {
   "name": "@nitric/sdk",
   "description": "Nitric NodeJS client sdk",
-  "nitric": "v0.27.0",
+  "nitric": "v0.30.0",
   "author": "Nitric <https://github.com/nitrictech>",
   "repository": "https://github.com/nitrictech/node-sdk",
   "main": "lib/index.js",
@@ -40,6 +40,7 @@
     "@opentelemetry/sdk-trace-node": "^1.10.1",
     "@opentelemetry/semantic-conventions": "^1.10.1",
     "google-protobuf": "3.14.0",
+    "portfinder": "^1.0.32",
     "tslib": "^2.1.0"
   },
   "license": "Apache-2.0",

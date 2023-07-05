@@ -96,7 +96,7 @@ describe('Schedule', () => {
         expect(faas.Faas).toBeCalledTimes(1);
       });
 
-      it('should provide Faas with ApiWorkerOptions', () => {
+      it('should provide Faas with RateWorkerOptions', () => {
         const expectedOpts = new RateWorkerOptions(
           'main',
           1,
@@ -125,7 +125,7 @@ describe('Schedule', () => {
         expect(faas.Faas).toBeCalledTimes(1);
       });
 
-      it('should provide Faas with ApiWorkerOptions', () => {
+      it('should provide Faas with RateWorkerOptions', () => {
         const expectedOpts = new RateWorkerOptions('main', 7, rate);
         expect(faas.Faas).toBeCalledWith(expectedOpts);
       });
