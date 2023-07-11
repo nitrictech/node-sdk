@@ -128,4 +128,3 @@ describe('Registering websocket resources', () => {
     });
   });
 });
-
