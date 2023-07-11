@@ -36,13 +36,24 @@ export class Websocket {
   async send(
     socket: string,
     connectionId: string,
-    message: string | Uint8Array
+    message: string | Uint8Array | Record<string, any>
   ): Promise<void> {
+    let payload: Uint8Array;
+
+    // handle all message types
+    if (typeof message === 'string') {
+      payload = new TextEncoder().encode(message);;
+    } else if (message instanceof Uint8Array) {
+      payload = message;
+    } else {
+      payload = new TextEncoder().encode(JSON.stringify(message));
+    }
+
     const sendRequest = new WebsocketSendRequest();
 
     sendRequest.setSocket(socket);
     sendRequest.setConnectionId(connectionId);
-    sendRequest.setData(message);
+    sendRequest.setData(payload);
 
     return new Promise((res, rej) => {
       this.client.send(sendRequest, (error, data) => {
