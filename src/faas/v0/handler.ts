@@ -18,6 +18,8 @@ import {
   EventContext,
   BucketNotificationContext,
   FileNotificationContext,
+  WebsocketNotificationContext,
+  JSONTypes,
 } from '.';
 
 export type GenericHandler<Ctx> = (ctx: Ctx) => Promise<Ctx> | Ctx;
@@ -35,6 +37,8 @@ export type GenericMiddleware<Ctx> = (
 
 export type TriggerMiddleware = GenericMiddleware<TriggerContext>;
 export type HttpMiddleware = GenericMiddleware<HttpContext>;
+export type WebsocketMiddleware<T extends JSONTypes = Record<string, any>> =
+  GenericMiddleware<WebsocketNotificationContext<T>>;
 export type EventMiddleware<
   T extends Record<string, any> = Record<string, any>
 > = GenericMiddleware<EventContext<NitricEvent<T>>>;

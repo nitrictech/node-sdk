@@ -33,6 +33,9 @@ import {
   BucketNotificationWorker,
   BucketNotificationConfig,
   HttpWorker,
+  WebsocketResponseContext,
+  WebsocketWorker,
+  WebsocketEvent,
 } from '@nitric/api/proto/faas/v1/faas_pb';
 
 import {
@@ -45,6 +48,7 @@ import {
   TriggerContext,
   TriggerMiddleware,
   FileNotificationMiddleware,
+  WebsocketMiddleware,
 } from '.';
 
 import newTracerProvider from './traceProvider';
@@ -59,6 +63,7 @@ import {
 
 import * as grpc from '@grpc/grpc-js';
 import { HttpWorkerOptions } from '@nitric/sdk/resources/http';
+import { WebsocketWorkerOptions } from '@nitric/sdk/resources/websocket';
 
 export class FaasWorkerOptions {}
 
@@ -75,6 +80,7 @@ type FaasClientOptions =
  */
 export class Faas {
   private httpHandler?: HttpMiddleware;
+  private websocketHandler?: WebsocketMiddleware;
   private eventHandler?: EventMiddleware | ScheduleMiddleware;
   private bucketNotificationHandler?:
     | BucketNotificationMiddleware
@@ -105,6 +111,17 @@ export class Faas {
    */
   http(...handlers: HttpMiddleware[]): Faas {
     this.httpHandler = createHandler(...handlers);
+    return this;
+  }
+
+  /**
+   * Add a websocket handler to this Faas server
+   *
+   * @param handlers the functions to call to respond to http requests
+   * @returns self
+   */
+  websocket(...handlers: WebsocketMiddleware[]): Faas {
+    this.websocketHandler = createHandler(...handlers);
     return this;
   }
 
@@ -153,6 +170,17 @@ export class Faas {
   }
 
   /**
+   * Get websocket handler for this server
+   * @returns the registered websocket handler
+   */
+  private getWebsocketHandler():
+    | WebsocketMiddleware
+    | TriggerMiddleware
+    | undefined {
+    return this.websocketHandler || this.anyHandler;
+  }
+
+  /**
    * Start the Faas server
    *
    * @param handlers to use as the default when no other handler is registered for the request type
@@ -167,6 +195,7 @@ export class Faas {
       !this.httpHandler &&
       !this.eventHandler &&
       !this.bucketNotificationHandler &&
+      !this.websocketHandler &&
       !this.anyHandler
     ) {
       throw new Error('A handler function must be provided.');
@@ -222,6 +251,10 @@ export class Faas {
             triggerType = 'Notification';
             handler =
               this.getBucketNotificationHandler() as GenericMiddleware<TriggerContext>;
+          } else if (ctx.websocket) {
+            triggerType = 'Websocket';
+            handler =
+              this.getWebsocketHandler() as GenericMiddleware<TriggerContext>;
           } else {
             console.error(
               `received an unexpected trigger type, are you using an outdated version of the SDK?`
@@ -266,6 +299,10 @@ export class Faas {
             const notificationResponse = new NotificationResponseContext();
             notificationResponse.setSuccess(false);
             triggerResponse.setNotification(notificationResponse);
+          } else if (triggerRequest.hasWebsocket()) {
+            const notificationResponse = new WebsocketResponseContext();
+            notificationResponse.setSuccess(false);
+            triggerResponse.setWebsocket(notificationResponse);
           }
         }
         // Send the response back to the membrane
@@ -330,6 +367,11 @@ export class Faas {
       const httpWorker = new HttpWorker();
       httpWorker.setPort(this.options.port);
       initRequest.setHttpWorker(httpWorker);
+    } else if (this.options instanceof WebsocketWorkerOptions) {
+      const websocketWorker = new WebsocketWorker();
+      websocketWorker.setSocket(this.options.socket);
+      websocketWorker.setEvent(this.options.eventType);
+      initRequest.setWebsocket(websocketWorker);
     }
     // Original faas workers should return a blank InitRequest for compatibility.
 
