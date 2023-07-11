@@ -42,7 +42,7 @@ export class Websocket {
 
     // handle all message types
     if (typeof message === 'string') {
-      payload = new TextEncoder().encode(message);;
+      payload = new TextEncoder().encode(message);
     } else if (message instanceof Uint8Array) {
       payload = message;
     } else {
