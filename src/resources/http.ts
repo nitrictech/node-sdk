@@ -31,7 +31,11 @@ export class HttpWorkerOptions {
   public readonly port: number;
   public readonly callback: () => void;
 
-  constructor(app: NodeApplication, port: number, callback: () => void = NO_OP) {
+  constructor(
+    app: NodeApplication,
+    port: number,
+    callback: () => void = NO_OP
+  ) {
     this.app = app;
     this.port = port;
     this.callback = callback;

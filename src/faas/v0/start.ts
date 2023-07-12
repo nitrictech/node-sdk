@@ -171,7 +171,7 @@ export class Faas {
 
   /**
    * Get websocket handler for this server
-   * 
+   *
    * @returns the registered websocket handler
    */
   private getWebsocketHandler():
