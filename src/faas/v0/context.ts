@@ -20,6 +20,7 @@ import {
   NotificationResponseContext,
   TopicResponseContext,
   BucketNotificationType as ProtoBucketNotificationType,
+  WebsocketResponseContext,
 } from '@nitric/api/proto/faas/v1/faas_pb';
 import * as api from '@opentelemetry/api';
 import * as jspb from 'google-protobuf';
@@ -69,6 +70,15 @@ export abstract class TriggerContext<
   }
 
   /**
+   * Noop base context websocket method
+   *
+   * @returns undefined
+   */
+  public get websocket(): WebsocketNotificationContext<unknown> | undefined {
+    return undefined;
+  }
+
+  /**
    * Return the request object from this context.
    *
    * @returns the request object.
@@ -107,6 +117,8 @@ export abstract class TriggerContext<
         trigger,
         options as BucketNotificationWorkerOptions
       );
+    } else if (trigger.hasWebsocket()) {
+      return WebsocketNotificationContext.fromGrpcTriggerRequest(trigger);
     }
     throw new Error('Unsupported trigger request type');
   }
@@ -118,6 +130,8 @@ export abstract class TriggerContext<
       return EventContext.toGrpcTriggerResponse(ctx);
     } else if (ctx.bucketNotification) {
       return BucketNotificationContext.toGrpcTriggerResponse(ctx);
+    } else if (ctx.websocket) {
+      return WebsocketNotificationContext.toGrpcTriggerResponse(ctx);
     }
 
     throw new Error('Unsupported trigger context type');
@@ -593,5 +607,78 @@ export class FileNotificationRequest extends BucketNotificationRequest {
 }
 
 export interface BucketNotificationResponse {
+  success: boolean;
+}
+
+// WEBSOCKET NOTIFICATION CONTEXT
+
+export class WebsocketNotificationContext<T> extends TriggerContext<
+  WebsocketNotificationRequest<T>,
+  WebsocketNotificationResponse
+> {
+  public get websocket(): WebsocketNotificationContext<T> {
+    return this;
+  }
+
+  static fromGrpcTriggerRequest(
+    trigger: TriggerRequest
+  ): WebsocketNotificationContext<any> {
+    const ctx = new WebsocketNotificationContext();
+
+    ctx.request = new WebsocketNotificationRequest(
+      trigger.getData_asU8(),
+      getTraceContext(trigger.getTraceContext()),
+      trigger.getWebsocket().getSocket(),
+      trigger.getWebsocket().getEvent(),
+      trigger.getWebsocket().getConnectionid()
+    );
+
+    ctx.response = {
+      success: true,
+    };
+
+    return ctx;
+  }
+
+  static toGrpcTriggerResponse(
+    ctx: TriggerContext<AbstractRequest, any>
+  ): TriggerResponse {
+    const notifyCtx = ctx.websocket;
+    const triggerResponse = new TriggerResponse();
+    const notificationResponse = new WebsocketResponseContext();
+    notificationResponse.setSuccess(notifyCtx.res.success);
+    triggerResponse.setWebsocket(notificationResponse);
+    return triggerResponse;
+  }
+}
+
+export enum WebsocketNotificationType {
+  Connected,
+  Disconnected,
+  Message,
+}
+
+export class WebsocketNotificationRequest<T> extends AbstractRequest<T> {
+  public readonly socket: string;
+  public readonly notificationType: WebsocketNotificationType;
+  public readonly connectionId: string;
+
+  constructor(
+    data: string | Uint8Array,
+    traceContext: api.Context,
+    socket: string,
+    notificationType: WebsocketNotificationType,
+    connectionId: string
+  ) {
+    super(data, traceContext);
+
+    // Get reference to the bucket
+    this.socket = socket;
+    this.notificationType = notificationType;
+    this.connectionId = connectionId;
+  }
+}
+
+export interface WebsocketNotificationResponse {
   success: boolean;
 }

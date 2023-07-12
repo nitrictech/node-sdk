@@ -23,15 +23,22 @@ interface NodeApplication {
   listen: ListenerFunction;
 }
 
+// eslint-disable-next-line
+const NO_OP = () => {};
+
 export class HttpWorkerOptions {
   public readonly app: NodeApplication;
   public readonly port: number;
   public readonly callback: () => void;
 
-  constructor(app: NodeApplication, port: number, callback?: () => void) {
+  constructor(
+    app: NodeApplication,
+    port: number,
+    callback: () => void = NO_OP
+  ) {
     this.app = app;
     this.port = port;
-    this.callback = callback || (() => {});
+    this.callback = callback;
   }
 }
 
