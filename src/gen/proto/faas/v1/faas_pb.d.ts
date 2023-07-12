@@ -687,6 +687,8 @@ export class WebsocketTriggerContext extends jspb.Message {
   getConnectionid(): string;
   setConnectionid(value: string): void;
 
+  getQueryParamsMap(): jspb.Map<string, QueryValue>;
+  clearQueryParamsMap(): void;
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): WebsocketTriggerContext.AsObject;
   static toObject(includeInstance: boolean, msg: WebsocketTriggerContext): WebsocketTriggerContext.AsObject;
@@ -702,6 +704,7 @@ export namespace WebsocketTriggerContext {
     socket: string,
     event: WebsocketEventMap[keyof WebsocketEventMap],
     connectionid: string,
+    queryParamsMap: Array<[string, QueryValue.AsObject]>,
   }
 }
 
