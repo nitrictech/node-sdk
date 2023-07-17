@@ -19,3 +19,4 @@ export * from './bucket';
 export * from './schedule';
 export * from './secret';
 export * from './http';
+export * from './websocket';
