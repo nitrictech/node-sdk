@@ -635,7 +635,7 @@ export class WebsocketNotificationContext<T> extends TriggerContext<
     ).reduce(
       (acc, [key, [val]]) => ({
         ...acc,
-        [key]: val.map((v) => decodeURIComponent(v))
+        [key]: val.map((v) => decodeURIComponent(v)),
       }),
       {} as Record<string, string[]>
     );
@@ -646,7 +646,7 @@ export class WebsocketNotificationContext<T> extends TriggerContext<
       trigger.getWebsocket().getSocket(),
       trigger.getWebsocket().getEvent(),
       trigger.getWebsocket().getConnectionid(),
-      query,
+      query
     );
 
     ctx.response = {
@@ -678,7 +678,7 @@ export class WebsocketNotificationRequest<T> extends AbstractRequest<T> {
   public readonly socket: string;
   public readonly notificationType: WebsocketNotificationType;
   public readonly connectionId: string;
-  public readonly query: Record<string, string[]>
+  public readonly query: Record<string, string[]>;
 
   constructor(
     data: string | Uint8Array,
@@ -686,7 +686,7 @@ export class WebsocketNotificationRequest<T> extends AbstractRequest<T> {
     socket: string,
     notificationType: WebsocketNotificationType,
     connectionId: string,
-    query: Record<string, string[]>,
+    query: Record<string, string[]>
   ) {
     super(data, traceContext);
 
