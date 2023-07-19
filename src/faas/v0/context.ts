@@ -625,12 +625,28 @@ export class WebsocketNotificationContext<T> extends TriggerContext<
   ): WebsocketNotificationContext<any> {
     const ctx = new WebsocketNotificationContext();
 
+    const query = (
+      trigger
+        .getWebsocket()
+        .getQueryParamsMap()
+        // getEntryList claims to return [string, faas.HeaderValue][], but really returns [string, string[][]][]
+        // we force the type to match the real return type.
+        .getEntryList() as unknown as [string, string[][]][]
+    ).reduce(
+      (acc, [key, [val]]) => ({
+        ...acc,
+        [key]: val.map((v) => decodeURIComponent(v)),
+      }),
+      {} as Record<string, string[]>
+    );
+
     ctx.request = new WebsocketNotificationRequest(
       trigger.getData_asU8(),
       getTraceContext(trigger.getTraceContext()),
       trigger.getWebsocket().getSocket(),
       trigger.getWebsocket().getEvent(),
-      trigger.getWebsocket().getConnectionid()
+      trigger.getWebsocket().getConnectionid(),
+      query
     );
 
     ctx.response = {
@@ -662,13 +678,15 @@ export class WebsocketNotificationRequest<T> extends AbstractRequest<T> {
   public readonly socket: string;
   public readonly notificationType: WebsocketNotificationType;
   public readonly connectionId: string;
+  public readonly query: Record<string, string[]>;
 
   constructor(
     data: string | Uint8Array,
     traceContext: api.Context,
     socket: string,
     notificationType: WebsocketNotificationType,
-    connectionId: string
+    connectionId: string,
+    query: Record<string, string[]>
   ) {
     super(data, traceContext);
 
@@ -676,6 +694,7 @@ export class WebsocketNotificationRequest<T> extends AbstractRequest<T> {
     this.socket = socket;
     this.notificationType = notificationType;
     this.connectionId = connectionId;
+    this.query = query;
   }
 }
 

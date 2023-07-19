@@ -5353,7 +5353,8 @@ proto.nitric.faas.v1.WebsocketTriggerContext.toObject = function(includeInstance
   var f, obj = {
     socket: jspb.Message.getFieldWithDefault(msg, 1, ""),
     event: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    connectionid: jspb.Message.getFieldWithDefault(msg, 3, "")
+    connectionid: jspb.Message.getFieldWithDefault(msg, 3, ""),
+    queryParamsMap: (f = msg.getQueryParamsMap()) ? f.toObject(includeInstance, proto.nitric.faas.v1.QueryValue.toObject) : []
   };
 
   if (includeInstance) {
@@ -5401,6 +5402,12 @@ proto.nitric.faas.v1.WebsocketTriggerContext.deserializeBinaryFromReader = funct
     case 3:
       var value = /** @type {string} */ (reader.readString());
       msg.setConnectionid(value);
+      break;
+    case 6:
+      var value = msg.getQueryParamsMap();
+      reader.readMessage(value, function(message, reader) {
+        jspb.Map.deserializeBinary(message, reader, jspb.BinaryReader.prototype.readString, jspb.BinaryReader.prototype.readMessage, proto.nitric.faas.v1.QueryValue.deserializeBinaryFromReader, "", new proto.nitric.faas.v1.QueryValue());
+         });
       break;
     default:
       reader.skipField();
@@ -5451,6 +5458,10 @@ proto.nitric.faas.v1.WebsocketTriggerContext.serializeBinaryToWriter = function(
       3,
       f
     );
+  }
+  f = message.getQueryParamsMap(true);
+  if (f && f.getLength() > 0) {
+    f.serializeBinary(6, writer, jspb.BinaryWriter.prototype.writeString, jspb.BinaryWriter.prototype.writeMessage, proto.nitric.faas.v1.QueryValue.serializeBinaryToWriter);
   }
 };
 
@@ -5507,6 +5518,28 @@ proto.nitric.faas.v1.WebsocketTriggerContext.prototype.getConnectionid = functio
 proto.nitric.faas.v1.WebsocketTriggerContext.prototype.setConnectionid = function(value) {
   return jspb.Message.setProto3StringField(this, 3, value);
 };
+
+
+/**
+ * map<string, QueryValue> query_params = 6;
+ * @param {boolean=} opt_noLazyCreate Do not create the map if
+ * empty, instead returning `undefined`
+ * @return {!jspb.Map<string,!proto.nitric.faas.v1.QueryValue>}
+ */
+proto.nitric.faas.v1.WebsocketTriggerContext.prototype.getQueryParamsMap = function(opt_noLazyCreate) {
+  return /** @type {!jspb.Map<string,!proto.nitric.faas.v1.QueryValue>} */ (
+      jspb.Message.getMapField(this, 6, opt_noLazyCreate,
+      proto.nitric.faas.v1.QueryValue));
+};
+
+
+/**
+ * Clears values from the map. The map will be non-null.
+ * @return {!proto.nitric.faas.v1.WebsocketTriggerContext} returns this
+ */
+proto.nitric.faas.v1.WebsocketTriggerContext.prototype.clearQueryParamsMap = function() {
+  this.getQueryParamsMap().clear();
+  return this;};
 
 
 
