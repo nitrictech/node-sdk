@@ -54,9 +54,11 @@ const newTracerProvider = (): NodeTracerProvider => {
 
   const processor = localRun
     ? new NoopSpanProcessor()
-    : new BatchSpanProcessor(new OTLPTraceExporter({
-      url: 'http://localhost:4317',
-    }));
+    : new BatchSpanProcessor(
+        new OTLPTraceExporter({
+          url: 'http://localhost:4317',
+        })
+      );
 
   provider.addSpanProcessor(processor);
   provider.register();
