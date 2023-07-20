@@ -15,6 +15,7 @@ import {
   ConsoleSpanExporter,
   BatchSpanProcessor,
   NodeTracerProvider,
+  NoopSpanProcessor,
 } from '@opentelemetry/sdk-trace-node';
 import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-http';
 import { Resource } from '@opentelemetry/resources';
@@ -51,13 +52,11 @@ const newTracerProvider = (): NodeTracerProvider => {
     tracerProvider: provider,
   });
 
-  const traceExporter = localRun // If running locally
-    ? new ConsoleSpanExporter()
-    : new OTLPTraceExporter({
-        url: 'http://localhost:4317',
-      });
-
-  const processor = new BatchSpanProcessor(traceExporter);
+  const processor = localRun
+    ? new NoopSpanProcessor()
+    : new BatchSpanProcessor(new OTLPTraceExporter({
+      url: 'http://localhost:4317',
+    }));
 
   provider.addSpanProcessor(processor);
   provider.register();
