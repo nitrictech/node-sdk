@@ -261,3 +261,47 @@ export namespace StorageListFilesResponse {
   }
 }
 
+export class StorageExistsRequest extends jspb.Message {
+  getBucket(): string;
+  setBucket(value: string): void;
+
+  getKey(): string;
+  setKey(value: string): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): StorageExistsRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: StorageExistsRequest): StorageExistsRequest.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: StorageExistsRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): StorageExistsRequest;
+  static deserializeBinaryFromReader(message: StorageExistsRequest, reader: jspb.BinaryReader): StorageExistsRequest;
+}
+
+export namespace StorageExistsRequest {
+  export type AsObject = {
+    bucket: string,
+    key: string,
+  }
+}
+
+export class StorageExistsResponse extends jspb.Message {
+  getExists(): boolean;
+  setExists(value: boolean): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): StorageExistsResponse.AsObject;
+  static toObject(includeInstance: boolean, msg: StorageExistsResponse): StorageExistsResponse.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: StorageExistsResponse, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): StorageExistsResponse;
+  static deserializeBinaryFromReader(message: StorageExistsResponse, reader: jspb.BinaryReader): StorageExistsResponse;
+}
+
+export namespace StorageExistsResponse {
+  export type AsObject = {
+    exists: boolean,
+  }
+}
+
