@@ -227,7 +227,6 @@ describe('Storage Client Tests', () => {
     });
   });
 
-
   describe('Given nitric.api.storage.StorageClient.Delete throws an error', () => {
     const MOCK_ERROR = {
       code: 2,

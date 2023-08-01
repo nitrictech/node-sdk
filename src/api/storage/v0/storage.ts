@@ -326,7 +326,7 @@ export class File {
    * import { bucket } from "@nitric/sdk";
    *
    * const exampleBucket = bucket('exampleBucket').for('reading');
-   * 
+   *
    * const exists = await storage.bucket("my-bucket").file("my-item").exists();
    * ```
    */
