@@ -3658,7 +3658,7 @@ declare class File {
      *
      * const exampleBucket = bucket('exampleBucket').for('reading');
      *
-     * const exists = await storage.bucket("my-bucket").file("my-item").exists();
+     * const exists = await exampleBucket.file("my-item").exists();
      * ```
      */
     exists(): Promise<boolean>;
