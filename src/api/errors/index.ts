@@ -29,11 +29,14 @@ import { UnauthenticatedError } from './unauthenticated';
 import { UnavailableError } from './unavailable';
 import { UnimplementedError } from './unimplemented';
 import { UnknownError } from './unknown';
+import { parse } from '@nitric/grpc-error-status';
+import { ErrorDetails, ErrorScope } from "@nitric/api/proto/error/v1/error_pb";
+import { getDefaultAuthority } from '@grpc/grpc-js/build/src/resolver';
 
 // Accept all codes except Status OK
 type codes = Exclude<status, status.OK>;
 
-const STATUS_CODE_MAP: Record<codes, new (message: string) => Error> = {
+const STATUS_CODE_MAP: Record<codes, new (message: string, details: ErrorDetails) => Error> = {
   [status.CANCELLED]: CancelledError,
   [status.UNKNOWN]: UnknownError,
   [status.INVALID_ARGUMENT]: InvalidArgumentError,
@@ -61,11 +64,15 @@ const STATUS_CODE_MAP: Record<codes, new (message: string) => Error> = {
 export const fromGrpcError = (error: ServiceError): Error => {
   const construct = STATUS_CODE_MAP[error.code];
 
+  const errorStatus = parse(error);
+
+  const [details] = errorStatus.parseDetails(ErrorDetails);
+
   if (construct) {
-    return new construct(error.message);
+    return new construct(error.message, details);
   }
 
-  return new UnknownError(error.message);
+  return new UnknownError(error.message, details);
 };
 
 // Re-export errors

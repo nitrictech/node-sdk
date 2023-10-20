@@ -12,15 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import { ErrorDetails } from "@nitric/sdk/gen/proto/error/v1/error_pb";
+import { NitricPluginError } from "./plugin-error";
+
 /**
  * PermissionDeniedError
  *
  * The client is authenticated but does not have permission to
  * perform the requested operation
  */
-export class PermissionDeniedError extends Error {
-  constructor(message: string) {
-    super(message);
+export class PermissionDeniedError extends NitricPluginError {
+  constructor(message: string, details: ErrorDetails) {
+    super(message, details);
     Object.setPrototypeOf(this, PermissionDeniedError.prototype);
   }
 }

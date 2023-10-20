@@ -734,6 +734,13 @@
     semver "^7.3.5"
     tar "^6.1.11"
 
+"@nitric/grpc-error-status@^0.0.1":
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/@nitric/grpc-error-status/-/grpc-error-status-0.0.1.tgz#317ca345dc4f99b3a8ff98561a22465aae9acda2"
+  integrity sha512-4Z5TCCYBtfM+1UXq8b2BCDdc3Y03OZ7Y9gYMoBo3OcxxItKje1pu9kw/xq+d4gEjl/Xq0eLshtsI/Xfx+cJLSw==
+  dependencies:
+    google-protobuf "^3.14.0"
+
 "@nodelib/fs.scandir@2.1.5":
   version "2.1.5"
   resolved "https://registry.yarnpkg.com/@nodelib/fs.scandir/-/fs.scandir-2.1.5.tgz#7619c2eb21b25483f6d167548b4cfd5a7488c3d5"
@@ -3170,7 +3177,7 @@ google-protobuf@3.14.0:
   resolved "https://registry.yarnpkg.com/google-protobuf/-/google-protobuf-3.14.0.tgz#20373d22046e63831a5110e11a84f713cc43651e"
   integrity sha512-bwa8dBuMpOxg7COyqkW6muQuvNnWgVN8TX/epDRGW5m0jcrmq2QJyCyiV8ZE2/6LaIIqJtiv9bYokFhfpy/o6w==
 
-google-protobuf@^3.15.5:
+google-protobuf@^3.14.0, google-protobuf@^3.15.5:
   version "3.21.2"
   resolved "https://registry.yarnpkg.com/google-protobuf/-/google-protobuf-3.21.2.tgz#4580a2bea8bbb291ee579d1fefb14d6fa3070ea4"
   integrity sha512-3MSOYFO5U9mPGikIYCzK0SaThypfGgS6bHqrUGXG3DPHCrb+txNqeEcns1W0lkGfk0rCyNXm7xB9rMxnCiZOoA==

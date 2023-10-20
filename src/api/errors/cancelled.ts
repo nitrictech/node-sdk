@@ -12,14 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import { ErrorDetails, ErrorScope } from "@nitric/sdk/gen/proto/error/v1/error_pb";
+import { NitricPluginError } from "./plugin-error";
+
 /**
  * CancelledError
  *
  * Operation was cancelled (typically occurs client side)
  */
-export class CancelledError extends Error {
-  constructor(message: string) {
-    super(message);
+export class CancelledError extends NitricPluginError {
+  constructor(message: string, details: ErrorDetails) {
+    super(message, details);
     Object.setPrototypeOf(this, CancelledError.prototype);
   }
 }

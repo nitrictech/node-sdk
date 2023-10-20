@@ -13,16 +13,23 @@
 // limitations under the License.
 
 import { ErrorDetails } from "@nitric/sdk/gen/proto/error/v1/error_pb";
-import { NitricPluginError } from "./plugin-error";
 
 /**
- * DeadlineExceededError
+ * CancelledError
  *
- * Specified deadline was exceeded before the operation could complete
+ * Operation was cancelled (typically occurs client side)
  */
-export class DeadlineExceededError extends NitricPluginError {
+export class NitricPluginError extends Error {
   constructor(message: string, details: ErrorDetails) {
-    super(message, details);
-    Object.setPrototypeOf(this, DeadlineExceededError.prototype);
+    // Format message type
+    const plugin = details.getScope().getPlugin();
+
+    const errorMessage = `${message};
+Nitric Plugin Error: ${details.getScope().getPlugin()}.${details.getScope().getService()}
+  Message: ${details.getMessage()}
+  Caused By: ${details.getCause()}
+`;
+
+    super(errorMessage);
   }
 }
