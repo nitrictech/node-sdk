@@ -143,7 +143,7 @@ export class DocumentRef<T extends DocumentStructure> {
     name: string
   ): CollectionRef<T> {
     if (this.depth() >= MAX_COLLECTION_DEPTH) {
-      throw new InvalidArgumentError(
+      throw new Error(
         `Maximum collection depth ${MAX_COLLECTION_DEPTH} exceeded`
       );
     }

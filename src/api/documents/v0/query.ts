@@ -139,7 +139,7 @@ export class Query<T extends DocumentStructure> {
    */
   public limit(limit: number): Query<T> {
     if (typeof limit !== 'number' || limit < 0) {
-      throw new InvalidArgumentError(
+      throw new Error(
         'limit must be a positive integer or 0 for unlimited.'
       );
     }
@@ -160,7 +160,7 @@ export class Query<T extends DocumentStructure> {
 
     if (this.pagingToken != null) {
       if (!(this.pagingToken instanceof Map)) {
-        throw new InvalidArgumentError('Invalid paging token provided!');
+        throw new Error('Invalid paging token provided!');
       }
 
       const map = request.getPagingTokenMap();

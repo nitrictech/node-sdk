@@ -54,7 +54,7 @@ export class Storage {
    */
   public bucket(name: string): Bucket {
     if (!name) {
-      throw new InvalidArgumentError(
+      throw new Error(
         'A bucket name is required to use a Bucket.'
       );
     }
@@ -101,7 +101,7 @@ export class Bucket {
 
   public file(name: string) {
     if (!name) {
-      throw new InvalidArgumentError(
+      throw new Error(
         'A file name/path is required to use a File.'
       );
     }

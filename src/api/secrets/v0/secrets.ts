@@ -54,7 +54,7 @@ export class Secrets {
    */
   public secret = (name: string): Secret => {
     if (!name) {
-      throw new InvalidArgumentError('A name is required to use a Secret.');
+      throw new Error('A name is required to use a Secret.');
     }
     return new Secret(this, name);
   };
@@ -150,7 +150,7 @@ export class Secret {
    */
   public version(version: string): SecretVersion {
     if (!version) {
-      throw new InvalidArgumentError(
+      throw new Error(
         'A version is required to create a version reference.'
       );
     }
