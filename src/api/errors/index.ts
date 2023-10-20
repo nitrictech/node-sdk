@@ -30,8 +30,7 @@ import { UnavailableError } from './unavailable';
 import { UnimplementedError } from './unimplemented';
 import { UnknownError } from './unknown';
 import { parse } from '@nitric/grpc-error-status';
-import { ErrorDetails, ErrorScope } from "@nitric/api/proto/error/v1/error_pb";
-import { getDefaultAuthority } from '@grpc/grpc-js/build/src/resolver';
+import { ErrorDetails } from "@nitric/api/proto/error/v1/error_pb";
 
 // Accept all codes except Status OK
 type codes = Exclude<status, status.OK>;
