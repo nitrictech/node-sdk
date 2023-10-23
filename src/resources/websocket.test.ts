@@ -16,7 +16,6 @@ import { ResourceServiceClient } from '@nitric/api/proto/resource/v1/resource_gr
 import { UnimplementedError } from '../api/errors';
 import { websocket } from '.';
 import { ResourceDeclareResponse } from '@nitric/api/proto/resource/v1/resource_pb';
-import * as faas from '../faas/index';
 
 jest.mock('../faas/index');
 

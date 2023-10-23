@@ -11,16 +11,26 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 import { ErrorDetails } from '@nitric/sdk/gen/proto/error/v1/error_pb';
-import { NitricPluginError } from './plugin-error';
+
 /**
- * AbortedError
+ * CancelledError
  *
- * The operation was aborted
+ * Operation was cancelled (typically occurs client side)
  */
-export class AbortedError extends NitricPluginError {
-  constructor(message: string, details: ErrorDetails) {
-    super(message, details);
-    Object.setPrototypeOf(this, AbortedError.prototype);
+export class NitricPluginError extends Error {
+  constructor(message: string, details?: ErrorDetails) {
+    let errorMessage = message;
+    if (details) {
+      errorMessage = `${message};
+Nitric Plugin Error: ${details.getScope().getPlugin()}.${details
+        .getScope()
+        .getService()}
+  Message: ${details.getMessage()}
+  Caused By: ${details.getCause()}`;
+    }
+
+    super(errorMessage);
   }
 }

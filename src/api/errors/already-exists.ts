@@ -12,14 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import { ErrorDetails } from '@nitric/sdk/gen/proto/error/v1/error_pb';
+import { NitricPluginError } from './plugin-error';
+
 /**
  * AlreadyExistsError
  *
  * Client attempted to illegally create an entity that already exists
  */
-export class AlreadyExistsError extends Error {
-  constructor(message: string) {
-    super(message);
+export class AlreadyExistsError extends NitricPluginError {
+  constructor(message: string, details: ErrorDetails) {
+    super(message, details);
     Object.setPrototypeOf(this, AlreadyExistsError.prototype);
   }
 }

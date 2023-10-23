@@ -78,7 +78,7 @@ export class Queueing {
 
   queue = <T>(name: string): Queue<T> => {
     if (!name) {
-      throw new InvalidArgumentError('A queue name is needed to use a Queue.');
+      throw new Error('A queue name is needed to use a Queue.');
     }
 
     return new Queue<T>(this, name);
@@ -153,7 +153,7 @@ export class Queue<T extends Record<string, any> = Record<string, any>> {
         if (!Array.isArray(tasks)) {
           // Single Task returns
           if (failedTasks.length > 0) {
-            reject(new InternalError(failedTasks[0].message));
+            reject(new Error(failedTasks[0].message));
           }
           resolve();
         } else {
