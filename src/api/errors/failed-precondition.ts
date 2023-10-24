@@ -12,15 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import { ErrorDetails } from '@nitric/sdk/gen/proto/error/v1/error_pb';
+import { NitricPluginError } from './plugin-error';
+
 /**
  * FailedPreconditionError
  *
  * Operation was rejected due to the system being not being
  * in a state required for the requested operation.
  */
-export class FailedPreconditionError extends Error {
-  constructor(message: string) {
-    super(message);
+export class FailedPreconditionError extends NitricPluginError {
+  constructor(message: string, details: ErrorDetails) {
+    super(message, details);
     Object.setPrototypeOf(this, FailedPreconditionError.prototype);
   }
 }
