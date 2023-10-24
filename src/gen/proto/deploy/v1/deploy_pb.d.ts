@@ -515,6 +515,11 @@ export class Api extends jspb.Message {
   getOpenapi(): string;
   setOpenapi(value: string): void;
 
+  hasCors(): boolean;
+  clearCors(): void;
+  getCors(): proto_resource_v1_resource_pb.ApiCorsDefinition | undefined;
+  setCors(value?: proto_resource_v1_resource_pb.ApiCorsDefinition): void;
+
   getDocumentCase(): Api.DocumentCase;
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): Api.AsObject;
@@ -529,6 +534,7 @@ export class Api extends jspb.Message {
 export namespace Api {
   export type AsObject = {
     openapi: string,
+    cors?: proto_resource_v1_resource_pb.ApiCorsDefinition.AsObject,
   }
 
   export enum DocumentCase {

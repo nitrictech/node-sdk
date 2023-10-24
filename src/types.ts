@@ -62,3 +62,13 @@ export type HttpMethod =
   | 'PUT'
   | 'DELETE'
   | 'OPTIONS';
+
+export type Duration = `${number} ${
+  | 'second'
+  | 'seconds'
+  | 'minute'
+  | 'minutes'
+  | 'hour'
+  | 'hours'
+  | 'day'
+  | 'days'}`;

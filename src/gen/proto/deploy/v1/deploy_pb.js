@@ -4059,7 +4059,8 @@ proto.nitric.deploy.v1.Api.prototype.toObject = function(opt_includeInstance) {
  */
 proto.nitric.deploy.v1.Api.toObject = function(includeInstance, msg) {
   var f, obj = {
-    openapi: jspb.Message.getFieldWithDefault(msg, 1, "")
+    openapi: jspb.Message.getFieldWithDefault(msg, 1, ""),
+    cors: (f = msg.getCors()) && proto_resource_v1_resource_pb.ApiCorsDefinition.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -4100,6 +4101,11 @@ proto.nitric.deploy.v1.Api.deserializeBinaryFromReader = function(msg, reader) {
       var value = /** @type {string} */ (reader.readString());
       msg.setOpenapi(value);
       break;
+    case 2:
+      var value = new proto_resource_v1_resource_pb.ApiCorsDefinition;
+      reader.readMessage(value,proto_resource_v1_resource_pb.ApiCorsDefinition.deserializeBinaryFromReader);
+      msg.setCors(value);
+      break;
     default:
       reader.skipField();
       break;
@@ -4134,6 +4140,14 @@ proto.nitric.deploy.v1.Api.serializeBinaryToWriter = function(message, writer) {
     writer.writeString(
       1,
       f
+    );
+  }
+  f = message.getCors();
+  if (f != null) {
+    writer.writeMessage(
+      2,
+      f,
+      proto_resource_v1_resource_pb.ApiCorsDefinition.serializeBinaryToWriter
     );
   }
 };
@@ -4172,6 +4186,43 @@ proto.nitric.deploy.v1.Api.prototype.clearOpenapi = function() {
  */
 proto.nitric.deploy.v1.Api.prototype.hasOpenapi = function() {
   return jspb.Message.getField(this, 1) != null;
+};
+
+
+/**
+ * optional nitric.resource.v1.ApiCorsDefinition cors = 2;
+ * @return {?proto.nitric.resource.v1.ApiCorsDefinition}
+ */
+proto.nitric.deploy.v1.Api.prototype.getCors = function() {
+  return /** @type{?proto.nitric.resource.v1.ApiCorsDefinition} */ (
+    jspb.Message.getWrapperField(this, proto_resource_v1_resource_pb.ApiCorsDefinition, 2));
+};
+
+
+/**
+ * @param {?proto.nitric.resource.v1.ApiCorsDefinition|undefined} value
+ * @return {!proto.nitric.deploy.v1.Api} returns this
+*/
+proto.nitric.deploy.v1.Api.prototype.setCors = function(value) {
+  return jspb.Message.setWrapperField(this, 2, value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.nitric.deploy.v1.Api} returns this
+ */
+proto.nitric.deploy.v1.Api.prototype.clearCors = function() {
+  return this.setCors(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.nitric.deploy.v1.Api.prototype.hasCors = function() {
+  return jspb.Message.getField(this, 2) != null;
 };
 
 

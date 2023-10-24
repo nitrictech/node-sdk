@@ -293,11 +293,64 @@ export namespace ApiScopes {
   }
 }
 
+export class ApiCorsDefinition extends jspb.Message {
+  getAllowCredentials(): boolean;
+  setAllowCredentials(value: boolean): void;
+
+  clearAllowHeadersList(): void;
+  getAllowHeadersList(): Array<string>;
+  setAllowHeadersList(value: Array<string>): void;
+  addAllowHeaders(value: string, index?: number): string;
+
+  clearAllowMethodsList(): void;
+  getAllowMethodsList(): Array<string>;
+  setAllowMethodsList(value: Array<string>): void;
+  addAllowMethods(value: string, index?: number): string;
+
+  clearAllowOriginsList(): void;
+  getAllowOriginsList(): Array<string>;
+  setAllowOriginsList(value: Array<string>): void;
+  addAllowOrigins(value: string, index?: number): string;
+
+  clearExposeHeadersList(): void;
+  getExposeHeadersList(): Array<string>;
+  setExposeHeadersList(value: Array<string>): void;
+  addExposeHeaders(value: string, index?: number): string;
+
+  getMaxAge(): number;
+  setMaxAge(value: number): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): ApiCorsDefinition.AsObject;
+  static toObject(includeInstance: boolean, msg: ApiCorsDefinition): ApiCorsDefinition.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: ApiCorsDefinition, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): ApiCorsDefinition;
+  static deserializeBinaryFromReader(message: ApiCorsDefinition, reader: jspb.BinaryReader): ApiCorsDefinition;
+}
+
+export namespace ApiCorsDefinition {
+  export type AsObject = {
+    allowCredentials: boolean,
+    allowHeadersList: Array<string>,
+    allowMethodsList: Array<string>,
+    allowOriginsList: Array<string>,
+    exposeHeadersList: Array<string>,
+    maxAge: number,
+  }
+}
+
 export class ApiResource extends jspb.Message {
   getSecurityDefinitionsMap(): jspb.Map<string, ApiSecurityDefinition>;
   clearSecurityDefinitionsMap(): void;
   getSecurityMap(): jspb.Map<string, ApiScopes>;
   clearSecurityMap(): void;
+  hasCors(): boolean;
+  clearCors(): void;
+  getCors(): ApiCorsDefinition | undefined;
+  setCors(value?: ApiCorsDefinition): void;
+
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): ApiResource.AsObject;
   static toObject(includeInstance: boolean, msg: ApiResource): ApiResource.AsObject;
@@ -312,6 +365,7 @@ export namespace ApiResource {
   export type AsObject = {
     securityDefinitionsMap: Array<[string, ApiSecurityDefinition.AsObject]>,
     securityMap: Array<[string, ApiScopes.AsObject]>,
+    cors?: ApiCorsDefinition.AsObject,
   }
 }
 

@@ -13,6 +13,7 @@
 // limitations under the License.
 import { HttpMiddleware, Faas } from '../faas';
 import {
+  ApiCorsDefinition,
   ApiResource,
   ApiScopes,
   ApiSecurityDefinition,
@@ -26,7 +27,7 @@ import {
 } from '@nitric/api/proto/resource/v1/resource_pb';
 import { fromGrpcError } from '../api/errors';
 import resourceClient from './client';
-import { HttpMethod } from '../types';
+import { Duration, HttpMethod } from '../types';
 import { make, Resource as Base } from './common';
 import path from 'path';
 
@@ -233,6 +234,74 @@ export interface JwtSecurityDefinition extends BaseSecurityDefinition<'jwt'> {
 // TODO: Union type for multiple security definition mappings
 export type SecurityDefinition = JwtSecurityDefinition;
 
+export interface CorsOptions {
+  /**
+   * Specifies whether credentials are included in the CORS request.
+   *
+   * @default false
+   */
+  allowCredentials?: boolean;
+  /**
+   * The collection of allowed headers.
+   *
+   * @default Allow all headers.
+   *
+   * @example
+   * ```js
+   * // Allow all headers
+   * allowHeaders: ["*"]
+   *
+   * // Allow specific headers
+   * allowHeaders: ["Accept", "Content-Type", "Authorization"]
+   * ```
+   */
+  allowHeaders?: string[];
+  /**
+   * The collection of allowed HTTP methods.
+   *
+   * @default Allow all methods.
+   *
+   * @example
+   * ```js
+   * // Allow specific methods
+   * allowMethods: ["GET", "POST"]
+   * ```
+   */
+  allowMethods?: HttpMethod[];
+  /**
+   * The collection of allowed origins.
+   *
+   * @default Allow all origins.
+   *
+   * @example
+   * ```js
+   * // Allow all origins
+   * allowOrigins: ["*"]
+   *
+   * // Allow specific origins. Note that the url protocol, ie. "https://", is required.
+   * allowOrigins: ["https://domain.com"]
+   * ```
+   */
+  allowOrigins?: string[];
+  /**
+   * The collection of exposed headers.
+   *
+   * @default No expose headers are allowed.
+   */
+  exposeHeaders?: string[];
+  /**
+   * Specify how long the results of a preflight response can be cached
+   *
+   * @default No caching
+   *
+   * @example
+   * ```js
+   * maxAge: "1 day"
+   * ```
+   */
+  maxAge?: Duration;
+}
+
 export interface ApiOptions<Defs extends string> {
   /**
    * The base path for all routes in the API.
@@ -255,6 +324,24 @@ export interface ApiOptions<Defs extends string> {
    * Optional root level security for the API
    */
   security?: Record<Defs, string[]>;
+
+  /**
+   * CORS support applied to all endpoints in this API
+   *
+   * @default false
+   *
+   * @example
+   * ```js
+   * const mainApi = api('main', {
+   *  cors: {
+   *     allowOrigins: ['*'],
+   *     allowMethods: ['GET', 'POST'],
+   *     allowCredentials: true,
+   *   },
+   * });
+   * ```
+   */
+  cors?: boolean | CorsOptions;
 }
 
 interface ApiDetails {
@@ -276,6 +363,7 @@ export class Api<SecurityDefs extends string> extends Base<ApiDetails> {
     SecurityDefinition
   >;
   private readonly security?: Record<SecurityDefs, string[]>;
+  private readonly cors?: boolean | CorsOptions;
 
   constructor(name: string, options: ApiOptions<SecurityDefs> = {}) {
     super(name);
@@ -284,6 +372,7 @@ export class Api<SecurityDefs extends string> extends Base<ApiDetails> {
       path = '/',
       securityDefinitions = null,
       security = {} as Record<SecurityDefs, string[]>,
+      cors,
     } = options;
     // prepend / to path if its not there
     this.path = path.replace(/^\/?/, '/');
@@ -291,6 +380,7 @@ export class Api<SecurityDefs extends string> extends Base<ApiDetails> {
     this.securityDefinitions = securityDefinitions;
     this.security = security;
     this.routes = [];
+    this.cors = cors;
   }
 
   /**
@@ -323,7 +413,9 @@ export class Api<SecurityDefs extends string> extends Base<ApiDetails> {
       // join the api level middleware and route level (route options) middleware
       middleware: [...this.middleware, ...routeMiddleware],
     });
+
     this.routes.push(r);
+
     return r;
   }
 
@@ -467,7 +559,7 @@ export class Api<SecurityDefs extends string> extends Base<ApiDetails> {
     const req = new ResourceDeclareRequest();
     const resource = new Resource();
     const apiResource = new ApiResource();
-    const { security, securityDefinitions } = this;
+    const { security, securityDefinitions, cors } = this;
 
     if (security) {
       Object.keys(security).forEach((k) => {
@@ -495,6 +587,22 @@ export class Api<SecurityDefs extends string> extends Base<ApiDetails> {
 
         apiResource.getSecurityDefinitionsMap().set(k, definition);
       });
+    }
+
+    if (cors) {
+      const corsConfig = typeof cors === 'object' ? cors : {};
+      const corsDef = new ApiCorsDefinition();
+
+      corsDef.setAllowCredentials(corsConfig.allowCredentials);
+      corsDef.setAllowOriginsList(corsConfig.allowOrigins);
+      corsDef.setAllowHeadersList(corsConfig.allowHeaders);
+      corsDef.setAllowMethodsList(corsConfig.allowMethods);
+      corsDef.setExposeHeadersList(corsConfig.exposeHeaders);
+      corsDef.setMaxAge(
+        corsConfig.maxAge ? durationToSeconds(corsConfig.maxAge) : undefined
+      );
+
+      apiResource.setCors(corsDef);
     }
 
     req.setApi(apiResource);
@@ -541,3 +649,30 @@ export const jwt = (
 
 const composeMiddleware = (middleware: HttpMiddleware | HttpMiddleware[]) =>
   Array.isArray(middleware) ? middleware : middleware ? [middleware] : [];
+
+// Function to convert Duration to seconds
+/**
+ *
+ * @param duration the duration as a string
+ * @returns number
+ */
+function durationToSeconds(duration: Duration): number {
+  const [amount, unit] = duration.split(' ');
+
+  switch (unit) {
+    case 'second':
+    case 'seconds':
+      return parseInt(amount, 10);
+    case 'minute':
+    case 'minutes':
+      return parseInt(amount, 10) * 60;
+    case 'hour':
+    case 'hours':
+      return parseInt(amount, 10) * 3600;
+    case 'day':
+    case 'days':
+      return parseInt(amount, 10) * 86400;
+    default:
+      throw new Error('Invalid duration unit');
+  }
+}
