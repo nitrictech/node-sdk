@@ -19,6 +19,7 @@ import {
   StorageDeleteRequest,
   StoragePreSignUrlRequest,
   StorageListFilesRequest,
+  StorageExistsRequest,
 } from '@nitric/api/proto/storage/v1/storage_pb';
 import * as grpc from '@grpc/grpc-js';
 import { fromGrpcError, InvalidArgumentError } from '../../errors';
@@ -53,9 +54,7 @@ export class Storage {
    */
   public bucket(name: string): Bucket {
     if (!name) {
-      throw new InvalidArgumentError(
-        'A bucket name is required to use a Bucket.'
-      );
+      throw new Error('A bucket name is required to use a Bucket.');
     }
     return new Bucket(this, name);
   }
@@ -100,9 +99,7 @@ export class Bucket {
 
   public file(name: string) {
     if (!name) {
-      throw new InvalidArgumentError(
-        'A file name/path is required to use a File.'
-      );
+      throw new Error('A file name/path is required to use a File.');
     }
     return new File(this.storage, this, name);
   }
@@ -310,6 +307,36 @@ export class File {
           reject(fromGrpcError(error));
         } else {
           resolve();
+        }
+      });
+    });
+  }
+
+  /**
+   * Determine if a file exists in a bucket.
+   *
+   * @returns A boolean promise.
+   *
+   * Example:
+   * ```typescript
+   * import { bucket } from "@nitric/sdk";
+   *
+   * const exampleBucket = bucket('exampleBucket').for('reading');
+   *
+   * const exists = await exampleBucket.file("my-item").exists();
+   * ```
+   */
+  public async exists(): Promise<boolean> {
+    const request = new StorageExistsRequest();
+    request.setBucket(this.bucket.name);
+    request.setKey(this.name);
+
+    return new Promise((resolve, reject) => {
+      this.storage.StorageServiceClient.exists(request, (error, response) => {
+        if (error) {
+          reject(fromGrpcError(error));
+        } else {
+          resolve(response.getExists());
         }
       });
     });

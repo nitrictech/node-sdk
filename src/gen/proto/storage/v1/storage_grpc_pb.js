@@ -27,6 +27,28 @@ function deserialize_nitric_storage_v1_StorageDeleteResponse(buffer_arg) {
   return proto_storage_v1_storage_pb.StorageDeleteResponse.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
+function serialize_nitric_storage_v1_StorageExistsRequest(arg) {
+  if (!(arg instanceof proto_storage_v1_storage_pb.StorageExistsRequest)) {
+    throw new Error('Expected argument of type nitric.storage.v1.StorageExistsRequest');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_nitric_storage_v1_StorageExistsRequest(buffer_arg) {
+  return proto_storage_v1_storage_pb.StorageExistsRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_nitric_storage_v1_StorageExistsResponse(arg) {
+  if (!(arg instanceof proto_storage_v1_storage_pb.StorageExistsResponse)) {
+    throw new Error('Expected argument of type nitric.storage.v1.StorageExistsResponse');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_nitric_storage_v1_StorageExistsResponse(buffer_arg) {
+  return proto_storage_v1_storage_pb.StorageExistsResponse.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
 function serialize_nitric_storage_v1_StorageListFilesRequest(arg) {
   if (!(arg instanceof proto_storage_v1_storage_pb.StorageListFilesRequest)) {
     throw new Error('Expected argument of type nitric.storage.v1.StorageListFilesRequest');
@@ -177,6 +199,18 @@ listFiles: {
     requestDeserialize: deserialize_nitric_storage_v1_StorageListFilesRequest,
     responseSerialize: serialize_nitric_storage_v1_StorageListFilesResponse,
     responseDeserialize: deserialize_nitric_storage_v1_StorageListFilesResponse,
+  },
+  // Determine is an object exists in a bucket
+exists: {
+    path: '/nitric.storage.v1.StorageService/Exists',
+    requestStream: false,
+    responseStream: false,
+    requestType: proto_storage_v1_storage_pb.StorageExistsRequest,
+    responseType: proto_storage_v1_storage_pb.StorageExistsResponse,
+    requestSerialize: serialize_nitric_storage_v1_StorageExistsRequest,
+    requestDeserialize: deserialize_nitric_storage_v1_StorageExistsRequest,
+    responseSerialize: serialize_nitric_storage_v1_StorageExistsResponse,
+    responseDeserialize: deserialize_nitric_storage_v1_StorageExistsResponse,
   },
 };
 

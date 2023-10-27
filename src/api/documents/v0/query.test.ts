@@ -200,8 +200,8 @@ describe('Query Tests', () => {
 
       q.pagingFrom('test' as any);
 
-      await expect(q.fetch()).rejects.toStrictEqual(
-        new InvalidArgumentError('Invalid paging token provided!')
+      await expect(q.fetch()).rejects.toEqual(
+        new Error('Invalid paging token provided!')
       );
     });
   });

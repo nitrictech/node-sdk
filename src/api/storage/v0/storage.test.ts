@@ -21,6 +21,7 @@ import {
   StoragePreSignUrlRequest,
   StorageListFilesResponse,
   File,
+  StorageExistsResponse,
 } from '@nitric/api/proto/storage/v1/storage_pb';
 import { UnimplementedError } from '../../errors';
 import {
@@ -162,6 +163,70 @@ describe('Storage Client Tests', () => {
       expect(readMock).toBeCalledTimes(1);
     });
   });
+
+  describe('Given nitric.api.storage.StorageClient.Exists throws an error', () => {
+    const MOCK_ERROR = {
+      code: 2,
+      message: 'UNIMPLEMENTED',
+    };
+    let existsMock;
+
+    beforeAll(() => {
+      existsMock = jest
+        .spyOn(GrpcStorageClient.prototype, 'exists')
+        .mockImplementation((_, callback: any) => {
+          callback(MOCK_ERROR, null);
+
+          return null as any;
+        });
+    });
+
+    afterAll(() => {
+      jest.resetAllMocks();
+    });
+
+    test('Then StorageClient.exists should reject', async () => {
+      const storage = new Storage();
+      await expect(
+        storage.bucket('test_bucket').file('test/item').exists()
+      ).rejects.toEqual(new UnimplementedError('UNIMPLEMENTED'));
+    });
+
+    test('The Grpc client for Storage.write should have been called exactly once', () => {
+      expect(existsMock).toBeCalledTimes(1);
+    });
+  });
+
+  describe('Given nitric.api.storage.StorageClient.Exists succeeds', () => {
+    let writeMock;
+    const MOCK_REPLY = new StorageExistsResponse();
+
+    beforeAll(() => {
+      writeMock = jest
+        .spyOn(GrpcStorageClient.prototype, 'exists')
+        .mockImplementation((_, callback: any) => {
+          callback(null, MOCK_REPLY);
+
+          return null as any;
+        });
+    });
+
+    afterAll(() => {
+      jest.resetAllMocks();
+    });
+
+    test('Then StorageClient.exists should resolve with success status', async () => {
+      const storage = new Storage();
+      await expect(
+        storage.bucket('test_bucket').file('test/item').exists()
+      ).resolves.toBe(false);
+    });
+
+    test('The Grpc client for Storage.write should have been called exactly once', () => {
+      expect(writeMock).toBeCalledTimes(1);
+    });
+  });
+
   describe('Given nitric.api.storage.StorageClient.Delete throws an error', () => {
     const MOCK_ERROR = {
       code: 2,

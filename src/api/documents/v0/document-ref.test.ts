@@ -176,7 +176,7 @@ describe('Document Ref Tests', () => {
       const testNestedAgain = () => nestedCollection.collection('nested-again');
 
       expect(testNestedAgain).toThrow(
-        new InvalidArgumentError('Maximum collection depth 1 exceeded')
+        new Error('Maximum collection depth 1 exceeded')
       );
     });
   });

@@ -179,7 +179,7 @@ export class Eventing {
     name: string
   ): Topic<T> {
     if (!name) {
-      throw new InvalidArgumentError('A topic name is needed to use a Topic.');
+      throw new Error('A topic name is needed to use a Topic.');
     }
 
     return new Topic(this, name);

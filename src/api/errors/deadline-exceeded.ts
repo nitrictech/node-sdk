@@ -12,14 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import { ErrorDetails } from '@nitric/sdk/gen/proto/error/v1/error_pb';
+import { NitricPluginError } from './plugin-error';
+
 /**
  * DeadlineExceededError
  *
  * Specified deadline was exceeded before the operation could complete
  */
-export class DeadlineExceededError extends Error {
-  constructor(message: string) {
-    super(message);
+export class DeadlineExceededError extends NitricPluginError {
+  constructor(message: string, details: ErrorDetails) {
+    super(message, details);
     Object.setPrototypeOf(this, DeadlineExceededError.prototype);
   }
 }

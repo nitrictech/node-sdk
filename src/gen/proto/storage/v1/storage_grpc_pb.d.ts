@@ -12,6 +12,7 @@ interface IStorageServiceService extends grpc.ServiceDefinition<grpc.UntypedServ
   delete: grpc.MethodDefinition<proto_storage_v1_storage_pb.StorageDeleteRequest, proto_storage_v1_storage_pb.StorageDeleteResponse>;
   preSignUrl: grpc.MethodDefinition<proto_storage_v1_storage_pb.StoragePreSignUrlRequest, proto_storage_v1_storage_pb.StoragePreSignUrlResponse>;
   listFiles: grpc.MethodDefinition<proto_storage_v1_storage_pb.StorageListFilesRequest, proto_storage_v1_storage_pb.StorageListFilesResponse>;
+  exists: grpc.MethodDefinition<proto_storage_v1_storage_pb.StorageExistsRequest, proto_storage_v1_storage_pb.StorageExistsResponse>;
 }
 
 export const StorageServiceService: IStorageServiceService;
@@ -22,6 +23,7 @@ export interface IStorageServiceServer extends grpc.UntypedServiceImplementation
   delete: grpc.handleUnaryCall<proto_storage_v1_storage_pb.StorageDeleteRequest, proto_storage_v1_storage_pb.StorageDeleteResponse>;
   preSignUrl: grpc.handleUnaryCall<proto_storage_v1_storage_pb.StoragePreSignUrlRequest, proto_storage_v1_storage_pb.StoragePreSignUrlResponse>;
   listFiles: grpc.handleUnaryCall<proto_storage_v1_storage_pb.StorageListFilesRequest, proto_storage_v1_storage_pb.StorageListFilesResponse>;
+  exists: grpc.handleUnaryCall<proto_storage_v1_storage_pb.StorageExistsRequest, proto_storage_v1_storage_pb.StorageExistsResponse>;
 }
 
 export class StorageServiceClient extends grpc.Client {
@@ -41,4 +43,7 @@ export class StorageServiceClient extends grpc.Client {
   listFiles(argument: proto_storage_v1_storage_pb.StorageListFilesRequest, callback: grpc.requestCallback<proto_storage_v1_storage_pb.StorageListFilesResponse>): grpc.ClientUnaryCall;
   listFiles(argument: proto_storage_v1_storage_pb.StorageListFilesRequest, metadataOrOptions: grpc.Metadata | grpc.CallOptions | null, callback: grpc.requestCallback<proto_storage_v1_storage_pb.StorageListFilesResponse>): grpc.ClientUnaryCall;
   listFiles(argument: proto_storage_v1_storage_pb.StorageListFilesRequest, metadata: grpc.Metadata | null, options: grpc.CallOptions | null, callback: grpc.requestCallback<proto_storage_v1_storage_pb.StorageListFilesResponse>): grpc.ClientUnaryCall;
+  exists(argument: proto_storage_v1_storage_pb.StorageExistsRequest, callback: grpc.requestCallback<proto_storage_v1_storage_pb.StorageExistsResponse>): grpc.ClientUnaryCall;
+  exists(argument: proto_storage_v1_storage_pb.StorageExistsRequest, metadataOrOptions: grpc.Metadata | grpc.CallOptions | null, callback: grpc.requestCallback<proto_storage_v1_storage_pb.StorageExistsResponse>): grpc.ClientUnaryCall;
+  exists(argument: proto_storage_v1_storage_pb.StorageExistsRequest, metadata: grpc.Metadata | null, options: grpc.CallOptions | null, callback: grpc.requestCallback<proto_storage_v1_storage_pb.StorageExistsResponse>): grpc.ClientUnaryCall;
 }
