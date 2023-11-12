@@ -79,7 +79,7 @@ export class SecretResource extends SecureResource<SecretPermission> {
     throw new Error('details unimplemented for secret');
   }
 
-  public for(...perms: SecretPermission[]): Secret {
+  public for(perm: SecretPermission, ...perms: SecretPermission[]): Secret {
     this.registerPolicy(...perms);
 
     return secrets().secret(this.name);

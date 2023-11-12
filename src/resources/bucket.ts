@@ -211,7 +211,7 @@ export class BucketResource extends SecureResource<BucketPermission> {
    * @param perms the required permission set
    * @returns a usable bucket reference
    */
-  public for(...perms: BucketPermission[]): Bucket {
+  public for(perm: BucketPermission, ...perms: BucketPermission[]): Bucket {
     this.registerPolicy(...perms);
 
     return storage().bucket(this.name);

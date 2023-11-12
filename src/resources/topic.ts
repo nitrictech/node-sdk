@@ -136,7 +136,7 @@ export class TopicResource<
    * @param perms the required permission set
    * @returns a usable topic reference
    */
-  public for(...perms: TopicPermission[]): Topic<T> {
+  public for(perm: TopicPermission, ...perms: TopicPermission[]): Topic<T> {
     this.registerPolicy(...perms);
     return events().topic(this.name);
   }
