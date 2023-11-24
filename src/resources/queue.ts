@@ -92,7 +92,7 @@ export class QueueResource<
    * @param perms the access that the currently scoped function is requesting to this resource.
    * @returns a useable queue.
    */
-  public for(...perms: QueuePermission[]): Queue<T> {
+  public for(perm: QueuePermission, ...perms: QueuePermission[]): Queue<T> {
     this.registerPolicy(...perms);
 
     return queues().queue(this.name);
