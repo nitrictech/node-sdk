@@ -11,13 +11,10 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { fromGrpcError } from '../api/errors';
-import { Faas, JSONTypes, WebsocketMiddleware } from '../faas';
 import {
   Websocket as WsClient,
   websocket as wsClient,
-} from '../api/websocket/v0';
-import { WebsocketEvent } from '../gen/proto/faas/v1/faas_pb';
+} from '../api/websocket/v1';
 import {
   Action,
   PolicyResource,
@@ -25,42 +22,111 @@ import {
   ResourceDeclareRequest,
   ResourceDetailsResponse,
   ResourceType,
-} from '../gen/proto/resource/v1/resource_pb';
+} from '@nitric/proto/resources/v1/resources_pb';
+import {
+  ClientMessage,
+  RegistrationRequest,
+  ServerMessage,
+  WebsocketConnectionResponse,
+  WebsocketEventResponse,
+  WebsocketEventType,
+} from '@nitric/proto/websockets/v1/websockets_pb';
 import resourceClient from './client';
-import { make, Resource as Base } from './common';
+import { make, Resource as Base, startStreamHandler } from './common';
+import { WebsocketHandlerClient } from '../gen/nitric/proto/websockets/v1/websockets_grpc_pb';
+import { SERVICE_BIND } from '../constants';
+import * as grpc from '@grpc/grpc-js';
+import { WebsocketNotificationContext } from '../context/websocket';
+import { WebsocketMiddleware, createHandler } from '../helpers/handler';
+import { JSONTypes } from '../context/base';
 
 const WebsocketEventTypeMap = {
-  connect: WebsocketEvent.CONNECT,
-  disconnect: WebsocketEvent.DISCONNECT,
-  message: WebsocketEvent.MESSAGE,
+  connect: WebsocketEventType.CONNECT,
+  disconnect: WebsocketEventType.DISCONNECT,
+  message: WebsocketEventType.MESSAGE,
 };
 
 type WebsocketEventType = keyof typeof WebsocketEventTypeMap;
 
-export class WebsocketWorkerOptions {
-  public readonly socket: string;
+export class Websocket {
+  private readonly handler: WebsocketMiddleware;
+  public readonly socketName: string;
   public readonly eventType: (typeof WebsocketEventTypeMap)[WebsocketEventType];
 
-  constructor(socket: string, eventType: WebsocketEventType) {
-    this.socket = socket;
-    this.eventType = WebsocketEventTypeMap[eventType];
-  }
-}
-
-export class Websocket {
-  private readonly faas: Faas;
-
   constructor(
-    socket: string,
+    socketName: string,
     eventType: WebsocketEventType,
     ...middleware: WebsocketMiddleware<unknown>[]
   ) {
-    this.faas = new Faas(new WebsocketWorkerOptions(socket, eventType));
-    this.faas.websocket(...middleware);
+    this.handler = createHandler(...middleware);
+    this.socketName = socketName;
+    this.eventType = WebsocketEventTypeMap[eventType];
   }
 
   private async start(): Promise<void> {
-    return this.faas.start();
+    return startStreamHandler(async () => {
+      if (!this.handler) {
+        throw new Error(
+          `A handler function must be provided for websocket ${this.socketName}.`
+        );
+      }
+
+      const wsHandlerClient = new WebsocketHandlerClient(
+        SERVICE_BIND,
+        grpc.ChannelCredentials.createInsecure()
+      );
+
+      // Begin Bi-Di streaming
+      const stream = wsHandlerClient.handleEvents();
+
+      stream.on('data', async (message: ServerMessage) => {
+        // We have an init response from the membrane
+        if (message.hasRegistrationResponse()) {
+          console.log('Function connected with membrane');
+          // We got an init response from the membrane
+          // The client can configure itself with any information provided by the membrane..
+        } else if (message.hasWebsocketEventRequest()) {
+          // We want to handle a function here...
+          const eventRequest = message.getWebsocketEventRequest();
+          const responseMessage = new ClientMessage();
+
+          responseMessage.setId(message.getId());
+
+          try {
+            eventRequest.getMessage();
+            const ctx = WebsocketNotificationContext.fromRequest(eventRequest);
+
+            const result = (await this.handler(ctx, async (ctx) => ctx)) || ctx;
+            responseMessage.setWebsocketEventResponse(
+              WebsocketNotificationContext.toResponse(result)
+            );
+          } catch (e) {
+            // generic error handling
+            console.error(e);
+            const eventResponse = new WebsocketEventResponse();
+            const connectionResponse = new WebsocketConnectionResponse();
+            connectionResponse.setReject(true);
+            eventResponse.setConnectionResponse(connectionResponse);
+            responseMessage.setWebsocketEventResponse(eventResponse);
+          }
+          // Send the response back to the membrane
+          stream.write(responseMessage);
+        }
+      });
+
+      // Let the membrane know we're ready to start
+      const initRequest = new RegistrationRequest();
+      const initMessage = new ClientMessage();
+
+      initRequest.setSocketName(this.socketName);
+      initRequest.setEventType(this.eventType);
+
+      //Original faas workers should return a blank InitRequest for compatibility.
+      initMessage.setRegistrationRequest(initRequest);
+      stream.write(initMessage);
+
+      return stream;
+    });
   }
 }
 
@@ -91,7 +157,7 @@ export class WebsocketResource extends Base<any> {
     const res = await new Promise<Resource>((resolve, reject) => {
       resourceClient.declare(req, (error, _: ResourceDeclareRequest) => {
         if (error) {
-          reject(fromGrpcError(error));
+          reject(error);
         } else {
           resolve(resource);
         }
@@ -114,7 +180,7 @@ export class WebsocketResource extends Base<any> {
     await new Promise<Resource>((resolve, reject) => {
       resourceClient.declare(policyReq, (error, _: ResourceDeclareRequest) => {
         if (error) {
-          reject(fromGrpcError(error));
+          reject(error);
         } else {
           resolve(resource);
         }

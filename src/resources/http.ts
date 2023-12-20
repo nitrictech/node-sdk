@@ -13,7 +13,10 @@
 // limitations under the License.
 
 import portfinder from 'portfinder';
-import { Faas } from '../faas';
+import { HttpClient } from '@nitric/proto/http/v1/http_grpc_pb';
+import { SERVICE_BIND } from '../constants';
+import * as grpc from '@grpc/grpc-js';
+import { HttpProxyRequest } from '@nitric/proto/http/v1/http_pb';
 
 type ListenerFunction =
   | ((port: number, callback?: () => void) => void)
@@ -46,13 +49,33 @@ export class HttpWorkerOptions {
  * Creates a http worker
  */
 class HttpWorker {
-  private readonly faas: Faas;
+  public readonly app: NodeApplication;
+  public readonly port: number;
+  public readonly callback: () => void;
 
   constructor(app: NodeApplication, port: number, callback?: () => void) {
-    this.faas = new Faas(new HttpWorkerOptions(app, port, callback));
-    this.faas.start();
+    this.app = app;
+    this.port = port;
+    this.callback = callback;
   }
 }
+
+const createWorker = async (
+  app: NodeApplication,
+  port: number,
+  callback?: () => void
+) => {
+  const httpClient = new HttpClient(
+    SERVICE_BIND,
+    grpc.ChannelCredentials.createInsecure()
+  );
+
+  // Begin Bi-Di streaming
+  const httpProxyRequest = new HttpProxyRequest();
+  httpProxyRequest.setHost(`:port`);
+
+  httpClient.proxy(httpProxyRequest, callback);
+};
 
 export const http = (
   app: NodeApplication | ListenerFunction,
@@ -77,11 +100,11 @@ export const http = (
         );
       }
 
-      new HttpWorker(nodeApp, port, callback);
+      createWorker(nodeApp, port, callback);
     });
 
     return;
   }
 
-  new HttpWorker(nodeApp, port, callback);
+  createWorker(nodeApp, port, callback);
 };

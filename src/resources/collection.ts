@@ -18,12 +18,11 @@ import {
   ResourceType,
   Action,
   ResourceDetailsResponse,
-} from '@nitric/api/proto/resource/v1/resource_pb';
-import { fromGrpcError } from '../api/errors';
+} from '@nitric/proto/resources/v1/resources_pb';
 import { documents } from '../api/documents';
 import resourceClient from './client';
 import { make, SecureResource } from './common';
-import { DocumentStructure } from '../api/documents/v0/document-ref';
+import { DocumentStructure } from '../api/documents/v1/document-ref';
 
 type CollectionPermission = 'reading' | 'writing' | 'deleting';
 
@@ -53,7 +52,7 @@ export class CollectionResource<
         req,
         (error, response: ResourceDeclareResponse) => {
           if (error) {
-            reject(fromGrpcError(error));
+            reject(error);
           } else {
             resolve(resource);
           }
@@ -108,7 +107,7 @@ export class CollectionResource<
    * @returns a usable collection reference
    */
   public for(perm: CollectionPermission, ...perms: CollectionPermission[]) {
-    this.registerPolicy(...perms);
+    this.registerPolicy(perm, ...perms);
 
     return documents().collection<T>(this.name);
   }

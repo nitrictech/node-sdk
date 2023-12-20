@@ -13,7 +13,5 @@
 // limitations under the License.
 export * from './api';
 
-// Nitric Node FaaS library
-export * as faas from './faas';
 export * from './resources';
 export * from './types';

@@ -11,24 +11,39 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { HttpMiddleware, Faas } from '../faas';
+import * as grpc from '@grpc/grpc-js';
 import {
   ApiResource,
   ApiScopes,
-  ApiSecurityDefinition,
-  ApiSecurityDefinitionJwt,
+  ApiSecurityDefinitionResource,
   Resource,
   ResourceDeclareRequest,
   ResourceDeclareResponse,
   ResourceDetailsResponse,
   ResourceType,
   ResourceTypeMap,
-} from '@nitric/api/proto/resource/v1/resource_pb';
-import { fromGrpcError } from '../api/errors';
+} from '@nitric/proto/resources/v1/resources_pb';
+import { ApiClient } from '@nitric/proto/apis/v1/apis_grpc_pb';
 import resourceClient from './client';
 import { HttpMethod } from '../types';
-import { make, Resource as Base } from './common';
+import { make, Resource as Base, startStreamHandler } from './common';
 import path from 'path';
+import {
+  ClientMessage,
+  RegistrationRequest,
+  ServerMessage,
+  ApiWorkerScopes,
+  HttpResponse,
+  HeaderValue,
+  ApiWorkerOptions as ApiWorkerOptionsPb,
+} from '@nitric/proto/apis/v1/apis_pb';
+import { SERVICE_BIND } from '../constants';
+import {
+  GenericMiddleware,
+  HttpMiddleware,
+  createHandler,
+} from '../helpers/handler';
+import { HttpContext } from '../context/http';
 
 export class ApiWorkerOptions {
   public readonly api: string;
@@ -57,7 +72,8 @@ export interface MethodOptions<SecurityDefs extends string> {
 }
 
 class Method<SecurityDefs extends string> {
-  private readonly faas: Faas;
+  private readonly options: ApiWorkerOptions;
+  private readonly handler: GenericMiddleware<HttpContext>;
   public readonly route: Route<SecurityDefs>;
   public readonly methods: HttpMethod[];
 
@@ -69,14 +85,106 @@ class Method<SecurityDefs extends string> {
   ) {
     this.route = route;
     this.methods = methods;
-    this.faas = new Faas(
-      new ApiWorkerOptions(route.api.name, route.path, methods, opts)
+    this.options = new ApiWorkerOptions(
+      this.route.api.name,
+      this.route.path,
+      this.methods,
+      opts
     );
-    this.faas.http(...middleware);
+    this.handler = createHandler(...middleware);
   }
 
   private async start(): Promise<void> {
-    return this.faas.start();
+    return startStreamHandler(async () => {
+      if (!this.handler) {
+        throw new Error(
+          `A handler function must be provided for ${this.route.path}.`
+        );
+      }
+
+      const apiClient = new ApiClient(
+        SERVICE_BIND,
+        grpc.ChannelCredentials.createInsecure()
+      );
+
+      // Begin Bi-Di streaming
+      const stream = apiClient.serve();
+
+      stream.on('data', async (message: ServerMessage) => {
+        // We have an init response from the membrane
+        if (message.hasRegistrationResponse()) {
+          console.log('Function connected with membrane');
+          // We got an init response from the membrane
+          // The client can configure itself with any information provided by the membrane..
+        } else if (message.hasHttpRequest()) {
+          // We want to handle a function here...
+          const httpRequest = message.getHttpRequest();
+          const responseMessage = new ClientMessage();
+
+          responseMessage.setId(message.getId());
+
+          try {
+            const httpResponse = new HttpResponse();
+            httpResponse.setStatus(200);
+            httpResponse.setBody('');
+
+            const ctx = HttpContext.fromHttpRequest(httpRequest);
+
+            const result = (await this.handler(ctx, async (ctx) => ctx)) || ctx;
+            responseMessage.setHttpResponse(HttpContext.toHttpResponse(result));
+          } catch (e) {
+            // generic error handling
+            console.error(e);
+            const httpResponse = new HttpResponse();
+            responseMessage.setHttpResponse(httpResponse);
+            httpResponse.setBody(
+              new TextEncoder().encode('Internal Server Error')
+            );
+            httpResponse.setStatus(500);
+
+            const headers = httpResponse.getHeadersMap();
+            const contentTypeHeader = new HeaderValue();
+            contentTypeHeader.addValue('text/plain');
+            headers.set('Content-Type', contentTypeHeader);
+          }
+          // Send the response back to the membrane
+          stream.write(responseMessage);
+        }
+      });
+
+      // Let the membrane know we're ready to start
+      const initRequest = new RegistrationRequest();
+      const initMessage = new ClientMessage();
+
+      if (this.options instanceof ApiWorkerOptions) {
+        initRequest.setApi(this.options.api);
+        initRequest.setMethodsList(this.options.methods);
+        initRequest.setPath(this.options.route);
+
+        const opts = new ApiWorkerOptionsPb();
+        if (this.options.opts && this.options.opts.security) {
+          if (Object.keys(this.options.opts.security).length == 0) {
+            // disable security if empty security is explicitly set
+            opts.setSecurityDisabled(true);
+          } else {
+            const methodOpts = this.options.opts;
+            Object.keys(methodOpts.security).forEach((k) => {
+              const scopes = new ApiWorkerScopes();
+              scopes.setScopesList(methodOpts.security[k]);
+              opts.getSecurityMap().set(k, scopes);
+            });
+          }
+        }
+
+        initRequest.setOptions(opts);
+      }
+
+      //Original faas workers should return a blank InitRequest for compatibility.
+      initMessage.setRegistrationRequest(initRequest);
+      stream.write(initMessage);
+
+      return stream;
+    });
   }
 }
 
@@ -480,22 +588,22 @@ export class Api<SecurityDefs extends string> extends Base<ApiDetails> {
     resource.setName(this.name);
     resource.setType(ResourceType.API);
 
-    if (securityDefinitions) {
-      Object.keys(securityDefinitions).forEach((k) => {
-        const def = securityDefinitions[k] as SecurityDefinition;
-        const definition = new ApiSecurityDefinition();
+    // if (securityDefinitions) {
+    //   Object.keys(securityDefinitions).forEach((k) => {
+    //     const def = securityDefinitions[k] as SecurityDefinition;
+    //     const definition = new ApiScopes();
 
-        if (def.kind === 'jwt') {
-          // Set it to a JWT definition
-          const secDef = new ApiSecurityDefinitionJwt();
-          secDef.setIssuer(def.issuer);
-          secDef.setAudiencesList(def.audiences);
-          definition.setJwt(secDef);
-        }
+    //     if (def.kind === 'jwt') {
+    //       // Set it to a JWT definition
+    //       const secDef = new ApiSecurityDefinitionJwt();
+    //       secDef.setIssuer(def.issuer);
+    //       secDef.setAudiencesList(def.audiences);
+    //       definition.setJwt(secDef);
+    //     }
 
-        apiResource.getSecurityDefinitionsMap().set(k, definition);
-      });
-    }
+    //     apiResource.getSecurityMap().set(k, definition);
+    //   });
+    // }
 
     req.setApi(apiResource);
     req.setResource(resource);
@@ -503,7 +611,7 @@ export class Api<SecurityDefs extends string> extends Base<ApiDetails> {
     return new Promise<Resource>((resolve, reject) => {
       resourceClient.declare(req, (error, _: ResourceDeclareResponse) => {
         if (error) {
-          reject(fromGrpcError(error));
+          reject(error);
         } else {
           resolve(resource);
         }

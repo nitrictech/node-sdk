@@ -93,3 +93,5 @@ typings/
 lib/
 
 contracts/
+
+nitric/**

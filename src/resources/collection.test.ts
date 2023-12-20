@@ -12,11 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { ResourceServiceClient } from '@nitric/api/proto/resource/v1/resource_grpc_pb';
+import { ResourcesClient } from '@nitric/proto/resources/v1/resources_grpc_pb';
 import { UnimplementedError } from '../api/errors';
 import { collection } from '.';
-import { ResourceDeclareResponse } from '@nitric/api/proto/resource/v1/resource_pb';
-import { CollectionRef } from '../api/documents/v0/collection-ref';
+import { ResourceDeclareResponse } from '@nitric/proto/resources/v1/resources_pb';
+import { CollectionRef } from '../api/documents/v1/collection-ref';
 
 describe('Registering collection resources', () => {
   describe('Given declare returns an error from the resource server', () => {
@@ -30,7 +30,7 @@ describe('Registering collection resources', () => {
 
     beforeAll(() => {
       declareSpy = jest
-        .spyOn(ResourceServiceClient.prototype, 'declare')
+        .spyOn(ResourcesClient.prototype, 'declare')
         .mockImplementationOnce((request, callback: any) => {
           callback(MOCK_ERROR, null);
 
@@ -60,7 +60,7 @@ describe('Registering collection resources', () => {
 
       beforeAll(() => {
         otherSpy = jest
-          .spyOn(ResourceServiceClient.prototype, 'declare')
+          .spyOn(ResourcesClient.prototype, 'declare')
           .mockImplementationOnce((request, callback: any) => {
             const response = new ResourceDeclareResponse();
             callback(null, response);
@@ -92,7 +92,7 @@ describe('Registering collection resources', () => {
     beforeEach(() => {
       // ensure a success is returned and calls can be counted.
       existsSpy = jest
-        .spyOn(ResourceServiceClient.prototype, 'declare')
+        .spyOn(ResourcesClient.prototype, 'declare')
         .mockImplementation((request, callback: any) => {
           const response = new ResourceDeclareResponse();
           callback(null, response);

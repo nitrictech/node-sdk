@@ -13,11 +13,11 @@
 // limitations under the License.
 import * as faas from '../faas/index';
 import { api, ApiWorkerOptions } from '.';
-import { ResourceServiceClient } from '@nitric/api/proto/resource/v1/resource_grpc_pb';
+import { ResourcesClient } from '@nitric/proto/resources/v1/resources_grpc_pb';
 import {
   ApiResourceDetails,
   ResourceDetailsResponse,
-} from '@nitric/api/proto/resource/v1/resource_pb';
+} from '@nitric/proto/resources/v1/resources_pb';
 
 jest.mock('../faas/index');
 
@@ -112,7 +112,7 @@ describe('Api', () => {
       beforeAll(async () => {
         // mock the details api
         detailsSpy = jest
-          .spyOn(ResourceServiceClient.prototype, 'details')
+          .spyOn(ResourcesClient.prototype, 'details')
           .mockImplementationOnce((request, callback: any) => {
             const resp = new ResourceDetailsResponse();
             resp.setId('mock-id');
@@ -147,7 +147,7 @@ describe('Api', () => {
       beforeAll(async () => {
         // mock the details api
         detailsSpy = jest
-          .spyOn(ResourceServiceClient.prototype, 'details')
+          .spyOn(ResourcesClient.prototype, 'details')
           .mockImplementationOnce((request, callback: any) => {
             const resp = new ResourceDetailsResponse();
             resp.setId('mock-id');

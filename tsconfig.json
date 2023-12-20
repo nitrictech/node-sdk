@@ -13,7 +13,7 @@
     "paths": {
       "@nitric/sdk": ["src"],
       "@nitric/sdk/*": ["src/*"],
-      "@nitric/api/*": ["src/gen/*"]
+      "@nitric/proto/*": ["src/gen/nitric/proto/*"]
     }
   },
   "include": ["src/**/*", "examples/**/*"]

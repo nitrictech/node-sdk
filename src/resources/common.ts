@@ -20,9 +20,10 @@ import {
   ResourceDetailsRequest,
   ResourceDetailsResponse,
   ResourceTypeMap,
-} from '@nitric/api/proto/resource/v1/resource_pb';
+} from '@nitric/proto/resources/v1/resources_pb';
 import resourceClient from './client';
-import { fromGrpcError } from '../api/errors';
+import { Duration } from 'google-protobuf/google/protobuf/duration_pb';
+import type { ClientDuplexStream } from '@grpc/grpc-js';
 
 export type ActionsList = ActionMap[keyof ActionMap][];
 
@@ -70,7 +71,7 @@ export abstract class Resource<Detail = any> {
     return new Promise<ResourceDetails<Detail>>((resolve, reject) => {
       resourceClient.details(req, (err, resp) => {
         if (err) {
-          reject(fromGrpcError(err));
+          reject(err);
         } else {
           resolve({
             id: resp.getId(),
@@ -116,7 +117,7 @@ export abstract class SecureResource<P> extends Resource {
 
       resourceClient.declare(req, (error) => {
         if (error) {
-          throw fromGrpcError(error);
+          throw error;
         }
       });
     });
@@ -156,4 +157,30 @@ export const make = <T extends Resource>(
     }
     return cache[typename][name] as T;
   };
+};
+
+export const toDuration = (seconds: number) => {
+  const duration = new Duration();
+  duration.setSeconds(seconds);
+
+  return duration;
+};
+
+export const startStreamHandler = async (
+  handler: () => Promise<ClientDuplexStream<any, any>>
+) => {
+  // const provider = newTracerProvider(); TODO add back later
+  const stream = await handler();
+
+  // Block until the stream has closed...
+  await new Promise<void>((res) => {
+    // The server has determined this stream must close
+    stream.on('end', () => {
+      console.log('Membrane has terminated the trigger stream');
+      res();
+    });
+  });
+
+  // Shutdown the trace provider, flushing the stream and stopping listeners
+  // await provider?.shutdown(); TODO add back later
 };

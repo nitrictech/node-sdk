@@ -12,13 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { ResourceServiceClient } from '@nitric/api/proto/resource/v1/resource_grpc_pb';
+import { ResourceServiceClient } from '@nitric/proto/proto/resource/v1/resource_grpc_pb';
 import { UnimplementedError } from '../api/errors';
 import { bucket } from '.';
 import {
   BucketResource,
   ResourceDeclareResponse,
-} from '@nitric/api/proto/resource/v1/resource_pb';
+} from '@nitric/proto/resources/v1/resources_pb';
 import { Resource } from './common';
 import { Bucket } from '..';
 

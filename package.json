@@ -23,7 +23,7 @@
     "license:check": "licensee --production",
     "download:contracts": "curl -L https://github.com/nitrictech/nitric/releases/download/${npm_package_nitric}/contracts.tgz -o contracts.tgz && tar xvzf contracts.tgz && rm contracts.tgz",
     "gen:proto": "yarn run download:contracts && yarn run gen:sources",
-    "gen:sources": "mkdir -p ./src/gen && grpc_tools_node_protoc --ts_out=service=grpc-node,mode=grpc-js:./src/gen --js_out=import_style=commonjs,binary:./src/gen --grpc_out=grpc_js:./src/gen -I ./contracts ./contracts/**/*.proto ./contracts/proto/**/*/*.proto"
+    "gen:sources": "mkdir -p ./src/gen && grpc_tools_node_protoc --ts_out=service=grpc-node,mode=grpc-js:./src/gen --js_out=import_style=commonjs,binary:./src/gen --grpc_out=grpc_js:./src/gen -I ./ ./nitric/proto/**/*/*.proto"
   },
   "contributors": [
     "Jye Cusch <jye.cusch@nitric.io>",
@@ -61,7 +61,7 @@
     "@typescript-eslint/parser": "^4.22.0",
     "codecov": "^3.8.3",
     "eslint": "^7.24.0",
-    "eslint-plugin-jsdoc": "^40.1.0",
+    "eslint-plugin-jsdoc": "^46.9.1",
     "glob-run": "^0.1.7",
     "grpc-tools": "^1.11.3",
     "husky": "^6.0.0",

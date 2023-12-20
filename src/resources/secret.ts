@@ -18,11 +18,10 @@ import {
   ResourceDeclareRequest,
   ResourceDeclareResponse,
   ResourceDetailsResponse,
-} from '@nitric/api/proto/resource/v1/resource_pb';
+} from '@nitric/proto/resources/v1/resources_pb';
 import resourceClient from './client';
 import { secrets, Secret } from '../api/secrets';
 import { ActionsList, make, SecureResource } from './common';
-import { fromGrpcError } from '../api/errors';
 
 type SecretPermission = 'put' | 'access';
 
@@ -45,7 +44,7 @@ export class SecretResource extends SecureResource<SecretPermission> {
         req,
         (error, response: ResourceDeclareResponse) => {
           if (error) {
-            reject(fromGrpcError(error));
+            reject(error);
           } else {
             resolve(resource);
           }
@@ -80,7 +79,7 @@ export class SecretResource extends SecureResource<SecretPermission> {
   }
 
   public for(perm: SecretPermission, ...perms: SecretPermission[]): Secret {
-    this.registerPolicy(...perms);
+    this.registerPolicy(perm, ...perms);
 
     return secrets().secret(this.name);
   }

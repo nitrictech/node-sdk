@@ -11,8 +11,8 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { ResourceServiceClient } from '@nitric/api/proto/resource/v1/resource_grpc_pb';
-import { ResourceDetailsResponse } from '@nitric/api/proto/resource/v1/resource_pb';
+import { ResourcesClient } from '@nitric/proto/resources/v1/resources_grpc_pb';
+import { ResourceDetailsResponse } from '@nitric/proto/resources/v1/resources_pb';
 import { Resource, make, ResourceDetails } from './common';
 
 const MOCK_RESOURCE = 0;
@@ -57,7 +57,7 @@ describe('common', () => {
 
       beforeAll(async () => {
         detailsSpy = jest
-          .spyOn(ResourceServiceClient.prototype, 'details')
+          .spyOn(ResourcesClient.prototype, 'details')
           .mockImplementationOnce((request, callback: any) => {
             const resp = new ResourceDetailsResponse();
             resp.setId('mock-id');

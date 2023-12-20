@@ -18,17 +18,32 @@ import {
   ResourceDeclareResponse,
   ResourceDetailsResponse,
   ResourceType,
-} from '@nitric/api/proto/resource/v1/resource_pb';
+} from '@nitric/proto/resources/v1/resources_pb';
 import resourceClient from './client';
 import { storage, Bucket } from '../api/storage';
-import { ActionsList, make, SecureResource } from './common';
-import { fromGrpcError } from '../api/errors';
 import {
-  Faas,
+  ActionsList,
+  make,
+  SecureResource,
+  startStreamHandler,
+} from './common';
+import {
+  BlobEventType,
+  ClientMessage,
+  RegistrationRequest,
+  ServerMessage,
+  BlobEvent,
+  BlobEventResponse,
+} from '@nitric/proto/storage/v1/storage_pb';
+import { StorageListenerClient } from '@nitric/proto/storage/v1/storage_grpc_pb';
+import * as grpc from '@grpc/grpc-js';
+import { SERVICE_BIND } from '../constants';
+import {
   BucketNotificationMiddleware,
   FileNotificationMiddleware,
-} from '../faas';
-import { BucketNotificationType as ProtoBucketNotificationType } from '../gen/proto/faas/v1/faas_pb';
+  createHandler,
+} from '../helpers/handler';
+import { BlobEventContext, BucketEventContext } from '../context/bucket';
 
 type BucketPermission = 'reading' | 'writing' | 'deleting';
 
@@ -38,7 +53,7 @@ export type BucketNotificationType = 'write' | 'delete';
 
 export class BucketNotificationWorkerOptions {
   public readonly bucket: string;
-  public readonly notificationType: 0 | 1 | 2;
+  public readonly notificationType: 0 | 1;
   public readonly notificationPrefixFilter: string;
 
   constructor(
@@ -52,12 +67,12 @@ export class BucketNotificationWorkerOptions {
     this.notificationPrefixFilter = notificationPrefixFilter;
   }
 
-  static toGrpcEvent(notificationType: BucketNotificationType): 0 | 1 | 2 {
+  static toGrpcEvent(notificationType: BucketNotificationType): 0 | 1 {
     switch (notificationType) {
       case 'write':
-        return ProtoBucketNotificationType.CREATED;
+        return BlobEventType.CREATED;
       case 'delete':
-        return ProtoBucketNotificationType.DELETED;
+        return BlobEventType.DELETED;
       default:
         throw new Error(`notification type ${notificationType} is unsupported`);
     }
@@ -79,50 +94,120 @@ export class FileNotificationWorkerOptions extends BucketNotificationWorkerOptio
 }
 
 export class BucketNotification {
-  private readonly faas: Faas;
+  private readonly options: BucketNotificationWorkerOptions;
+  private readonly handler: BucketNotificationMiddleware;
 
   constructor(
-    bucket: string,
+    bucketName: string,
     notificationType: BucketNotificationType,
-    notificationPrefixFilter,
+    notificationPrefixFilter: string,
     ...middleware: BucketNotificationMiddleware[]
   ) {
-    this.faas = new Faas(
-      new BucketNotificationWorkerOptions(
-        bucket,
-        notificationType,
-        notificationPrefixFilter
-      )
+    this.options = new BucketNotificationWorkerOptions(
+      bucketName,
+      notificationType,
+      notificationPrefixFilter
     );
-    this.faas.bucketNotification(...middleware);
+    this.handler = createHandler(...middleware);
   }
 
-  private async start(): Promise<void> {
-    return this.faas.start();
+  private async start(bucket?: Bucket): Promise<void> {
+    return startStreamHandler(async () => {
+      const storageListenerClient = new StorageListenerClient(
+        SERVICE_BIND,
+        grpc.ChannelCredentials.createInsecure()
+      );
+
+      // Begin Bi-Di streaming
+      const stream = storageListenerClient.listen();
+
+      stream.on('data', async (message: ServerMessage) => {
+        // We have an init response from the membrane
+        if (message.hasRegistrationResponse()) {
+          console.log('Function connected with membrane');
+          // We got an init response from the membrane
+          // The client can configure itself with any information provided by the membrane..
+        } else if (message.hasBlobEventRequest()) {
+          // We want to handle a function here...
+          const blobEventRequest = message.getBlobEventRequest();
+          const responseMessage = new ClientMessage();
+
+          responseMessage.setId(message.getId());
+
+          try {
+            blobEventRequest.setBucketName(this.options.bucket);
+            const blobEvent = new BlobEvent();
+            blobEvent.setKey(this.options.notificationPrefixFilter);
+            blobEvent.setType(this.options.notificationType);
+            blobEventRequest.setBlobEvent(blobEvent);
+
+            if (bucket) {
+              const ctx = BlobEventContext.fromRequest(
+                blobEventRequest,
+                bucket
+              );
+
+              const result =
+                (await this.handler(ctx, async (ctx) => ctx)) || ctx;
+
+              responseMessage.setBlobEventResponse(
+                BlobEventContext.toResponse(result as BlobEventContext)
+              );
+            } else {
+              const ctx = BucketEventContext.fromRequest(blobEventRequest);
+
+              const result =
+                (await this.handler(ctx, async (ctx) => ctx)) || ctx;
+              responseMessage.setBlobEventResponse(
+                BucketEventContext.toResponse(result)
+              );
+            }
+          } catch (e) {
+            // generic error handling
+            console.error(e);
+            const eventResponse = new BlobEventResponse();
+            eventResponse.setSuccess(false);
+            responseMessage.setBlobEventResponse(eventResponse);
+          }
+          // Send the response back to the membrane
+          stream.write(responseMessage);
+        }
+      });
+
+      // Let the membrane know we're ready to start
+      const initRequest = new RegistrationRequest();
+      const initMessage = new ClientMessage();
+
+      initRequest.setBucketName(this.options.bucket);
+      initRequest.setKeyPrefixFilter(this.options.notificationPrefixFilter);
+      initRequest.setBlobEventType(this.options.notificationType);
+
+      //Original faas workers should return a blank InitRequest for compatibility.
+      initMessage.setRegistrationRequest(initRequest);
+      stream.write(initMessage);
+
+      return stream;
+    });
   }
 }
 
-export class FileNotification {
-  private readonly faas: Faas;
+export class FileNotification extends BucketNotification {
+  private readonly bucket: Bucket | undefined;
 
   constructor(
     bucket: Bucket,
     notificationType: BucketNotificationType,
-    notificationPrefixFilter,
+    notificationPrefixFilter: string,
     ...middleware: FileNotificationMiddleware[]
   ) {
-    this.faas = new Faas(
-      new FileNotificationWorkerOptions(
-        bucket,
-        notificationType,
-        notificationPrefixFilter
-      )
+    super(
+      bucket.name,
+      notificationType,
+      notificationPrefixFilter,
+      ...middleware
     );
-    this.faas.bucketNotification(...middleware);
-  }
 
-  private async start(): Promise<void> {
-    return this.faas.start();
+    this.bucket = bucket;
   }
 }
 
@@ -146,7 +231,7 @@ export class BucketResource extends SecureResource<BucketPermission> {
     return new Promise<Resource>((resolve, reject) => {
       resourceClient.declare(req, (error, _: ResourceDeclareResponse) => {
         if (error) {
-          reject(fromGrpcError(error));
+          reject(error);
         } else {
           resolve(resource);
         }
@@ -212,7 +297,7 @@ export class BucketResource extends SecureResource<BucketPermission> {
    * @returns a usable bucket reference
    */
   public for(perm: BucketPermission, ...perms: BucketPermission[]): Bucket {
-    this.registerPolicy(...perms);
+    this.registerPolicy(perm, ...perms);
 
     return storage().bucket(this.name);
   }
