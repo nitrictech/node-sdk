@@ -103,7 +103,8 @@ export class CollectionResource<
    *
    * e.g. const customers = resources.collection('customers').for('reading', 'writing')
    *
-   * @param perms the required permission set
+   * @param perm  the required permission set
+   * @param perms additional required permissions set
    * @returns a usable collection reference
    */
   public for(perm: CollectionPermission, ...perms: CollectionPermission[]) {

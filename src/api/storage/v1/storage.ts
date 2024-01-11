@@ -181,6 +181,7 @@ export class File {
    * @param opts file URL signing options.
    * @param opts.expiry how long the URL should be valid for in seconds.
    * @deprecated for simplicity we suggest using getUploadUrl or getDownloadUrl.
+   * @returns a presigned url string.
    */
   public async signUrl(
     mode: FileMode,

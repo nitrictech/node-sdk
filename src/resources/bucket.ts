@@ -293,7 +293,8 @@ export class BucketResource extends SecureResource<BucketPermission> {
    *
    * e.g. const imgs = resources.bucket('image').for('writing')
    *
-   * @param perms the required permission set
+   * @param perm  the required permission set
+   * @param perms additional required permissions set
    * @returns a usable bucket reference
    */
   public for(perm: BucketPermission, ...perms: BucketPermission[]): Bucket {

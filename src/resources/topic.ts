@@ -202,7 +202,8 @@ export class TopicResource<
    *
    * e.g. const updates = resources.topic('updates').for('publishing')
    *
-   * @param perms the required permission set
+   * @param perm the required permission set
+   * @param perms additional required permissions set
    * @returns a usable topic reference
    */
   public for(perm: TopicPermission, ...perms: TopicPermission[]): Topic<T> {

@@ -58,9 +58,6 @@ export abstract class Resource<Detail = any> {
     this._registerPromise = promise;
   }
 
-  /**
-   * Returns details of this
-   */
   protected async details(): Promise<ResourceDetails<Detail>> {
     const req = new ResourceDetailsRequest();
     const res = new ProtoResource();
