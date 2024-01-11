@@ -19,22 +19,26 @@ export class WebsocketNotificationContext<T> extends BaseContext<
   ): WebsocketNotificationContext<any> {
     const ctx = new WebsocketNotificationContext();
     const connection = request.getConnection();
-    const query = (
-      connection
-        .getQueryParamsMap()
-        // getEntryList claims to return [string, faas.HeaderValue][], but really returns [string, string[][]][]
-        // we force the type to match the real return type.
-        .getEntryList() as unknown as [string, string[][]][]
-    ).reduce(
-      (acc, [key, [val]]) => ({
-        ...acc,
-        [key]: val.map((v) => decodeURIComponent(v)),
-      }),
-      {} as Record<string, string[]>
-    );
+    const query = connection
+      ? (
+          connection
+            .getQueryParamsMap()
+            // getEntryList claims to return [string, faas.HeaderValue][], but really returns [string, string[][]][]
+            // we force the type to match the real return type.
+            .getEntryList() as unknown as [string, string[][]][]
+        ).reduce(
+          (acc, [key, [val]]) => ({
+            ...acc,
+            [key]: val.map((v) => decodeURIComponent(v)),
+          }),
+          {} as Record<string, string[]>
+        )
+      : {};
+
+    const message = request.getMessage();
 
     ctx.request = new WebsocketNotificationRequest(
-      request.getMessage().getBody(),
+      message ? message.getBody() : '',
       request.getSocketName(),
       request.getWebsocketEventCase(),
       request.getConnectionid(),

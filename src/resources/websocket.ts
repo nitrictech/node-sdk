@@ -82,7 +82,7 @@ export class Websocket {
       stream.on('data', async (message: ServerMessage) => {
         // We have an init response from the membrane
         if (message.hasRegistrationResponse()) {
-          console.log('Function connected with membrane');
+          console.log('Websocket function connected with membrane');
           // We got an init response from the membrane
           // The client can configure itself with any information provided by the membrane..
         } else if (message.hasWebsocketEventRequest()) {
@@ -93,7 +93,6 @@ export class Websocket {
           responseMessage.setId(message.getId());
 
           try {
-            eventRequest.getMessage();
             const ctx = WebsocketNotificationContext.fromRequest(eventRequest);
 
             const result = (await this.handler(ctx, async (ctx) => ctx)) || ctx;
