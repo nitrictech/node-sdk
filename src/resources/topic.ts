@@ -112,6 +112,7 @@ class Subscription<T extends Record<string, any> = Record<string, any>> {
       const initRequest = new RegistrationRequest();
       const initMessage = new ClientMessage();
 
+      initRequest.setTopicName(this.options.topic);
       initMessage.setRegistrationRequest(initRequest);
       stream.write(initMessage);
 
