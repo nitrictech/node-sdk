@@ -31,8 +31,8 @@ const DEFAULT_PUBLISH_OPTS: PublishOptions = {
 };
 
 export class Topic<T extends Record<string, any> = Record<string, any>> {
-  eventing: Eventing;
-  name: string;
+  private eventing: Eventing;
+  private name: string;
 
   constructor(eventing: Eventing, name: string) {
     this.eventing = eventing;
@@ -155,15 +155,13 @@ let TOPIC = undefined;
  * @returns an Events API client.
  * @example
  * ```typescript
- * import { events } from "@nitric/sdk";
+ * import { topic } from "@nitric/sdk";
+ *
+ * const userCreatedTopic = topic('user-created').for('publishing')
  *
  * async function publishEvent() {
- *  const topic = events().topic('notifications');
- *
- *  await topic.publish({
- *    payload: {
- *     amazing: 'thing happened!',
- *    },
+ *  await userCreatedTopic.publish({
+ *    amazing: 'thing happened!',
  *  });
  *
  *  return 'Successfully published notification';
