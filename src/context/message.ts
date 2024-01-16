@@ -36,11 +36,9 @@ export class MessageContext<T> extends BaseContext<
     const topic = messageRequest.getTopicName();
     const ctx = new MessageContext();
 
-    ctx.request = new MessageRequest(
-      messageRequest.getMessage().getStructPayload().serializeBinary(),
-      topic
-      // getTraceContext(trigger.getTraceContext())
-    );
+    const data = messageRequest.getMessage().getStructPayload().toJavaScript();
+
+    ctx.request = new MessageRequest(JSON.stringify(data), topic);
 
     ctx.response = {
       success: true,
@@ -53,9 +51,6 @@ export class MessageContext<T> extends BaseContext<
     const evtCtx = ctx.event;
     const messageResponse = new MessageResponsePb();
     messageResponse.setSuccess(evtCtx.res.success);
-    // const topicResponse = new TopicResponseContext();
-    // topicResponse.setSuccess(evtCtx.res.success);
-    // messageResponse.setTopic(topicResponse);
 
     return messageResponse;
   }
