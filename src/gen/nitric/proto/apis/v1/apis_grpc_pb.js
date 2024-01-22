@@ -4,6 +4,28 @@
 var grpc = require('@grpc/grpc-js');
 var nitric_proto_apis_v1_apis_pb = require('../../../../nitric/proto/apis/v1/apis_pb.js');
 
+function serialize_nitric_proto_apis_v1_ApiDetailsRequest(arg) {
+  if (!(arg instanceof nitric_proto_apis_v1_apis_pb.ApiDetailsRequest)) {
+    throw new Error('Expected argument of type nitric.proto.apis.v1.ApiDetailsRequest');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_nitric_proto_apis_v1_ApiDetailsRequest(buffer_arg) {
+  return nitric_proto_apis_v1_apis_pb.ApiDetailsRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_nitric_proto_apis_v1_ApiDetailsResponse(arg) {
+  if (!(arg instanceof nitric_proto_apis_v1_apis_pb.ApiDetailsResponse)) {
+    throw new Error('Expected argument of type nitric.proto.apis.v1.ApiDetailsResponse');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_nitric_proto_apis_v1_ApiDetailsResponse(buffer_arg) {
+  return nitric_proto_apis_v1_apis_pb.ApiDetailsResponse.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
 function serialize_nitric_proto_apis_v1_ClientMessage(arg) {
   if (!(arg instanceof nitric_proto_apis_v1_apis_pb.ClientMessage)) {
     throw new Error('Expected argument of type nitric.proto.apis.v1.ClientMessage');
@@ -40,6 +62,18 @@ serve: {
     requestDeserialize: deserialize_nitric_proto_apis_v1_ClientMessage,
     responseSerialize: serialize_nitric_proto_apis_v1_ServerMessage,
     responseDeserialize: deserialize_nitric_proto_apis_v1_ServerMessage,
+  },
+  // Retrieve details about an API
+details: {
+    path: '/nitric.proto.apis.v1.Api/Details',
+    requestStream: false,
+    responseStream: false,
+    requestType: nitric_proto_apis_v1_apis_pb.ApiDetailsRequest,
+    responseType: nitric_proto_apis_v1_apis_pb.ApiDetailsResponse,
+    requestSerialize: serialize_nitric_proto_apis_v1_ApiDetailsRequest,
+    requestDeserialize: deserialize_nitric_proto_apis_v1_ApiDetailsRequest,
+    responseSerialize: serialize_nitric_proto_apis_v1_ApiDetailsResponse,
+    responseDeserialize: deserialize_nitric_proto_apis_v1_ApiDetailsResponse,
   },
 };
 

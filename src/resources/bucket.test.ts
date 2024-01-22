@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { ResourceServiceClient } from '@nitric/proto/proto/resource/v1/resource_grpc_pb';
-import { UnimplementedError } from '../api/errors';
+import { ResourcesClient } from '@nitric/proto/resources/v1/resources_grpc_pb';
+// import { UnimplementedError } from '../api/errors';
 import { bucket } from '.';
 import {
   BucketResource,
@@ -41,7 +41,7 @@ describe('Registering bucket resources', () => {
 
       beforeAll(() => {
         declareSpy = jest
-          .spyOn(ResourceServiceClient.prototype, 'declare')
+          .spyOn(ResourcesClient.prototype, 'declare')
           .mockImplementationOnce((request, callback: any) => {
             callback(MOCK_ERROR, null);
 
@@ -72,7 +72,7 @@ describe('Registering bucket resources', () => {
 
       beforeAll(() => {
         otherSpy = jest
-          .spyOn(ResourceServiceClient.prototype, 'declare')
+          .spyOn(ResourcesClient.prototype, 'declare')
           .mockImplementationOnce((request, callback: any) => {
             const response = new ResourceDeclareResponse();
             callback(null, response);
@@ -103,7 +103,7 @@ describe('Registering bucket resources', () => {
       beforeEach(() => {
         // ensure a success is returned and calls can be counted.
         existsSpy = jest
-          .spyOn(ResourceServiceClient.prototype, 'declare')
+          .spyOn(ResourcesClient.prototype, 'declare')
           .mockImplementation((request, callback: any) => {
             const response = new ResourceDeclareResponse();
             callback(null, response);

@@ -14,7 +14,7 @@
 import { Topic, topics } from '@nitric/sdk/api/topics';
 import resourceClient from './client';
 import {
-  Resource,
+  ResourceIdentifier,
   ResourceDeclareRequest,
   ResourceDeclareResponse,
   ResourceType,
@@ -132,14 +132,14 @@ export class TopicResource<
    *
    * @returns a promise that resolves when the registration is complete
    */
-  protected async register(): Promise<Resource> {
+  protected async register(): Promise<ResourceIdentifier> {
     const req = new ResourceDeclareRequest();
-    const resource = new Resource();
+    const resource = new ResourceIdentifier();
     resource.setName(this.name);
     resource.setType(ResourceType.TOPIC);
-    req.setResource(resource);
+    req.setId(resource);
 
-    return new Promise<Resource>((resolve, reject) => {
+    return new Promise<ResourceIdentifier>((resolve, reject) => {
       resourceClient.declare(
         req,
         (error, response: ResourceDeclareResponse) => {

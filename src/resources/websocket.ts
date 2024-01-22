@@ -18,9 +18,8 @@ import {
 import {
   Action,
   PolicyResource,
-  Resource,
+  ResourceIdentifier,
   ResourceDeclareRequest,
-  ResourceDetailsResponse,
   ResourceType,
 } from '@nitric/proto/resources/v1/resources_pb';
 import {
@@ -28,6 +27,7 @@ import {
   RegistrationRequest,
   ServerMessage,
   WebsocketConnectionResponse,
+  WebsocketDetailsRequest,
   WebsocketEventResponse,
   WebsocketEventType,
 } from '@nitric/proto/websockets/v1/websockets_pb';
@@ -129,6 +129,10 @@ export class Websocket {
   }
 }
 
+interface WebsocketDetails {
+  url: string;
+}
+
 /**
  * Websocket resource for bi-di HTTP communication.
  */
@@ -145,15 +149,15 @@ export class WebsocketResource extends Base<any> {
    *
    * @returns a promise that resolves when the registration is complete
    */
-  protected async register(): Promise<Resource> {
+  protected async register(): Promise<ResourceIdentifier> {
     const req = new ResourceDeclareRequest();
-    const resource = new Resource();
+    const resource = new ResourceIdentifier();
     resource.setName(this.name);
     resource.setType(ResourceType.WEBSOCKET);
 
-    req.setResource(resource);
+    req.setId(resource);
 
-    const res = await new Promise<Resource>((resolve, reject) => {
+    const res = await new Promise<ResourceIdentifier>((resolve, reject) => {
       resourceClient.declare(req, (error, _: ResourceDeclareRequest) => {
         if (error) {
           reject(error);
@@ -163,10 +167,10 @@ export class WebsocketResource extends Base<any> {
       });
     });
 
-    const defaultPrincipal = new Resource();
-    defaultPrincipal.setType(ResourceType.FUNCTION);
+    const defaultPrincipal = new ResourceIdentifier();
+    defaultPrincipal.setType(ResourceType.SERVICE);
 
-    const policyResource = new Resource();
+    const policyResource = new ResourceIdentifier();
     policyResource.setType(ResourceType.POLICY);
     const policyReq = new ResourceDeclareRequest();
     const policy = new PolicyResource();
@@ -174,9 +178,9 @@ export class WebsocketResource extends Base<any> {
     policy.setPrincipalsList([defaultPrincipal]);
     policy.setResourcesList([resource]);
     policyReq.setPolicy(policy);
-    policyReq.setResource(policyResource);
+    policyReq.setId(policyResource);
 
-    await new Promise<Resource>((resolve, reject) => {
+    await new Promise<ResourceIdentifier>((resolve, reject) => {
       resourceClient.declare(policyReq, (error, _: ResourceDeclareRequest) => {
         if (error) {
           reject(error);
@@ -207,11 +211,22 @@ export class WebsocketResource extends Base<any> {
    * @returns Promise that returns the URL of this Websocket
    */
   async url(): Promise<string> {
-    const {
-      details: { url },
-    } = await this.details();
+    const request = new WebsocketDetailsRequest();
+    request.setSocketName(this.name);
 
-    return url;
+    const details = await new Promise<WebsocketDetails>((resolve, reject) => {
+      this.wsClient.client.details(request, (error, data) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve({
+            url: data.getUrl(),
+          });
+        }
+      });
+    });
+
+    return details.url;
   }
 
   /**

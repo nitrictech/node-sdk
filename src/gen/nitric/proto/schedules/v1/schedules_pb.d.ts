@@ -125,10 +125,10 @@ export class RegistrationRequest extends jspb.Message {
   getScheduleName(): string;
   setScheduleName(value: string): void;
 
-  hasRate(): boolean;
-  clearRate(): void;
-  getRate(): ScheduleRate | undefined;
-  setRate(value?: ScheduleRate): void;
+  hasEvery(): boolean;
+  clearEvery(): void;
+  getEvery(): ScheduleEvery | undefined;
+  setEvery(value?: ScheduleEvery): void;
 
   hasCron(): boolean;
   clearCron(): void;
@@ -149,32 +149,32 @@ export class RegistrationRequest extends jspb.Message {
 export namespace RegistrationRequest {
   export type AsObject = {
     scheduleName: string,
-    rate?: ScheduleRate.AsObject,
+    every?: ScheduleEvery.AsObject,
     cron?: ScheduleCron.AsObject,
   }
 
   export enum CadenceCase {
     CADENCE_NOT_SET = 0,
-    RATE = 10,
+    EVERY = 10,
     CRON = 11,
   }
 }
 
-export class ScheduleRate extends jspb.Message {
+export class ScheduleEvery extends jspb.Message {
   getRate(): string;
   setRate(value: string): void;
 
   serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): ScheduleRate.AsObject;
-  static toObject(includeInstance: boolean, msg: ScheduleRate): ScheduleRate.AsObject;
+  toObject(includeInstance?: boolean): ScheduleEvery.AsObject;
+  static toObject(includeInstance: boolean, msg: ScheduleEvery): ScheduleEvery.AsObject;
   static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
   static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
-  static serializeBinaryToWriter(message: ScheduleRate, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): ScheduleRate;
-  static deserializeBinaryFromReader(message: ScheduleRate, reader: jspb.BinaryReader): ScheduleRate;
+  static serializeBinaryToWriter(message: ScheduleEvery, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): ScheduleEvery;
+  static deserializeBinaryFromReader(message: ScheduleEvery, reader: jspb.BinaryReader): ScheduleEvery;
 }
 
-export namespace ScheduleRate {
+export namespace ScheduleEvery {
   export type AsObject = {
     rate: string,
   }

@@ -12,12 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import {
-  Resource,
+  ResourceIdentifier,
   ResourceDeclareRequest,
   ResourceDeclareResponse,
   ResourceType,
   Action,
-  ResourceDetailsResponse,
 } from '@nitric/proto/resources/v1/resources_pb';
 import { documents } from '../api/documents';
 import resourceClient from './client';
@@ -39,15 +38,15 @@ export class CollectionResource<
    *
    * @returns a promise that resolves when the registration is complete
    */
-  protected async register(): Promise<Resource> {
+  protected async register(): Promise<ResourceIdentifier> {
     const req = new ResourceDeclareRequest();
 
-    const resource = new Resource();
+    const resource = new ResourceIdentifier();
     resource.setName(this.name);
     resource.setType(ResourceType.COLLECTION);
-    req.setResource(resource);
+    req.setId(resource);
 
-    return new Promise<Resource>((resolve, reject) => {
+    return new Promise<ResourceIdentifier>((resolve, reject) => {
       resourceClient.declare(
         req,
         (error, response: ResourceDeclareResponse) => {
@@ -92,10 +91,6 @@ export class CollectionResource<
 
   protected resourceType() {
     return ResourceType.COLLECTION;
-  }
-
-  protected unwrapDetails(resp: ResourceDetailsResponse): never {
-    throw new Error('details unimplemented for collection');
   }
 
   /**

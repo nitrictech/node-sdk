@@ -12,13 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import {
-  Resource as ProtoResource,
+  ResourceIdentifier as ProtoResource,
   ResourceType,
   PolicyResource,
   ResourceDeclareRequest,
   ActionMap,
-  ResourceDetailsRequest,
-  ResourceDetailsResponse,
   ResourceTypeMap,
 } from '@nitric/proto/resources/v1/resources_pb';
 import resourceClient from './client';
@@ -58,32 +56,7 @@ export abstract class Resource<Detail = any> {
     this._registerPromise = promise;
   }
 
-  protected async details(): Promise<ResourceDetails<Detail>> {
-    const req = new ResourceDetailsRequest();
-    const res = new ProtoResource();
-    res.setName(this.name);
-    res.setType(this.resourceType());
-
-    req.setResource(res);
-    return new Promise<ResourceDetails<Detail>>((resolve, reject) => {
-      resourceClient.details(req, (err, resp) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve({
-            id: resp.getId(),
-            provider: resp.getProvider(),
-            service: resp.getService(),
-            details: this.unwrapDetails(resp),
-          });
-        }
-      });
-    });
-  }
-
   protected abstract resourceType(): ResourceTypeMap[keyof ResourceTypeMap];
-
-  protected abstract unwrapDetails(resp: ResourceDetailsResponse): Detail;
 
   protected abstract register(): Promise<ProtoResource>;
 }
@@ -99,14 +72,14 @@ export abstract class SecureResource<P> extends Resource {
     // Send an unnamed function as the principle. This is interpreted to mean the currently running function, making the request.
     const policy = new PolicyResource();
     const defaultPrincipal = new ProtoResource();
-    defaultPrincipal.setType(ResourceType.FUNCTION);
+    defaultPrincipal.setType(ResourceType.SERVICE);
     policy.setPrincipalsList([defaultPrincipal]);
 
     // Convert the permissions to an action set.
     const actions = this.permsToActions(...perms);
     policy.setActionsList(actions);
 
-    req.setResource(policyResource);
+    req.setId(policyResource);
     req.setPolicy(policy);
 
     this.registerPromise.then((resource) => {

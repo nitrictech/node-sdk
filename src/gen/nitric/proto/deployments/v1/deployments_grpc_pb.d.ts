@@ -6,22 +6,22 @@
 import * as nitric_proto_deployments_v1_deployments_pb from "../../../../nitric/proto/deployments/v1/deployments_pb";
 import * as grpc from "@grpc/grpc-js";
 
-interface IDeployService extends grpc.ServiceDefinition<grpc.UntypedServiceImplementation> {
-  up: grpc.MethodDefinition<nitric_proto_deployments_v1_deployments_pb.DeployUpRequest, nitric_proto_deployments_v1_deployments_pb.DeployUpEvent>;
-  down: grpc.MethodDefinition<nitric_proto_deployments_v1_deployments_pb.DeployDownRequest, nitric_proto_deployments_v1_deployments_pb.DeployDownEvent>;
+interface IDeploymentService extends grpc.ServiceDefinition<grpc.UntypedServiceImplementation> {
+  up: grpc.MethodDefinition<nitric_proto_deployments_v1_deployments_pb.DeploymentUpRequest, nitric_proto_deployments_v1_deployments_pb.DeploymentUpEvent>;
+  down: grpc.MethodDefinition<nitric_proto_deployments_v1_deployments_pb.DeploymentDownRequest, nitric_proto_deployments_v1_deployments_pb.DeploymentDownEvent>;
 }
 
-export const DeployService: IDeployService;
+export const DeploymentService: IDeploymentService;
 
-export interface IDeployServer extends grpc.UntypedServiceImplementation {
-  up: grpc.handleServerStreamingCall<nitric_proto_deployments_v1_deployments_pb.DeployUpRequest, nitric_proto_deployments_v1_deployments_pb.DeployUpEvent>;
-  down: grpc.handleServerStreamingCall<nitric_proto_deployments_v1_deployments_pb.DeployDownRequest, nitric_proto_deployments_v1_deployments_pb.DeployDownEvent>;
+export interface IDeploymentServer extends grpc.UntypedServiceImplementation {
+  up: grpc.handleServerStreamingCall<nitric_proto_deployments_v1_deployments_pb.DeploymentUpRequest, nitric_proto_deployments_v1_deployments_pb.DeploymentUpEvent>;
+  down: grpc.handleServerStreamingCall<nitric_proto_deployments_v1_deployments_pb.DeploymentDownRequest, nitric_proto_deployments_v1_deployments_pb.DeploymentDownEvent>;
 }
 
-export class DeployClient extends grpc.Client {
+export class DeploymentClient extends grpc.Client {
   constructor(address: string, credentials: grpc.ChannelCredentials, options?: object);
-  up(argument: nitric_proto_deployments_v1_deployments_pb.DeployUpRequest, metadataOrOptions?: grpc.Metadata | grpc.CallOptions | null): grpc.ClientReadableStream<nitric_proto_deployments_v1_deployments_pb.DeployUpEvent>;
-  up(argument: nitric_proto_deployments_v1_deployments_pb.DeployUpRequest, metadata?: grpc.Metadata | null, options?: grpc.CallOptions | null): grpc.ClientReadableStream<nitric_proto_deployments_v1_deployments_pb.DeployUpEvent>;
-  down(argument: nitric_proto_deployments_v1_deployments_pb.DeployDownRequest, metadataOrOptions?: grpc.Metadata | grpc.CallOptions | null): grpc.ClientReadableStream<nitric_proto_deployments_v1_deployments_pb.DeployDownEvent>;
-  down(argument: nitric_proto_deployments_v1_deployments_pb.DeployDownRequest, metadata?: grpc.Metadata | null, options?: grpc.CallOptions | null): grpc.ClientReadableStream<nitric_proto_deployments_v1_deployments_pb.DeployDownEvent>;
+  up(argument: nitric_proto_deployments_v1_deployments_pb.DeploymentUpRequest, metadataOrOptions?: grpc.Metadata | grpc.CallOptions | null): grpc.ClientReadableStream<nitric_proto_deployments_v1_deployments_pb.DeploymentUpEvent>;
+  up(argument: nitric_proto_deployments_v1_deployments_pb.DeploymentUpRequest, metadata?: grpc.Metadata | null, options?: grpc.CallOptions | null): grpc.ClientReadableStream<nitric_proto_deployments_v1_deployments_pb.DeploymentUpEvent>;
+  down(argument: nitric_proto_deployments_v1_deployments_pb.DeploymentDownRequest, metadataOrOptions?: grpc.Metadata | grpc.CallOptions | null): grpc.ClientReadableStream<nitric_proto_deployments_v1_deployments_pb.DeploymentDownEvent>;
+  down(argument: nitric_proto_deployments_v1_deployments_pb.DeploymentDownRequest, metadata?: grpc.Metadata | null, options?: grpc.CallOptions | null): grpc.ClientReadableStream<nitric_proto_deployments_v1_deployments_pb.DeploymentDownEvent>;
 }

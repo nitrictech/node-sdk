@@ -30,20 +30,16 @@ goog.object.extend(proto, nitric_proto_storage_v1_storage_pb);
 goog.exportSymbol('proto.nitric.proto.deployments.v1.Api', null, global);
 goog.exportSymbol('proto.nitric.proto.deployments.v1.Api.DocumentCase', null, global);
 goog.exportSymbol('proto.nitric.proto.deployments.v1.Bucket', null, global);
-goog.exportSymbol('proto.nitric.proto.deployments.v1.BucketNotificationTarget', null, global);
-goog.exportSymbol('proto.nitric.proto.deployments.v1.BucketNotificationTarget.TargetCase', null, global);
+goog.exportSymbol('proto.nitric.proto.deployments.v1.BucketListener', null, global);
+goog.exportSymbol('proto.nitric.proto.deployments.v1.BucketListener.TargetCase', null, global);
 goog.exportSymbol('proto.nitric.proto.deployments.v1.Collection', null, global);
-goog.exportSymbol('proto.nitric.proto.deployments.v1.DeployDownEvent', null, global);
-goog.exportSymbol('proto.nitric.proto.deployments.v1.DeployDownEvent.ContentCase', null, global);
-goog.exportSymbol('proto.nitric.proto.deployments.v1.DeployDownEventResult', null, global);
-goog.exportSymbol('proto.nitric.proto.deployments.v1.DeployDownRequest', null, global);
-goog.exportSymbol('proto.nitric.proto.deployments.v1.DeployEventMessage', null, global);
-goog.exportSymbol('proto.nitric.proto.deployments.v1.DeployUpEvent', null, global);
-goog.exportSymbol('proto.nitric.proto.deployments.v1.DeployUpEvent.ContentCase', null, global);
-goog.exportSymbol('proto.nitric.proto.deployments.v1.DeployUpEventResult', null, global);
-goog.exportSymbol('proto.nitric.proto.deployments.v1.DeployUpRequest', null, global);
-goog.exportSymbol('proto.nitric.proto.deployments.v1.ExecutionUnit', null, global);
-goog.exportSymbol('proto.nitric.proto.deployments.v1.ExecutionUnit.SourceCase', null, global);
+goog.exportSymbol('proto.nitric.proto.deployments.v1.DeploymentDownEvent', null, global);
+goog.exportSymbol('proto.nitric.proto.deployments.v1.DeploymentDownEvent.ContentCase', null, global);
+goog.exportSymbol('proto.nitric.proto.deployments.v1.DeploymentDownRequest', null, global);
+goog.exportSymbol('proto.nitric.proto.deployments.v1.DeploymentUpEvent', null, global);
+goog.exportSymbol('proto.nitric.proto.deployments.v1.DeploymentUpEvent.ContentCase', null, global);
+goog.exportSymbol('proto.nitric.proto.deployments.v1.DeploymentUpRequest', null, global);
+goog.exportSymbol('proto.nitric.proto.deployments.v1.DownResult', null, global);
 goog.exportSymbol('proto.nitric.proto.deployments.v1.Http', null, global);
 goog.exportSymbol('proto.nitric.proto.deployments.v1.HttpTarget', null, global);
 goog.exportSymbol('proto.nitric.proto.deployments.v1.HttpTarget.TargetCase', null, global);
@@ -51,17 +47,24 @@ goog.exportSymbol('proto.nitric.proto.deployments.v1.ImageSource', null, global)
 goog.exportSymbol('proto.nitric.proto.deployments.v1.Policy', null, global);
 goog.exportSymbol('proto.nitric.proto.deployments.v1.Resource', null, global);
 goog.exportSymbol('proto.nitric.proto.deployments.v1.Resource.ConfigCase', null, global);
+goog.exportSymbol('proto.nitric.proto.deployments.v1.ResourceDeploymentAction', null, global);
+goog.exportSymbol('proto.nitric.proto.deployments.v1.ResourceDeploymentStatus', null, global);
+goog.exportSymbol('proto.nitric.proto.deployments.v1.ResourceUpdate', null, global);
 goog.exportSymbol('proto.nitric.proto.deployments.v1.Schedule', null, global);
+goog.exportSymbol('proto.nitric.proto.deployments.v1.Schedule.CadenceCase', null, global);
+goog.exportSymbol('proto.nitric.proto.deployments.v1.ScheduleCron', null, global);
+goog.exportSymbol('proto.nitric.proto.deployments.v1.ScheduleEvery', null, global);
 goog.exportSymbol('proto.nitric.proto.deployments.v1.ScheduleTarget', null, global);
 goog.exportSymbol('proto.nitric.proto.deployments.v1.ScheduleTarget.TargetCase', null, global);
 goog.exportSymbol('proto.nitric.proto.deployments.v1.Secret', null, global);
+goog.exportSymbol('proto.nitric.proto.deployments.v1.Service', null, global);
+goog.exportSymbol('proto.nitric.proto.deployments.v1.Service.SourceCase', null, global);
 goog.exportSymbol('proto.nitric.proto.deployments.v1.Spec', null, global);
 goog.exportSymbol('proto.nitric.proto.deployments.v1.SubscriptionTarget', null, global);
 goog.exportSymbol('proto.nitric.proto.deployments.v1.SubscriptionTarget.TargetCase', null, global);
 goog.exportSymbol('proto.nitric.proto.deployments.v1.Topic', null, global);
 goog.exportSymbol('proto.nitric.proto.deployments.v1.TopicSubscription', null, global);
 goog.exportSymbol('proto.nitric.proto.deployments.v1.UpResult', null, global);
-goog.exportSymbol('proto.nitric.proto.deployments.v1.UpResult.ContentCase', null, global);
 goog.exportSymbol('proto.nitric.proto.deployments.v1.Websocket', null, global);
 goog.exportSymbol('proto.nitric.proto.deployments.v1.WebsocketTarget', null, global);
 goog.exportSymbol('proto.nitric.proto.deployments.v1.WebsocketTarget.TargetCase', null, global);
@@ -75,16 +78,16 @@ goog.exportSymbol('proto.nitric.proto.deployments.v1.WebsocketTarget.TargetCase'
  * @extends {jspb.Message}
  * @constructor
  */
-proto.nitric.proto.deployments.v1.DeployUpRequest = function(opt_data) {
+proto.nitric.proto.deployments.v1.DeploymentUpRequest = function(opt_data) {
   jspb.Message.initialize(this, opt_data, 0, -1, null, null);
 };
-goog.inherits(proto.nitric.proto.deployments.v1.DeployUpRequest, jspb.Message);
+goog.inherits(proto.nitric.proto.deployments.v1.DeploymentUpRequest, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
   /**
    * @public
    * @override
    */
-  proto.nitric.proto.deployments.v1.DeployUpRequest.displayName = 'proto.nitric.proto.deployments.v1.DeployUpRequest';
+  proto.nitric.proto.deployments.v1.DeploymentUpRequest.displayName = 'proto.nitric.proto.deployments.v1.DeploymentUpRequest';
 }
 /**
  * Generated by JsPbCodeGenerator.
@@ -96,16 +99,16 @@ if (goog.DEBUG && !COMPILED) {
  * @extends {jspb.Message}
  * @constructor
  */
-proto.nitric.proto.deployments.v1.DeployUpEvent = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, null, proto.nitric.proto.deployments.v1.DeployUpEvent.oneofGroups_);
+proto.nitric.proto.deployments.v1.DeploymentUpEvent = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, null, proto.nitric.proto.deployments.v1.DeploymentUpEvent.oneofGroups_);
 };
-goog.inherits(proto.nitric.proto.deployments.v1.DeployUpEvent, jspb.Message);
+goog.inherits(proto.nitric.proto.deployments.v1.DeploymentUpEvent, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
   /**
    * @public
    * @override
    */
-  proto.nitric.proto.deployments.v1.DeployUpEvent.displayName = 'proto.nitric.proto.deployments.v1.DeployUpEvent';
+  proto.nitric.proto.deployments.v1.DeploymentUpEvent.displayName = 'proto.nitric.proto.deployments.v1.DeploymentUpEvent';
 }
 /**
  * Generated by JsPbCodeGenerator.
@@ -117,16 +120,16 @@ if (goog.DEBUG && !COMPILED) {
  * @extends {jspb.Message}
  * @constructor
  */
-proto.nitric.proto.deployments.v1.DeployEventMessage = function(opt_data) {
+proto.nitric.proto.deployments.v1.ResourceUpdate = function(opt_data) {
   jspb.Message.initialize(this, opt_data, 0, -1, null, null);
 };
-goog.inherits(proto.nitric.proto.deployments.v1.DeployEventMessage, jspb.Message);
+goog.inherits(proto.nitric.proto.deployments.v1.ResourceUpdate, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
   /**
    * @public
    * @override
    */
-  proto.nitric.proto.deployments.v1.DeployEventMessage.displayName = 'proto.nitric.proto.deployments.v1.DeployEventMessage';
+  proto.nitric.proto.deployments.v1.ResourceUpdate.displayName = 'proto.nitric.proto.deployments.v1.ResourceUpdate';
 }
 /**
  * Generated by JsPbCodeGenerator.
@@ -139,7 +142,7 @@ if (goog.DEBUG && !COMPILED) {
  * @constructor
  */
 proto.nitric.proto.deployments.v1.UpResult = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, null, proto.nitric.proto.deployments.v1.UpResult.oneofGroups_);
+  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
 };
 goog.inherits(proto.nitric.proto.deployments.v1.UpResult, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
@@ -159,16 +162,16 @@ if (goog.DEBUG && !COMPILED) {
  * @extends {jspb.Message}
  * @constructor
  */
-proto.nitric.proto.deployments.v1.DeployUpEventResult = function(opt_data) {
+proto.nitric.proto.deployments.v1.DeploymentDownRequest = function(opt_data) {
   jspb.Message.initialize(this, opt_data, 0, -1, null, null);
 };
-goog.inherits(proto.nitric.proto.deployments.v1.DeployUpEventResult, jspb.Message);
+goog.inherits(proto.nitric.proto.deployments.v1.DeploymentDownRequest, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
   /**
    * @public
    * @override
    */
-  proto.nitric.proto.deployments.v1.DeployUpEventResult.displayName = 'proto.nitric.proto.deployments.v1.DeployUpEventResult';
+  proto.nitric.proto.deployments.v1.DeploymentDownRequest.displayName = 'proto.nitric.proto.deployments.v1.DeploymentDownRequest';
 }
 /**
  * Generated by JsPbCodeGenerator.
@@ -180,16 +183,16 @@ if (goog.DEBUG && !COMPILED) {
  * @extends {jspb.Message}
  * @constructor
  */
-proto.nitric.proto.deployments.v1.DeployDownRequest = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
+proto.nitric.proto.deployments.v1.DeploymentDownEvent = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, null, proto.nitric.proto.deployments.v1.DeploymentDownEvent.oneofGroups_);
 };
-goog.inherits(proto.nitric.proto.deployments.v1.DeployDownRequest, jspb.Message);
+goog.inherits(proto.nitric.proto.deployments.v1.DeploymentDownEvent, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
   /**
    * @public
    * @override
    */
-  proto.nitric.proto.deployments.v1.DeployDownRequest.displayName = 'proto.nitric.proto.deployments.v1.DeployDownRequest';
+  proto.nitric.proto.deployments.v1.DeploymentDownEvent.displayName = 'proto.nitric.proto.deployments.v1.DeploymentDownEvent';
 }
 /**
  * Generated by JsPbCodeGenerator.
@@ -201,37 +204,16 @@ if (goog.DEBUG && !COMPILED) {
  * @extends {jspb.Message}
  * @constructor
  */
-proto.nitric.proto.deployments.v1.DeployDownEvent = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, null, proto.nitric.proto.deployments.v1.DeployDownEvent.oneofGroups_);
-};
-goog.inherits(proto.nitric.proto.deployments.v1.DeployDownEvent, jspb.Message);
-if (goog.DEBUG && !COMPILED) {
-  /**
-   * @public
-   * @override
-   */
-  proto.nitric.proto.deployments.v1.DeployDownEvent.displayName = 'proto.nitric.proto.deployments.v1.DeployDownEvent';
-}
-/**
- * Generated by JsPbCodeGenerator.
- * @param {Array=} opt_data Optional initial data array, typically from a
- * server response, or constructed directly in Javascript. The array is used
- * in place and becomes part of the constructed object. It is not cloned.
- * If no data is provided, the constructed object will be empty, but still
- * valid.
- * @extends {jspb.Message}
- * @constructor
- */
-proto.nitric.proto.deployments.v1.DeployDownEventResult = function(opt_data) {
+proto.nitric.proto.deployments.v1.DownResult = function(opt_data) {
   jspb.Message.initialize(this, opt_data, 0, -1, null, null);
 };
-goog.inherits(proto.nitric.proto.deployments.v1.DeployDownEventResult, jspb.Message);
+goog.inherits(proto.nitric.proto.deployments.v1.DownResult, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
   /**
    * @public
    * @override
    */
-  proto.nitric.proto.deployments.v1.DeployDownEventResult.displayName = 'proto.nitric.proto.deployments.v1.DeployDownEventResult';
+  proto.nitric.proto.deployments.v1.DownResult.displayName = 'proto.nitric.proto.deployments.v1.DownResult';
 }
 /**
  * Generated by JsPbCodeGenerator.
@@ -264,16 +246,16 @@ if (goog.DEBUG && !COMPILED) {
  * @extends {jspb.Message}
  * @constructor
  */
-proto.nitric.proto.deployments.v1.ExecutionUnit = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, null, proto.nitric.proto.deployments.v1.ExecutionUnit.oneofGroups_);
+proto.nitric.proto.deployments.v1.Service = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, null, proto.nitric.proto.deployments.v1.Service.oneofGroups_);
 };
-goog.inherits(proto.nitric.proto.deployments.v1.ExecutionUnit, jspb.Message);
+goog.inherits(proto.nitric.proto.deployments.v1.Service, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
   /**
    * @public
    * @override
    */
-  proto.nitric.proto.deployments.v1.ExecutionUnit.displayName = 'proto.nitric.proto.deployments.v1.ExecutionUnit';
+  proto.nitric.proto.deployments.v1.Service.displayName = 'proto.nitric.proto.deployments.v1.Service';
 }
 /**
  * Generated by JsPbCodeGenerator.
@@ -306,16 +288,16 @@ if (goog.DEBUG && !COMPILED) {
  * @extends {jspb.Message}
  * @constructor
  */
-proto.nitric.proto.deployments.v1.BucketNotificationTarget = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, null, proto.nitric.proto.deployments.v1.BucketNotificationTarget.oneofGroups_);
+proto.nitric.proto.deployments.v1.BucketListener = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, null, proto.nitric.proto.deployments.v1.BucketListener.oneofGroups_);
 };
-goog.inherits(proto.nitric.proto.deployments.v1.BucketNotificationTarget, jspb.Message);
+goog.inherits(proto.nitric.proto.deployments.v1.BucketListener, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
   /**
    * @public
    * @override
    */
-  proto.nitric.proto.deployments.v1.BucketNotificationTarget.displayName = 'proto.nitric.proto.deployments.v1.BucketNotificationTarget';
+  proto.nitric.proto.deployments.v1.BucketListener.displayName = 'proto.nitric.proto.deployments.v1.BucketListener';
 }
 /**
  * Generated by JsPbCodeGenerator.
@@ -559,7 +541,7 @@ if (goog.DEBUG && !COMPILED) {
  * @constructor
  */
 proto.nitric.proto.deployments.v1.Schedule = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
+  jspb.Message.initialize(this, opt_data, 0, -1, null, proto.nitric.proto.deployments.v1.Schedule.oneofGroups_);
 };
 goog.inherits(proto.nitric.proto.deployments.v1.Schedule, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
@@ -568,6 +550,48 @@ if (goog.DEBUG && !COMPILED) {
    * @override
    */
   proto.nitric.proto.deployments.v1.Schedule.displayName = 'proto.nitric.proto.deployments.v1.Schedule';
+}
+/**
+ * Generated by JsPbCodeGenerator.
+ * @param {Array=} opt_data Optional initial data array, typically from a
+ * server response, or constructed directly in Javascript. The array is used
+ * in place and becomes part of the constructed object. It is not cloned.
+ * If no data is provided, the constructed object will be empty, but still
+ * valid.
+ * @extends {jspb.Message}
+ * @constructor
+ */
+proto.nitric.proto.deployments.v1.ScheduleEvery = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
+};
+goog.inherits(proto.nitric.proto.deployments.v1.ScheduleEvery, jspb.Message);
+if (goog.DEBUG && !COMPILED) {
+  /**
+   * @public
+   * @override
+   */
+  proto.nitric.proto.deployments.v1.ScheduleEvery.displayName = 'proto.nitric.proto.deployments.v1.ScheduleEvery';
+}
+/**
+ * Generated by JsPbCodeGenerator.
+ * @param {Array=} opt_data Optional initial data array, typically from a
+ * server response, or constructed directly in Javascript. The array is used
+ * in place and becomes part of the constructed object. It is not cloned.
+ * If no data is provided, the constructed object will be empty, but still
+ * valid.
+ * @extends {jspb.Message}
+ * @constructor
+ */
+proto.nitric.proto.deployments.v1.ScheduleCron = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
+};
+goog.inherits(proto.nitric.proto.deployments.v1.ScheduleCron, jspb.Message);
+if (goog.DEBUG && !COMPILED) {
+  /**
+   * @public
+   * @override
+   */
+  proto.nitric.proto.deployments.v1.ScheduleCron.displayName = 'proto.nitric.proto.deployments.v1.ScheduleCron';
 }
 /**
  * Generated by JsPbCodeGenerator.
@@ -648,8 +672,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
  *     http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.nitric.proto.deployments.v1.DeployUpRequest.prototype.toObject = function(opt_includeInstance) {
-  return proto.nitric.proto.deployments.v1.DeployUpRequest.toObject(opt_includeInstance, this);
+proto.nitric.proto.deployments.v1.DeploymentUpRequest.prototype.toObject = function(opt_includeInstance) {
+  return proto.nitric.proto.deployments.v1.DeploymentUpRequest.toObject(opt_includeInstance, this);
 };
 
 
@@ -658,11 +682,11 @@ proto.nitric.proto.deployments.v1.DeployUpRequest.prototype.toObject = function(
  * @param {boolean|undefined} includeInstance Deprecated. Whether to include
  *     the JSPB instance for transitional soy proto support:
  *     http://goto/soy-param-migration
- * @param {!proto.nitric.proto.deployments.v1.DeployUpRequest} msg The msg instance to transform.
+ * @param {!proto.nitric.proto.deployments.v1.DeploymentUpRequest} msg The msg instance to transform.
  * @return {!Object}
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.nitric.proto.deployments.v1.DeployUpRequest.toObject = function(includeInstance, msg) {
+proto.nitric.proto.deployments.v1.DeploymentUpRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
     spec: (f = msg.getSpec()) && proto.nitric.proto.deployments.v1.Spec.toObject(includeInstance, f),
     attributes: (f = msg.getAttributes()) && google_protobuf_struct_pb.Struct.toObject(includeInstance, f),
@@ -680,23 +704,23 @@ proto.nitric.proto.deployments.v1.DeployUpRequest.toObject = function(includeIns
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.nitric.proto.deployments.v1.DeployUpRequest}
+ * @return {!proto.nitric.proto.deployments.v1.DeploymentUpRequest}
  */
-proto.nitric.proto.deployments.v1.DeployUpRequest.deserializeBinary = function(bytes) {
+proto.nitric.proto.deployments.v1.DeploymentUpRequest.deserializeBinary = function(bytes) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.nitric.proto.deployments.v1.DeployUpRequest;
-  return proto.nitric.proto.deployments.v1.DeployUpRequest.deserializeBinaryFromReader(msg, reader);
+  var msg = new proto.nitric.proto.deployments.v1.DeploymentUpRequest;
+  return proto.nitric.proto.deployments.v1.DeploymentUpRequest.deserializeBinaryFromReader(msg, reader);
 };
 
 
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.nitric.proto.deployments.v1.DeployUpRequest} msg The message object to deserialize into.
+ * @param {!proto.nitric.proto.deployments.v1.DeploymentUpRequest} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.nitric.proto.deployments.v1.DeployUpRequest}
+ * @return {!proto.nitric.proto.deployments.v1.DeploymentUpRequest}
  */
-proto.nitric.proto.deployments.v1.DeployUpRequest.deserializeBinaryFromReader = function(msg, reader) {
+proto.nitric.proto.deployments.v1.DeploymentUpRequest.deserializeBinaryFromReader = function(msg, reader) {
   while (reader.nextField()) {
     if (reader.isEndGroup()) {
       break;
@@ -730,9 +754,9 @@ proto.nitric.proto.deployments.v1.DeployUpRequest.deserializeBinaryFromReader = 
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.nitric.proto.deployments.v1.DeployUpRequest.prototype.serializeBinary = function() {
+proto.nitric.proto.deployments.v1.DeploymentUpRequest.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
-  proto.nitric.proto.deployments.v1.DeployUpRequest.serializeBinaryToWriter(this, writer);
+  proto.nitric.proto.deployments.v1.DeploymentUpRequest.serializeBinaryToWriter(this, writer);
   return writer.getResultBuffer();
 };
 
@@ -740,11 +764,11 @@ proto.nitric.proto.deployments.v1.DeployUpRequest.prototype.serializeBinary = fu
 /**
  * Serializes the given message to binary data (in protobuf wire
  * format), writing to the given BinaryWriter.
- * @param {!proto.nitric.proto.deployments.v1.DeployUpRequest} message
+ * @param {!proto.nitric.proto.deployments.v1.DeploymentUpRequest} message
  * @param {!jspb.BinaryWriter} writer
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.nitric.proto.deployments.v1.DeployUpRequest.serializeBinaryToWriter = function(message, writer) {
+proto.nitric.proto.deployments.v1.DeploymentUpRequest.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
   f = message.getSpec();
   if (f != null) {
@@ -776,7 +800,7 @@ proto.nitric.proto.deployments.v1.DeployUpRequest.serializeBinaryToWriter = func
  * optional Spec spec = 1;
  * @return {?proto.nitric.proto.deployments.v1.Spec}
  */
-proto.nitric.proto.deployments.v1.DeployUpRequest.prototype.getSpec = function() {
+proto.nitric.proto.deployments.v1.DeploymentUpRequest.prototype.getSpec = function() {
   return /** @type{?proto.nitric.proto.deployments.v1.Spec} */ (
     jspb.Message.getWrapperField(this, proto.nitric.proto.deployments.v1.Spec, 1));
 };
@@ -784,18 +808,18 @@ proto.nitric.proto.deployments.v1.DeployUpRequest.prototype.getSpec = function()
 
 /**
  * @param {?proto.nitric.proto.deployments.v1.Spec|undefined} value
- * @return {!proto.nitric.proto.deployments.v1.DeployUpRequest} returns this
+ * @return {!proto.nitric.proto.deployments.v1.DeploymentUpRequest} returns this
 */
-proto.nitric.proto.deployments.v1.DeployUpRequest.prototype.setSpec = function(value) {
+proto.nitric.proto.deployments.v1.DeploymentUpRequest.prototype.setSpec = function(value) {
   return jspb.Message.setWrapperField(this, 1, value);
 };
 
 
 /**
  * Clears the message field making it undefined.
- * @return {!proto.nitric.proto.deployments.v1.DeployUpRequest} returns this
+ * @return {!proto.nitric.proto.deployments.v1.DeploymentUpRequest} returns this
  */
-proto.nitric.proto.deployments.v1.DeployUpRequest.prototype.clearSpec = function() {
+proto.nitric.proto.deployments.v1.DeploymentUpRequest.prototype.clearSpec = function() {
   return this.setSpec(undefined);
 };
 
@@ -804,7 +828,7 @@ proto.nitric.proto.deployments.v1.DeployUpRequest.prototype.clearSpec = function
  * Returns whether this field is set.
  * @return {boolean}
  */
-proto.nitric.proto.deployments.v1.DeployUpRequest.prototype.hasSpec = function() {
+proto.nitric.proto.deployments.v1.DeploymentUpRequest.prototype.hasSpec = function() {
   return jspb.Message.getField(this, 1) != null;
 };
 
@@ -813,7 +837,7 @@ proto.nitric.proto.deployments.v1.DeployUpRequest.prototype.hasSpec = function()
  * optional google.protobuf.Struct attributes = 2;
  * @return {?proto.google.protobuf.Struct}
  */
-proto.nitric.proto.deployments.v1.DeployUpRequest.prototype.getAttributes = function() {
+proto.nitric.proto.deployments.v1.DeploymentUpRequest.prototype.getAttributes = function() {
   return /** @type{?proto.google.protobuf.Struct} */ (
     jspb.Message.getWrapperField(this, google_protobuf_struct_pb.Struct, 2));
 };
@@ -821,18 +845,18 @@ proto.nitric.proto.deployments.v1.DeployUpRequest.prototype.getAttributes = func
 
 /**
  * @param {?proto.google.protobuf.Struct|undefined} value
- * @return {!proto.nitric.proto.deployments.v1.DeployUpRequest} returns this
+ * @return {!proto.nitric.proto.deployments.v1.DeploymentUpRequest} returns this
 */
-proto.nitric.proto.deployments.v1.DeployUpRequest.prototype.setAttributes = function(value) {
+proto.nitric.proto.deployments.v1.DeploymentUpRequest.prototype.setAttributes = function(value) {
   return jspb.Message.setWrapperField(this, 2, value);
 };
 
 
 /**
  * Clears the message field making it undefined.
- * @return {!proto.nitric.proto.deployments.v1.DeployUpRequest} returns this
+ * @return {!proto.nitric.proto.deployments.v1.DeploymentUpRequest} returns this
  */
-proto.nitric.proto.deployments.v1.DeployUpRequest.prototype.clearAttributes = function() {
+proto.nitric.proto.deployments.v1.DeploymentUpRequest.prototype.clearAttributes = function() {
   return this.setAttributes(undefined);
 };
 
@@ -841,7 +865,7 @@ proto.nitric.proto.deployments.v1.DeployUpRequest.prototype.clearAttributes = fu
  * Returns whether this field is set.
  * @return {boolean}
  */
-proto.nitric.proto.deployments.v1.DeployUpRequest.prototype.hasAttributes = function() {
+proto.nitric.proto.deployments.v1.DeploymentUpRequest.prototype.hasAttributes = function() {
   return jspb.Message.getField(this, 2) != null;
 };
 
@@ -850,16 +874,16 @@ proto.nitric.proto.deployments.v1.DeployUpRequest.prototype.hasAttributes = func
  * optional bool interactive = 3;
  * @return {boolean}
  */
-proto.nitric.proto.deployments.v1.DeployUpRequest.prototype.getInteractive = function() {
+proto.nitric.proto.deployments.v1.DeploymentUpRequest.prototype.getInteractive = function() {
   return /** @type {boolean} */ (jspb.Message.getBooleanFieldWithDefault(this, 3, false));
 };
 
 
 /**
  * @param {boolean} value
- * @return {!proto.nitric.proto.deployments.v1.DeployUpRequest} returns this
+ * @return {!proto.nitric.proto.deployments.v1.DeploymentUpRequest} returns this
  */
-proto.nitric.proto.deployments.v1.DeployUpRequest.prototype.setInteractive = function(value) {
+proto.nitric.proto.deployments.v1.DeploymentUpRequest.prototype.setInteractive = function(value) {
   return jspb.Message.setProto3BooleanField(this, 3, value);
 };
 
@@ -873,22 +897,23 @@ proto.nitric.proto.deployments.v1.DeployUpRequest.prototype.setInteractive = fun
  * @private {!Array<!Array<number>>}
  * @const
  */
-proto.nitric.proto.deployments.v1.DeployUpEvent.oneofGroups_ = [[1,2]];
+proto.nitric.proto.deployments.v1.DeploymentUpEvent.oneofGroups_ = [[1,2,3]];
 
 /**
  * @enum {number}
  */
-proto.nitric.proto.deployments.v1.DeployUpEvent.ContentCase = {
+proto.nitric.proto.deployments.v1.DeploymentUpEvent.ContentCase = {
   CONTENT_NOT_SET: 0,
   MESSAGE: 1,
-  RESULT: 2
+  UPDATE: 2,
+  RESULT: 3
 };
 
 /**
- * @return {proto.nitric.proto.deployments.v1.DeployUpEvent.ContentCase}
+ * @return {proto.nitric.proto.deployments.v1.DeploymentUpEvent.ContentCase}
  */
-proto.nitric.proto.deployments.v1.DeployUpEvent.prototype.getContentCase = function() {
-  return /** @type {proto.nitric.proto.deployments.v1.DeployUpEvent.ContentCase} */(jspb.Message.computeOneofCase(this, proto.nitric.proto.deployments.v1.DeployUpEvent.oneofGroups_[0]));
+proto.nitric.proto.deployments.v1.DeploymentUpEvent.prototype.getContentCase = function() {
+  return /** @type {proto.nitric.proto.deployments.v1.DeploymentUpEvent.ContentCase} */(jspb.Message.computeOneofCase(this, proto.nitric.proto.deployments.v1.DeploymentUpEvent.oneofGroups_[0]));
 };
 
 
@@ -906,8 +931,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
  *     http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.nitric.proto.deployments.v1.DeployUpEvent.prototype.toObject = function(opt_includeInstance) {
-  return proto.nitric.proto.deployments.v1.DeployUpEvent.toObject(opt_includeInstance, this);
+proto.nitric.proto.deployments.v1.DeploymentUpEvent.prototype.toObject = function(opt_includeInstance) {
+  return proto.nitric.proto.deployments.v1.DeploymentUpEvent.toObject(opt_includeInstance, this);
 };
 
 
@@ -916,14 +941,15 @@ proto.nitric.proto.deployments.v1.DeployUpEvent.prototype.toObject = function(op
  * @param {boolean|undefined} includeInstance Deprecated. Whether to include
  *     the JSPB instance for transitional soy proto support:
  *     http://goto/soy-param-migration
- * @param {!proto.nitric.proto.deployments.v1.DeployUpEvent} msg The msg instance to transform.
+ * @param {!proto.nitric.proto.deployments.v1.DeploymentUpEvent} msg The msg instance to transform.
  * @return {!Object}
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.nitric.proto.deployments.v1.DeployUpEvent.toObject = function(includeInstance, msg) {
+proto.nitric.proto.deployments.v1.DeploymentUpEvent.toObject = function(includeInstance, msg) {
   var f, obj = {
-    message: (f = msg.getMessage()) && proto.nitric.proto.deployments.v1.DeployEventMessage.toObject(includeInstance, f),
-    result: (f = msg.getResult()) && proto.nitric.proto.deployments.v1.DeployUpEventResult.toObject(includeInstance, f)
+    message: jspb.Message.getFieldWithDefault(msg, 1, ""),
+    update: (f = msg.getUpdate()) && proto.nitric.proto.deployments.v1.ResourceUpdate.toObject(includeInstance, f),
+    result: (f = msg.getResult()) && proto.nitric.proto.deployments.v1.UpResult.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -937,23 +963,23 @@ proto.nitric.proto.deployments.v1.DeployUpEvent.toObject = function(includeInsta
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.nitric.proto.deployments.v1.DeployUpEvent}
+ * @return {!proto.nitric.proto.deployments.v1.DeploymentUpEvent}
  */
-proto.nitric.proto.deployments.v1.DeployUpEvent.deserializeBinary = function(bytes) {
+proto.nitric.proto.deployments.v1.DeploymentUpEvent.deserializeBinary = function(bytes) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.nitric.proto.deployments.v1.DeployUpEvent;
-  return proto.nitric.proto.deployments.v1.DeployUpEvent.deserializeBinaryFromReader(msg, reader);
+  var msg = new proto.nitric.proto.deployments.v1.DeploymentUpEvent;
+  return proto.nitric.proto.deployments.v1.DeploymentUpEvent.deserializeBinaryFromReader(msg, reader);
 };
 
 
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.nitric.proto.deployments.v1.DeployUpEvent} msg The message object to deserialize into.
+ * @param {!proto.nitric.proto.deployments.v1.DeploymentUpEvent} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.nitric.proto.deployments.v1.DeployUpEvent}
+ * @return {!proto.nitric.proto.deployments.v1.DeploymentUpEvent}
  */
-proto.nitric.proto.deployments.v1.DeployUpEvent.deserializeBinaryFromReader = function(msg, reader) {
+proto.nitric.proto.deployments.v1.DeploymentUpEvent.deserializeBinaryFromReader = function(msg, reader) {
   while (reader.nextField()) {
     if (reader.isEndGroup()) {
       break;
@@ -961,13 +987,17 @@ proto.nitric.proto.deployments.v1.DeployUpEvent.deserializeBinaryFromReader = fu
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = new proto.nitric.proto.deployments.v1.DeployEventMessage;
-      reader.readMessage(value,proto.nitric.proto.deployments.v1.DeployEventMessage.deserializeBinaryFromReader);
+      var value = /** @type {string} */ (reader.readString());
       msg.setMessage(value);
       break;
     case 2:
-      var value = new proto.nitric.proto.deployments.v1.DeployUpEventResult;
-      reader.readMessage(value,proto.nitric.proto.deployments.v1.DeployUpEventResult.deserializeBinaryFromReader);
+      var value = new proto.nitric.proto.deployments.v1.ResourceUpdate;
+      reader.readMessage(value,proto.nitric.proto.deployments.v1.ResourceUpdate.deserializeBinaryFromReader);
+      msg.setUpdate(value);
+      break;
+    case 3:
+      var value = new proto.nitric.proto.deployments.v1.UpResult;
+      reader.readMessage(value,proto.nitric.proto.deployments.v1.UpResult.deserializeBinaryFromReader);
       msg.setResult(value);
       break;
     default:
@@ -983,9 +1013,9 @@ proto.nitric.proto.deployments.v1.DeployUpEvent.deserializeBinaryFromReader = fu
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.nitric.proto.deployments.v1.DeployUpEvent.prototype.serializeBinary = function() {
+proto.nitric.proto.deployments.v1.DeploymentUpEvent.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
-  proto.nitric.proto.deployments.v1.DeployUpEvent.serializeBinaryToWriter(this, writer);
+  proto.nitric.proto.deployments.v1.DeploymentUpEvent.serializeBinaryToWriter(this, writer);
   return writer.getResultBuffer();
 };
 
@@ -993,56 +1023,62 @@ proto.nitric.proto.deployments.v1.DeployUpEvent.prototype.serializeBinary = func
 /**
  * Serializes the given message to binary data (in protobuf wire
  * format), writing to the given BinaryWriter.
- * @param {!proto.nitric.proto.deployments.v1.DeployUpEvent} message
+ * @param {!proto.nitric.proto.deployments.v1.DeploymentUpEvent} message
  * @param {!jspb.BinaryWriter} writer
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.nitric.proto.deployments.v1.DeployUpEvent.serializeBinaryToWriter = function(message, writer) {
+proto.nitric.proto.deployments.v1.DeploymentUpEvent.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
-  f = message.getMessage();
+  f = /** @type {string} */ (jspb.Message.getField(message, 1));
+  if (f != null) {
+    writer.writeString(
+      1,
+      f
+    );
+  }
+  f = message.getUpdate();
   if (f != null) {
     writer.writeMessage(
-      1,
+      2,
       f,
-      proto.nitric.proto.deployments.v1.DeployEventMessage.serializeBinaryToWriter
+      proto.nitric.proto.deployments.v1.ResourceUpdate.serializeBinaryToWriter
     );
   }
   f = message.getResult();
   if (f != null) {
     writer.writeMessage(
-      2,
+      3,
       f,
-      proto.nitric.proto.deployments.v1.DeployUpEventResult.serializeBinaryToWriter
+      proto.nitric.proto.deployments.v1.UpResult.serializeBinaryToWriter
     );
   }
 };
 
 
 /**
- * optional DeployEventMessage message = 1;
- * @return {?proto.nitric.proto.deployments.v1.DeployEventMessage}
+ * optional string message = 1;
+ * @return {string}
  */
-proto.nitric.proto.deployments.v1.DeployUpEvent.prototype.getMessage = function() {
-  return /** @type{?proto.nitric.proto.deployments.v1.DeployEventMessage} */ (
-    jspb.Message.getWrapperField(this, proto.nitric.proto.deployments.v1.DeployEventMessage, 1));
+proto.nitric.proto.deployments.v1.DeploymentUpEvent.prototype.getMessage = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
 };
 
 
 /**
- * @param {?proto.nitric.proto.deployments.v1.DeployEventMessage|undefined} value
- * @return {!proto.nitric.proto.deployments.v1.DeployUpEvent} returns this
-*/
-proto.nitric.proto.deployments.v1.DeployUpEvent.prototype.setMessage = function(value) {
-  return jspb.Message.setOneofWrapperField(this, 1, proto.nitric.proto.deployments.v1.DeployUpEvent.oneofGroups_[0], value);
+ * @param {string} value
+ * @return {!proto.nitric.proto.deployments.v1.DeploymentUpEvent} returns this
+ */
+proto.nitric.proto.deployments.v1.DeploymentUpEvent.prototype.setMessage = function(value) {
+  return jspb.Message.setOneofField(this, 1, proto.nitric.proto.deployments.v1.DeploymentUpEvent.oneofGroups_[0], value);
 };
 
 
 /**
- * Clears the message field making it undefined.
- * @return {!proto.nitric.proto.deployments.v1.DeployUpEvent} returns this
+ * Clears the field making it undefined.
+ * @return {!proto.nitric.proto.deployments.v1.DeploymentUpEvent} returns this
  */
-proto.nitric.proto.deployments.v1.DeployUpEvent.prototype.clearMessage = function() {
-  return this.setMessage(undefined);
+proto.nitric.proto.deployments.v1.DeploymentUpEvent.prototype.clearMessage = function() {
+  return jspb.Message.setOneofField(this, 1, proto.nitric.proto.deployments.v1.DeploymentUpEvent.oneofGroups_[0], undefined);
 };
 
 
@@ -1050,35 +1086,72 @@ proto.nitric.proto.deployments.v1.DeployUpEvent.prototype.clearMessage = functio
  * Returns whether this field is set.
  * @return {boolean}
  */
-proto.nitric.proto.deployments.v1.DeployUpEvent.prototype.hasMessage = function() {
+proto.nitric.proto.deployments.v1.DeploymentUpEvent.prototype.hasMessage = function() {
   return jspb.Message.getField(this, 1) != null;
 };
 
 
 /**
- * optional DeployUpEventResult result = 2;
- * @return {?proto.nitric.proto.deployments.v1.DeployUpEventResult}
+ * optional ResourceUpdate update = 2;
+ * @return {?proto.nitric.proto.deployments.v1.ResourceUpdate}
  */
-proto.nitric.proto.deployments.v1.DeployUpEvent.prototype.getResult = function() {
-  return /** @type{?proto.nitric.proto.deployments.v1.DeployUpEventResult} */ (
-    jspb.Message.getWrapperField(this, proto.nitric.proto.deployments.v1.DeployUpEventResult, 2));
+proto.nitric.proto.deployments.v1.DeploymentUpEvent.prototype.getUpdate = function() {
+  return /** @type{?proto.nitric.proto.deployments.v1.ResourceUpdate} */ (
+    jspb.Message.getWrapperField(this, proto.nitric.proto.deployments.v1.ResourceUpdate, 2));
 };
 
 
 /**
- * @param {?proto.nitric.proto.deployments.v1.DeployUpEventResult|undefined} value
- * @return {!proto.nitric.proto.deployments.v1.DeployUpEvent} returns this
+ * @param {?proto.nitric.proto.deployments.v1.ResourceUpdate|undefined} value
+ * @return {!proto.nitric.proto.deployments.v1.DeploymentUpEvent} returns this
 */
-proto.nitric.proto.deployments.v1.DeployUpEvent.prototype.setResult = function(value) {
-  return jspb.Message.setOneofWrapperField(this, 2, proto.nitric.proto.deployments.v1.DeployUpEvent.oneofGroups_[0], value);
+proto.nitric.proto.deployments.v1.DeploymentUpEvent.prototype.setUpdate = function(value) {
+  return jspb.Message.setOneofWrapperField(this, 2, proto.nitric.proto.deployments.v1.DeploymentUpEvent.oneofGroups_[0], value);
 };
 
 
 /**
  * Clears the message field making it undefined.
- * @return {!proto.nitric.proto.deployments.v1.DeployUpEvent} returns this
+ * @return {!proto.nitric.proto.deployments.v1.DeploymentUpEvent} returns this
  */
-proto.nitric.proto.deployments.v1.DeployUpEvent.prototype.clearResult = function() {
+proto.nitric.proto.deployments.v1.DeploymentUpEvent.prototype.clearUpdate = function() {
+  return this.setUpdate(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.nitric.proto.deployments.v1.DeploymentUpEvent.prototype.hasUpdate = function() {
+  return jspb.Message.getField(this, 2) != null;
+};
+
+
+/**
+ * optional UpResult result = 3;
+ * @return {?proto.nitric.proto.deployments.v1.UpResult}
+ */
+proto.nitric.proto.deployments.v1.DeploymentUpEvent.prototype.getResult = function() {
+  return /** @type{?proto.nitric.proto.deployments.v1.UpResult} */ (
+    jspb.Message.getWrapperField(this, proto.nitric.proto.deployments.v1.UpResult, 3));
+};
+
+
+/**
+ * @param {?proto.nitric.proto.deployments.v1.UpResult|undefined} value
+ * @return {!proto.nitric.proto.deployments.v1.DeploymentUpEvent} returns this
+*/
+proto.nitric.proto.deployments.v1.DeploymentUpEvent.prototype.setResult = function(value) {
+  return jspb.Message.setOneofWrapperField(this, 3, proto.nitric.proto.deployments.v1.DeploymentUpEvent.oneofGroups_[0], value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.nitric.proto.deployments.v1.DeploymentUpEvent} returns this
+ */
+proto.nitric.proto.deployments.v1.DeploymentUpEvent.prototype.clearResult = function() {
   return this.setResult(undefined);
 };
 
@@ -1087,8 +1160,8 @@ proto.nitric.proto.deployments.v1.DeployUpEvent.prototype.clearResult = function
  * Returns whether this field is set.
  * @return {boolean}
  */
-proto.nitric.proto.deployments.v1.DeployUpEvent.prototype.hasResult = function() {
-  return jspb.Message.getField(this, 2) != null;
+proto.nitric.proto.deployments.v1.DeploymentUpEvent.prototype.hasResult = function() {
+  return jspb.Message.getField(this, 3) != null;
 };
 
 
@@ -1108,8 +1181,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
  *     http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.nitric.proto.deployments.v1.DeployEventMessage.prototype.toObject = function(opt_includeInstance) {
-  return proto.nitric.proto.deployments.v1.DeployEventMessage.toObject(opt_includeInstance, this);
+proto.nitric.proto.deployments.v1.ResourceUpdate.prototype.toObject = function(opt_includeInstance) {
+  return proto.nitric.proto.deployments.v1.ResourceUpdate.toObject(opt_includeInstance, this);
 };
 
 
@@ -1118,13 +1191,17 @@ proto.nitric.proto.deployments.v1.DeployEventMessage.prototype.toObject = functi
  * @param {boolean|undefined} includeInstance Deprecated. Whether to include
  *     the JSPB instance for transitional soy proto support:
  *     http://goto/soy-param-migration
- * @param {!proto.nitric.proto.deployments.v1.DeployEventMessage} msg The msg instance to transform.
+ * @param {!proto.nitric.proto.deployments.v1.ResourceUpdate} msg The msg instance to transform.
  * @return {!Object}
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.nitric.proto.deployments.v1.DeployEventMessage.toObject = function(includeInstance, msg) {
+proto.nitric.proto.deployments.v1.ResourceUpdate.toObject = function(includeInstance, msg) {
   var f, obj = {
-    message: jspb.Message.getFieldWithDefault(msg, 1, "")
+    id: (f = msg.getId()) && nitric_proto_resources_v1_resources_pb.ResourceIdentifier.toObject(includeInstance, f),
+    action: jspb.Message.getFieldWithDefault(msg, 3, 0),
+    status: jspb.Message.getFieldWithDefault(msg, 4, 0),
+    subResource: jspb.Message.getFieldWithDefault(msg, 5, ""),
+    message: jspb.Message.getFieldWithDefault(msg, 6, "")
   };
 
   if (includeInstance) {
@@ -1138,23 +1215,23 @@ proto.nitric.proto.deployments.v1.DeployEventMessage.toObject = function(include
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.nitric.proto.deployments.v1.DeployEventMessage}
+ * @return {!proto.nitric.proto.deployments.v1.ResourceUpdate}
  */
-proto.nitric.proto.deployments.v1.DeployEventMessage.deserializeBinary = function(bytes) {
+proto.nitric.proto.deployments.v1.ResourceUpdate.deserializeBinary = function(bytes) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.nitric.proto.deployments.v1.DeployEventMessage;
-  return proto.nitric.proto.deployments.v1.DeployEventMessage.deserializeBinaryFromReader(msg, reader);
+  var msg = new proto.nitric.proto.deployments.v1.ResourceUpdate;
+  return proto.nitric.proto.deployments.v1.ResourceUpdate.deserializeBinaryFromReader(msg, reader);
 };
 
 
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.nitric.proto.deployments.v1.DeployEventMessage} msg The message object to deserialize into.
+ * @param {!proto.nitric.proto.deployments.v1.ResourceUpdate} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.nitric.proto.deployments.v1.DeployEventMessage}
+ * @return {!proto.nitric.proto.deployments.v1.ResourceUpdate}
  */
-proto.nitric.proto.deployments.v1.DeployEventMessage.deserializeBinaryFromReader = function(msg, reader) {
+proto.nitric.proto.deployments.v1.ResourceUpdate.deserializeBinaryFromReader = function(msg, reader) {
   while (reader.nextField()) {
     if (reader.isEndGroup()) {
       break;
@@ -1162,6 +1239,23 @@ proto.nitric.proto.deployments.v1.DeployEventMessage.deserializeBinaryFromReader
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
+      var value = new nitric_proto_resources_v1_resources_pb.ResourceIdentifier;
+      reader.readMessage(value,nitric_proto_resources_v1_resources_pb.ResourceIdentifier.deserializeBinaryFromReader);
+      msg.setId(value);
+      break;
+    case 3:
+      var value = /** @type {!proto.nitric.proto.deployments.v1.ResourceDeploymentAction} */ (reader.readEnum());
+      msg.setAction(value);
+      break;
+    case 4:
+      var value = /** @type {!proto.nitric.proto.deployments.v1.ResourceDeploymentStatus} */ (reader.readEnum());
+      msg.setStatus(value);
+      break;
+    case 5:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setSubResource(value);
+      break;
+    case 6:
       var value = /** @type {string} */ (reader.readString());
       msg.setMessage(value);
       break;
@@ -1178,9 +1272,9 @@ proto.nitric.proto.deployments.v1.DeployEventMessage.deserializeBinaryFromReader
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.nitric.proto.deployments.v1.DeployEventMessage.prototype.serializeBinary = function() {
+proto.nitric.proto.deployments.v1.ResourceUpdate.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
-  proto.nitric.proto.deployments.v1.DeployEventMessage.serializeBinaryToWriter(this, writer);
+  proto.nitric.proto.deployments.v1.ResourceUpdate.serializeBinaryToWriter(this, writer);
   return writer.getResultBuffer();
 };
 
@@ -1188,16 +1282,45 @@ proto.nitric.proto.deployments.v1.DeployEventMessage.prototype.serializeBinary =
 /**
  * Serializes the given message to binary data (in protobuf wire
  * format), writing to the given BinaryWriter.
- * @param {!proto.nitric.proto.deployments.v1.DeployEventMessage} message
+ * @param {!proto.nitric.proto.deployments.v1.ResourceUpdate} message
  * @param {!jspb.BinaryWriter} writer
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.nitric.proto.deployments.v1.DeployEventMessage.serializeBinaryToWriter = function(message, writer) {
+proto.nitric.proto.deployments.v1.ResourceUpdate.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
+  f = message.getId();
+  if (f != null) {
+    writer.writeMessage(
+      1,
+      f,
+      nitric_proto_resources_v1_resources_pb.ResourceIdentifier.serializeBinaryToWriter
+    );
+  }
+  f = message.getAction();
+  if (f !== 0.0) {
+    writer.writeEnum(
+      3,
+      f
+    );
+  }
+  f = message.getStatus();
+  if (f !== 0.0) {
+    writer.writeEnum(
+      4,
+      f
+    );
+  }
+  f = message.getSubResource();
+  if (f.length > 0) {
+    writer.writeString(
+      5,
+      f
+    );
+  }
   f = message.getMessage();
   if (f.length > 0) {
     writer.writeString(
-      1,
+      6,
       f
     );
   }
@@ -1205,48 +1328,114 @@ proto.nitric.proto.deployments.v1.DeployEventMessage.serializeBinaryToWriter = f
 
 
 /**
- * optional string message = 1;
+ * optional nitric.proto.resources.v1.ResourceIdentifier id = 1;
+ * @return {?proto.nitric.proto.resources.v1.ResourceIdentifier}
+ */
+proto.nitric.proto.deployments.v1.ResourceUpdate.prototype.getId = function() {
+  return /** @type{?proto.nitric.proto.resources.v1.ResourceIdentifier} */ (
+    jspb.Message.getWrapperField(this, nitric_proto_resources_v1_resources_pb.ResourceIdentifier, 1));
+};
+
+
+/**
+ * @param {?proto.nitric.proto.resources.v1.ResourceIdentifier|undefined} value
+ * @return {!proto.nitric.proto.deployments.v1.ResourceUpdate} returns this
+*/
+proto.nitric.proto.deployments.v1.ResourceUpdate.prototype.setId = function(value) {
+  return jspb.Message.setWrapperField(this, 1, value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.nitric.proto.deployments.v1.ResourceUpdate} returns this
+ */
+proto.nitric.proto.deployments.v1.ResourceUpdate.prototype.clearId = function() {
+  return this.setId(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.nitric.proto.deployments.v1.ResourceUpdate.prototype.hasId = function() {
+  return jspb.Message.getField(this, 1) != null;
+};
+
+
+/**
+ * optional ResourceDeploymentAction action = 3;
+ * @return {!proto.nitric.proto.deployments.v1.ResourceDeploymentAction}
+ */
+proto.nitric.proto.deployments.v1.ResourceUpdate.prototype.getAction = function() {
+  return /** @type {!proto.nitric.proto.deployments.v1.ResourceDeploymentAction} */ (jspb.Message.getFieldWithDefault(this, 3, 0));
+};
+
+
+/**
+ * @param {!proto.nitric.proto.deployments.v1.ResourceDeploymentAction} value
+ * @return {!proto.nitric.proto.deployments.v1.ResourceUpdate} returns this
+ */
+proto.nitric.proto.deployments.v1.ResourceUpdate.prototype.setAction = function(value) {
+  return jspb.Message.setProto3EnumField(this, 3, value);
+};
+
+
+/**
+ * optional ResourceDeploymentStatus status = 4;
+ * @return {!proto.nitric.proto.deployments.v1.ResourceDeploymentStatus}
+ */
+proto.nitric.proto.deployments.v1.ResourceUpdate.prototype.getStatus = function() {
+  return /** @type {!proto.nitric.proto.deployments.v1.ResourceDeploymentStatus} */ (jspb.Message.getFieldWithDefault(this, 4, 0));
+};
+
+
+/**
+ * @param {!proto.nitric.proto.deployments.v1.ResourceDeploymentStatus} value
+ * @return {!proto.nitric.proto.deployments.v1.ResourceUpdate} returns this
+ */
+proto.nitric.proto.deployments.v1.ResourceUpdate.prototype.setStatus = function(value) {
+  return jspb.Message.setProto3EnumField(this, 4, value);
+};
+
+
+/**
+ * optional string sub_resource = 5;
  * @return {string}
  */
-proto.nitric.proto.deployments.v1.DeployEventMessage.prototype.getMessage = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
+proto.nitric.proto.deployments.v1.ResourceUpdate.prototype.getSubResource = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 5, ""));
 };
 
 
 /**
  * @param {string} value
- * @return {!proto.nitric.proto.deployments.v1.DeployEventMessage} returns this
+ * @return {!proto.nitric.proto.deployments.v1.ResourceUpdate} returns this
  */
-proto.nitric.proto.deployments.v1.DeployEventMessage.prototype.setMessage = function(value) {
-  return jspb.Message.setProto3StringField(this, 1, value);
+proto.nitric.proto.deployments.v1.ResourceUpdate.prototype.setSubResource = function(value) {
+  return jspb.Message.setProto3StringField(this, 5, value);
 };
 
 
-
 /**
- * Oneof group definitions for this message. Each group defines the field
- * numbers belonging to that group. When of these fields' value is set, all
- * other fields in the group are cleared. During deserialization, if multiple
- * fields are encountered for a group, only the last value seen will be kept.
- * @private {!Array<!Array<number>>}
- * @const
+ * optional string message = 6;
+ * @return {string}
  */
-proto.nitric.proto.deployments.v1.UpResult.oneofGroups_ = [[1]];
-
-/**
- * @enum {number}
- */
-proto.nitric.proto.deployments.v1.UpResult.ContentCase = {
-  CONTENT_NOT_SET: 0,
-  STRING_RESULT: 1
+proto.nitric.proto.deployments.v1.ResourceUpdate.prototype.getMessage = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 6, ""));
 };
 
+
 /**
- * @return {proto.nitric.proto.deployments.v1.UpResult.ContentCase}
+ * @param {string} value
+ * @return {!proto.nitric.proto.deployments.v1.ResourceUpdate} returns this
  */
-proto.nitric.proto.deployments.v1.UpResult.prototype.getContentCase = function() {
-  return /** @type {proto.nitric.proto.deployments.v1.UpResult.ContentCase} */(jspb.Message.computeOneofCase(this, proto.nitric.proto.deployments.v1.UpResult.oneofGroups_[0]));
+proto.nitric.proto.deployments.v1.ResourceUpdate.prototype.setMessage = function(value) {
+  return jspb.Message.setProto3StringField(this, 6, value);
 };
+
+
 
 
 
@@ -1279,7 +1468,8 @@ proto.nitric.proto.deployments.v1.UpResult.prototype.toObject = function(opt_inc
  */
 proto.nitric.proto.deployments.v1.UpResult.toObject = function(includeInstance, msg) {
   var f, obj = {
-    stringResult: jspb.Message.getFieldWithDefault(msg, 1, "")
+    success: jspb.Message.getBooleanFieldWithDefault(msg, 1, false),
+    details: jspb.Message.getFieldWithDefault(msg, 2, "")
   };
 
   if (includeInstance) {
@@ -1317,8 +1507,12 @@ proto.nitric.proto.deployments.v1.UpResult.deserializeBinaryFromReader = functio
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
+      var value = /** @type {boolean} */ (reader.readBool());
+      msg.setSuccess(value);
+      break;
+    case 2:
       var value = /** @type {string} */ (reader.readString());
-      msg.setStringResult(value);
+      msg.setDetails(value);
       break;
     default:
       reader.skipField();
@@ -1349,160 +1543,6 @@ proto.nitric.proto.deployments.v1.UpResult.prototype.serializeBinary = function(
  */
 proto.nitric.proto.deployments.v1.UpResult.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
-  f = /** @type {string} */ (jspb.Message.getField(message, 1));
-  if (f != null) {
-    writer.writeString(
-      1,
-      f
-    );
-  }
-};
-
-
-/**
- * optional string string_result = 1;
- * @return {string}
- */
-proto.nitric.proto.deployments.v1.UpResult.prototype.getStringResult = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
-};
-
-
-/**
- * @param {string} value
- * @return {!proto.nitric.proto.deployments.v1.UpResult} returns this
- */
-proto.nitric.proto.deployments.v1.UpResult.prototype.setStringResult = function(value) {
-  return jspb.Message.setOneofField(this, 1, proto.nitric.proto.deployments.v1.UpResult.oneofGroups_[0], value);
-};
-
-
-/**
- * Clears the field making it undefined.
- * @return {!proto.nitric.proto.deployments.v1.UpResult} returns this
- */
-proto.nitric.proto.deployments.v1.UpResult.prototype.clearStringResult = function() {
-  return jspb.Message.setOneofField(this, 1, proto.nitric.proto.deployments.v1.UpResult.oneofGroups_[0], undefined);
-};
-
-
-/**
- * Returns whether this field is set.
- * @return {boolean}
- */
-proto.nitric.proto.deployments.v1.UpResult.prototype.hasStringResult = function() {
-  return jspb.Message.getField(this, 1) != null;
-};
-
-
-
-
-
-if (jspb.Message.GENERATE_TO_OBJECT) {
-/**
- * Creates an object representation of this proto.
- * Field names that are reserved in JavaScript and will be renamed to pb_name.
- * Optional fields that are not set will be set to undefined.
- * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
- * For the list of reserved names please see:
- *     net/proto2/compiler/js/internal/generator.cc#kKeyword.
- * @param {boolean=} opt_includeInstance Deprecated. whether to include the
- *     JSPB instance for transitional soy proto support:
- *     http://goto/soy-param-migration
- * @return {!Object}
- */
-proto.nitric.proto.deployments.v1.DeployUpEventResult.prototype.toObject = function(opt_includeInstance) {
-  return proto.nitric.proto.deployments.v1.DeployUpEventResult.toObject(opt_includeInstance, this);
-};
-
-
-/**
- * Static version of the {@see toObject} method.
- * @param {boolean|undefined} includeInstance Deprecated. Whether to include
- *     the JSPB instance for transitional soy proto support:
- *     http://goto/soy-param-migration
- * @param {!proto.nitric.proto.deployments.v1.DeployUpEventResult} msg The msg instance to transform.
- * @return {!Object}
- * @suppress {unusedLocalVariables} f is only used for nested messages
- */
-proto.nitric.proto.deployments.v1.DeployUpEventResult.toObject = function(includeInstance, msg) {
-  var f, obj = {
-    success: jspb.Message.getBooleanFieldWithDefault(msg, 1, false),
-    result: (f = msg.getResult()) && proto.nitric.proto.deployments.v1.UpResult.toObject(includeInstance, f)
-  };
-
-  if (includeInstance) {
-    obj.$jspbMessageInstance = msg;
-  }
-  return obj;
-};
-}
-
-
-/**
- * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.nitric.proto.deployments.v1.DeployUpEventResult}
- */
-proto.nitric.proto.deployments.v1.DeployUpEventResult.deserializeBinary = function(bytes) {
-  var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.nitric.proto.deployments.v1.DeployUpEventResult;
-  return proto.nitric.proto.deployments.v1.DeployUpEventResult.deserializeBinaryFromReader(msg, reader);
-};
-
-
-/**
- * Deserializes binary data (in protobuf wire format) from the
- * given reader into the given message object.
- * @param {!proto.nitric.proto.deployments.v1.DeployUpEventResult} msg The message object to deserialize into.
- * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.nitric.proto.deployments.v1.DeployUpEventResult}
- */
-proto.nitric.proto.deployments.v1.DeployUpEventResult.deserializeBinaryFromReader = function(msg, reader) {
-  while (reader.nextField()) {
-    if (reader.isEndGroup()) {
-      break;
-    }
-    var field = reader.getFieldNumber();
-    switch (field) {
-    case 1:
-      var value = /** @type {boolean} */ (reader.readBool());
-      msg.setSuccess(value);
-      break;
-    case 2:
-      var value = new proto.nitric.proto.deployments.v1.UpResult;
-      reader.readMessage(value,proto.nitric.proto.deployments.v1.UpResult.deserializeBinaryFromReader);
-      msg.setResult(value);
-      break;
-    default:
-      reader.skipField();
-      break;
-    }
-  }
-  return msg;
-};
-
-
-/**
- * Serializes the message to binary data (in protobuf wire format).
- * @return {!Uint8Array}
- */
-proto.nitric.proto.deployments.v1.DeployUpEventResult.prototype.serializeBinary = function() {
-  var writer = new jspb.BinaryWriter();
-  proto.nitric.proto.deployments.v1.DeployUpEventResult.serializeBinaryToWriter(this, writer);
-  return writer.getResultBuffer();
-};
-
-
-/**
- * Serializes the given message to binary data (in protobuf wire
- * format), writing to the given BinaryWriter.
- * @param {!proto.nitric.proto.deployments.v1.DeployUpEventResult} message
- * @param {!jspb.BinaryWriter} writer
- * @suppress {unusedLocalVariables} f is only used for nested messages
- */
-proto.nitric.proto.deployments.v1.DeployUpEventResult.serializeBinaryToWriter = function(message, writer) {
-  var f = undefined;
   f = message.getSuccess();
   if (f) {
     writer.writeBool(
@@ -1510,12 +1550,11 @@ proto.nitric.proto.deployments.v1.DeployUpEventResult.serializeBinaryToWriter = 
       f
     );
   }
-  f = message.getResult();
-  if (f != null) {
-    writer.writeMessage(
+  f = message.getDetails();
+  if (f.length > 0) {
+    writer.writeString(
       2,
-      f,
-      proto.nitric.proto.deployments.v1.UpResult.serializeBinaryToWriter
+      f
     );
   }
 };
@@ -1525,54 +1564,35 @@ proto.nitric.proto.deployments.v1.DeployUpEventResult.serializeBinaryToWriter = 
  * optional bool success = 1;
  * @return {boolean}
  */
-proto.nitric.proto.deployments.v1.DeployUpEventResult.prototype.getSuccess = function() {
+proto.nitric.proto.deployments.v1.UpResult.prototype.getSuccess = function() {
   return /** @type {boolean} */ (jspb.Message.getBooleanFieldWithDefault(this, 1, false));
 };
 
 
 /**
  * @param {boolean} value
- * @return {!proto.nitric.proto.deployments.v1.DeployUpEventResult} returns this
+ * @return {!proto.nitric.proto.deployments.v1.UpResult} returns this
  */
-proto.nitric.proto.deployments.v1.DeployUpEventResult.prototype.setSuccess = function(value) {
+proto.nitric.proto.deployments.v1.UpResult.prototype.setSuccess = function(value) {
   return jspb.Message.setProto3BooleanField(this, 1, value);
 };
 
 
 /**
- * optional UpResult result = 2;
- * @return {?proto.nitric.proto.deployments.v1.UpResult}
+ * optional string details = 2;
+ * @return {string}
  */
-proto.nitric.proto.deployments.v1.DeployUpEventResult.prototype.getResult = function() {
-  return /** @type{?proto.nitric.proto.deployments.v1.UpResult} */ (
-    jspb.Message.getWrapperField(this, proto.nitric.proto.deployments.v1.UpResult, 2));
+proto.nitric.proto.deployments.v1.UpResult.prototype.getDetails = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 2, ""));
 };
 
 
 /**
- * @param {?proto.nitric.proto.deployments.v1.UpResult|undefined} value
- * @return {!proto.nitric.proto.deployments.v1.DeployUpEventResult} returns this
-*/
-proto.nitric.proto.deployments.v1.DeployUpEventResult.prototype.setResult = function(value) {
-  return jspb.Message.setWrapperField(this, 2, value);
-};
-
-
-/**
- * Clears the message field making it undefined.
- * @return {!proto.nitric.proto.deployments.v1.DeployUpEventResult} returns this
+ * @param {string} value
+ * @return {!proto.nitric.proto.deployments.v1.UpResult} returns this
  */
-proto.nitric.proto.deployments.v1.DeployUpEventResult.prototype.clearResult = function() {
-  return this.setResult(undefined);
-};
-
-
-/**
- * Returns whether this field is set.
- * @return {boolean}
- */
-proto.nitric.proto.deployments.v1.DeployUpEventResult.prototype.hasResult = function() {
-  return jspb.Message.getField(this, 2) != null;
+proto.nitric.proto.deployments.v1.UpResult.prototype.setDetails = function(value) {
+  return jspb.Message.setProto3StringField(this, 2, value);
 };
 
 
@@ -1592,8 +1612,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
  *     http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.nitric.proto.deployments.v1.DeployDownRequest.prototype.toObject = function(opt_includeInstance) {
-  return proto.nitric.proto.deployments.v1.DeployDownRequest.toObject(opt_includeInstance, this);
+proto.nitric.proto.deployments.v1.DeploymentDownRequest.prototype.toObject = function(opt_includeInstance) {
+  return proto.nitric.proto.deployments.v1.DeploymentDownRequest.toObject(opt_includeInstance, this);
 };
 
 
@@ -1602,11 +1622,11 @@ proto.nitric.proto.deployments.v1.DeployDownRequest.prototype.toObject = functio
  * @param {boolean|undefined} includeInstance Deprecated. Whether to include
  *     the JSPB instance for transitional soy proto support:
  *     http://goto/soy-param-migration
- * @param {!proto.nitric.proto.deployments.v1.DeployDownRequest} msg The msg instance to transform.
+ * @param {!proto.nitric.proto.deployments.v1.DeploymentDownRequest} msg The msg instance to transform.
  * @return {!Object}
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.nitric.proto.deployments.v1.DeployDownRequest.toObject = function(includeInstance, msg) {
+proto.nitric.proto.deployments.v1.DeploymentDownRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
     attributes: (f = msg.getAttributes()) && google_protobuf_struct_pb.Struct.toObject(includeInstance, f),
     interactive: jspb.Message.getBooleanFieldWithDefault(msg, 2, false)
@@ -1623,23 +1643,23 @@ proto.nitric.proto.deployments.v1.DeployDownRequest.toObject = function(includeI
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.nitric.proto.deployments.v1.DeployDownRequest}
+ * @return {!proto.nitric.proto.deployments.v1.DeploymentDownRequest}
  */
-proto.nitric.proto.deployments.v1.DeployDownRequest.deserializeBinary = function(bytes) {
+proto.nitric.proto.deployments.v1.DeploymentDownRequest.deserializeBinary = function(bytes) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.nitric.proto.deployments.v1.DeployDownRequest;
-  return proto.nitric.proto.deployments.v1.DeployDownRequest.deserializeBinaryFromReader(msg, reader);
+  var msg = new proto.nitric.proto.deployments.v1.DeploymentDownRequest;
+  return proto.nitric.proto.deployments.v1.DeploymentDownRequest.deserializeBinaryFromReader(msg, reader);
 };
 
 
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.nitric.proto.deployments.v1.DeployDownRequest} msg The message object to deserialize into.
+ * @param {!proto.nitric.proto.deployments.v1.DeploymentDownRequest} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.nitric.proto.deployments.v1.DeployDownRequest}
+ * @return {!proto.nitric.proto.deployments.v1.DeploymentDownRequest}
  */
-proto.nitric.proto.deployments.v1.DeployDownRequest.deserializeBinaryFromReader = function(msg, reader) {
+proto.nitric.proto.deployments.v1.DeploymentDownRequest.deserializeBinaryFromReader = function(msg, reader) {
   while (reader.nextField()) {
     if (reader.isEndGroup()) {
       break;
@@ -1668,9 +1688,9 @@ proto.nitric.proto.deployments.v1.DeployDownRequest.deserializeBinaryFromReader 
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.nitric.proto.deployments.v1.DeployDownRequest.prototype.serializeBinary = function() {
+proto.nitric.proto.deployments.v1.DeploymentDownRequest.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
-  proto.nitric.proto.deployments.v1.DeployDownRequest.serializeBinaryToWriter(this, writer);
+  proto.nitric.proto.deployments.v1.DeploymentDownRequest.serializeBinaryToWriter(this, writer);
   return writer.getResultBuffer();
 };
 
@@ -1678,11 +1698,11 @@ proto.nitric.proto.deployments.v1.DeployDownRequest.prototype.serializeBinary = 
 /**
  * Serializes the given message to binary data (in protobuf wire
  * format), writing to the given BinaryWriter.
- * @param {!proto.nitric.proto.deployments.v1.DeployDownRequest} message
+ * @param {!proto.nitric.proto.deployments.v1.DeploymentDownRequest} message
  * @param {!jspb.BinaryWriter} writer
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.nitric.proto.deployments.v1.DeployDownRequest.serializeBinaryToWriter = function(message, writer) {
+proto.nitric.proto.deployments.v1.DeploymentDownRequest.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
   f = message.getAttributes();
   if (f != null) {
@@ -1706,7 +1726,7 @@ proto.nitric.proto.deployments.v1.DeployDownRequest.serializeBinaryToWriter = fu
  * optional google.protobuf.Struct attributes = 1;
  * @return {?proto.google.protobuf.Struct}
  */
-proto.nitric.proto.deployments.v1.DeployDownRequest.prototype.getAttributes = function() {
+proto.nitric.proto.deployments.v1.DeploymentDownRequest.prototype.getAttributes = function() {
   return /** @type{?proto.google.protobuf.Struct} */ (
     jspb.Message.getWrapperField(this, google_protobuf_struct_pb.Struct, 1));
 };
@@ -1714,18 +1734,18 @@ proto.nitric.proto.deployments.v1.DeployDownRequest.prototype.getAttributes = fu
 
 /**
  * @param {?proto.google.protobuf.Struct|undefined} value
- * @return {!proto.nitric.proto.deployments.v1.DeployDownRequest} returns this
+ * @return {!proto.nitric.proto.deployments.v1.DeploymentDownRequest} returns this
 */
-proto.nitric.proto.deployments.v1.DeployDownRequest.prototype.setAttributes = function(value) {
+proto.nitric.proto.deployments.v1.DeploymentDownRequest.prototype.setAttributes = function(value) {
   return jspb.Message.setWrapperField(this, 1, value);
 };
 
 
 /**
  * Clears the message field making it undefined.
- * @return {!proto.nitric.proto.deployments.v1.DeployDownRequest} returns this
+ * @return {!proto.nitric.proto.deployments.v1.DeploymentDownRequest} returns this
  */
-proto.nitric.proto.deployments.v1.DeployDownRequest.prototype.clearAttributes = function() {
+proto.nitric.proto.deployments.v1.DeploymentDownRequest.prototype.clearAttributes = function() {
   return this.setAttributes(undefined);
 };
 
@@ -1734,7 +1754,7 @@ proto.nitric.proto.deployments.v1.DeployDownRequest.prototype.clearAttributes = 
  * Returns whether this field is set.
  * @return {boolean}
  */
-proto.nitric.proto.deployments.v1.DeployDownRequest.prototype.hasAttributes = function() {
+proto.nitric.proto.deployments.v1.DeploymentDownRequest.prototype.hasAttributes = function() {
   return jspb.Message.getField(this, 1) != null;
 };
 
@@ -1743,16 +1763,16 @@ proto.nitric.proto.deployments.v1.DeployDownRequest.prototype.hasAttributes = fu
  * optional bool interactive = 2;
  * @return {boolean}
  */
-proto.nitric.proto.deployments.v1.DeployDownRequest.prototype.getInteractive = function() {
+proto.nitric.proto.deployments.v1.DeploymentDownRequest.prototype.getInteractive = function() {
   return /** @type {boolean} */ (jspb.Message.getBooleanFieldWithDefault(this, 2, false));
 };
 
 
 /**
  * @param {boolean} value
- * @return {!proto.nitric.proto.deployments.v1.DeployDownRequest} returns this
+ * @return {!proto.nitric.proto.deployments.v1.DeploymentDownRequest} returns this
  */
-proto.nitric.proto.deployments.v1.DeployDownRequest.prototype.setInteractive = function(value) {
+proto.nitric.proto.deployments.v1.DeploymentDownRequest.prototype.setInteractive = function(value) {
   return jspb.Message.setProto3BooleanField(this, 2, value);
 };
 
@@ -1766,22 +1786,23 @@ proto.nitric.proto.deployments.v1.DeployDownRequest.prototype.setInteractive = f
  * @private {!Array<!Array<number>>}
  * @const
  */
-proto.nitric.proto.deployments.v1.DeployDownEvent.oneofGroups_ = [[1,2]];
+proto.nitric.proto.deployments.v1.DeploymentDownEvent.oneofGroups_ = [[1,2,3]];
 
 /**
  * @enum {number}
  */
-proto.nitric.proto.deployments.v1.DeployDownEvent.ContentCase = {
+proto.nitric.proto.deployments.v1.DeploymentDownEvent.ContentCase = {
   CONTENT_NOT_SET: 0,
   MESSAGE: 1,
-  RESULT: 2
+  RESULT: 2,
+  UPDATE: 3
 };
 
 /**
- * @return {proto.nitric.proto.deployments.v1.DeployDownEvent.ContentCase}
+ * @return {proto.nitric.proto.deployments.v1.DeploymentDownEvent.ContentCase}
  */
-proto.nitric.proto.deployments.v1.DeployDownEvent.prototype.getContentCase = function() {
-  return /** @type {proto.nitric.proto.deployments.v1.DeployDownEvent.ContentCase} */(jspb.Message.computeOneofCase(this, proto.nitric.proto.deployments.v1.DeployDownEvent.oneofGroups_[0]));
+proto.nitric.proto.deployments.v1.DeploymentDownEvent.prototype.getContentCase = function() {
+  return /** @type {proto.nitric.proto.deployments.v1.DeploymentDownEvent.ContentCase} */(jspb.Message.computeOneofCase(this, proto.nitric.proto.deployments.v1.DeploymentDownEvent.oneofGroups_[0]));
 };
 
 
@@ -1799,8 +1820,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
  *     http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.nitric.proto.deployments.v1.DeployDownEvent.prototype.toObject = function(opt_includeInstance) {
-  return proto.nitric.proto.deployments.v1.DeployDownEvent.toObject(opt_includeInstance, this);
+proto.nitric.proto.deployments.v1.DeploymentDownEvent.prototype.toObject = function(opt_includeInstance) {
+  return proto.nitric.proto.deployments.v1.DeploymentDownEvent.toObject(opt_includeInstance, this);
 };
 
 
@@ -1809,14 +1830,15 @@ proto.nitric.proto.deployments.v1.DeployDownEvent.prototype.toObject = function(
  * @param {boolean|undefined} includeInstance Deprecated. Whether to include
  *     the JSPB instance for transitional soy proto support:
  *     http://goto/soy-param-migration
- * @param {!proto.nitric.proto.deployments.v1.DeployDownEvent} msg The msg instance to transform.
+ * @param {!proto.nitric.proto.deployments.v1.DeploymentDownEvent} msg The msg instance to transform.
  * @return {!Object}
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.nitric.proto.deployments.v1.DeployDownEvent.toObject = function(includeInstance, msg) {
+proto.nitric.proto.deployments.v1.DeploymentDownEvent.toObject = function(includeInstance, msg) {
   var f, obj = {
-    message: (f = msg.getMessage()) && proto.nitric.proto.deployments.v1.DeployEventMessage.toObject(includeInstance, f),
-    result: (f = msg.getResult()) && proto.nitric.proto.deployments.v1.DeployDownEventResult.toObject(includeInstance, f)
+    message: jspb.Message.getFieldWithDefault(msg, 1, ""),
+    result: (f = msg.getResult()) && proto.nitric.proto.deployments.v1.DownResult.toObject(includeInstance, f),
+    update: (f = msg.getUpdate()) && proto.nitric.proto.deployments.v1.ResourceUpdate.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -1830,23 +1852,23 @@ proto.nitric.proto.deployments.v1.DeployDownEvent.toObject = function(includeIns
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.nitric.proto.deployments.v1.DeployDownEvent}
+ * @return {!proto.nitric.proto.deployments.v1.DeploymentDownEvent}
  */
-proto.nitric.proto.deployments.v1.DeployDownEvent.deserializeBinary = function(bytes) {
+proto.nitric.proto.deployments.v1.DeploymentDownEvent.deserializeBinary = function(bytes) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.nitric.proto.deployments.v1.DeployDownEvent;
-  return proto.nitric.proto.deployments.v1.DeployDownEvent.deserializeBinaryFromReader(msg, reader);
+  var msg = new proto.nitric.proto.deployments.v1.DeploymentDownEvent;
+  return proto.nitric.proto.deployments.v1.DeploymentDownEvent.deserializeBinaryFromReader(msg, reader);
 };
 
 
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.nitric.proto.deployments.v1.DeployDownEvent} msg The message object to deserialize into.
+ * @param {!proto.nitric.proto.deployments.v1.DeploymentDownEvent} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.nitric.proto.deployments.v1.DeployDownEvent}
+ * @return {!proto.nitric.proto.deployments.v1.DeploymentDownEvent}
  */
-proto.nitric.proto.deployments.v1.DeployDownEvent.deserializeBinaryFromReader = function(msg, reader) {
+proto.nitric.proto.deployments.v1.DeploymentDownEvent.deserializeBinaryFromReader = function(msg, reader) {
   while (reader.nextField()) {
     if (reader.isEndGroup()) {
       break;
@@ -1854,14 +1876,18 @@ proto.nitric.proto.deployments.v1.DeployDownEvent.deserializeBinaryFromReader = 
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = new proto.nitric.proto.deployments.v1.DeployEventMessage;
-      reader.readMessage(value,proto.nitric.proto.deployments.v1.DeployEventMessage.deserializeBinaryFromReader);
+      var value = /** @type {string} */ (reader.readString());
       msg.setMessage(value);
       break;
     case 2:
-      var value = new proto.nitric.proto.deployments.v1.DeployDownEventResult;
-      reader.readMessage(value,proto.nitric.proto.deployments.v1.DeployDownEventResult.deserializeBinaryFromReader);
+      var value = new proto.nitric.proto.deployments.v1.DownResult;
+      reader.readMessage(value,proto.nitric.proto.deployments.v1.DownResult.deserializeBinaryFromReader);
       msg.setResult(value);
+      break;
+    case 3:
+      var value = new proto.nitric.proto.deployments.v1.ResourceUpdate;
+      reader.readMessage(value,proto.nitric.proto.deployments.v1.ResourceUpdate.deserializeBinaryFromReader);
+      msg.setUpdate(value);
       break;
     default:
       reader.skipField();
@@ -1876,9 +1902,9 @@ proto.nitric.proto.deployments.v1.DeployDownEvent.deserializeBinaryFromReader = 
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.nitric.proto.deployments.v1.DeployDownEvent.prototype.serializeBinary = function() {
+proto.nitric.proto.deployments.v1.DeploymentDownEvent.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
-  proto.nitric.proto.deployments.v1.DeployDownEvent.serializeBinaryToWriter(this, writer);
+  proto.nitric.proto.deployments.v1.DeploymentDownEvent.serializeBinaryToWriter(this, writer);
   return writer.getResultBuffer();
 };
 
@@ -1886,18 +1912,17 @@ proto.nitric.proto.deployments.v1.DeployDownEvent.prototype.serializeBinary = fu
 /**
  * Serializes the given message to binary data (in protobuf wire
  * format), writing to the given BinaryWriter.
- * @param {!proto.nitric.proto.deployments.v1.DeployDownEvent} message
+ * @param {!proto.nitric.proto.deployments.v1.DeploymentDownEvent} message
  * @param {!jspb.BinaryWriter} writer
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.nitric.proto.deployments.v1.DeployDownEvent.serializeBinaryToWriter = function(message, writer) {
+proto.nitric.proto.deployments.v1.DeploymentDownEvent.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
-  f = message.getMessage();
+  f = /** @type {string} */ (jspb.Message.getField(message, 1));
   if (f != null) {
-    writer.writeMessage(
+    writer.writeString(
       1,
-      f,
-      proto.nitric.proto.deployments.v1.DeployEventMessage.serializeBinaryToWriter
+      f
     );
   }
   f = message.getResult();
@@ -1905,37 +1930,44 @@ proto.nitric.proto.deployments.v1.DeployDownEvent.serializeBinaryToWriter = func
     writer.writeMessage(
       2,
       f,
-      proto.nitric.proto.deployments.v1.DeployDownEventResult.serializeBinaryToWriter
+      proto.nitric.proto.deployments.v1.DownResult.serializeBinaryToWriter
+    );
+  }
+  f = message.getUpdate();
+  if (f != null) {
+    writer.writeMessage(
+      3,
+      f,
+      proto.nitric.proto.deployments.v1.ResourceUpdate.serializeBinaryToWriter
     );
   }
 };
 
 
 /**
- * optional DeployEventMessage message = 1;
- * @return {?proto.nitric.proto.deployments.v1.DeployEventMessage}
+ * optional string message = 1;
+ * @return {string}
  */
-proto.nitric.proto.deployments.v1.DeployDownEvent.prototype.getMessage = function() {
-  return /** @type{?proto.nitric.proto.deployments.v1.DeployEventMessage} */ (
-    jspb.Message.getWrapperField(this, proto.nitric.proto.deployments.v1.DeployEventMessage, 1));
+proto.nitric.proto.deployments.v1.DeploymentDownEvent.prototype.getMessage = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
 };
 
 
 /**
- * @param {?proto.nitric.proto.deployments.v1.DeployEventMessage|undefined} value
- * @return {!proto.nitric.proto.deployments.v1.DeployDownEvent} returns this
-*/
-proto.nitric.proto.deployments.v1.DeployDownEvent.prototype.setMessage = function(value) {
-  return jspb.Message.setOneofWrapperField(this, 1, proto.nitric.proto.deployments.v1.DeployDownEvent.oneofGroups_[0], value);
+ * @param {string} value
+ * @return {!proto.nitric.proto.deployments.v1.DeploymentDownEvent} returns this
+ */
+proto.nitric.proto.deployments.v1.DeploymentDownEvent.prototype.setMessage = function(value) {
+  return jspb.Message.setOneofField(this, 1, proto.nitric.proto.deployments.v1.DeploymentDownEvent.oneofGroups_[0], value);
 };
 
 
 /**
- * Clears the message field making it undefined.
- * @return {!proto.nitric.proto.deployments.v1.DeployDownEvent} returns this
+ * Clears the field making it undefined.
+ * @return {!proto.nitric.proto.deployments.v1.DeploymentDownEvent} returns this
  */
-proto.nitric.proto.deployments.v1.DeployDownEvent.prototype.clearMessage = function() {
-  return this.setMessage(undefined);
+proto.nitric.proto.deployments.v1.DeploymentDownEvent.prototype.clearMessage = function() {
+  return jspb.Message.setOneofField(this, 1, proto.nitric.proto.deployments.v1.DeploymentDownEvent.oneofGroups_[0], undefined);
 };
 
 
@@ -1943,35 +1975,35 @@ proto.nitric.proto.deployments.v1.DeployDownEvent.prototype.clearMessage = funct
  * Returns whether this field is set.
  * @return {boolean}
  */
-proto.nitric.proto.deployments.v1.DeployDownEvent.prototype.hasMessage = function() {
+proto.nitric.proto.deployments.v1.DeploymentDownEvent.prototype.hasMessage = function() {
   return jspb.Message.getField(this, 1) != null;
 };
 
 
 /**
- * optional DeployDownEventResult result = 2;
- * @return {?proto.nitric.proto.deployments.v1.DeployDownEventResult}
+ * optional DownResult result = 2;
+ * @return {?proto.nitric.proto.deployments.v1.DownResult}
  */
-proto.nitric.proto.deployments.v1.DeployDownEvent.prototype.getResult = function() {
-  return /** @type{?proto.nitric.proto.deployments.v1.DeployDownEventResult} */ (
-    jspb.Message.getWrapperField(this, proto.nitric.proto.deployments.v1.DeployDownEventResult, 2));
+proto.nitric.proto.deployments.v1.DeploymentDownEvent.prototype.getResult = function() {
+  return /** @type{?proto.nitric.proto.deployments.v1.DownResult} */ (
+    jspb.Message.getWrapperField(this, proto.nitric.proto.deployments.v1.DownResult, 2));
 };
 
 
 /**
- * @param {?proto.nitric.proto.deployments.v1.DeployDownEventResult|undefined} value
- * @return {!proto.nitric.proto.deployments.v1.DeployDownEvent} returns this
+ * @param {?proto.nitric.proto.deployments.v1.DownResult|undefined} value
+ * @return {!proto.nitric.proto.deployments.v1.DeploymentDownEvent} returns this
 */
-proto.nitric.proto.deployments.v1.DeployDownEvent.prototype.setResult = function(value) {
-  return jspb.Message.setOneofWrapperField(this, 2, proto.nitric.proto.deployments.v1.DeployDownEvent.oneofGroups_[0], value);
+proto.nitric.proto.deployments.v1.DeploymentDownEvent.prototype.setResult = function(value) {
+  return jspb.Message.setOneofWrapperField(this, 2, proto.nitric.proto.deployments.v1.DeploymentDownEvent.oneofGroups_[0], value);
 };
 
 
 /**
  * Clears the message field making it undefined.
- * @return {!proto.nitric.proto.deployments.v1.DeployDownEvent} returns this
+ * @return {!proto.nitric.proto.deployments.v1.DeploymentDownEvent} returns this
  */
-proto.nitric.proto.deployments.v1.DeployDownEvent.prototype.clearResult = function() {
+proto.nitric.proto.deployments.v1.DeploymentDownEvent.prototype.clearResult = function() {
   return this.setResult(undefined);
 };
 
@@ -1980,8 +2012,45 @@ proto.nitric.proto.deployments.v1.DeployDownEvent.prototype.clearResult = functi
  * Returns whether this field is set.
  * @return {boolean}
  */
-proto.nitric.proto.deployments.v1.DeployDownEvent.prototype.hasResult = function() {
+proto.nitric.proto.deployments.v1.DeploymentDownEvent.prototype.hasResult = function() {
   return jspb.Message.getField(this, 2) != null;
+};
+
+
+/**
+ * optional ResourceUpdate update = 3;
+ * @return {?proto.nitric.proto.deployments.v1.ResourceUpdate}
+ */
+proto.nitric.proto.deployments.v1.DeploymentDownEvent.prototype.getUpdate = function() {
+  return /** @type{?proto.nitric.proto.deployments.v1.ResourceUpdate} */ (
+    jspb.Message.getWrapperField(this, proto.nitric.proto.deployments.v1.ResourceUpdate, 3));
+};
+
+
+/**
+ * @param {?proto.nitric.proto.deployments.v1.ResourceUpdate|undefined} value
+ * @return {!proto.nitric.proto.deployments.v1.DeploymentDownEvent} returns this
+*/
+proto.nitric.proto.deployments.v1.DeploymentDownEvent.prototype.setUpdate = function(value) {
+  return jspb.Message.setOneofWrapperField(this, 3, proto.nitric.proto.deployments.v1.DeploymentDownEvent.oneofGroups_[0], value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.nitric.proto.deployments.v1.DeploymentDownEvent} returns this
+ */
+proto.nitric.proto.deployments.v1.DeploymentDownEvent.prototype.clearUpdate = function() {
+  return this.setUpdate(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.nitric.proto.deployments.v1.DeploymentDownEvent.prototype.hasUpdate = function() {
+  return jspb.Message.getField(this, 3) != null;
 };
 
 
@@ -2001,8 +2070,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
  *     http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.nitric.proto.deployments.v1.DeployDownEventResult.prototype.toObject = function(opt_includeInstance) {
-  return proto.nitric.proto.deployments.v1.DeployDownEventResult.toObject(opt_includeInstance, this);
+proto.nitric.proto.deployments.v1.DownResult.prototype.toObject = function(opt_includeInstance) {
+  return proto.nitric.proto.deployments.v1.DownResult.toObject(opt_includeInstance, this);
 };
 
 
@@ -2011,11 +2080,11 @@ proto.nitric.proto.deployments.v1.DeployDownEventResult.prototype.toObject = fun
  * @param {boolean|undefined} includeInstance Deprecated. Whether to include
  *     the JSPB instance for transitional soy proto support:
  *     http://goto/soy-param-migration
- * @param {!proto.nitric.proto.deployments.v1.DeployDownEventResult} msg The msg instance to transform.
+ * @param {!proto.nitric.proto.deployments.v1.DownResult} msg The msg instance to transform.
  * @return {!Object}
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.nitric.proto.deployments.v1.DeployDownEventResult.toObject = function(includeInstance, msg) {
+proto.nitric.proto.deployments.v1.DownResult.toObject = function(includeInstance, msg) {
   var f, obj = {
 
   };
@@ -2031,23 +2100,23 @@ proto.nitric.proto.deployments.v1.DeployDownEventResult.toObject = function(incl
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.nitric.proto.deployments.v1.DeployDownEventResult}
+ * @return {!proto.nitric.proto.deployments.v1.DownResult}
  */
-proto.nitric.proto.deployments.v1.DeployDownEventResult.deserializeBinary = function(bytes) {
+proto.nitric.proto.deployments.v1.DownResult.deserializeBinary = function(bytes) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.nitric.proto.deployments.v1.DeployDownEventResult;
-  return proto.nitric.proto.deployments.v1.DeployDownEventResult.deserializeBinaryFromReader(msg, reader);
+  var msg = new proto.nitric.proto.deployments.v1.DownResult;
+  return proto.nitric.proto.deployments.v1.DownResult.deserializeBinaryFromReader(msg, reader);
 };
 
 
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.nitric.proto.deployments.v1.DeployDownEventResult} msg The message object to deserialize into.
+ * @param {!proto.nitric.proto.deployments.v1.DownResult} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.nitric.proto.deployments.v1.DeployDownEventResult}
+ * @return {!proto.nitric.proto.deployments.v1.DownResult}
  */
-proto.nitric.proto.deployments.v1.DeployDownEventResult.deserializeBinaryFromReader = function(msg, reader) {
+proto.nitric.proto.deployments.v1.DownResult.deserializeBinaryFromReader = function(msg, reader) {
   while (reader.nextField()) {
     if (reader.isEndGroup()) {
       break;
@@ -2067,9 +2136,9 @@ proto.nitric.proto.deployments.v1.DeployDownEventResult.deserializeBinaryFromRea
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.nitric.proto.deployments.v1.DeployDownEventResult.prototype.serializeBinary = function() {
+proto.nitric.proto.deployments.v1.DownResult.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
-  proto.nitric.proto.deployments.v1.DeployDownEventResult.serializeBinaryToWriter(this, writer);
+  proto.nitric.proto.deployments.v1.DownResult.serializeBinaryToWriter(this, writer);
   return writer.getResultBuffer();
 };
 
@@ -2077,11 +2146,11 @@ proto.nitric.proto.deployments.v1.DeployDownEventResult.prototype.serializeBinar
 /**
  * Serializes the given message to binary data (in protobuf wire
  * format), writing to the given BinaryWriter.
- * @param {!proto.nitric.proto.deployments.v1.DeployDownEventResult} message
+ * @param {!proto.nitric.proto.deployments.v1.DownResult} message
  * @param {!jspb.BinaryWriter} writer
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.nitric.proto.deployments.v1.DeployDownEventResult.serializeBinaryToWriter = function(message, writer) {
+proto.nitric.proto.deployments.v1.DownResult.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
 };
 
@@ -2225,21 +2294,21 @@ proto.nitric.proto.deployments.v1.ImageSource.prototype.setUri = function(value)
  * @private {!Array<!Array<number>>}
  * @const
  */
-proto.nitric.proto.deployments.v1.ExecutionUnit.oneofGroups_ = [[1]];
+proto.nitric.proto.deployments.v1.Service.oneofGroups_ = [[1]];
 
 /**
  * @enum {number}
  */
-proto.nitric.proto.deployments.v1.ExecutionUnit.SourceCase = {
+proto.nitric.proto.deployments.v1.Service.SourceCase = {
   SOURCE_NOT_SET: 0,
   IMAGE: 1
 };
 
 /**
- * @return {proto.nitric.proto.deployments.v1.ExecutionUnit.SourceCase}
+ * @return {proto.nitric.proto.deployments.v1.Service.SourceCase}
  */
-proto.nitric.proto.deployments.v1.ExecutionUnit.prototype.getSourceCase = function() {
-  return /** @type {proto.nitric.proto.deployments.v1.ExecutionUnit.SourceCase} */(jspb.Message.computeOneofCase(this, proto.nitric.proto.deployments.v1.ExecutionUnit.oneofGroups_[0]));
+proto.nitric.proto.deployments.v1.Service.prototype.getSourceCase = function() {
+  return /** @type {proto.nitric.proto.deployments.v1.Service.SourceCase} */(jspb.Message.computeOneofCase(this, proto.nitric.proto.deployments.v1.Service.oneofGroups_[0]));
 };
 
 
@@ -2257,8 +2326,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
  *     http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.nitric.proto.deployments.v1.ExecutionUnit.prototype.toObject = function(opt_includeInstance) {
-  return proto.nitric.proto.deployments.v1.ExecutionUnit.toObject(opt_includeInstance, this);
+proto.nitric.proto.deployments.v1.Service.prototype.toObject = function(opt_includeInstance) {
+  return proto.nitric.proto.deployments.v1.Service.toObject(opt_includeInstance, this);
 };
 
 
@@ -2267,11 +2336,11 @@ proto.nitric.proto.deployments.v1.ExecutionUnit.prototype.toObject = function(op
  * @param {boolean|undefined} includeInstance Deprecated. Whether to include
  *     the JSPB instance for transitional soy proto support:
  *     http://goto/soy-param-migration
- * @param {!proto.nitric.proto.deployments.v1.ExecutionUnit} msg The msg instance to transform.
+ * @param {!proto.nitric.proto.deployments.v1.Service} msg The msg instance to transform.
  * @return {!Object}
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.nitric.proto.deployments.v1.ExecutionUnit.toObject = function(includeInstance, msg) {
+proto.nitric.proto.deployments.v1.Service.toObject = function(includeInstance, msg) {
   var f, obj = {
     image: (f = msg.getImage()) && proto.nitric.proto.deployments.v1.ImageSource.toObject(includeInstance, f),
     workers: jspb.Message.getFieldWithDefault(msg, 10, 0),
@@ -2292,23 +2361,23 @@ proto.nitric.proto.deployments.v1.ExecutionUnit.toObject = function(includeInsta
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.nitric.proto.deployments.v1.ExecutionUnit}
+ * @return {!proto.nitric.proto.deployments.v1.Service}
  */
-proto.nitric.proto.deployments.v1.ExecutionUnit.deserializeBinary = function(bytes) {
+proto.nitric.proto.deployments.v1.Service.deserializeBinary = function(bytes) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.nitric.proto.deployments.v1.ExecutionUnit;
-  return proto.nitric.proto.deployments.v1.ExecutionUnit.deserializeBinaryFromReader(msg, reader);
+  var msg = new proto.nitric.proto.deployments.v1.Service;
+  return proto.nitric.proto.deployments.v1.Service.deserializeBinaryFromReader(msg, reader);
 };
 
 
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.nitric.proto.deployments.v1.ExecutionUnit} msg The message object to deserialize into.
+ * @param {!proto.nitric.proto.deployments.v1.Service} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.nitric.proto.deployments.v1.ExecutionUnit}
+ * @return {!proto.nitric.proto.deployments.v1.Service}
  */
-proto.nitric.proto.deployments.v1.ExecutionUnit.deserializeBinaryFromReader = function(msg, reader) {
+proto.nitric.proto.deployments.v1.Service.deserializeBinaryFromReader = function(msg, reader) {
   while (reader.nextField()) {
     if (reader.isEndGroup()) {
       break;
@@ -2355,9 +2424,9 @@ proto.nitric.proto.deployments.v1.ExecutionUnit.deserializeBinaryFromReader = fu
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.nitric.proto.deployments.v1.ExecutionUnit.prototype.serializeBinary = function() {
+proto.nitric.proto.deployments.v1.Service.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
-  proto.nitric.proto.deployments.v1.ExecutionUnit.serializeBinaryToWriter(this, writer);
+  proto.nitric.proto.deployments.v1.Service.serializeBinaryToWriter(this, writer);
   return writer.getResultBuffer();
 };
 
@@ -2365,11 +2434,11 @@ proto.nitric.proto.deployments.v1.ExecutionUnit.prototype.serializeBinary = func
 /**
  * Serializes the given message to binary data (in protobuf wire
  * format), writing to the given BinaryWriter.
- * @param {!proto.nitric.proto.deployments.v1.ExecutionUnit} message
+ * @param {!proto.nitric.proto.deployments.v1.Service} message
  * @param {!jspb.BinaryWriter} writer
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.nitric.proto.deployments.v1.ExecutionUnit.serializeBinaryToWriter = function(message, writer) {
+proto.nitric.proto.deployments.v1.Service.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
   f = message.getImage();
   if (f != null) {
@@ -2418,7 +2487,7 @@ proto.nitric.proto.deployments.v1.ExecutionUnit.serializeBinaryToWriter = functi
  * optional ImageSource image = 1;
  * @return {?proto.nitric.proto.deployments.v1.ImageSource}
  */
-proto.nitric.proto.deployments.v1.ExecutionUnit.prototype.getImage = function() {
+proto.nitric.proto.deployments.v1.Service.prototype.getImage = function() {
   return /** @type{?proto.nitric.proto.deployments.v1.ImageSource} */ (
     jspb.Message.getWrapperField(this, proto.nitric.proto.deployments.v1.ImageSource, 1));
 };
@@ -2426,18 +2495,18 @@ proto.nitric.proto.deployments.v1.ExecutionUnit.prototype.getImage = function() 
 
 /**
  * @param {?proto.nitric.proto.deployments.v1.ImageSource|undefined} value
- * @return {!proto.nitric.proto.deployments.v1.ExecutionUnit} returns this
+ * @return {!proto.nitric.proto.deployments.v1.Service} returns this
 */
-proto.nitric.proto.deployments.v1.ExecutionUnit.prototype.setImage = function(value) {
-  return jspb.Message.setOneofWrapperField(this, 1, proto.nitric.proto.deployments.v1.ExecutionUnit.oneofGroups_[0], value);
+proto.nitric.proto.deployments.v1.Service.prototype.setImage = function(value) {
+  return jspb.Message.setOneofWrapperField(this, 1, proto.nitric.proto.deployments.v1.Service.oneofGroups_[0], value);
 };
 
 
 /**
  * Clears the message field making it undefined.
- * @return {!proto.nitric.proto.deployments.v1.ExecutionUnit} returns this
+ * @return {!proto.nitric.proto.deployments.v1.Service} returns this
  */
-proto.nitric.proto.deployments.v1.ExecutionUnit.prototype.clearImage = function() {
+proto.nitric.proto.deployments.v1.Service.prototype.clearImage = function() {
   return this.setImage(undefined);
 };
 
@@ -2446,7 +2515,7 @@ proto.nitric.proto.deployments.v1.ExecutionUnit.prototype.clearImage = function(
  * Returns whether this field is set.
  * @return {boolean}
  */
-proto.nitric.proto.deployments.v1.ExecutionUnit.prototype.hasImage = function() {
+proto.nitric.proto.deployments.v1.Service.prototype.hasImage = function() {
   return jspb.Message.getField(this, 1) != null;
 };
 
@@ -2455,16 +2524,16 @@ proto.nitric.proto.deployments.v1.ExecutionUnit.prototype.hasImage = function() 
  * optional int32 workers = 10;
  * @return {number}
  */
-proto.nitric.proto.deployments.v1.ExecutionUnit.prototype.getWorkers = function() {
+proto.nitric.proto.deployments.v1.Service.prototype.getWorkers = function() {
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 10, 0));
 };
 
 
 /**
  * @param {number} value
- * @return {!proto.nitric.proto.deployments.v1.ExecutionUnit} returns this
+ * @return {!proto.nitric.proto.deployments.v1.Service} returns this
  */
-proto.nitric.proto.deployments.v1.ExecutionUnit.prototype.setWorkers = function(value) {
+proto.nitric.proto.deployments.v1.Service.prototype.setWorkers = function(value) {
   return jspb.Message.setProto3IntField(this, 10, value);
 };
 
@@ -2473,16 +2542,16 @@ proto.nitric.proto.deployments.v1.ExecutionUnit.prototype.setWorkers = function(
  * optional int32 timeout = 11;
  * @return {number}
  */
-proto.nitric.proto.deployments.v1.ExecutionUnit.prototype.getTimeout = function() {
+proto.nitric.proto.deployments.v1.Service.prototype.getTimeout = function() {
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 11, 0));
 };
 
 
 /**
  * @param {number} value
- * @return {!proto.nitric.proto.deployments.v1.ExecutionUnit} returns this
+ * @return {!proto.nitric.proto.deployments.v1.Service} returns this
  */
-proto.nitric.proto.deployments.v1.ExecutionUnit.prototype.setTimeout = function(value) {
+proto.nitric.proto.deployments.v1.Service.prototype.setTimeout = function(value) {
   return jspb.Message.setProto3IntField(this, 11, value);
 };
 
@@ -2491,16 +2560,16 @@ proto.nitric.proto.deployments.v1.ExecutionUnit.prototype.setTimeout = function(
  * optional int32 memory = 12;
  * @return {number}
  */
-proto.nitric.proto.deployments.v1.ExecutionUnit.prototype.getMemory = function() {
+proto.nitric.proto.deployments.v1.Service.prototype.getMemory = function() {
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 12, 0));
 };
 
 
 /**
  * @param {number} value
- * @return {!proto.nitric.proto.deployments.v1.ExecutionUnit} returns this
+ * @return {!proto.nitric.proto.deployments.v1.Service} returns this
  */
-proto.nitric.proto.deployments.v1.ExecutionUnit.prototype.setMemory = function(value) {
+proto.nitric.proto.deployments.v1.Service.prototype.setMemory = function(value) {
   return jspb.Message.setProto3IntField(this, 12, value);
 };
 
@@ -2509,16 +2578,16 @@ proto.nitric.proto.deployments.v1.ExecutionUnit.prototype.setMemory = function(v
  * optional string type = 13;
  * @return {string}
  */
-proto.nitric.proto.deployments.v1.ExecutionUnit.prototype.getType = function() {
+proto.nitric.proto.deployments.v1.Service.prototype.getType = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 13, ""));
 };
 
 
 /**
  * @param {string} value
- * @return {!proto.nitric.proto.deployments.v1.ExecutionUnit} returns this
+ * @return {!proto.nitric.proto.deployments.v1.Service} returns this
  */
-proto.nitric.proto.deployments.v1.ExecutionUnit.prototype.setType = function(value) {
+proto.nitric.proto.deployments.v1.Service.prototype.setType = function(value) {
   return jspb.Message.setProto3StringField(this, 13, value);
 };
 
@@ -2529,7 +2598,7 @@ proto.nitric.proto.deployments.v1.ExecutionUnit.prototype.setType = function(val
  * empty, instead returning `undefined`
  * @return {!jspb.Map<string,string>}
  */
-proto.nitric.proto.deployments.v1.ExecutionUnit.prototype.getEnvMap = function(opt_noLazyCreate) {
+proto.nitric.proto.deployments.v1.Service.prototype.getEnvMap = function(opt_noLazyCreate) {
   return /** @type {!jspb.Map<string,string>} */ (
       jspb.Message.getMapField(this, 14, opt_noLazyCreate,
       null));
@@ -2538,9 +2607,9 @@ proto.nitric.proto.deployments.v1.ExecutionUnit.prototype.getEnvMap = function(o
 
 /**
  * Clears values from the map. The map will be non-null.
- * @return {!proto.nitric.proto.deployments.v1.ExecutionUnit} returns this
+ * @return {!proto.nitric.proto.deployments.v1.Service} returns this
  */
-proto.nitric.proto.deployments.v1.ExecutionUnit.prototype.clearEnvMap = function() {
+proto.nitric.proto.deployments.v1.Service.prototype.clearEnvMap = function() {
   this.getEnvMap().clear();
   return this;};
 
@@ -2584,8 +2653,8 @@ proto.nitric.proto.deployments.v1.Bucket.prototype.toObject = function(opt_inclu
  */
 proto.nitric.proto.deployments.v1.Bucket.toObject = function(includeInstance, msg) {
   var f, obj = {
-    notificationsList: jspb.Message.toObjectList(msg.getNotificationsList(),
-    proto.nitric.proto.deployments.v1.BucketNotificationTarget.toObject, includeInstance)
+    listenersList: jspb.Message.toObjectList(msg.getListenersList(),
+    proto.nitric.proto.deployments.v1.BucketListener.toObject, includeInstance)
   };
 
   if (includeInstance) {
@@ -2623,9 +2692,9 @@ proto.nitric.proto.deployments.v1.Bucket.deserializeBinaryFromReader = function(
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = new proto.nitric.proto.deployments.v1.BucketNotificationTarget;
-      reader.readMessage(value,proto.nitric.proto.deployments.v1.BucketNotificationTarget.deserializeBinaryFromReader);
-      msg.addNotifications(value);
+      var value = new proto.nitric.proto.deployments.v1.BucketListener;
+      reader.readMessage(value,proto.nitric.proto.deployments.v1.BucketListener.deserializeBinaryFromReader);
+      msg.addListeners(value);
       break;
     default:
       reader.skipField();
@@ -2656,43 +2725,43 @@ proto.nitric.proto.deployments.v1.Bucket.prototype.serializeBinary = function() 
  */
 proto.nitric.proto.deployments.v1.Bucket.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
-  f = message.getNotificationsList();
+  f = message.getListenersList();
   if (f.length > 0) {
     writer.writeRepeatedMessage(
       1,
       f,
-      proto.nitric.proto.deployments.v1.BucketNotificationTarget.serializeBinaryToWriter
+      proto.nitric.proto.deployments.v1.BucketListener.serializeBinaryToWriter
     );
   }
 };
 
 
 /**
- * repeated BucketNotificationTarget notifications = 1;
- * @return {!Array<!proto.nitric.proto.deployments.v1.BucketNotificationTarget>}
+ * repeated BucketListener listeners = 1;
+ * @return {!Array<!proto.nitric.proto.deployments.v1.BucketListener>}
  */
-proto.nitric.proto.deployments.v1.Bucket.prototype.getNotificationsList = function() {
-  return /** @type{!Array<!proto.nitric.proto.deployments.v1.BucketNotificationTarget>} */ (
-    jspb.Message.getRepeatedWrapperField(this, proto.nitric.proto.deployments.v1.BucketNotificationTarget, 1));
+proto.nitric.proto.deployments.v1.Bucket.prototype.getListenersList = function() {
+  return /** @type{!Array<!proto.nitric.proto.deployments.v1.BucketListener>} */ (
+    jspb.Message.getRepeatedWrapperField(this, proto.nitric.proto.deployments.v1.BucketListener, 1));
 };
 
 
 /**
- * @param {!Array<!proto.nitric.proto.deployments.v1.BucketNotificationTarget>} value
+ * @param {!Array<!proto.nitric.proto.deployments.v1.BucketListener>} value
  * @return {!proto.nitric.proto.deployments.v1.Bucket} returns this
 */
-proto.nitric.proto.deployments.v1.Bucket.prototype.setNotificationsList = function(value) {
+proto.nitric.proto.deployments.v1.Bucket.prototype.setListenersList = function(value) {
   return jspb.Message.setRepeatedWrapperField(this, 1, value);
 };
 
 
 /**
- * @param {!proto.nitric.proto.deployments.v1.BucketNotificationTarget=} opt_value
+ * @param {!proto.nitric.proto.deployments.v1.BucketListener=} opt_value
  * @param {number=} opt_index
- * @return {!proto.nitric.proto.deployments.v1.BucketNotificationTarget}
+ * @return {!proto.nitric.proto.deployments.v1.BucketListener}
  */
-proto.nitric.proto.deployments.v1.Bucket.prototype.addNotifications = function(opt_value, opt_index) {
-  return jspb.Message.addToRepeatedWrapperField(this, 1, opt_value, proto.nitric.proto.deployments.v1.BucketNotificationTarget, opt_index);
+proto.nitric.proto.deployments.v1.Bucket.prototype.addListeners = function(opt_value, opt_index) {
+  return jspb.Message.addToRepeatedWrapperField(this, 1, opt_value, proto.nitric.proto.deployments.v1.BucketListener, opt_index);
 };
 
 
@@ -2700,8 +2769,8 @@ proto.nitric.proto.deployments.v1.Bucket.prototype.addNotifications = function(o
  * Clears the list making it empty but non-null.
  * @return {!proto.nitric.proto.deployments.v1.Bucket} returns this
  */
-proto.nitric.proto.deployments.v1.Bucket.prototype.clearNotificationsList = function() {
-  return this.setNotificationsList([]);
+proto.nitric.proto.deployments.v1.Bucket.prototype.clearListenersList = function() {
+  return this.setListenersList([]);
 };
 
 
@@ -2714,21 +2783,21 @@ proto.nitric.proto.deployments.v1.Bucket.prototype.clearNotificationsList = func
  * @private {!Array<!Array<number>>}
  * @const
  */
-proto.nitric.proto.deployments.v1.BucketNotificationTarget.oneofGroups_ = [[2]];
+proto.nitric.proto.deployments.v1.BucketListener.oneofGroups_ = [[2]];
 
 /**
  * @enum {number}
  */
-proto.nitric.proto.deployments.v1.BucketNotificationTarget.TargetCase = {
+proto.nitric.proto.deployments.v1.BucketListener.TargetCase = {
   TARGET_NOT_SET: 0,
-  EXECUTION_UNIT: 2
+  SERVICE: 2
 };
 
 /**
- * @return {proto.nitric.proto.deployments.v1.BucketNotificationTarget.TargetCase}
+ * @return {proto.nitric.proto.deployments.v1.BucketListener.TargetCase}
  */
-proto.nitric.proto.deployments.v1.BucketNotificationTarget.prototype.getTargetCase = function() {
-  return /** @type {proto.nitric.proto.deployments.v1.BucketNotificationTarget.TargetCase} */(jspb.Message.computeOneofCase(this, proto.nitric.proto.deployments.v1.BucketNotificationTarget.oneofGroups_[0]));
+proto.nitric.proto.deployments.v1.BucketListener.prototype.getTargetCase = function() {
+  return /** @type {proto.nitric.proto.deployments.v1.BucketListener.TargetCase} */(jspb.Message.computeOneofCase(this, proto.nitric.proto.deployments.v1.BucketListener.oneofGroups_[0]));
 };
 
 
@@ -2746,8 +2815,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
  *     http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.nitric.proto.deployments.v1.BucketNotificationTarget.prototype.toObject = function(opt_includeInstance) {
-  return proto.nitric.proto.deployments.v1.BucketNotificationTarget.toObject(opt_includeInstance, this);
+proto.nitric.proto.deployments.v1.BucketListener.prototype.toObject = function(opt_includeInstance) {
+  return proto.nitric.proto.deployments.v1.BucketListener.toObject(opt_includeInstance, this);
 };
 
 
@@ -2756,14 +2825,14 @@ proto.nitric.proto.deployments.v1.BucketNotificationTarget.prototype.toObject = 
  * @param {boolean|undefined} includeInstance Deprecated. Whether to include
  *     the JSPB instance for transitional soy proto support:
  *     http://goto/soy-param-migration
- * @param {!proto.nitric.proto.deployments.v1.BucketNotificationTarget} msg The msg instance to transform.
+ * @param {!proto.nitric.proto.deployments.v1.BucketListener} msg The msg instance to transform.
  * @return {!Object}
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.nitric.proto.deployments.v1.BucketNotificationTarget.toObject = function(includeInstance, msg) {
+proto.nitric.proto.deployments.v1.BucketListener.toObject = function(includeInstance, msg) {
   var f, obj = {
     config: (f = msg.getConfig()) && nitric_proto_storage_v1_storage_pb.RegistrationRequest.toObject(includeInstance, f),
-    executionUnit: jspb.Message.getFieldWithDefault(msg, 2, "")
+    service: jspb.Message.getFieldWithDefault(msg, 2, "")
   };
 
   if (includeInstance) {
@@ -2777,23 +2846,23 @@ proto.nitric.proto.deployments.v1.BucketNotificationTarget.toObject = function(i
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.nitric.proto.deployments.v1.BucketNotificationTarget}
+ * @return {!proto.nitric.proto.deployments.v1.BucketListener}
  */
-proto.nitric.proto.deployments.v1.BucketNotificationTarget.deserializeBinary = function(bytes) {
+proto.nitric.proto.deployments.v1.BucketListener.deserializeBinary = function(bytes) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.nitric.proto.deployments.v1.BucketNotificationTarget;
-  return proto.nitric.proto.deployments.v1.BucketNotificationTarget.deserializeBinaryFromReader(msg, reader);
+  var msg = new proto.nitric.proto.deployments.v1.BucketListener;
+  return proto.nitric.proto.deployments.v1.BucketListener.deserializeBinaryFromReader(msg, reader);
 };
 
 
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.nitric.proto.deployments.v1.BucketNotificationTarget} msg The message object to deserialize into.
+ * @param {!proto.nitric.proto.deployments.v1.BucketListener} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.nitric.proto.deployments.v1.BucketNotificationTarget}
+ * @return {!proto.nitric.proto.deployments.v1.BucketListener}
  */
-proto.nitric.proto.deployments.v1.BucketNotificationTarget.deserializeBinaryFromReader = function(msg, reader) {
+proto.nitric.proto.deployments.v1.BucketListener.deserializeBinaryFromReader = function(msg, reader) {
   while (reader.nextField()) {
     if (reader.isEndGroup()) {
       break;
@@ -2807,7 +2876,7 @@ proto.nitric.proto.deployments.v1.BucketNotificationTarget.deserializeBinaryFrom
       break;
     case 2:
       var value = /** @type {string} */ (reader.readString());
-      msg.setExecutionUnit(value);
+      msg.setService(value);
       break;
     default:
       reader.skipField();
@@ -2822,9 +2891,9 @@ proto.nitric.proto.deployments.v1.BucketNotificationTarget.deserializeBinaryFrom
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.nitric.proto.deployments.v1.BucketNotificationTarget.prototype.serializeBinary = function() {
+proto.nitric.proto.deployments.v1.BucketListener.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
-  proto.nitric.proto.deployments.v1.BucketNotificationTarget.serializeBinaryToWriter(this, writer);
+  proto.nitric.proto.deployments.v1.BucketListener.serializeBinaryToWriter(this, writer);
   return writer.getResultBuffer();
 };
 
@@ -2832,11 +2901,11 @@ proto.nitric.proto.deployments.v1.BucketNotificationTarget.prototype.serializeBi
 /**
  * Serializes the given message to binary data (in protobuf wire
  * format), writing to the given BinaryWriter.
- * @param {!proto.nitric.proto.deployments.v1.BucketNotificationTarget} message
+ * @param {!proto.nitric.proto.deployments.v1.BucketListener} message
  * @param {!jspb.BinaryWriter} writer
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.nitric.proto.deployments.v1.BucketNotificationTarget.serializeBinaryToWriter = function(message, writer) {
+proto.nitric.proto.deployments.v1.BucketListener.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
   f = message.getConfig();
   if (f != null) {
@@ -2860,7 +2929,7 @@ proto.nitric.proto.deployments.v1.BucketNotificationTarget.serializeBinaryToWrit
  * optional nitric.proto.storage.v1.RegistrationRequest config = 1;
  * @return {?proto.nitric.proto.storage.v1.RegistrationRequest}
  */
-proto.nitric.proto.deployments.v1.BucketNotificationTarget.prototype.getConfig = function() {
+proto.nitric.proto.deployments.v1.BucketListener.prototype.getConfig = function() {
   return /** @type{?proto.nitric.proto.storage.v1.RegistrationRequest} */ (
     jspb.Message.getWrapperField(this, nitric_proto_storage_v1_storage_pb.RegistrationRequest, 1));
 };
@@ -2868,18 +2937,18 @@ proto.nitric.proto.deployments.v1.BucketNotificationTarget.prototype.getConfig =
 
 /**
  * @param {?proto.nitric.proto.storage.v1.RegistrationRequest|undefined} value
- * @return {!proto.nitric.proto.deployments.v1.BucketNotificationTarget} returns this
+ * @return {!proto.nitric.proto.deployments.v1.BucketListener} returns this
 */
-proto.nitric.proto.deployments.v1.BucketNotificationTarget.prototype.setConfig = function(value) {
+proto.nitric.proto.deployments.v1.BucketListener.prototype.setConfig = function(value) {
   return jspb.Message.setWrapperField(this, 1, value);
 };
 
 
 /**
  * Clears the message field making it undefined.
- * @return {!proto.nitric.proto.deployments.v1.BucketNotificationTarget} returns this
+ * @return {!proto.nitric.proto.deployments.v1.BucketListener} returns this
  */
-proto.nitric.proto.deployments.v1.BucketNotificationTarget.prototype.clearConfig = function() {
+proto.nitric.proto.deployments.v1.BucketListener.prototype.clearConfig = function() {
   return this.setConfig(undefined);
 };
 
@@ -2888,35 +2957,35 @@ proto.nitric.proto.deployments.v1.BucketNotificationTarget.prototype.clearConfig
  * Returns whether this field is set.
  * @return {boolean}
  */
-proto.nitric.proto.deployments.v1.BucketNotificationTarget.prototype.hasConfig = function() {
+proto.nitric.proto.deployments.v1.BucketListener.prototype.hasConfig = function() {
   return jspb.Message.getField(this, 1) != null;
 };
 
 
 /**
- * optional string execution_unit = 2;
+ * optional string service = 2;
  * @return {string}
  */
-proto.nitric.proto.deployments.v1.BucketNotificationTarget.prototype.getExecutionUnit = function() {
+proto.nitric.proto.deployments.v1.BucketListener.prototype.getService = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 2, ""));
 };
 
 
 /**
  * @param {string} value
- * @return {!proto.nitric.proto.deployments.v1.BucketNotificationTarget} returns this
+ * @return {!proto.nitric.proto.deployments.v1.BucketListener} returns this
  */
-proto.nitric.proto.deployments.v1.BucketNotificationTarget.prototype.setExecutionUnit = function(value) {
-  return jspb.Message.setOneofField(this, 2, proto.nitric.proto.deployments.v1.BucketNotificationTarget.oneofGroups_[0], value);
+proto.nitric.proto.deployments.v1.BucketListener.prototype.setService = function(value) {
+  return jspb.Message.setOneofField(this, 2, proto.nitric.proto.deployments.v1.BucketListener.oneofGroups_[0], value);
 };
 
 
 /**
  * Clears the field making it undefined.
- * @return {!proto.nitric.proto.deployments.v1.BucketNotificationTarget} returns this
+ * @return {!proto.nitric.proto.deployments.v1.BucketListener} returns this
  */
-proto.nitric.proto.deployments.v1.BucketNotificationTarget.prototype.clearExecutionUnit = function() {
-  return jspb.Message.setOneofField(this, 2, proto.nitric.proto.deployments.v1.BucketNotificationTarget.oneofGroups_[0], undefined);
+proto.nitric.proto.deployments.v1.BucketListener.prototype.clearService = function() {
+  return jspb.Message.setOneofField(this, 2, proto.nitric.proto.deployments.v1.BucketListener.oneofGroups_[0], undefined);
 };
 
 
@@ -2924,7 +2993,7 @@ proto.nitric.proto.deployments.v1.BucketNotificationTarget.prototype.clearExecut
  * Returns whether this field is set.
  * @return {boolean}
  */
-proto.nitric.proto.deployments.v1.BucketNotificationTarget.prototype.hasExecutionUnit = function() {
+proto.nitric.proto.deployments.v1.BucketListener.prototype.hasService = function() {
   return jspb.Message.getField(this, 2) != null;
 };
 
@@ -3307,7 +3376,7 @@ proto.nitric.proto.deployments.v1.SubscriptionTarget.oneofGroups_ = [[1]];
  */
 proto.nitric.proto.deployments.v1.SubscriptionTarget.TargetCase = {
   TARGET_NOT_SET: 0,
-  EXECUTION_UNIT: 1
+  SERVICE: 1
 };
 
 /**
@@ -3348,7 +3417,7 @@ proto.nitric.proto.deployments.v1.SubscriptionTarget.prototype.toObject = functi
  */
 proto.nitric.proto.deployments.v1.SubscriptionTarget.toObject = function(includeInstance, msg) {
   var f, obj = {
-    executionUnit: jspb.Message.getFieldWithDefault(msg, 1, "")
+    service: jspb.Message.getFieldWithDefault(msg, 1, "")
   };
 
   if (includeInstance) {
@@ -3387,7 +3456,7 @@ proto.nitric.proto.deployments.v1.SubscriptionTarget.deserializeBinaryFromReader
     switch (field) {
     case 1:
       var value = /** @type {string} */ (reader.readString());
-      msg.setExecutionUnit(value);
+      msg.setService(value);
       break;
     default:
       reader.skipField();
@@ -3429,10 +3498,10 @@ proto.nitric.proto.deployments.v1.SubscriptionTarget.serializeBinaryToWriter = f
 
 
 /**
- * optional string execution_unit = 1;
+ * optional string service = 1;
  * @return {string}
  */
-proto.nitric.proto.deployments.v1.SubscriptionTarget.prototype.getExecutionUnit = function() {
+proto.nitric.proto.deployments.v1.SubscriptionTarget.prototype.getService = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
 };
 
@@ -3441,7 +3510,7 @@ proto.nitric.proto.deployments.v1.SubscriptionTarget.prototype.getExecutionUnit 
  * @param {string} value
  * @return {!proto.nitric.proto.deployments.v1.SubscriptionTarget} returns this
  */
-proto.nitric.proto.deployments.v1.SubscriptionTarget.prototype.setExecutionUnit = function(value) {
+proto.nitric.proto.deployments.v1.SubscriptionTarget.prototype.setService = function(value) {
   return jspb.Message.setOneofField(this, 1, proto.nitric.proto.deployments.v1.SubscriptionTarget.oneofGroups_[0], value);
 };
 
@@ -3450,7 +3519,7 @@ proto.nitric.proto.deployments.v1.SubscriptionTarget.prototype.setExecutionUnit 
  * Clears the field making it undefined.
  * @return {!proto.nitric.proto.deployments.v1.SubscriptionTarget} returns this
  */
-proto.nitric.proto.deployments.v1.SubscriptionTarget.prototype.clearExecutionUnit = function() {
+proto.nitric.proto.deployments.v1.SubscriptionTarget.prototype.clearService = function() {
   return jspb.Message.setOneofField(this, 1, proto.nitric.proto.deployments.v1.SubscriptionTarget.oneofGroups_[0], undefined);
 };
 
@@ -3459,7 +3528,7 @@ proto.nitric.proto.deployments.v1.SubscriptionTarget.prototype.clearExecutionUni
  * Returns whether this field is set.
  * @return {boolean}
  */
-proto.nitric.proto.deployments.v1.SubscriptionTarget.prototype.hasExecutionUnit = function() {
+proto.nitric.proto.deployments.v1.SubscriptionTarget.prototype.hasService = function() {
   return jspb.Message.getField(this, 1) != null;
 };
 
@@ -3631,7 +3700,7 @@ proto.nitric.proto.deployments.v1.HttpTarget.oneofGroups_ = [[1]];
  */
 proto.nitric.proto.deployments.v1.HttpTarget.TargetCase = {
   TARGET_NOT_SET: 0,
-  EXECUTION_UNIT: 1
+  SERVICE: 1
 };
 
 /**
@@ -3672,7 +3741,7 @@ proto.nitric.proto.deployments.v1.HttpTarget.prototype.toObject = function(opt_i
  */
 proto.nitric.proto.deployments.v1.HttpTarget.toObject = function(includeInstance, msg) {
   var f, obj = {
-    executionUnit: jspb.Message.getFieldWithDefault(msg, 1, "")
+    service: jspb.Message.getFieldWithDefault(msg, 1, "")
   };
 
   if (includeInstance) {
@@ -3711,7 +3780,7 @@ proto.nitric.proto.deployments.v1.HttpTarget.deserializeBinaryFromReader = funct
     switch (field) {
     case 1:
       var value = /** @type {string} */ (reader.readString());
-      msg.setExecutionUnit(value);
+      msg.setService(value);
       break;
     default:
       reader.skipField();
@@ -3753,10 +3822,10 @@ proto.nitric.proto.deployments.v1.HttpTarget.serializeBinaryToWriter = function(
 
 
 /**
- * optional string execution_unit = 1;
+ * optional string service = 1;
  * @return {string}
  */
-proto.nitric.proto.deployments.v1.HttpTarget.prototype.getExecutionUnit = function() {
+proto.nitric.proto.deployments.v1.HttpTarget.prototype.getService = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
 };
 
@@ -3765,7 +3834,7 @@ proto.nitric.proto.deployments.v1.HttpTarget.prototype.getExecutionUnit = functi
  * @param {string} value
  * @return {!proto.nitric.proto.deployments.v1.HttpTarget} returns this
  */
-proto.nitric.proto.deployments.v1.HttpTarget.prototype.setExecutionUnit = function(value) {
+proto.nitric.proto.deployments.v1.HttpTarget.prototype.setService = function(value) {
   return jspb.Message.setOneofField(this, 1, proto.nitric.proto.deployments.v1.HttpTarget.oneofGroups_[0], value);
 };
 
@@ -3774,7 +3843,7 @@ proto.nitric.proto.deployments.v1.HttpTarget.prototype.setExecutionUnit = functi
  * Clears the field making it undefined.
  * @return {!proto.nitric.proto.deployments.v1.HttpTarget} returns this
  */
-proto.nitric.proto.deployments.v1.HttpTarget.prototype.clearExecutionUnit = function() {
+proto.nitric.proto.deployments.v1.HttpTarget.prototype.clearService = function() {
   return jspb.Message.setOneofField(this, 1, proto.nitric.proto.deployments.v1.HttpTarget.oneofGroups_[0], undefined);
 };
 
@@ -3783,7 +3852,7 @@ proto.nitric.proto.deployments.v1.HttpTarget.prototype.clearExecutionUnit = func
  * Returns whether this field is set.
  * @return {boolean}
  */
-proto.nitric.proto.deployments.v1.HttpTarget.prototype.hasExecutionUnit = function() {
+proto.nitric.proto.deployments.v1.HttpTarget.prototype.hasService = function() {
   return jspb.Message.getField(this, 1) != null;
 };
 
@@ -4381,7 +4450,7 @@ proto.nitric.proto.deployments.v1.WebsocketTarget.oneofGroups_ = [[1]];
  */
 proto.nitric.proto.deployments.v1.WebsocketTarget.TargetCase = {
   TARGET_NOT_SET: 0,
-  EXECUTION_UNIT: 1
+  SERVICE: 1
 };
 
 /**
@@ -4422,7 +4491,7 @@ proto.nitric.proto.deployments.v1.WebsocketTarget.prototype.toObject = function(
  */
 proto.nitric.proto.deployments.v1.WebsocketTarget.toObject = function(includeInstance, msg) {
   var f, obj = {
-    executionUnit: jspb.Message.getFieldWithDefault(msg, 1, "")
+    service: jspb.Message.getFieldWithDefault(msg, 1, "")
   };
 
   if (includeInstance) {
@@ -4461,7 +4530,7 @@ proto.nitric.proto.deployments.v1.WebsocketTarget.deserializeBinaryFromReader = 
     switch (field) {
     case 1:
       var value = /** @type {string} */ (reader.readString());
-      msg.setExecutionUnit(value);
+      msg.setService(value);
       break;
     default:
       reader.skipField();
@@ -4503,10 +4572,10 @@ proto.nitric.proto.deployments.v1.WebsocketTarget.serializeBinaryToWriter = func
 
 
 /**
- * optional string execution_unit = 1;
+ * optional string service = 1;
  * @return {string}
  */
-proto.nitric.proto.deployments.v1.WebsocketTarget.prototype.getExecutionUnit = function() {
+proto.nitric.proto.deployments.v1.WebsocketTarget.prototype.getService = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
 };
 
@@ -4515,7 +4584,7 @@ proto.nitric.proto.deployments.v1.WebsocketTarget.prototype.getExecutionUnit = f
  * @param {string} value
  * @return {!proto.nitric.proto.deployments.v1.WebsocketTarget} returns this
  */
-proto.nitric.proto.deployments.v1.WebsocketTarget.prototype.setExecutionUnit = function(value) {
+proto.nitric.proto.deployments.v1.WebsocketTarget.prototype.setService = function(value) {
   return jspb.Message.setOneofField(this, 1, proto.nitric.proto.deployments.v1.WebsocketTarget.oneofGroups_[0], value);
 };
 
@@ -4524,7 +4593,7 @@ proto.nitric.proto.deployments.v1.WebsocketTarget.prototype.setExecutionUnit = f
  * Clears the field making it undefined.
  * @return {!proto.nitric.proto.deployments.v1.WebsocketTarget} returns this
  */
-proto.nitric.proto.deployments.v1.WebsocketTarget.prototype.clearExecutionUnit = function() {
+proto.nitric.proto.deployments.v1.WebsocketTarget.prototype.clearService = function() {
   return jspb.Message.setOneofField(this, 1, proto.nitric.proto.deployments.v1.WebsocketTarget.oneofGroups_[0], undefined);
 };
 
@@ -4533,7 +4602,7 @@ proto.nitric.proto.deployments.v1.WebsocketTarget.prototype.clearExecutionUnit =
  * Returns whether this field is set.
  * @return {boolean}
  */
-proto.nitric.proto.deployments.v1.WebsocketTarget.prototype.hasExecutionUnit = function() {
+proto.nitric.proto.deployments.v1.WebsocketTarget.prototype.hasService = function() {
   return jspb.Message.getField(this, 1) != null;
 };
 
@@ -4554,7 +4623,7 @@ proto.nitric.proto.deployments.v1.ScheduleTarget.oneofGroups_ = [[1]];
  */
 proto.nitric.proto.deployments.v1.ScheduleTarget.TargetCase = {
   TARGET_NOT_SET: 0,
-  EXECUTION_UNIT: 1
+  SERVICE: 1
 };
 
 /**
@@ -4595,7 +4664,7 @@ proto.nitric.proto.deployments.v1.ScheduleTarget.prototype.toObject = function(o
  */
 proto.nitric.proto.deployments.v1.ScheduleTarget.toObject = function(includeInstance, msg) {
   var f, obj = {
-    executionUnit: jspb.Message.getFieldWithDefault(msg, 1, "")
+    service: jspb.Message.getFieldWithDefault(msg, 1, "")
   };
 
   if (includeInstance) {
@@ -4634,7 +4703,7 @@ proto.nitric.proto.deployments.v1.ScheduleTarget.deserializeBinaryFromReader = f
     switch (field) {
     case 1:
       var value = /** @type {string} */ (reader.readString());
-      msg.setExecutionUnit(value);
+      msg.setService(value);
       break;
     default:
       reader.skipField();
@@ -4676,10 +4745,10 @@ proto.nitric.proto.deployments.v1.ScheduleTarget.serializeBinaryToWriter = funct
 
 
 /**
- * optional string execution_unit = 1;
+ * optional string service = 1;
  * @return {string}
  */
-proto.nitric.proto.deployments.v1.ScheduleTarget.prototype.getExecutionUnit = function() {
+proto.nitric.proto.deployments.v1.ScheduleTarget.prototype.getService = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
 };
 
@@ -4688,7 +4757,7 @@ proto.nitric.proto.deployments.v1.ScheduleTarget.prototype.getExecutionUnit = fu
  * @param {string} value
  * @return {!proto.nitric.proto.deployments.v1.ScheduleTarget} returns this
  */
-proto.nitric.proto.deployments.v1.ScheduleTarget.prototype.setExecutionUnit = function(value) {
+proto.nitric.proto.deployments.v1.ScheduleTarget.prototype.setService = function(value) {
   return jspb.Message.setOneofField(this, 1, proto.nitric.proto.deployments.v1.ScheduleTarget.oneofGroups_[0], value);
 };
 
@@ -4697,7 +4766,7 @@ proto.nitric.proto.deployments.v1.ScheduleTarget.prototype.setExecutionUnit = fu
  * Clears the field making it undefined.
  * @return {!proto.nitric.proto.deployments.v1.ScheduleTarget} returns this
  */
-proto.nitric.proto.deployments.v1.ScheduleTarget.prototype.clearExecutionUnit = function() {
+proto.nitric.proto.deployments.v1.ScheduleTarget.prototype.clearService = function() {
   return jspb.Message.setOneofField(this, 1, proto.nitric.proto.deployments.v1.ScheduleTarget.oneofGroups_[0], undefined);
 };
 
@@ -4706,11 +4775,37 @@ proto.nitric.proto.deployments.v1.ScheduleTarget.prototype.clearExecutionUnit = 
  * Returns whether this field is set.
  * @return {boolean}
  */
-proto.nitric.proto.deployments.v1.ScheduleTarget.prototype.hasExecutionUnit = function() {
+proto.nitric.proto.deployments.v1.ScheduleTarget.prototype.hasService = function() {
   return jspb.Message.getField(this, 1) != null;
 };
 
 
+
+/**
+ * Oneof group definitions for this message. Each group defines the field
+ * numbers belonging to that group. When of these fields' value is set, all
+ * other fields in the group are cleared. During deserialization, if multiple
+ * fields are encountered for a group, only the last value seen will be kept.
+ * @private {!Array<!Array<number>>}
+ * @const
+ */
+proto.nitric.proto.deployments.v1.Schedule.oneofGroups_ = [[10,11]];
+
+/**
+ * @enum {number}
+ */
+proto.nitric.proto.deployments.v1.Schedule.CadenceCase = {
+  CADENCE_NOT_SET: 0,
+  EVERY: 10,
+  CRON: 11
+};
+
+/**
+ * @return {proto.nitric.proto.deployments.v1.Schedule.CadenceCase}
+ */
+proto.nitric.proto.deployments.v1.Schedule.prototype.getCadenceCase = function() {
+  return /** @type {proto.nitric.proto.deployments.v1.Schedule.CadenceCase} */(jspb.Message.computeOneofCase(this, proto.nitric.proto.deployments.v1.Schedule.oneofGroups_[0]));
+};
 
 
 
@@ -4743,8 +4838,9 @@ proto.nitric.proto.deployments.v1.Schedule.prototype.toObject = function(opt_inc
  */
 proto.nitric.proto.deployments.v1.Schedule.toObject = function(includeInstance, msg) {
   var f, obj = {
-    cron: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    target: (f = msg.getTarget()) && proto.nitric.proto.deployments.v1.ScheduleTarget.toObject(includeInstance, f)
+    target: (f = msg.getTarget()) && proto.nitric.proto.deployments.v1.ScheduleTarget.toObject(includeInstance, f),
+    every: (f = msg.getEvery()) && proto.nitric.proto.deployments.v1.ScheduleEvery.toObject(includeInstance, f),
+    cron: (f = msg.getCron()) && proto.nitric.proto.deployments.v1.ScheduleCron.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -4782,13 +4878,19 @@ proto.nitric.proto.deployments.v1.Schedule.deserializeBinaryFromReader = functio
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
-      msg.setCron(value);
-      break;
-    case 2:
       var value = new proto.nitric.proto.deployments.v1.ScheduleTarget;
       reader.readMessage(value,proto.nitric.proto.deployments.v1.ScheduleTarget.deserializeBinaryFromReader);
       msg.setTarget(value);
+      break;
+    case 10:
+      var value = new proto.nitric.proto.deployments.v1.ScheduleEvery;
+      reader.readMessage(value,proto.nitric.proto.deployments.v1.ScheduleEvery.deserializeBinaryFromReader);
+      msg.setEvery(value);
+      break;
+    case 11:
+      var value = new proto.nitric.proto.deployments.v1.ScheduleCron;
+      reader.readMessage(value,proto.nitric.proto.deployments.v1.ScheduleCron.deserializeBinaryFromReader);
+      msg.setCron(value);
       break;
     default:
       reader.skipField();
@@ -4819,49 +4921,40 @@ proto.nitric.proto.deployments.v1.Schedule.prototype.serializeBinary = function(
  */
 proto.nitric.proto.deployments.v1.Schedule.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
-  f = message.getCron();
-  if (f.length > 0) {
-    writer.writeString(
-      1,
-      f
-    );
-  }
   f = message.getTarget();
   if (f != null) {
     writer.writeMessage(
-      2,
+      1,
       f,
       proto.nitric.proto.deployments.v1.ScheduleTarget.serializeBinaryToWriter
     );
   }
+  f = message.getEvery();
+  if (f != null) {
+    writer.writeMessage(
+      10,
+      f,
+      proto.nitric.proto.deployments.v1.ScheduleEvery.serializeBinaryToWriter
+    );
+  }
+  f = message.getCron();
+  if (f != null) {
+    writer.writeMessage(
+      11,
+      f,
+      proto.nitric.proto.deployments.v1.ScheduleCron.serializeBinaryToWriter
+    );
+  }
 };
 
 
 /**
- * optional string cron = 1;
- * @return {string}
- */
-proto.nitric.proto.deployments.v1.Schedule.prototype.getCron = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
-};
-
-
-/**
- * @param {string} value
- * @return {!proto.nitric.proto.deployments.v1.Schedule} returns this
- */
-proto.nitric.proto.deployments.v1.Schedule.prototype.setCron = function(value) {
-  return jspb.Message.setProto3StringField(this, 1, value);
-};
-
-
-/**
- * optional ScheduleTarget target = 2;
+ * optional ScheduleTarget target = 1;
  * @return {?proto.nitric.proto.deployments.v1.ScheduleTarget}
  */
 proto.nitric.proto.deployments.v1.Schedule.prototype.getTarget = function() {
   return /** @type{?proto.nitric.proto.deployments.v1.ScheduleTarget} */ (
-    jspb.Message.getWrapperField(this, proto.nitric.proto.deployments.v1.ScheduleTarget, 2));
+    jspb.Message.getWrapperField(this, proto.nitric.proto.deployments.v1.ScheduleTarget, 1));
 };
 
 
@@ -4870,7 +4963,7 @@ proto.nitric.proto.deployments.v1.Schedule.prototype.getTarget = function() {
  * @return {!proto.nitric.proto.deployments.v1.Schedule} returns this
 */
 proto.nitric.proto.deployments.v1.Schedule.prototype.setTarget = function(value) {
-  return jspb.Message.setWrapperField(this, 2, value);
+  return jspb.Message.setWrapperField(this, 1, value);
 };
 
 
@@ -4888,7 +4981,341 @@ proto.nitric.proto.deployments.v1.Schedule.prototype.clearTarget = function() {
  * @return {boolean}
  */
 proto.nitric.proto.deployments.v1.Schedule.prototype.hasTarget = function() {
-  return jspb.Message.getField(this, 2) != null;
+  return jspb.Message.getField(this, 1) != null;
+};
+
+
+/**
+ * optional ScheduleEvery every = 10;
+ * @return {?proto.nitric.proto.deployments.v1.ScheduleEvery}
+ */
+proto.nitric.proto.deployments.v1.Schedule.prototype.getEvery = function() {
+  return /** @type{?proto.nitric.proto.deployments.v1.ScheduleEvery} */ (
+    jspb.Message.getWrapperField(this, proto.nitric.proto.deployments.v1.ScheduleEvery, 10));
+};
+
+
+/**
+ * @param {?proto.nitric.proto.deployments.v1.ScheduleEvery|undefined} value
+ * @return {!proto.nitric.proto.deployments.v1.Schedule} returns this
+*/
+proto.nitric.proto.deployments.v1.Schedule.prototype.setEvery = function(value) {
+  return jspb.Message.setOneofWrapperField(this, 10, proto.nitric.proto.deployments.v1.Schedule.oneofGroups_[0], value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.nitric.proto.deployments.v1.Schedule} returns this
+ */
+proto.nitric.proto.deployments.v1.Schedule.prototype.clearEvery = function() {
+  return this.setEvery(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.nitric.proto.deployments.v1.Schedule.prototype.hasEvery = function() {
+  return jspb.Message.getField(this, 10) != null;
+};
+
+
+/**
+ * optional ScheduleCron cron = 11;
+ * @return {?proto.nitric.proto.deployments.v1.ScheduleCron}
+ */
+proto.nitric.proto.deployments.v1.Schedule.prototype.getCron = function() {
+  return /** @type{?proto.nitric.proto.deployments.v1.ScheduleCron} */ (
+    jspb.Message.getWrapperField(this, proto.nitric.proto.deployments.v1.ScheduleCron, 11));
+};
+
+
+/**
+ * @param {?proto.nitric.proto.deployments.v1.ScheduleCron|undefined} value
+ * @return {!proto.nitric.proto.deployments.v1.Schedule} returns this
+*/
+proto.nitric.proto.deployments.v1.Schedule.prototype.setCron = function(value) {
+  return jspb.Message.setOneofWrapperField(this, 11, proto.nitric.proto.deployments.v1.Schedule.oneofGroups_[0], value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.nitric.proto.deployments.v1.Schedule} returns this
+ */
+proto.nitric.proto.deployments.v1.Schedule.prototype.clearCron = function() {
+  return this.setCron(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.nitric.proto.deployments.v1.Schedule.prototype.hasCron = function() {
+  return jspb.Message.getField(this, 11) != null;
+};
+
+
+
+
+
+if (jspb.Message.GENERATE_TO_OBJECT) {
+/**
+ * Creates an object representation of this proto.
+ * Field names that are reserved in JavaScript and will be renamed to pb_name.
+ * Optional fields that are not set will be set to undefined.
+ * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
+ * For the list of reserved names please see:
+ *     net/proto2/compiler/js/internal/generator.cc#kKeyword.
+ * @param {boolean=} opt_includeInstance Deprecated. whether to include the
+ *     JSPB instance for transitional soy proto support:
+ *     http://goto/soy-param-migration
+ * @return {!Object}
+ */
+proto.nitric.proto.deployments.v1.ScheduleEvery.prototype.toObject = function(opt_includeInstance) {
+  return proto.nitric.proto.deployments.v1.ScheduleEvery.toObject(opt_includeInstance, this);
+};
+
+
+/**
+ * Static version of the {@see toObject} method.
+ * @param {boolean|undefined} includeInstance Deprecated. Whether to include
+ *     the JSPB instance for transitional soy proto support:
+ *     http://goto/soy-param-migration
+ * @param {!proto.nitric.proto.deployments.v1.ScheduleEvery} msg The msg instance to transform.
+ * @return {!Object}
+ * @suppress {unusedLocalVariables} f is only used for nested messages
+ */
+proto.nitric.proto.deployments.v1.ScheduleEvery.toObject = function(includeInstance, msg) {
+  var f, obj = {
+    rate: jspb.Message.getFieldWithDefault(msg, 1, "")
+  };
+
+  if (includeInstance) {
+    obj.$jspbMessageInstance = msg;
+  }
+  return obj;
+};
+}
+
+
+/**
+ * Deserializes binary data (in protobuf wire format).
+ * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @return {!proto.nitric.proto.deployments.v1.ScheduleEvery}
+ */
+proto.nitric.proto.deployments.v1.ScheduleEvery.deserializeBinary = function(bytes) {
+  var reader = new jspb.BinaryReader(bytes);
+  var msg = new proto.nitric.proto.deployments.v1.ScheduleEvery;
+  return proto.nitric.proto.deployments.v1.ScheduleEvery.deserializeBinaryFromReader(msg, reader);
+};
+
+
+/**
+ * Deserializes binary data (in protobuf wire format) from the
+ * given reader into the given message object.
+ * @param {!proto.nitric.proto.deployments.v1.ScheduleEvery} msg The message object to deserialize into.
+ * @param {!jspb.BinaryReader} reader The BinaryReader to use.
+ * @return {!proto.nitric.proto.deployments.v1.ScheduleEvery}
+ */
+proto.nitric.proto.deployments.v1.ScheduleEvery.deserializeBinaryFromReader = function(msg, reader) {
+  while (reader.nextField()) {
+    if (reader.isEndGroup()) {
+      break;
+    }
+    var field = reader.getFieldNumber();
+    switch (field) {
+    case 1:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setRate(value);
+      break;
+    default:
+      reader.skipField();
+      break;
+    }
+  }
+  return msg;
+};
+
+
+/**
+ * Serializes the message to binary data (in protobuf wire format).
+ * @return {!Uint8Array}
+ */
+proto.nitric.proto.deployments.v1.ScheduleEvery.prototype.serializeBinary = function() {
+  var writer = new jspb.BinaryWriter();
+  proto.nitric.proto.deployments.v1.ScheduleEvery.serializeBinaryToWriter(this, writer);
+  return writer.getResultBuffer();
+};
+
+
+/**
+ * Serializes the given message to binary data (in protobuf wire
+ * format), writing to the given BinaryWriter.
+ * @param {!proto.nitric.proto.deployments.v1.ScheduleEvery} message
+ * @param {!jspb.BinaryWriter} writer
+ * @suppress {unusedLocalVariables} f is only used for nested messages
+ */
+proto.nitric.proto.deployments.v1.ScheduleEvery.serializeBinaryToWriter = function(message, writer) {
+  var f = undefined;
+  f = message.getRate();
+  if (f.length > 0) {
+    writer.writeString(
+      1,
+      f
+    );
+  }
+};
+
+
+/**
+ * optional string rate = 1;
+ * @return {string}
+ */
+proto.nitric.proto.deployments.v1.ScheduleEvery.prototype.getRate = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.nitric.proto.deployments.v1.ScheduleEvery} returns this
+ */
+proto.nitric.proto.deployments.v1.ScheduleEvery.prototype.setRate = function(value) {
+  return jspb.Message.setProto3StringField(this, 1, value);
+};
+
+
+
+
+
+if (jspb.Message.GENERATE_TO_OBJECT) {
+/**
+ * Creates an object representation of this proto.
+ * Field names that are reserved in JavaScript and will be renamed to pb_name.
+ * Optional fields that are not set will be set to undefined.
+ * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
+ * For the list of reserved names please see:
+ *     net/proto2/compiler/js/internal/generator.cc#kKeyword.
+ * @param {boolean=} opt_includeInstance Deprecated. whether to include the
+ *     JSPB instance for transitional soy proto support:
+ *     http://goto/soy-param-migration
+ * @return {!Object}
+ */
+proto.nitric.proto.deployments.v1.ScheduleCron.prototype.toObject = function(opt_includeInstance) {
+  return proto.nitric.proto.deployments.v1.ScheduleCron.toObject(opt_includeInstance, this);
+};
+
+
+/**
+ * Static version of the {@see toObject} method.
+ * @param {boolean|undefined} includeInstance Deprecated. Whether to include
+ *     the JSPB instance for transitional soy proto support:
+ *     http://goto/soy-param-migration
+ * @param {!proto.nitric.proto.deployments.v1.ScheduleCron} msg The msg instance to transform.
+ * @return {!Object}
+ * @suppress {unusedLocalVariables} f is only used for nested messages
+ */
+proto.nitric.proto.deployments.v1.ScheduleCron.toObject = function(includeInstance, msg) {
+  var f, obj = {
+    expression: jspb.Message.getFieldWithDefault(msg, 1, "")
+  };
+
+  if (includeInstance) {
+    obj.$jspbMessageInstance = msg;
+  }
+  return obj;
+};
+}
+
+
+/**
+ * Deserializes binary data (in protobuf wire format).
+ * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @return {!proto.nitric.proto.deployments.v1.ScheduleCron}
+ */
+proto.nitric.proto.deployments.v1.ScheduleCron.deserializeBinary = function(bytes) {
+  var reader = new jspb.BinaryReader(bytes);
+  var msg = new proto.nitric.proto.deployments.v1.ScheduleCron;
+  return proto.nitric.proto.deployments.v1.ScheduleCron.deserializeBinaryFromReader(msg, reader);
+};
+
+
+/**
+ * Deserializes binary data (in protobuf wire format) from the
+ * given reader into the given message object.
+ * @param {!proto.nitric.proto.deployments.v1.ScheduleCron} msg The message object to deserialize into.
+ * @param {!jspb.BinaryReader} reader The BinaryReader to use.
+ * @return {!proto.nitric.proto.deployments.v1.ScheduleCron}
+ */
+proto.nitric.proto.deployments.v1.ScheduleCron.deserializeBinaryFromReader = function(msg, reader) {
+  while (reader.nextField()) {
+    if (reader.isEndGroup()) {
+      break;
+    }
+    var field = reader.getFieldNumber();
+    switch (field) {
+    case 1:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setExpression(value);
+      break;
+    default:
+      reader.skipField();
+      break;
+    }
+  }
+  return msg;
+};
+
+
+/**
+ * Serializes the message to binary data (in protobuf wire format).
+ * @return {!Uint8Array}
+ */
+proto.nitric.proto.deployments.v1.ScheduleCron.prototype.serializeBinary = function() {
+  var writer = new jspb.BinaryWriter();
+  proto.nitric.proto.deployments.v1.ScheduleCron.serializeBinaryToWriter(this, writer);
+  return writer.getResultBuffer();
+};
+
+
+/**
+ * Serializes the given message to binary data (in protobuf wire
+ * format), writing to the given BinaryWriter.
+ * @param {!proto.nitric.proto.deployments.v1.ScheduleCron} message
+ * @param {!jspb.BinaryWriter} writer
+ * @suppress {unusedLocalVariables} f is only used for nested messages
+ */
+proto.nitric.proto.deployments.v1.ScheduleCron.serializeBinaryToWriter = function(message, writer) {
+  var f = undefined;
+  f = message.getExpression();
+  if (f.length > 0) {
+    writer.writeString(
+      1,
+      f
+    );
+  }
+};
+
+
+/**
+ * optional string expression = 1;
+ * @return {string}
+ */
+proto.nitric.proto.deployments.v1.ScheduleCron.prototype.getExpression = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.nitric.proto.deployments.v1.ScheduleCron} returns this
+ */
+proto.nitric.proto.deployments.v1.ScheduleCron.prototype.setExpression = function(value) {
+  return jspb.Message.setProto3StringField(this, 1, value);
 };
 
 
@@ -4908,7 +5335,7 @@ proto.nitric.proto.deployments.v1.Resource.oneofGroups_ = [[10,11,12,13,14,15,16
  */
 proto.nitric.proto.deployments.v1.Resource.ConfigCase = {
   CONFIG_NOT_SET: 0,
-  EXECUTION_UNIT: 10,
+  SERVICE: 10,
   BUCKET: 11,
   TOPIC: 12,
   API: 13,
@@ -4958,9 +5385,8 @@ proto.nitric.proto.deployments.v1.Resource.prototype.toObject = function(opt_inc
  */
 proto.nitric.proto.deployments.v1.Resource.toObject = function(includeInstance, msg) {
   var f, obj = {
-    name: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    type: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    executionUnit: (f = msg.getExecutionUnit()) && proto.nitric.proto.deployments.v1.ExecutionUnit.toObject(includeInstance, f),
+    id: (f = msg.getId()) && nitric_proto_resources_v1_resources_pb.ResourceIdentifier.toObject(includeInstance, f),
+    service: (f = msg.getService()) && proto.nitric.proto.deployments.v1.Service.toObject(includeInstance, f),
     bucket: (f = msg.getBucket()) && proto.nitric.proto.deployments.v1.Bucket.toObject(includeInstance, f),
     topic: (f = msg.getTopic()) && proto.nitric.proto.deployments.v1.Topic.toObject(includeInstance, f),
     api: (f = msg.getApi()) && proto.nitric.proto.deployments.v1.Api.toObject(includeInstance, f),
@@ -5007,17 +5433,14 @@ proto.nitric.proto.deployments.v1.Resource.deserializeBinaryFromReader = functio
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
-      msg.setName(value);
-      break;
-    case 2:
-      var value = /** @type {!proto.nitric.proto.resources.v1.ResourceType} */ (reader.readEnum());
-      msg.setType(value);
+      var value = new nitric_proto_resources_v1_resources_pb.ResourceIdentifier;
+      reader.readMessage(value,nitric_proto_resources_v1_resources_pb.ResourceIdentifier.deserializeBinaryFromReader);
+      msg.setId(value);
       break;
     case 10:
-      var value = new proto.nitric.proto.deployments.v1.ExecutionUnit;
-      reader.readMessage(value,proto.nitric.proto.deployments.v1.ExecutionUnit.deserializeBinaryFromReader);
-      msg.setExecutionUnit(value);
+      var value = new proto.nitric.proto.deployments.v1.Service;
+      reader.readMessage(value,proto.nitric.proto.deployments.v1.Service.deserializeBinaryFromReader);
+      msg.setService(value);
       break;
     case 11:
       var value = new proto.nitric.proto.deployments.v1.Bucket;
@@ -5093,26 +5516,20 @@ proto.nitric.proto.deployments.v1.Resource.prototype.serializeBinary = function(
  */
 proto.nitric.proto.deployments.v1.Resource.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
-  f = message.getName();
-  if (f.length > 0) {
-    writer.writeString(
+  f = message.getId();
+  if (f != null) {
+    writer.writeMessage(
       1,
-      f
+      f,
+      nitric_proto_resources_v1_resources_pb.ResourceIdentifier.serializeBinaryToWriter
     );
   }
-  f = message.getType();
-  if (f !== 0.0) {
-    writer.writeEnum(
-      2,
-      f
-    );
-  }
-  f = message.getExecutionUnit();
+  f = message.getService();
   if (f != null) {
     writer.writeMessage(
       10,
       f,
-      proto.nitric.proto.deployments.v1.ExecutionUnit.serializeBinaryToWriter
+      proto.nitric.proto.deployments.v1.Service.serializeBinaryToWriter
     );
   }
   f = message.getBucket();
@@ -5191,56 +5608,57 @@ proto.nitric.proto.deployments.v1.Resource.serializeBinaryToWriter = function(me
 
 
 /**
- * optional string name = 1;
- * @return {string}
+ * optional nitric.proto.resources.v1.ResourceIdentifier id = 1;
+ * @return {?proto.nitric.proto.resources.v1.ResourceIdentifier}
  */
-proto.nitric.proto.deployments.v1.Resource.prototype.getName = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
+proto.nitric.proto.deployments.v1.Resource.prototype.getId = function() {
+  return /** @type{?proto.nitric.proto.resources.v1.ResourceIdentifier} */ (
+    jspb.Message.getWrapperField(this, nitric_proto_resources_v1_resources_pb.ResourceIdentifier, 1));
 };
 
 
 /**
- * @param {string} value
- * @return {!proto.nitric.proto.deployments.v1.Resource} returns this
- */
-proto.nitric.proto.deployments.v1.Resource.prototype.setName = function(value) {
-  return jspb.Message.setProto3StringField(this, 1, value);
-};
-
-
-/**
- * optional nitric.proto.resources.v1.ResourceType type = 2;
- * @return {!proto.nitric.proto.resources.v1.ResourceType}
- */
-proto.nitric.proto.deployments.v1.Resource.prototype.getType = function() {
-  return /** @type {!proto.nitric.proto.resources.v1.ResourceType} */ (jspb.Message.getFieldWithDefault(this, 2, 0));
-};
-
-
-/**
- * @param {!proto.nitric.proto.resources.v1.ResourceType} value
- * @return {!proto.nitric.proto.deployments.v1.Resource} returns this
- */
-proto.nitric.proto.deployments.v1.Resource.prototype.setType = function(value) {
-  return jspb.Message.setProto3EnumField(this, 2, value);
-};
-
-
-/**
- * optional ExecutionUnit execution_unit = 10;
- * @return {?proto.nitric.proto.deployments.v1.ExecutionUnit}
- */
-proto.nitric.proto.deployments.v1.Resource.prototype.getExecutionUnit = function() {
-  return /** @type{?proto.nitric.proto.deployments.v1.ExecutionUnit} */ (
-    jspb.Message.getWrapperField(this, proto.nitric.proto.deployments.v1.ExecutionUnit, 10));
-};
-
-
-/**
- * @param {?proto.nitric.proto.deployments.v1.ExecutionUnit|undefined} value
+ * @param {?proto.nitric.proto.resources.v1.ResourceIdentifier|undefined} value
  * @return {!proto.nitric.proto.deployments.v1.Resource} returns this
 */
-proto.nitric.proto.deployments.v1.Resource.prototype.setExecutionUnit = function(value) {
+proto.nitric.proto.deployments.v1.Resource.prototype.setId = function(value) {
+  return jspb.Message.setWrapperField(this, 1, value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.nitric.proto.deployments.v1.Resource} returns this
+ */
+proto.nitric.proto.deployments.v1.Resource.prototype.clearId = function() {
+  return this.setId(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.nitric.proto.deployments.v1.Resource.prototype.hasId = function() {
+  return jspb.Message.getField(this, 1) != null;
+};
+
+
+/**
+ * optional Service service = 10;
+ * @return {?proto.nitric.proto.deployments.v1.Service}
+ */
+proto.nitric.proto.deployments.v1.Resource.prototype.getService = function() {
+  return /** @type{?proto.nitric.proto.deployments.v1.Service} */ (
+    jspb.Message.getWrapperField(this, proto.nitric.proto.deployments.v1.Service, 10));
+};
+
+
+/**
+ * @param {?proto.nitric.proto.deployments.v1.Service|undefined} value
+ * @return {!proto.nitric.proto.deployments.v1.Resource} returns this
+*/
+proto.nitric.proto.deployments.v1.Resource.prototype.setService = function(value) {
   return jspb.Message.setOneofWrapperField(this, 10, proto.nitric.proto.deployments.v1.Resource.oneofGroups_[0], value);
 };
 
@@ -5249,8 +5667,8 @@ proto.nitric.proto.deployments.v1.Resource.prototype.setExecutionUnit = function
  * Clears the message field making it undefined.
  * @return {!proto.nitric.proto.deployments.v1.Resource} returns this
  */
-proto.nitric.proto.deployments.v1.Resource.prototype.clearExecutionUnit = function() {
-  return this.setExecutionUnit(undefined);
+proto.nitric.proto.deployments.v1.Resource.prototype.clearService = function() {
+  return this.setService(undefined);
 };
 
 
@@ -5258,7 +5676,7 @@ proto.nitric.proto.deployments.v1.Resource.prototype.clearExecutionUnit = functi
  * Returns whether this field is set.
  * @return {boolean}
  */
-proto.nitric.proto.deployments.v1.Resource.prototype.hasExecutionUnit = function() {
+proto.nitric.proto.deployments.v1.Resource.prototype.hasService = function() {
   return jspb.Message.getField(this, 10) != null;
 };
 
@@ -6019,5 +6437,26 @@ proto.nitric.proto.deployments.v1.Spec.prototype.clearResourcesList = function()
   return this.setResourcesList([]);
 };
 
+
+/**
+ * @enum {number}
+ */
+proto.nitric.proto.deployments.v1.ResourceDeploymentAction = {
+  CREATE: 0,
+  UPDATE: 1,
+  REPLACE: 2,
+  SAME: 3,
+  DELETE: 4
+};
+
+/**
+ * @enum {number}
+ */
+proto.nitric.proto.deployments.v1.ResourceDeploymentStatus = {
+  PENDING: 0,
+  IN_PROGRESS: 1,
+  SUCCESS: 2,
+  FAILED: 3
+};
 
 goog.object.extend(exports, proto.nitric.proto.deployments.v1);

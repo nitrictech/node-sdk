@@ -48,6 +48,28 @@ function deserialize_nitric_proto_websockets_v1_WebsocketCloseResponse(buffer_ar
   return nitric_proto_websockets_v1_websockets_pb.WebsocketCloseResponse.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
+function serialize_nitric_proto_websockets_v1_WebsocketDetailsRequest(arg) {
+  if (!(arg instanceof nitric_proto_websockets_v1_websockets_pb.WebsocketDetailsRequest)) {
+    throw new Error('Expected argument of type nitric.proto.websockets.v1.WebsocketDetailsRequest');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_nitric_proto_websockets_v1_WebsocketDetailsRequest(buffer_arg) {
+  return nitric_proto_websockets_v1_websockets_pb.WebsocketDetailsRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_nitric_proto_websockets_v1_WebsocketDetailsResponse(arg) {
+  if (!(arg instanceof nitric_proto_websockets_v1_websockets_pb.WebsocketDetailsResponse)) {
+    throw new Error('Expected argument of type nitric.proto.websockets.v1.WebsocketDetailsResponse');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_nitric_proto_websockets_v1_WebsocketDetailsResponse(buffer_arg) {
+  return nitric_proto_websockets_v1_websockets_pb.WebsocketDetailsResponse.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
 function serialize_nitric_proto_websockets_v1_WebsocketSendRequest(arg) {
   if (!(arg instanceof nitric_proto_websockets_v1_websockets_pb.WebsocketSendRequest)) {
     throw new Error('Expected argument of type nitric.proto.websockets.v1.WebsocketSendRequest');
@@ -96,6 +118,18 @@ close: {
     requestDeserialize: deserialize_nitric_proto_websockets_v1_WebsocketCloseRequest,
     responseSerialize: serialize_nitric_proto_websockets_v1_WebsocketCloseResponse,
     responseDeserialize: deserialize_nitric_proto_websockets_v1_WebsocketCloseResponse,
+  },
+  // Retrieve details about an API
+details: {
+    path: '/nitric.proto.websockets.v1.Websocket/Details',
+    requestStream: false,
+    responseStream: false,
+    requestType: nitric_proto_websockets_v1_websockets_pb.WebsocketDetailsRequest,
+    responseType: nitric_proto_websockets_v1_websockets_pb.WebsocketDetailsResponse,
+    requestSerialize: serialize_nitric_proto_websockets_v1_WebsocketDetailsRequest,
+    requestDeserialize: deserialize_nitric_proto_websockets_v1_WebsocketDetailsRequest,
+    responseSerialize: serialize_nitric_proto_websockets_v1_WebsocketDetailsResponse,
+    responseDeserialize: deserialize_nitric_proto_websockets_v1_WebsocketDetailsResponse,
   },
 };
 

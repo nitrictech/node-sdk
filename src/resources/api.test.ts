@@ -14,10 +14,8 @@
 import * as faas from '../faas/index';
 import { api, ApiWorkerOptions } from '.';
 import { ResourcesClient } from '@nitric/proto/resources/v1/resources_grpc_pb';
-import {
-  ApiResourceDetails,
-  ResourceDetailsResponse,
-} from '@nitric/proto/resources/v1/resources_pb';
+import { ApiDetailsResponse } from '../gen/nitric/proto/apis/v1/apis_pb';
+import { ApiClient } from '../gen/nitric/proto/apis/v1/apis_grpc_pb';
 
 jest.mock('../faas/index');
 
@@ -112,16 +110,10 @@ describe('Api', () => {
       beforeAll(async () => {
         // mock the details api
         detailsSpy = jest
-          .spyOn(ResourcesClient.prototype, 'details')
+          .spyOn(ApiClient.prototype, 'details')
           .mockImplementationOnce((request, callback: any) => {
-            const resp = new ResourceDetailsResponse();
-            resp.setId('mock-id');
-            resp.setProvider('mock-provider');
-            resp.setService('mock-service');
-
-            const api = new ApiResourceDetails();
-            api.setUrl('http://localhost:9001/test');
-            resp.setApi(api);
+            const resp = new ApiDetailsResponse();
+            resp.setUrl('http://localhost:9001/test');
 
             callback(null, resp);
 
@@ -137,39 +129,6 @@ describe('Api', () => {
 
       it('should return the url', async () => {
         await expect(a.url()).resolves.toBe('http://localhost:9001/test');
-      });
-    });
-
-    describe('when non api details are returned', () => {
-      let a;
-      let detailsSpy;
-
-      beforeAll(async () => {
-        // mock the details api
-        detailsSpy = jest
-          .spyOn(ResourcesClient.prototype, 'details')
-          .mockImplementationOnce((request, callback: any) => {
-            const resp = new ResourceDetailsResponse();
-            resp.setId('mock-id');
-            resp.setProvider('mock-provider');
-            resp.setService('mock-service');
-
-            callback(null, resp);
-
-            return null as any;
-          });
-
-        a = await api('main');
-      });
-
-      afterAll(() => {
-        jest.resetAllMocks();
-      });
-
-      it('should throw an error', async () => {
-        await expect(a.url()).rejects.toThrowError(
-          'Unexpected details in response. Expected API details'
-        );
       });
     });
   });

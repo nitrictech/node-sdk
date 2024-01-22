@@ -3,6 +3,46 @@
 
 import * as jspb from "google-protobuf";
 
+export class ApiDetailsRequest extends jspb.Message {
+  getApiName(): string;
+  setApiName(value: string): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): ApiDetailsRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: ApiDetailsRequest): ApiDetailsRequest.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: ApiDetailsRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): ApiDetailsRequest;
+  static deserializeBinaryFromReader(message: ApiDetailsRequest, reader: jspb.BinaryReader): ApiDetailsRequest;
+}
+
+export namespace ApiDetailsRequest {
+  export type AsObject = {
+    apiName: string,
+  }
+}
+
+export class ApiDetailsResponse extends jspb.Message {
+  getUrl(): string;
+  setUrl(value: string): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): ApiDetailsResponse.AsObject;
+  static toObject(includeInstance: boolean, msg: ApiDetailsResponse): ApiDetailsResponse.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: ApiDetailsResponse, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): ApiDetailsResponse;
+  static deserializeBinaryFromReader(message: ApiDetailsResponse, reader: jspb.BinaryReader): ApiDetailsResponse;
+}
+
+export namespace ApiDetailsResponse {
+  export type AsObject = {
+    url: string,
+  }
+}
+
 export class ClientMessage extends jspb.Message {
   getId(): string;
   setId(value: string): void;

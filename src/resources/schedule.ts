@@ -19,7 +19,7 @@ import {
   ClientMessage,
   RegistrationRequest,
   ScheduleCron,
-  ScheduleRate,
+  ScheduleEvery,
   ServerMessage,
 } from '@nitric/proto/schedules/v1/schedules_pb';
 import { ScheduleMiddleware, createHandler } from '../helpers/handler';
@@ -74,9 +74,9 @@ const handleStart = (schedule: Rate | Cron) =>
 
     if (schedule instanceof Rate) {
       initRequest.setScheduleName(schedule.scheduleName);
-      const rate = new ScheduleRate();
+      const rate = new ScheduleEvery();
       rate.setRate(schedule.rate);
-      initRequest.setRate(rate);
+      initRequest.setEvery(rate);
     } else if (schedule instanceof Cron) {
       initRequest.setScheduleName(schedule.scheduleName);
       const cron = new ScheduleCron();

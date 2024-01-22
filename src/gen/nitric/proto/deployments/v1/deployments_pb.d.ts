@@ -6,7 +6,7 @@ import * as google_protobuf_struct_pb from "google-protobuf/google/protobuf/stru
 import * as nitric_proto_resources_v1_resources_pb from "../../../../nitric/proto/resources/v1/resources_pb";
 import * as nitric_proto_storage_v1_storage_pb from "../../../../nitric/proto/storage/v1/storage_pb";
 
-export class DeployUpRequest extends jspb.Message {
+export class DeploymentUpRequest extends jspb.Message {
   hasSpec(): boolean;
   clearSpec(): void;
   getSpec(): Spec | undefined;
@@ -21,16 +21,16 @@ export class DeployUpRequest extends jspb.Message {
   setInteractive(value: boolean): void;
 
   serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): DeployUpRequest.AsObject;
-  static toObject(includeInstance: boolean, msg: DeployUpRequest): DeployUpRequest.AsObject;
+  toObject(includeInstance?: boolean): DeploymentUpRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: DeploymentUpRequest): DeploymentUpRequest.AsObject;
   static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
   static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
-  static serializeBinaryToWriter(message: DeployUpRequest, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): DeployUpRequest;
-  static deserializeBinaryFromReader(message: DeployUpRequest, reader: jspb.BinaryReader): DeployUpRequest;
+  static serializeBinaryToWriter(message: DeploymentUpRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): DeploymentUpRequest;
+  static deserializeBinaryFromReader(message: DeploymentUpRequest, reader: jspb.BinaryReader): DeploymentUpRequest;
 }
 
-export namespace DeployUpRequest {
+export namespace DeploymentUpRequest {
   export type AsObject = {
     spec?: Spec.AsObject,
     attributes?: google_protobuf_struct_pb.Struct.AsObject,
@@ -38,68 +38,93 @@ export namespace DeployUpRequest {
   }
 }
 
-export class DeployUpEvent extends jspb.Message {
+export class DeploymentUpEvent extends jspb.Message {
   hasMessage(): boolean;
   clearMessage(): void;
-  getMessage(): DeployEventMessage | undefined;
-  setMessage(value?: DeployEventMessage): void;
+  getMessage(): string;
+  setMessage(value: string): void;
+
+  hasUpdate(): boolean;
+  clearUpdate(): void;
+  getUpdate(): ResourceUpdate | undefined;
+  setUpdate(value?: ResourceUpdate): void;
 
   hasResult(): boolean;
   clearResult(): void;
-  getResult(): DeployUpEventResult | undefined;
-  setResult(value?: DeployUpEventResult): void;
+  getResult(): UpResult | undefined;
+  setResult(value?: UpResult): void;
 
-  getContentCase(): DeployUpEvent.ContentCase;
+  getContentCase(): DeploymentUpEvent.ContentCase;
   serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): DeployUpEvent.AsObject;
-  static toObject(includeInstance: boolean, msg: DeployUpEvent): DeployUpEvent.AsObject;
+  toObject(includeInstance?: boolean): DeploymentUpEvent.AsObject;
+  static toObject(includeInstance: boolean, msg: DeploymentUpEvent): DeploymentUpEvent.AsObject;
   static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
   static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
-  static serializeBinaryToWriter(message: DeployUpEvent, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): DeployUpEvent;
-  static deserializeBinaryFromReader(message: DeployUpEvent, reader: jspb.BinaryReader): DeployUpEvent;
+  static serializeBinaryToWriter(message: DeploymentUpEvent, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): DeploymentUpEvent;
+  static deserializeBinaryFromReader(message: DeploymentUpEvent, reader: jspb.BinaryReader): DeploymentUpEvent;
 }
 
-export namespace DeployUpEvent {
+export namespace DeploymentUpEvent {
   export type AsObject = {
-    message?: DeployEventMessage.AsObject,
-    result?: DeployUpEventResult.AsObject,
+    message: string,
+    update?: ResourceUpdate.AsObject,
+    result?: UpResult.AsObject,
   }
 
   export enum ContentCase {
     CONTENT_NOT_SET = 0,
     MESSAGE = 1,
-    RESULT = 2,
+    UPDATE = 2,
+    RESULT = 3,
   }
 }
 
-export class DeployEventMessage extends jspb.Message {
+export class ResourceUpdate extends jspb.Message {
+  hasId(): boolean;
+  clearId(): void;
+  getId(): nitric_proto_resources_v1_resources_pb.ResourceIdentifier | undefined;
+  setId(value?: nitric_proto_resources_v1_resources_pb.ResourceIdentifier): void;
+
+  getAction(): ResourceDeploymentActionMap[keyof ResourceDeploymentActionMap];
+  setAction(value: ResourceDeploymentActionMap[keyof ResourceDeploymentActionMap]): void;
+
+  getStatus(): ResourceDeploymentStatusMap[keyof ResourceDeploymentStatusMap];
+  setStatus(value: ResourceDeploymentStatusMap[keyof ResourceDeploymentStatusMap]): void;
+
+  getSubResource(): string;
+  setSubResource(value: string): void;
+
   getMessage(): string;
   setMessage(value: string): void;
 
   serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): DeployEventMessage.AsObject;
-  static toObject(includeInstance: boolean, msg: DeployEventMessage): DeployEventMessage.AsObject;
+  toObject(includeInstance?: boolean): ResourceUpdate.AsObject;
+  static toObject(includeInstance: boolean, msg: ResourceUpdate): ResourceUpdate.AsObject;
   static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
   static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
-  static serializeBinaryToWriter(message: DeployEventMessage, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): DeployEventMessage;
-  static deserializeBinaryFromReader(message: DeployEventMessage, reader: jspb.BinaryReader): DeployEventMessage;
+  static serializeBinaryToWriter(message: ResourceUpdate, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): ResourceUpdate;
+  static deserializeBinaryFromReader(message: ResourceUpdate, reader: jspb.BinaryReader): ResourceUpdate;
 }
 
-export namespace DeployEventMessage {
+export namespace ResourceUpdate {
   export type AsObject = {
+    id?: nitric_proto_resources_v1_resources_pb.ResourceIdentifier.AsObject,
+    action: ResourceDeploymentActionMap[keyof ResourceDeploymentActionMap],
+    status: ResourceDeploymentStatusMap[keyof ResourceDeploymentStatusMap],
+    subResource: string,
     message: string,
   }
 }
 
 export class UpResult extends jspb.Message {
-  hasStringResult(): boolean;
-  clearStringResult(): void;
-  getStringResult(): string;
-  setStringResult(value: string): void;
+  getSuccess(): boolean;
+  setSuccess(value: boolean): void;
 
-  getContentCase(): UpResult.ContentCase;
+  getDetails(): string;
+  setDetails(value: string): void;
+
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): UpResult.AsObject;
   static toObject(includeInstance: boolean, msg: UpResult): UpResult.AsObject;
@@ -112,42 +137,12 @@ export class UpResult extends jspb.Message {
 
 export namespace UpResult {
   export type AsObject = {
-    stringResult: string,
-  }
-
-  export enum ContentCase {
-    CONTENT_NOT_SET = 0,
-    STRING_RESULT = 1,
-  }
-}
-
-export class DeployUpEventResult extends jspb.Message {
-  getSuccess(): boolean;
-  setSuccess(value: boolean): void;
-
-  hasResult(): boolean;
-  clearResult(): void;
-  getResult(): UpResult | undefined;
-  setResult(value?: UpResult): void;
-
-  serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): DeployUpEventResult.AsObject;
-  static toObject(includeInstance: boolean, msg: DeployUpEventResult): DeployUpEventResult.AsObject;
-  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
-  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
-  static serializeBinaryToWriter(message: DeployUpEventResult, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): DeployUpEventResult;
-  static deserializeBinaryFromReader(message: DeployUpEventResult, reader: jspb.BinaryReader): DeployUpEventResult;
-}
-
-export namespace DeployUpEventResult {
-  export type AsObject = {
     success: boolean,
-    result?: UpResult.AsObject,
+    details: string,
   }
 }
 
-export class DeployDownRequest extends jspb.Message {
+export class DeploymentDownRequest extends jspb.Message {
   hasAttributes(): boolean;
   clearAttributes(): void;
   getAttributes(): google_protobuf_struct_pb.Struct | undefined;
@@ -157,69 +152,76 @@ export class DeployDownRequest extends jspb.Message {
   setInteractive(value: boolean): void;
 
   serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): DeployDownRequest.AsObject;
-  static toObject(includeInstance: boolean, msg: DeployDownRequest): DeployDownRequest.AsObject;
+  toObject(includeInstance?: boolean): DeploymentDownRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: DeploymentDownRequest): DeploymentDownRequest.AsObject;
   static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
   static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
-  static serializeBinaryToWriter(message: DeployDownRequest, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): DeployDownRequest;
-  static deserializeBinaryFromReader(message: DeployDownRequest, reader: jspb.BinaryReader): DeployDownRequest;
+  static serializeBinaryToWriter(message: DeploymentDownRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): DeploymentDownRequest;
+  static deserializeBinaryFromReader(message: DeploymentDownRequest, reader: jspb.BinaryReader): DeploymentDownRequest;
 }
 
-export namespace DeployDownRequest {
+export namespace DeploymentDownRequest {
   export type AsObject = {
     attributes?: google_protobuf_struct_pb.Struct.AsObject,
     interactive: boolean,
   }
 }
 
-export class DeployDownEvent extends jspb.Message {
+export class DeploymentDownEvent extends jspb.Message {
   hasMessage(): boolean;
   clearMessage(): void;
-  getMessage(): DeployEventMessage | undefined;
-  setMessage(value?: DeployEventMessage): void;
+  getMessage(): string;
+  setMessage(value: string): void;
 
   hasResult(): boolean;
   clearResult(): void;
-  getResult(): DeployDownEventResult | undefined;
-  setResult(value?: DeployDownEventResult): void;
+  getResult(): DownResult | undefined;
+  setResult(value?: DownResult): void;
 
-  getContentCase(): DeployDownEvent.ContentCase;
+  hasUpdate(): boolean;
+  clearUpdate(): void;
+  getUpdate(): ResourceUpdate | undefined;
+  setUpdate(value?: ResourceUpdate): void;
+
+  getContentCase(): DeploymentDownEvent.ContentCase;
   serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): DeployDownEvent.AsObject;
-  static toObject(includeInstance: boolean, msg: DeployDownEvent): DeployDownEvent.AsObject;
+  toObject(includeInstance?: boolean): DeploymentDownEvent.AsObject;
+  static toObject(includeInstance: boolean, msg: DeploymentDownEvent): DeploymentDownEvent.AsObject;
   static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
   static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
-  static serializeBinaryToWriter(message: DeployDownEvent, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): DeployDownEvent;
-  static deserializeBinaryFromReader(message: DeployDownEvent, reader: jspb.BinaryReader): DeployDownEvent;
+  static serializeBinaryToWriter(message: DeploymentDownEvent, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): DeploymentDownEvent;
+  static deserializeBinaryFromReader(message: DeploymentDownEvent, reader: jspb.BinaryReader): DeploymentDownEvent;
 }
 
-export namespace DeployDownEvent {
+export namespace DeploymentDownEvent {
   export type AsObject = {
-    message?: DeployEventMessage.AsObject,
-    result?: DeployDownEventResult.AsObject,
+    message: string,
+    result?: DownResult.AsObject,
+    update?: ResourceUpdate.AsObject,
   }
 
   export enum ContentCase {
     CONTENT_NOT_SET = 0,
     MESSAGE = 1,
     RESULT = 2,
+    UPDATE = 3,
   }
 }
 
-export class DeployDownEventResult extends jspb.Message {
+export class DownResult extends jspb.Message {
   serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): DeployDownEventResult.AsObject;
-  static toObject(includeInstance: boolean, msg: DeployDownEventResult): DeployDownEventResult.AsObject;
+  toObject(includeInstance?: boolean): DownResult.AsObject;
+  static toObject(includeInstance: boolean, msg: DownResult): DownResult.AsObject;
   static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
   static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
-  static serializeBinaryToWriter(message: DeployDownEventResult, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): DeployDownEventResult;
-  static deserializeBinaryFromReader(message: DeployDownEventResult, reader: jspb.BinaryReader): DeployDownEventResult;
+  static serializeBinaryToWriter(message: DownResult, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): DownResult;
+  static deserializeBinaryFromReader(message: DownResult, reader: jspb.BinaryReader): DownResult;
 }
 
-export namespace DeployDownEventResult {
+export namespace DownResult {
   export type AsObject = {
   }
 }
@@ -244,7 +246,7 @@ export namespace ImageSource {
   }
 }
 
-export class ExecutionUnit extends jspb.Message {
+export class Service extends jspb.Message {
   hasImage(): boolean;
   clearImage(): void;
   getImage(): ImageSource | undefined;
@@ -264,18 +266,18 @@ export class ExecutionUnit extends jspb.Message {
 
   getEnvMap(): jspb.Map<string, string>;
   clearEnvMap(): void;
-  getSourceCase(): ExecutionUnit.SourceCase;
+  getSourceCase(): Service.SourceCase;
   serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): ExecutionUnit.AsObject;
-  static toObject(includeInstance: boolean, msg: ExecutionUnit): ExecutionUnit.AsObject;
+  toObject(includeInstance?: boolean): Service.AsObject;
+  static toObject(includeInstance: boolean, msg: Service): Service.AsObject;
   static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
   static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
-  static serializeBinaryToWriter(message: ExecutionUnit, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): ExecutionUnit;
-  static deserializeBinaryFromReader(message: ExecutionUnit, reader: jspb.BinaryReader): ExecutionUnit;
+  static serializeBinaryToWriter(message: Service, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): Service;
+  static deserializeBinaryFromReader(message: Service, reader: jspb.BinaryReader): Service;
 }
 
-export namespace ExecutionUnit {
+export namespace Service {
   export type AsObject = {
     image?: ImageSource.AsObject,
     workers: number,
@@ -292,10 +294,10 @@ export namespace ExecutionUnit {
 }
 
 export class Bucket extends jspb.Message {
-  clearNotificationsList(): void;
-  getNotificationsList(): Array<BucketNotificationTarget>;
-  setNotificationsList(value: Array<BucketNotificationTarget>): void;
-  addNotifications(value?: BucketNotificationTarget, index?: number): BucketNotificationTarget;
+  clearListenersList(): void;
+  getListenersList(): Array<BucketListener>;
+  setListenersList(value: Array<BucketListener>): void;
+  addListeners(value?: BucketListener, index?: number): BucketListener;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): Bucket.AsObject;
@@ -309,41 +311,41 @@ export class Bucket extends jspb.Message {
 
 export namespace Bucket {
   export type AsObject = {
-    notificationsList: Array<BucketNotificationTarget.AsObject>,
+    listenersList: Array<BucketListener.AsObject>,
   }
 }
 
-export class BucketNotificationTarget extends jspb.Message {
+export class BucketListener extends jspb.Message {
   hasConfig(): boolean;
   clearConfig(): void;
   getConfig(): nitric_proto_storage_v1_storage_pb.RegistrationRequest | undefined;
   setConfig(value?: nitric_proto_storage_v1_storage_pb.RegistrationRequest): void;
 
-  hasExecutionUnit(): boolean;
-  clearExecutionUnit(): void;
-  getExecutionUnit(): string;
-  setExecutionUnit(value: string): void;
+  hasService(): boolean;
+  clearService(): void;
+  getService(): string;
+  setService(value: string): void;
 
-  getTargetCase(): BucketNotificationTarget.TargetCase;
+  getTargetCase(): BucketListener.TargetCase;
   serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): BucketNotificationTarget.AsObject;
-  static toObject(includeInstance: boolean, msg: BucketNotificationTarget): BucketNotificationTarget.AsObject;
+  toObject(includeInstance?: boolean): BucketListener.AsObject;
+  static toObject(includeInstance: boolean, msg: BucketListener): BucketListener.AsObject;
   static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
   static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
-  static serializeBinaryToWriter(message: BucketNotificationTarget, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): BucketNotificationTarget;
-  static deserializeBinaryFromReader(message: BucketNotificationTarget, reader: jspb.BinaryReader): BucketNotificationTarget;
+  static serializeBinaryToWriter(message: BucketListener, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): BucketListener;
+  static deserializeBinaryFromReader(message: BucketListener, reader: jspb.BinaryReader): BucketListener;
 }
 
-export namespace BucketNotificationTarget {
+export namespace BucketListener {
   export type AsObject = {
     config?: nitric_proto_storage_v1_storage_pb.RegistrationRequest.AsObject,
-    executionUnit: string,
+    service: string,
   }
 
   export enum TargetCase {
     TARGET_NOT_SET = 0,
-    EXECUTION_UNIT = 2,
+    SERVICE = 2,
   }
 }
 
@@ -402,10 +404,10 @@ export namespace Secret {
 }
 
 export class SubscriptionTarget extends jspb.Message {
-  hasExecutionUnit(): boolean;
-  clearExecutionUnit(): void;
-  getExecutionUnit(): string;
-  setExecutionUnit(value: string): void;
+  hasService(): boolean;
+  clearService(): void;
+  getService(): string;
+  setService(value: string): void;
 
   getTargetCase(): SubscriptionTarget.TargetCase;
   serializeBinary(): Uint8Array;
@@ -420,12 +422,12 @@ export class SubscriptionTarget extends jspb.Message {
 
 export namespace SubscriptionTarget {
   export type AsObject = {
-    executionUnit: string,
+    service: string,
   }
 
   export enum TargetCase {
     TARGET_NOT_SET = 0,
-    EXECUTION_UNIT = 1,
+    SERVICE = 1,
   }
 }
 
@@ -452,10 +454,10 @@ export namespace TopicSubscription {
 }
 
 export class HttpTarget extends jspb.Message {
-  hasExecutionUnit(): boolean;
-  clearExecutionUnit(): void;
-  getExecutionUnit(): string;
-  setExecutionUnit(value: string): void;
+  hasService(): boolean;
+  clearService(): void;
+  getService(): string;
+  setService(value: string): void;
 
   getTargetCase(): HttpTarget.TargetCase;
   serializeBinary(): Uint8Array;
@@ -470,12 +472,12 @@ export class HttpTarget extends jspb.Message {
 
 export namespace HttpTarget {
   export type AsObject = {
-    executionUnit: string,
+    service: string,
   }
 
   export enum TargetCase {
     TARGET_NOT_SET = 0,
-    EXECUTION_UNIT = 1,
+    SERVICE = 1,
   }
 }
 
@@ -564,10 +566,10 @@ export namespace Websocket {
 }
 
 export class WebsocketTarget extends jspb.Message {
-  hasExecutionUnit(): boolean;
-  clearExecutionUnit(): void;
-  getExecutionUnit(): string;
-  setExecutionUnit(value: string): void;
+  hasService(): boolean;
+  clearService(): void;
+  getService(): string;
+  setService(value: string): void;
 
   getTargetCase(): WebsocketTarget.TargetCase;
   serializeBinary(): Uint8Array;
@@ -582,20 +584,20 @@ export class WebsocketTarget extends jspb.Message {
 
 export namespace WebsocketTarget {
   export type AsObject = {
-    executionUnit: string,
+    service: string,
   }
 
   export enum TargetCase {
     TARGET_NOT_SET = 0,
-    EXECUTION_UNIT = 1,
+    SERVICE = 1,
   }
 }
 
 export class ScheduleTarget extends jspb.Message {
-  hasExecutionUnit(): boolean;
-  clearExecutionUnit(): void;
-  getExecutionUnit(): string;
-  setExecutionUnit(value: string): void;
+  hasService(): boolean;
+  clearService(): void;
+  getService(): string;
+  setService(value: string): void;
 
   getTargetCase(): ScheduleTarget.TargetCase;
   serializeBinary(): Uint8Array;
@@ -610,24 +612,32 @@ export class ScheduleTarget extends jspb.Message {
 
 export namespace ScheduleTarget {
   export type AsObject = {
-    executionUnit: string,
+    service: string,
   }
 
   export enum TargetCase {
     TARGET_NOT_SET = 0,
-    EXECUTION_UNIT = 1,
+    SERVICE = 1,
   }
 }
 
 export class Schedule extends jspb.Message {
-  getCron(): string;
-  setCron(value: string): void;
-
   hasTarget(): boolean;
   clearTarget(): void;
   getTarget(): ScheduleTarget | undefined;
   setTarget(value?: ScheduleTarget): void;
 
+  hasEvery(): boolean;
+  clearEvery(): void;
+  getEvery(): ScheduleEvery | undefined;
+  setEvery(value?: ScheduleEvery): void;
+
+  hasCron(): boolean;
+  clearCron(): void;
+  getCron(): ScheduleCron | undefined;
+  setCron(value?: ScheduleCron): void;
+
+  getCadenceCase(): Schedule.CadenceCase;
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): Schedule.AsObject;
   static toObject(includeInstance: boolean, msg: Schedule): Schedule.AsObject;
@@ -640,22 +650,68 @@ export class Schedule extends jspb.Message {
 
 export namespace Schedule {
   export type AsObject = {
-    cron: string,
     target?: ScheduleTarget.AsObject,
+    every?: ScheduleEvery.AsObject,
+    cron?: ScheduleCron.AsObject,
+  }
+
+  export enum CadenceCase {
+    CADENCE_NOT_SET = 0,
+    EVERY = 10,
+    CRON = 11,
+  }
+}
+
+export class ScheduleEvery extends jspb.Message {
+  getRate(): string;
+  setRate(value: string): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): ScheduleEvery.AsObject;
+  static toObject(includeInstance: boolean, msg: ScheduleEvery): ScheduleEvery.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: ScheduleEvery, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): ScheduleEvery;
+  static deserializeBinaryFromReader(message: ScheduleEvery, reader: jspb.BinaryReader): ScheduleEvery;
+}
+
+export namespace ScheduleEvery {
+  export type AsObject = {
+    rate: string,
+  }
+}
+
+export class ScheduleCron extends jspb.Message {
+  getExpression(): string;
+  setExpression(value: string): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): ScheduleCron.AsObject;
+  static toObject(includeInstance: boolean, msg: ScheduleCron): ScheduleCron.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: ScheduleCron, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): ScheduleCron;
+  static deserializeBinaryFromReader(message: ScheduleCron, reader: jspb.BinaryReader): ScheduleCron;
+}
+
+export namespace ScheduleCron {
+  export type AsObject = {
+    expression: string,
   }
 }
 
 export class Resource extends jspb.Message {
-  getName(): string;
-  setName(value: string): void;
+  hasId(): boolean;
+  clearId(): void;
+  getId(): nitric_proto_resources_v1_resources_pb.ResourceIdentifier | undefined;
+  setId(value?: nitric_proto_resources_v1_resources_pb.ResourceIdentifier): void;
 
-  getType(): nitric_proto_resources_v1_resources_pb.ResourceTypeMap[keyof nitric_proto_resources_v1_resources_pb.ResourceTypeMap];
-  setType(value: nitric_proto_resources_v1_resources_pb.ResourceTypeMap[keyof nitric_proto_resources_v1_resources_pb.ResourceTypeMap]): void;
-
-  hasExecutionUnit(): boolean;
-  clearExecutionUnit(): void;
-  getExecutionUnit(): ExecutionUnit | undefined;
-  setExecutionUnit(value?: ExecutionUnit): void;
+  hasService(): boolean;
+  clearService(): void;
+  getService(): Service | undefined;
+  setService(value?: Service): void;
 
   hasBucket(): boolean;
   clearBucket(): void;
@@ -715,9 +771,8 @@ export class Resource extends jspb.Message {
 
 export namespace Resource {
   export type AsObject = {
-    name: string,
-    type: nitric_proto_resources_v1_resources_pb.ResourceTypeMap[keyof nitric_proto_resources_v1_resources_pb.ResourceTypeMap],
-    executionUnit?: ExecutionUnit.AsObject,
+    id?: nitric_proto_resources_v1_resources_pb.ResourceIdentifier.AsObject,
+    service?: Service.AsObject,
     bucket?: Bucket.AsObject,
     topic?: Topic.AsObject,
     api?: Api.AsObject,
@@ -731,7 +786,7 @@ export namespace Resource {
 
   export enum ConfigCase {
     CONFIG_NOT_SET = 0,
-    EXECUTION_UNIT = 10,
+    SERVICE = 10,
     BUCKET = 11,
     TOPIC = 12,
     API = 13,
@@ -799,4 +854,23 @@ export namespace Spec {
     resourcesList: Array<Resource.AsObject>,
   }
 }
+
+export interface ResourceDeploymentActionMap {
+  CREATE: 0;
+  UPDATE: 1;
+  REPLACE: 2;
+  SAME: 3;
+  DELETE: 4;
+}
+
+export const ResourceDeploymentAction: ResourceDeploymentActionMap;
+
+export interface ResourceDeploymentStatusMap {
+  PENDING: 0;
+  IN_PROGRESS: 1;
+  SUCCESS: 2;
+  FAILED: 3;
+}
+
+export const ResourceDeploymentStatus: ResourceDeploymentStatusMap;
 

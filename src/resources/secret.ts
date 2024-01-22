@@ -13,11 +13,10 @@
 // limitations under the License.
 import {
   Action,
-  Resource,
+  ResourceIdentifier,
   ResourceType,
   ResourceDeclareRequest,
   ResourceDeclareResponse,
-  ResourceDetailsResponse,
 } from '@nitric/proto/resources/v1/resources_pb';
 import resourceClient from './client';
 import { secrets, Secret } from '../api/secrets';
@@ -31,15 +30,15 @@ const everything: SecretPermission[] = ['put', 'access'];
  * Cloud secret resource for secret storage
  */
 export class SecretResource extends SecureResource<SecretPermission> {
-  protected async register(): Promise<Resource> {
+  protected async register(): Promise<ResourceIdentifier> {
     const req = new ResourceDeclareRequest();
-    const resource = new Resource();
+    const resource = new ResourceIdentifier();
     resource.setName(this.name);
     resource.setType(ResourceType.SECRET);
 
-    req.setResource(resource);
+    req.setId(resource);
 
-    return new Promise<Resource>((resolve, reject) => {
+    return new Promise<ResourceIdentifier>((resolve, reject) => {
       resourceClient.declare(
         req,
         (error, response: ResourceDeclareResponse) => {
@@ -72,10 +71,6 @@ export class SecretResource extends SecureResource<SecretPermission> {
 
   protected resourceType() {
     return ResourceType.SECRET;
-  }
-
-  protected unwrapDetails(resp: ResourceDetailsResponse): never {
-    throw new Error('details unimplemented for secret');
   }
 
   public for(perm: SecretPermission, ...perms: SecretPermission[]): Secret {

@@ -5,9 +5,9 @@ import * as jspb from "google-protobuf";
 
 export class PolicyResource extends jspb.Message {
   clearPrincipalsList(): void;
-  getPrincipalsList(): Array<Resource>;
-  setPrincipalsList(value: Array<Resource>): void;
-  addPrincipals(value?: Resource, index?: number): Resource;
+  getPrincipalsList(): Array<ResourceIdentifier>;
+  setPrincipalsList(value: Array<ResourceIdentifier>): void;
+  addPrincipals(value?: ResourceIdentifier, index?: number): ResourceIdentifier;
 
   clearActionsList(): void;
   getActionsList(): Array<ActionMap[keyof ActionMap]>;
@@ -15,9 +15,9 @@ export class PolicyResource extends jspb.Message {
   addActions(value: ActionMap[keyof ActionMap], index?: number): ActionMap[keyof ActionMap];
 
   clearResourcesList(): void;
-  getResourcesList(): Array<Resource>;
-  setResourcesList(value: Array<Resource>): void;
-  addResources(value?: Resource, index?: number): Resource;
+  getResourcesList(): Array<ResourceIdentifier>;
+  setResourcesList(value: Array<ResourceIdentifier>): void;
+  addResources(value?: ResourceIdentifier, index?: number): ResourceIdentifier;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): PolicyResource.AsObject;
@@ -31,13 +31,13 @@ export class PolicyResource extends jspb.Message {
 
 export namespace PolicyResource {
   export type AsObject = {
-    principalsList: Array<Resource.AsObject>,
+    principalsList: Array<ResourceIdentifier.AsObject>,
     actionsList: Array<ActionMap[keyof ActionMap]>,
-    resourcesList: Array<Resource.AsObject>,
+    resourcesList: Array<ResourceIdentifier.AsObject>,
   }
 }
 
-export class Resource extends jspb.Message {
+export class ResourceIdentifier extends jspb.Message {
   getType(): ResourceTypeMap[keyof ResourceTypeMap];
   setType(value: ResourceTypeMap[keyof ResourceTypeMap]): void;
 
@@ -45,16 +45,16 @@ export class Resource extends jspb.Message {
   setName(value: string): void;
 
   serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): Resource.AsObject;
-  static toObject(includeInstance: boolean, msg: Resource): Resource.AsObject;
+  toObject(includeInstance?: boolean): ResourceIdentifier.AsObject;
+  static toObject(includeInstance: boolean, msg: ResourceIdentifier): ResourceIdentifier.AsObject;
   static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
   static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
-  static serializeBinaryToWriter(message: Resource, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): Resource;
-  static deserializeBinaryFromReader(message: Resource, reader: jspb.BinaryReader): Resource;
+  static serializeBinaryToWriter(message: ResourceIdentifier, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): ResourceIdentifier;
+  static deserializeBinaryFromReader(message: ResourceIdentifier, reader: jspb.BinaryReader): ResourceIdentifier;
 }
 
-export namespace Resource {
+export namespace ResourceIdentifier {
   export type AsObject = {
     type: ResourceTypeMap[keyof ResourceTypeMap],
     name: string,
@@ -62,10 +62,10 @@ export namespace Resource {
 }
 
 export class ResourceDeclareRequest extends jspb.Message {
-  hasResource(): boolean;
-  clearResource(): void;
-  getResource(): Resource | undefined;
-  setResource(value?: Resource): void;
+  hasId(): boolean;
+  clearId(): void;
+  getId(): ResourceIdentifier | undefined;
+  setId(value?: ResourceIdentifier): void;
 
   hasPolicy(): boolean;
   clearPolicy(): void;
@@ -115,7 +115,7 @@ export class ResourceDeclareRequest extends jspb.Message {
 
 export namespace ResourceDeclareRequest {
   export type AsObject = {
-    resource?: Resource.AsObject,
+    id?: ResourceIdentifier.AsObject,
     policy?: PolicyResource.AsObject,
     bucket?: BucketResource.AsObject,
     topic?: TopicResource.AsObject,
@@ -228,6 +228,9 @@ export namespace ApiOpenIdConnectionDefinition {
 }
 
 export class ApiSecurityDefinitionResource extends jspb.Message {
+  getApiName(): string;
+  setApiName(value: string): void;
+
   hasOidc(): boolean;
   clearOidc(): void;
   getOidc(): ApiOpenIdConnectionDefinition | undefined;
@@ -246,12 +249,13 @@ export class ApiSecurityDefinitionResource extends jspb.Message {
 
 export namespace ApiSecurityDefinitionResource {
   export type AsObject = {
+    apiName: string,
     oidc?: ApiOpenIdConnectionDefinition.AsObject,
   }
 
   export enum DefinitionCase {
     DEFINITION_NOT_SET = 0,
-    OIDC = 1,
+    OIDC = 2,
   }
 }
 
@@ -312,118 +316,9 @@ export namespace ResourceDeclareResponse {
   }
 }
 
-export class ApiResourceDetails extends jspb.Message {
-  getUrl(): string;
-  setUrl(value: string): void;
-
-  serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): ApiResourceDetails.AsObject;
-  static toObject(includeInstance: boolean, msg: ApiResourceDetails): ApiResourceDetails.AsObject;
-  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
-  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
-  static serializeBinaryToWriter(message: ApiResourceDetails, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): ApiResourceDetails;
-  static deserializeBinaryFromReader(message: ApiResourceDetails, reader: jspb.BinaryReader): ApiResourceDetails;
-}
-
-export namespace ApiResourceDetails {
-  export type AsObject = {
-    url: string,
-  }
-}
-
-export class WebsocketResourceDetails extends jspb.Message {
-  getUrl(): string;
-  setUrl(value: string): void;
-
-  serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): WebsocketResourceDetails.AsObject;
-  static toObject(includeInstance: boolean, msg: WebsocketResourceDetails): WebsocketResourceDetails.AsObject;
-  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
-  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
-  static serializeBinaryToWriter(message: WebsocketResourceDetails, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): WebsocketResourceDetails;
-  static deserializeBinaryFromReader(message: WebsocketResourceDetails, reader: jspb.BinaryReader): WebsocketResourceDetails;
-}
-
-export namespace WebsocketResourceDetails {
-  export type AsObject = {
-    url: string,
-  }
-}
-
-export class ResourceDetailsRequest extends jspb.Message {
-  hasResource(): boolean;
-  clearResource(): void;
-  getResource(): Resource | undefined;
-  setResource(value?: Resource): void;
-
-  serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): ResourceDetailsRequest.AsObject;
-  static toObject(includeInstance: boolean, msg: ResourceDetailsRequest): ResourceDetailsRequest.AsObject;
-  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
-  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
-  static serializeBinaryToWriter(message: ResourceDetailsRequest, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): ResourceDetailsRequest;
-  static deserializeBinaryFromReader(message: ResourceDetailsRequest, reader: jspb.BinaryReader): ResourceDetailsRequest;
-}
-
-export namespace ResourceDetailsRequest {
-  export type AsObject = {
-    resource?: Resource.AsObject,
-  }
-}
-
-export class ResourceDetailsResponse extends jspb.Message {
-  getId(): string;
-  setId(value: string): void;
-
-  getProvider(): string;
-  setProvider(value: string): void;
-
-  getService(): string;
-  setService(value: string): void;
-
-  hasApi(): boolean;
-  clearApi(): void;
-  getApi(): ApiResourceDetails | undefined;
-  setApi(value?: ApiResourceDetails): void;
-
-  hasWebsocket(): boolean;
-  clearWebsocket(): void;
-  getWebsocket(): WebsocketResourceDetails | undefined;
-  setWebsocket(value?: WebsocketResourceDetails): void;
-
-  getDetailsCase(): ResourceDetailsResponse.DetailsCase;
-  serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): ResourceDetailsResponse.AsObject;
-  static toObject(includeInstance: boolean, msg: ResourceDetailsResponse): ResourceDetailsResponse.AsObject;
-  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
-  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
-  static serializeBinaryToWriter(message: ResourceDetailsResponse, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): ResourceDetailsResponse;
-  static deserializeBinaryFromReader(message: ResourceDetailsResponse, reader: jspb.BinaryReader): ResourceDetailsResponse;
-}
-
-export namespace ResourceDetailsResponse {
-  export type AsObject = {
-    id: string,
-    provider: string,
-    service: string,
-    api?: ApiResourceDetails.AsObject,
-    websocket?: WebsocketResourceDetails.AsObject,
-  }
-
-  export enum DetailsCase {
-    DETAILS_NOT_SET = 0,
-    API = 10,
-    WEBSOCKET = 11,
-  }
-}
-
 export interface ResourceTypeMap {
   API: 0;
-  FUNCTION: 1;
+  SERVICE: 1;
   BUCKET: 2;
   TOPIC: 3;
   SCHEDULE: 4;
@@ -431,7 +326,7 @@ export interface ResourceTypeMap {
   COLLECTION: 6;
   POLICY: 7;
   SECRET: 8;
-  NOTIFICATION: 9;
+  BUCKETLISTENER: 9;
   WEBSOCKET: 10;
   HTTP: 11;
   APISECURITYDEFINITION: 12;

@@ -13,10 +13,9 @@
 // limitations under the License.
 import {
   Action,
-  Resource,
+  ResourceIdentifier,
   ResourceDeclareRequest,
   ResourceDeclareResponse,
-  ResourceDetailsResponse,
   ResourceType,
 } from '@nitric/proto/resources/v1/resources_pb';
 import resourceClient from './client';
@@ -220,15 +219,15 @@ export class BucketResource extends SecureResource<BucketPermission> {
    *
    * @returns a promise that resolves when the registration is complete
    */
-  protected async register(): Promise<Resource> {
+  protected async register(): Promise<ResourceIdentifier> {
     const req = new ResourceDeclareRequest();
-    const resource = new Resource();
+    const resource = new ResourceIdentifier();
     resource.setName(this.name);
     resource.setType(ResourceType.BUCKET);
 
-    req.setResource(resource);
+    req.setId(resource);
 
-    return new Promise<Resource>((resolve, reject) => {
+    return new Promise<ResourceIdentifier>((resolve, reject) => {
       resourceClient.declare(req, (error, _: ResourceDeclareResponse) => {
         if (error) {
           reject(error);
@@ -282,10 +281,6 @@ export class BucketResource extends SecureResource<BucketPermission> {
 
   protected resourceType() {
     return ResourceType.BUCKET;
-  }
-
-  protected unwrapDetails(resp: ResourceDetailsResponse): never {
-    throw new Error('details unimplemented for bucket');
   }
 
   /**

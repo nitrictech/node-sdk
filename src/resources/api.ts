@@ -16,13 +16,13 @@ import {
   ApiResource,
   ApiScopes,
   ApiSecurityDefinitionResource,
-  Resource,
   ResourceDeclareRequest,
   ResourceDeclareResponse,
-  ResourceDetailsResponse,
+  ResourceIdentifier,
   ResourceType,
   ResourceTypeMap,
 } from '@nitric/proto/resources/v1/resources_pb';
+import { ApiDetailsRequest } from '@nitric/proto/apis/v1/apis_pb';
 import { ApiClient } from '@nitric/proto/apis/v1/apis_grpc_pb';
 import resourceClient from './client';
 import { HttpMethod } from '../types';
@@ -545,25 +545,31 @@ export class Api<SecurityDefs extends string> extends Base<ApiDetails> {
    * @returns Promise that returns the URL of this API
    */
   async url(): Promise<string> {
-    const {
-      details: { url },
-    } = await this.details();
+    const request = new ApiDetailsRequest();
+    request.setApiName(this.name);
 
-    return url;
+    const apiClient = new ApiClient(
+      SERVICE_BIND,
+      grpc.ChannelCredentials.createInsecure()
+    );
+
+    const details = await new Promise<ApiDetails>((resolve, reject) => {
+      apiClient.details(request, (error, data) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve({
+            url: data.getUrl(),
+          });
+        }
+      });
+    });
+
+    return details.url;
   }
 
   protected resourceType(): ResourceTypeMap[keyof ResourceTypeMap] {
     return ResourceType.API;
-  }
-
-  protected unwrapDetails(resp: ResourceDetailsResponse): ApiDetails {
-    if (resp.hasApi()) {
-      return {
-        url: resp.getApi().getUrl(),
-      };
-    }
-
-    throw new Error('Unexpected details in response. Expected API details');
   }
 
   /**
@@ -571,9 +577,9 @@ export class Api<SecurityDefs extends string> extends Base<ApiDetails> {
    *
    * @returns a promise that resolves when the registration is complete
    */
-  protected async register(): Promise<Resource> {
+  protected async register(): Promise<ResourceIdentifier> {
     const req = new ResourceDeclareRequest();
-    const resource = new Resource();
+    const resourceId = new ResourceIdentifier();
     const apiResource = new ApiResource();
     const { security, securityDefinitions } = this;
 
@@ -585,8 +591,8 @@ export class Api<SecurityDefs extends string> extends Base<ApiDetails> {
       });
     }
 
-    resource.setName(this.name);
-    resource.setType(ResourceType.API);
+    resourceId.setName(this.name);
+    resourceId.setType(ResourceType.API);
 
     // if (securityDefinitions) {
     //   Object.keys(securityDefinitions).forEach((k) => {
@@ -606,14 +612,14 @@ export class Api<SecurityDefs extends string> extends Base<ApiDetails> {
     // }
 
     req.setApi(apiResource);
-    req.setResource(resource);
+    req.setId(resourceId);
 
-    return new Promise<Resource>((resolve, reject) => {
+    return new Promise<ResourceIdentifier>((resolve, reject) => {
       resourceClient.declare(req, (error, _: ResourceDeclareResponse) => {
         if (error) {
           reject(error);
         } else {
-          resolve(resource);
+          resolve(resourceId);
         }
       });
     });

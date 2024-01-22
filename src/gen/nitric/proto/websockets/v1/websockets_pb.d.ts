@@ -3,6 +3,46 @@
 
 import * as jspb from "google-protobuf";
 
+export class WebsocketDetailsRequest extends jspb.Message {
+  getSocketName(): string;
+  setSocketName(value: string): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): WebsocketDetailsRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: WebsocketDetailsRequest): WebsocketDetailsRequest.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: WebsocketDetailsRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): WebsocketDetailsRequest;
+  static deserializeBinaryFromReader(message: WebsocketDetailsRequest, reader: jspb.BinaryReader): WebsocketDetailsRequest;
+}
+
+export namespace WebsocketDetailsRequest {
+  export type AsObject = {
+    socketName: string,
+  }
+}
+
+export class WebsocketDetailsResponse extends jspb.Message {
+  getUrl(): string;
+  setUrl(value: string): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): WebsocketDetailsResponse.AsObject;
+  static toObject(includeInstance: boolean, msg: WebsocketDetailsResponse): WebsocketDetailsResponse.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: WebsocketDetailsResponse, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): WebsocketDetailsResponse;
+  static deserializeBinaryFromReader(message: WebsocketDetailsResponse, reader: jspb.BinaryReader): WebsocketDetailsResponse;
+}
+
+export namespace WebsocketDetailsResponse {
+  export type AsObject = {
+    url: string,
+  }
+}
+
 export class WebsocketSendRequest extends jspb.Message {
   getSocketName(): string;
   setSocketName(value: string): void;
