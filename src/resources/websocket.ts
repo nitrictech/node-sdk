@@ -39,6 +39,7 @@ import * as grpc from '@grpc/grpc-js';
 import { WebsocketNotificationContext } from '../context/websocket';
 import { WebsocketMiddleware, createHandler } from '../helpers/handler';
 import { JSONTypes } from '../context/base';
+import { fromGrpcError } from '../api/errors';
 
 const WebsocketEventTypeMap = {
   connect: WebsocketEventType.CONNECT,
@@ -160,7 +161,7 @@ export class WebsocketResource extends Base<any> {
     const res = await new Promise<ResourceIdentifier>((resolve, reject) => {
       resourceClient.declare(req, (error, _: ResourceDeclareRequest) => {
         if (error) {
-          reject(error);
+          reject(fromGrpcError(error));
         } else {
           resolve(resource);
         }
@@ -183,7 +184,7 @@ export class WebsocketResource extends Base<any> {
     await new Promise<ResourceIdentifier>((resolve, reject) => {
       resourceClient.declare(policyReq, (error, _: ResourceDeclareRequest) => {
         if (error) {
-          reject(error);
+          reject(fromGrpcError(error));
         } else {
           resolve(resource);
         }
@@ -217,7 +218,7 @@ export class WebsocketResource extends Base<any> {
     const details = await new Promise<WebsocketDetails>((resolve, reject) => {
       this.wsClient.client.details(request, (error, data) => {
         if (error) {
-          reject(error);
+          reject(fromGrpcError(error));
         } else {
           resolve({
             url: data.getUrl(),

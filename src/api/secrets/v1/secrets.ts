@@ -22,6 +22,7 @@ import {
   Secret as GrpcSecret,
 } from '@nitric/proto/secrets/v1/secrets_pb';
 import * as grpc from '@grpc/grpc-js';
+import { fromGrpcError } from '../../errors';
 
 const ENCODER = new TextEncoder();
 const DECODER = new TextDecoder();
@@ -99,7 +100,7 @@ export class Secret {
         request,
         (error, response: SecretPutResponse) => {
           if (error) {
-            reject(error);
+            reject(fromGrpcError(error));
           } else {
             resolve(
               new SecretVersion(
@@ -201,7 +202,7 @@ class SecretVersion {
         request,
         (error, response: SecretAccessResponse) => {
           if (error) {
-            reject(error);
+            reject(fromGrpcError(error));
           } else {
             const secretVersion = new SecretVersion(
               this.secrets,

@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import { ResourcesClient } from '@nitric/proto/resources/v1/resources_grpc_pb';
-// import { UnimplementedError } from '../api/errors';
+import { UnimplementedError } from '../api/errors';
 import { bucket } from '.';
 import {
   BucketResource,
@@ -21,6 +21,7 @@ import {
 } from '@nitric/proto/resources/v1/resources_pb';
 import { Resource } from './common';
 import { Bucket } from '..';
+import { Metadata, status } from '@grpc/grpc-js';
 
 // What we need to test about buckets
 // 1. register with the name
@@ -32,7 +33,7 @@ describe('Registering bucket resources', () => {
   describe('Given the server is unimplemented', () => {
     describe('When a bucket is registered', () => {
       const MOCK_ERROR = {
-        code: 2,
+        code: status.UNIMPLEMENTED,
         message: 'UNIMPLEMENTED',
       };
 
@@ -54,9 +55,7 @@ describe('Registering bucket resources', () => {
       });
 
       it('Should throw the error', async () => {
-        await expect(bucket(validName)['registerPromise']).rejects.toEqual(
-          new UnimplementedError('UNIMPLEMENTED')
-        );
+        await expect(bucket(validName)['registerPromise']).rejects.toBeInstanceOf(UnimplementedError);
       });
 
       it('Should call the resource server', () => {

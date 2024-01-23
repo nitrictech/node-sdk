@@ -11,17 +11,27 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import * as faas from '../faas/index';
-import { api, ApiWorkerOptions } from '.';
+import { api, Method } from '.';
 import { ResourcesClient } from '@nitric/proto/resources/v1/resources_grpc_pb';
 import { ApiDetailsResponse } from '../gen/nitric/proto/apis/v1/apis_pb';
 import { ApiClient } from '../gen/nitric/proto/apis/v1/apis_grpc_pb';
-
-jest.mock('../faas/index');
+import { status } from '@grpc/grpc-js';
 
 describe('Api', () => {
+  const MOCK_ERROR = {
+    code: status.UNIMPLEMENTED,
+    message: 'UNIMPLEMENTED',
+  };
+
+  const declareSpy = jest
+        .spyOn(ResourcesClient.prototype, 'declare')
+        .mockImplementationOnce((request, callback: any) => {
+          callback(MOCK_ERROR, null);
+
+          return null as any;
+        });
   const startSpy = jest
-    .spyOn(faas.Faas.prototype, 'start')
+    .spyOn(Method.prototype as any, 'start')
     .mockReturnValue(Promise.resolve());
   const mockFn = jest.fn();
 
@@ -36,28 +46,12 @@ describe('Api', () => {
 
     const route = api('main').route('/newroute/');
 
-    describe('when registing a catch all handler', () => {
+    describe('when registering a catch all handler', () => {
       beforeAll(async () => {
         await route.all(mockFn);
       });
 
-      it('should create a new FaasClient', () => {
-        expect(faas.Faas).toBeCalledTimes(1);
-      });
-
-      it('should provide Faas with ApiWorkerOptions', () => {
-        const expectedOpts = new ApiWorkerOptions('main', '/newroute/', [
-          'GET',
-          'POST',
-          'PATCH',
-          'PUT',
-          'DELETE',
-          'OPTIONS',
-        ]);
-        expect(faas.Faas).toBeCalledWith(expectedOpts);
-      });
-
-      it('should call FaasClient::start()', () => {
+      it('should call Method::start()', () => {
         expect(startSpy).toBeCalledTimes(1);
       });
     });
@@ -78,22 +72,6 @@ describe('Api', () => {
 
       afterAll(() => {
         jest.resetAllMocks();
-      });
-
-      it('should create a new FaasClient', () => {
-        expect(faas.Faas).toBeCalledTimes(1);
-      });
-
-      it('should provide Faas with ApiWorkerOptions', () => {
-        const expectedOpts = new ApiWorkerOptions(
-          'main1',
-          '/v1/test/',
-          [method.toUpperCase() as any],
-          {
-            security: { test: [] },
-          }
-        );
-        expect(faas.Faas).toBeCalledWith(expectedOpts);
       });
 
       it('should call FaasClient::start()', () => {

@@ -26,6 +26,7 @@ import { documents, Documents } from './documents';
 import { DocumentSnapshot } from './document-snapshot';
 import { InvalidArgumentError, UnimplementedError } from '../../errors';
 import { DocumentRef } from './document-ref';
+import { status } from '@grpc/grpc-js';
 
 describe('Query Tests', () => {
   describe('Adding a where clause to a query', () => {
@@ -103,7 +104,7 @@ describe('Query Tests', () => {
 
   describe('Given DocumentServiceClient.Query throws an error', () => {
     const MOCK_ERROR = {
-      code: 2,
+      code: status.UNIMPLEMENTED,
       message: 'UNIMPLEMENTED',
     };
     let documentsClient: Documents;
@@ -126,9 +127,7 @@ describe('Query Tests', () => {
 
     test('Then DocumentRef.Query should reject', async () => {
       const query = documentsClient.collection('test').query();
-      await expect(query.fetch()).rejects.toEqual(
-        new UnimplementedError('UNIMPLEMENTED')
-      );
+      await expect(query.fetch()).rejects.toBeInstanceOf(UnimplementedError);
     });
 
     test('The Grpc client for DocumentServiceClient.Query should have been called exactly once', () => {
@@ -208,7 +207,7 @@ describe('Query Tests', () => {
 
   describe('Given DocumentServiceClient.QueryStream throws an error', () => {
     const MOCK_ERROR = {
-      code: 2,
+      code: status.UNIMPLEMENTED,
       message: 'UNIMPLEMENTED',
     };
     let documentsClient: Documents;
@@ -239,9 +238,9 @@ describe('Query Tests', () => {
         });
       });
 
-      await expect(test).resolves.toEqual(
-        new UnimplementedError('UNIMPLEMENTED')
-      );
+      await expect(test).resolves.toMatchObject({
+        code: status.UNIMPLEMENTED,
+      });
     });
 
     test('The Grpc client for DocumentServiceClient.QueryStream should have been called exactly once', () => {

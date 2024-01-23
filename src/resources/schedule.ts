@@ -96,7 +96,7 @@ const handleStart = (schedule: Rate | Cron) =>
  *
  * Rates provide a simple expressive way to define schedules
  */
-class Rate {
+export class Rate {
   public readonly scheduleName: string;
   public readonly rate: string;
   public readonly frequency: Frequency;
@@ -111,13 +111,13 @@ class Rate {
     const normalizedFrequency = frequency.toLocaleLowerCase() as Frequency;
 
     // // This will automatically parse the int off of a valid rate expression e.g. "10 minutes" === 10
-    // const rateNum = parseInt(rate);
+    const rateNum = parseInt(rate);
 
-    // if (isNaN(rateNum)) {
-    //   throw new Error(
-    //     'invalid rate expression, expression must begin with a number'
-    //   );
-    // }
+    if (isNaN(rateNum)) {
+      throw new Error(
+        'invalid rate expression, expression must begin with a number'
+      );
+    }
 
     if (!Frequencies.includes(normalizedFrequency)) {
       throw new Error(
@@ -148,7 +148,7 @@ class Rate {
 /**
  * Provides a cron based schedule
  */
-class Cron {
+export class Cron {
   public readonly cron: string;
   public readonly scheduleName: string;
   public readonly handler: ScheduleMiddleware | undefined;
@@ -178,7 +178,7 @@ class Cron {
 /**
  * Providers a scheduled worker.
  */
-class Schedule {
+export class Schedule {
   private readonly name: string;
 
   constructor(name: string) {

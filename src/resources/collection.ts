@@ -22,6 +22,7 @@ import { documents } from '../api/documents';
 import resourceClient from './client';
 import { make, SecureResource } from './common';
 import { DocumentStructure } from '../api/documents/v1/document-ref';
+import { fromGrpcError } from '../api/errors';
 
 type CollectionPermission = 'reading' | 'writing' | 'deleting';
 
@@ -51,7 +52,7 @@ export class CollectionResource<
         req,
         (error, response: ResourceDeclareResponse) => {
           if (error) {
-            reject(error);
+            reject(fromGrpcError(error));
           } else {
             resolve(resource);
           }

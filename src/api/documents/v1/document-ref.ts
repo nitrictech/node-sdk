@@ -22,6 +22,7 @@ import {
 import { DocumentsClient } from '@nitric/proto/documents/v1/documents_grpc_pb';
 import { CollectionRef } from './collection-ref';
 import { MAX_COLLECTION_DEPTH } from './constants';
+import { fromGrpcError } from '../../errors';
 
 export type DocumentStructure = Record<string, any>;
 
@@ -60,7 +61,7 @@ export class DocumentRef<T extends DocumentStructure> {
         request,
         (error, response: DocumentGetResponse) => {
           if (error) {
-            reject(error);
+            reject(fromGrpcError(error));
           } else if (response.hasDocument()) {
             const document = response.getDocument();
             const content = document.getContent().toJavaScript() as T;
@@ -89,7 +90,7 @@ export class DocumentRef<T extends DocumentStructure> {
     return new Promise<void>((resolve, reject) => {
       this.documentClient.set(request, (error) => {
         if (error) {
-          reject(error);
+          reject(fromGrpcError(error));
         } else {
           resolve();
         }
@@ -107,7 +108,7 @@ export class DocumentRef<T extends DocumentStructure> {
     return new Promise<void>((resolve, reject) => {
       this.documentClient.delete(request, (error) => {
         if (error) {
-          reject(error);
+          reject(fromGrpcError(error));
         } else {
           resolve();
         }

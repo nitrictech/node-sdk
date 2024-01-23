@@ -44,6 +44,7 @@ import {
   createHandler,
 } from '../helpers/handler';
 import { HttpContext } from '../context/http';
+import { fromGrpcError } from '../api/errors';
 
 export class ApiWorkerOptions {
   public readonly api: string;
@@ -71,7 +72,7 @@ export interface MethodOptions<SecurityDefs extends string> {
   security?: Partial<Record<SecurityDefs, string[]>>;
 }
 
-class Method<SecurityDefs extends string> {
+export class Method<SecurityDefs extends string> {
   private readonly options: ApiWorkerOptions;
   private readonly handler: GenericMiddleware<HttpContext>;
   public readonly route: Route<SecurityDefs>;
@@ -556,7 +557,7 @@ export class Api<SecurityDefs extends string> extends Base<ApiDetails> {
     const details = await new Promise<ApiDetails>((resolve, reject) => {
       apiClient.details(request, (error, data) => {
         if (error) {
-          reject(error);
+          reject(fromGrpcError(error));
         } else {
           resolve({
             url: data.getUrl(),
@@ -594,30 +595,13 @@ export class Api<SecurityDefs extends string> extends Base<ApiDetails> {
     resourceId.setName(this.name);
     resourceId.setType(ResourceType.API);
 
-    // if (securityDefinitions) {
-    //   Object.keys(securityDefinitions).forEach((k) => {
-    //     const def = securityDefinitions[k] as SecurityDefinition;
-    //     const definition = new ApiScopes();
-
-    //     if (def.kind === 'jwt') {
-    //       // Set it to a JWT definition
-    //       const secDef = new ApiSecurityDefinitionJwt();
-    //       secDef.setIssuer(def.issuer);
-    //       secDef.setAudiencesList(def.audiences);
-    //       definition.setJwt(secDef);
-    //     }
-
-    //     apiResource.getSecurityMap().set(k, definition);
-    //   });
-    // }
-
     req.setApi(apiResource);
     req.setId(resourceId);
 
     return new Promise<ResourceIdentifier>((resolve, reject) => {
       resourceClient.declare(req, (error, _: ResourceDeclareResponse) => {
         if (error) {
-          reject(error);
+          reject(fromGrpcError(error));
         } else {
           resolve(resourceId);
         }

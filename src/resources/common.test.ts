@@ -11,9 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { ResourcesClient } from '@nitric/proto/resources/v1/resources_grpc_pb';
-import { ResourceDetailsResponse } from '@nitric/proto/resources/v1/resources_pb';
-import { Resource, make, ResourceDetails } from './common';
+import { Resource, make } from './common';
 
 const MOCK_RESOURCE = 0;
 const MOCK_DETAILS = {};
@@ -46,53 +44,6 @@ describe('common', () => {
 
       it('should return the same instance of those resource', () => {
         expect(test1).toStrictEqual(test2);
-      });
-    });
-
-    describe('when calling resource details', () => {
-      const test = res('same');
-
-      let detailsSpy;
-      let details: ResourceDetails<any>;
-
-      beforeAll(async () => {
-        detailsSpy = jest
-          .spyOn(ResourcesClient.prototype, 'details')
-          .mockImplementationOnce((request, callback: any) => {
-            const resp = new ResourceDetailsResponse();
-            resp.setId('mock-id');
-            resp.setProvider('mock-provider');
-            resp.setService('mock-service');
-            callback(null, resp);
-
-            return null as any;
-          });
-
-        details = await test['details']();
-      });
-
-      afterAll(() => {
-        detailsSpy.mockClear();
-      });
-
-      it('should call gRPC details method', () => {
-        expect(detailsSpy).toBeCalledTimes(1);
-      });
-
-      it('should return unwrapped details', () => {
-        expect(details.details).toBe(MOCK_DETAILS);
-      });
-
-      it('should return the correct id', () => {
-        expect(details.id).toBe('mock-id');
-      });
-
-      it('should return the correct provider', () => {
-        expect(details.provider).toBe('mock-provider');
-      });
-
-      it('should return the correct service', () => {
-        expect(details.service).toBe('mock-service');
       });
     });
   });

@@ -22,6 +22,7 @@ import {
 import resourceClient from './client';
 import { Duration } from 'google-protobuf/google/protobuf/duration_pb';
 import type { ClientDuplexStream } from '@grpc/grpc-js';
+import { fromGrpcError } from '../api/errors';
 
 export type ActionsList = ActionMap[keyof ActionMap][];
 
@@ -87,7 +88,7 @@ export abstract class SecureResource<P> extends Resource {
 
       resourceClient.declare(req, (error) => {
         if (error) {
-          throw error;
+          throw fromGrpcError(error);
         }
       });
     });
@@ -122,7 +123,7 @@ export const make = <T extends Resource>(
       cache[typename][name]['registerPromise'] = prom;
 
       prom.catch((err) => {
-        console.log(err);
+        console.error(err);
       });
     }
     return cache[typename][name] as T;

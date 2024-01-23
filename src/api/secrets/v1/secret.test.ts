@@ -22,11 +22,12 @@ import {
   Secret as GrpcSecret,
 } from '@nitric/proto/secrets/v1/secrets_pb';
 import { UnimplementedError } from '../../errors';
+import { Metadata, status } from '@grpc/grpc-js';
 
 describe('Secrets Client Tests', () => {
   describe('Given nitric.api.secrets.SecretsClient.Put throws an error', () => {
     const MOCK_ERROR = {
-      code: 12,
+      code: status.UNIMPLEMENTED,
       message: 'UNIMPLEMENTED',
     };
     let sendMock;
@@ -47,10 +48,7 @@ describe('Secrets Client Tests', () => {
 
     it('then Secret.put should reject', async () => {
       const secrets = new Secrets();
-
-      await expect(secrets.secret('test').put('test-secret')).rejects.toEqual(
-        new UnimplementedError('UNIMPLEMENTED')
-      );
+      await expect(secrets.secret('test').put('test-secret')).rejects.toBeInstanceOf(UnimplementedError);
     });
 
     it('then Secret.put should be called once', () => {
@@ -99,13 +97,13 @@ describe('Secrets Client Tests', () => {
 
   describe('Given nitric.api.secrets.SecretsClient.Access throws an error', () => {
     const MOCK_ERROR = {
-      code: 12,
-      message: 'UNIMPLEMENTED',
+      code: status.UNIMPLEMENTED,
+      message: 'The operation is not implemented.',
     };
-    let sendMock;
+    let accessMock;
 
     beforeAll(() => {
-      sendMock = jest
+      accessMock = jest
         .spyOn(GrpcSecretClient.prototype, 'access')
         .mockImplementation((request, callback: any) => {
           callback(MOCK_ERROR, null);
@@ -121,13 +119,11 @@ describe('Secrets Client Tests', () => {
     it('then Secret.access should reject', async () => {
       const secrets = new Secrets();
 
-      await expect(secrets.secret('test').latest().access()).rejects.toEqual(
-        new UnimplementedError('UNIMPLEMENTED')
-      );
+      await expect(secrets.secret('test').latest().access()).rejects.toBeInstanceOf(UnimplementedError);
     });
 
     it('then Secret.access should be called once', () => {
-      expect(sendMock).toBeCalledTimes(1);
+      expect(accessMock).toBeCalledTimes(1);
     });
   });
 

@@ -25,20 +25,22 @@ import {
 } from '@nitric/proto/storage/v1/storage_pb';
 import { UnimplementedError } from '../../errors';
 import {
+  BucketNotification,
   BucketNotificationType,
   BucketNotificationWorkerOptions,
+  FileNotification,
   FileNotificationWorkerOptions,
   bucket,
 } from '@nitric/sdk/resources';
-import { faas } from '@nitric/sdk';
 import { ResourcesClient } from '@nitric/proto/resources/v1/resources_grpc_pb';
 import { ResourceDeclareResponse } from '@nitric/proto/resources/v1/resources_pb';
 import { toDuration } from '@nitric/sdk/resources/common';
+import { Metadata, status } from '@grpc/grpc-js';
 
 describe('Storage Client Tests', () => {
   describe('Given nitric.api.storage.StorageClient.Write throws an error', () => {
     const MOCK_ERROR = {
-      code: 2,
+      code: status.UNIMPLEMENTED,
       message: 'UNIMPLEMENTED',
     };
     let writeMock;
@@ -61,7 +63,7 @@ describe('Storage Client Tests', () => {
       const storage = new Storage();
       await expect(
         storage.bucket('test_bucket').file('test/item').write(new Uint8Array())
-      ).rejects.toEqual(new UnimplementedError('UNIMPLEMENTED'));
+      ).rejects.toBeInstanceOf(UnimplementedError);
     });
 
     test('The Grpc client for Storage.write should have been called exactly once', () => {
@@ -101,7 +103,7 @@ describe('Storage Client Tests', () => {
 
   describe('Given nitric.api.storage.StorageClient.Read throws an error', () => {
     const MOCK_ERROR = {
-      code: 2,
+      code: status.UNIMPLEMENTED,
       message: 'UNIMPLEMENTED',
     };
     let readMock;
@@ -124,7 +126,7 @@ describe('Storage Client Tests', () => {
       const storage = new Storage();
       await expect(
         storage.bucket('test_bucket').file('test/item').read()
-      ).rejects.toEqual(new UnimplementedError('UNIMPLEMENTED'));
+      ).rejects.toBeInstanceOf(UnimplementedError);
     });
 
     test('The Grpc client for Storage.read should have been called exactly once', () => {
@@ -167,7 +169,7 @@ describe('Storage Client Tests', () => {
 
   describe('Given nitric.api.storage.StorageClient.Exists throws an error', () => {
     const MOCK_ERROR = {
-      code: 2,
+      code: status.UNIMPLEMENTED,
       message: 'UNIMPLEMENTED',
     };
     let existsMock;
@@ -190,7 +192,7 @@ describe('Storage Client Tests', () => {
       const storage = new Storage();
       await expect(
         storage.bucket('test_bucket').file('test/item').exists()
-      ).rejects.toEqual(new UnimplementedError('UNIMPLEMENTED'));
+      ).rejects.toBeInstanceOf(UnimplementedError);
     });
 
     test('The Grpc client for Storage.write should have been called exactly once', () => {
@@ -230,7 +232,7 @@ describe('Storage Client Tests', () => {
 
   describe('Given nitric.api.storage.StorageClient.Delete throws an error', () => {
     const MOCK_ERROR = {
-      code: 2,
+      code: status.UNIMPLEMENTED,
       message: 'UNIMPLEMENTED',
     };
     let deleteMock;
@@ -251,9 +253,7 @@ describe('Storage Client Tests', () => {
 
     test('Then StorageClient.delete should reject', async () => {
       const client = new Storage();
-      await expect(client.bucket('test').file('test').delete()).rejects.toEqual(
-        new UnimplementedError('UNIMPLEMENTED')
-      );
+      await expect(client.bucket('test').file('test').delete()).rejects.toBeInstanceOf(UnimplementedError);
     });
 
     test('The Grpc client for Storage.delete should have been called exactly once', () => {
@@ -292,7 +292,7 @@ describe('Storage Client Tests', () => {
 
   describe('Given nitric.api.storage.StorageClient.PresignUrl throws an error', () => {
     const MOCK_ERROR = {
-      code: 2,
+      code: status.UNIMPLEMENTED,
       message: 'UNIMPLEMENTED',
     };
     let signUrlMock;
@@ -314,8 +314,8 @@ describe('Storage Client Tests', () => {
     test('Then file.signUrl should reject', async () => {
       const client = new Storage();
       await expect(
-        client.bucket('test').file('test').signUrl(FileMode.Read)
-      ).rejects.toEqual(new UnimplementedError('UNIMPLEMENTED'));
+        client.bucket('test').file('test').getDownloadUrl()
+      ).rejects.toBeInstanceOf(UnimplementedError);
     });
 
     test('The Grpc client for file.signUrl should have been called exactly once', () => {
@@ -426,7 +426,7 @@ describe('Storage Client Tests', () => {
 
   describe('Given nitric.api.storage.StorageClient.listBlobs throws an error', () => {
     const MOCK_ERROR = {
-      code: 2,
+      code: status.UNIMPLEMENTED,
       message: 'UNIMPLEMENTED',
     };
 
@@ -448,9 +448,7 @@ describe('Storage Client Tests', () => {
 
     test('Then StorageClient.listBlobs should reject', async () => {
       const client = new Storage();
-      await expect(client.bucket('test').files()).rejects.toEqual(
-        new UnimplementedError('UNIMPLEMENTED')
-      );
+      await expect(client.bucket('test').files()).rejects.toBeInstanceOf(UnimplementedError);
     });
 
     test('The Grpc client for Storage.listBlobs should have been called exactly once', () => {
@@ -498,11 +496,12 @@ describe('Storage Client Tests', () => {
   });
 });
 
-jest.mock('../../../faas/index');
+// FIXME:
+// jest.mock('../../../faas/index');
 
 describe('bucket notification', () => {
   const startSpy = jest
-    .spyOn(faas.Faas.prototype, 'start')
+    .spyOn(BucketNotification.prototype as any, 'start')
     .mockReturnValue(Promise.resolve());
   const mockFn = jest.fn();
 
@@ -519,19 +518,6 @@ describe('bucket notification', () => {
       await bucket('test-bucket').on('write', 'test.png', mockFn);
     });
 
-    it('should create a new FaasClient', () => {
-      expect(faas.Faas).toBeCalledTimes(1);
-    });
-
-    it('should provide Faas with BucketNotificationWorkerOptions', () => {
-      const expectedOpts = new BucketNotificationWorkerOptions(
-        'test-bucket',
-        'write',
-        'test.png'
-      );
-      expect(faas.Faas).toBeCalledWith(expectedOpts);
-    });
-
     it('should call FaasClient::start()', () => {
       expect(startSpy).toBeCalledTimes(1);
     });
@@ -546,19 +532,6 @@ describe('bucket notification', () => {
       await bucket('test-bucket').on('delete', 'test.png', mockFn);
     });
 
-    it('should create a new FaasClient', () => {
-      expect(faas.Faas).toBeCalledTimes(1);
-    });
-
-    it('should provide Faas with BucketNotificationWorkerOptions', () => {
-      const expectedOpts = new BucketNotificationWorkerOptions(
-        'test-bucket',
-        'delete',
-        'test.png'
-      );
-      expect(faas.Faas).toBeCalledWith(expectedOpts);
-    });
-
     it('should call FaasClient::start()', () => {
       expect(startSpy).toBeCalledTimes(1);
     });
@@ -567,7 +540,7 @@ describe('bucket notification', () => {
 
 describe('file notification', () => {
   const startSpy = jest
-    .spyOn(faas.Faas.prototype, 'start')
+    .spyOn(FileNotification.prototype as any, 'start')
     .mockReturnValue(Promise.resolve());
 
   const existsSpy = jest
@@ -595,19 +568,6 @@ describe('file notification', () => {
       expect(existsSpy).toBeCalledTimes(1);
     });
 
-    it('should create a new FaasClient', () => {
-      expect(faas.Faas).toBeCalledTimes(1);
-    });
-
-    it('should provide Faas with FileNotificationWorkerOptions', () => {
-      const expectedOpts = new FileNotificationWorkerOptions(
-        bucketResource,
-        'write',
-        'test.png'
-      );
-      expect(faas.Faas).toBeCalledWith(expectedOpts);
-    });
-
     it('should call FaasClient::start()', () => {
       expect(startSpy).toBeCalledTimes(1);
     });
@@ -626,19 +586,6 @@ describe('file notification', () => {
 
     it('should declare the new resource', () => {
       expect(existsSpy).toBeCalledTimes(1);
-    });
-
-    it('should create a new FaasClient', () => {
-      expect(faas.Faas).toBeCalledTimes(1);
-    });
-
-    it('should provide Faas with FileNotificationWorkerOptions', () => {
-      const expectedOpts = new FileNotificationWorkerOptions(
-        bucketResource,
-        'delete',
-        'test.png'
-      );
-      expect(faas.Faas).toBeCalledWith(expectedOpts);
     });
 
     it('should call FaasClient::start()', () => {

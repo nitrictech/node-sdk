@@ -17,12 +17,13 @@ import { UnimplementedError } from '../api/errors';
 import { secret } from '.';
 import { ResourceDeclareResponse } from '@nitric/proto/resources/v1/resources_pb';
 import { Secret } from '..';
+import { status } from '@grpc/grpc-js';
 
 describe('Registering secret resources', () => {
   describe('Given the server is unimplemented', () => {
     describe('When a secret is registered', () => {
       const MOCK_ERROR = {
-        code: 2,
+        code: status.UNIMPLEMENTED,
         message: 'UNIMPLEMENTED',
       };
 
@@ -44,9 +45,7 @@ describe('Registering secret resources', () => {
       });
 
       it('Should throw the error', async () => {
-        await expect(secret(validName)['registerPromise']).rejects.toEqual(
-          new UnimplementedError('UNIMPLEMENTED')
-        );
+        await expect(secret(validName)['registerPromise']).rejects.toBeInstanceOf(UnimplementedError);
       });
 
       it('Should call the resource server', () => {

@@ -43,6 +43,7 @@ import {
   createHandler,
 } from '../helpers/handler';
 import { BlobEventContext, BucketEventContext } from '../context/bucket';
+import { fromGrpcError } from '../api/errors';
 
 type BucketPermission = 'reading' | 'writing' | 'deleting';
 
@@ -230,7 +231,7 @@ export class BucketResource extends SecureResource<BucketPermission> {
     return new Promise<ResourceIdentifier>((resolve, reject) => {
       resourceClient.declare(req, (error, _: ResourceDeclareResponse) => {
         if (error) {
-          reject(error);
+          reject(fromGrpcError(error));
         } else {
           resolve(resource);
         }

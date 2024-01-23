@@ -16,13 +16,12 @@ import { ResourcesClient } from '@nitric/proto/resources/v1/resources_grpc_pb';
 import { UnimplementedError } from '../api/errors';
 import { websocket } from '.';
 import { ResourceDeclareResponse } from '@nitric/proto/resources/v1/resources_pb';
-
-jest.mock('../faas/index');
+import { Metadata, status } from '@grpc/grpc-js';
 
 describe('Registering websocket resources', () => {
   describe('Given declare returns an error from the resource server', () => {
     const MOCK_ERROR = {
-      code: 2,
+      code: status.UNIMPLEMENTED,
       message: 'UNIMPLEMENTED',
     };
 
@@ -44,9 +43,7 @@ describe('Registering websocket resources', () => {
     });
 
     it('Should throw the error', async () => {
-      await expect(websocket(validName)['registerPromise']).rejects.toEqual(
-        new UnimplementedError('UNIMPLEMENTED')
-      );
+      await expect(websocket(validName)['registerPromise']).rejects.toBeInstanceOf(UnimplementedError);
     });
 
     it('Should call the resource server', () => {

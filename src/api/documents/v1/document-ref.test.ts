@@ -19,12 +19,13 @@ import {
 } from '@nitric/proto/documents/v1/documents_pb';
 import { InvalidArgumentError, UnimplementedError } from '../../errors';
 import { Documents, documents } from './documents';
+import { status } from '@grpc/grpc-js';
 
 describe('Document Ref Tests', () => {
   describe('Given DocumentServiceClient.Get throws an error', () => {
     const MOCK_ERROR = {
-      code: 2,
-      message: 'UNIMPLEMENTED',
+      code: status.UNIMPLEMENTED,
+      message: 'test message',
     };
     let documentsClient: Documents;
     let getMock;
@@ -46,9 +47,7 @@ describe('Document Ref Tests', () => {
 
     test('Then DocumentRef.Get should reject', async () => {
       const doc = documentsClient.collection('test').doc('id');
-      await expect(doc.get()).rejects.toEqual(
-        new UnimplementedError('UNIMPLEMENTED')
-      );
+      await expect(doc.get()).rejects.toBeInstanceOf(UnimplementedError);
     });
 
     test('The Grpc client for DocumentServiceClient.Put should have been called exactly once', () => {
@@ -98,8 +97,8 @@ describe('Document Ref Tests', () => {
 
   describe('Given DocumentServiceClient.Set throws an error', () => {
     const MOCK_ERROR = {
-      code: 2,
-      message: 'UNIMPLEMENTED',
+      code: status.UNIMPLEMENTED,
+      message: 'test message',
     };
     let documentsClient: Documents;
     let setMock;
@@ -125,7 +124,7 @@ describe('Document Ref Tests', () => {
         doc.set({
           name: 'test',
         })
-      ).rejects.toEqual(new UnimplementedError('UNIMPLEMENTED'));
+      ).rejects.toBeInstanceOf(UnimplementedError);
     });
 
     test('The Grpc client for DocumentServiceClient.Get should have been called exactly once', () => {
@@ -135,8 +134,8 @@ describe('Document Ref Tests', () => {
 
   describe('Given DocumentServiceClient.Delete throws an error', () => {
     const MOCK_ERROR = {
-      code: 2,
-      message: 'UNIMPLEMENTED',
+      code: status.UNIMPLEMENTED,
+      message: 'test message',
     };
     let documentsClient: Documents;
     let deleteMock;
@@ -158,9 +157,7 @@ describe('Document Ref Tests', () => {
 
     test('Then DocumentRef.Delete should reject', async () => {
       const doc = documentsClient.collection('test').doc('id');
-      await expect(doc.delete()).rejects.toEqual(
-        new UnimplementedError('UNIMPLEMENTED')
-      );
+      await expect(doc.delete()).rejects.toBeInstanceOf(UnimplementedError);
     });
 
     test('The Grpc client for DocumentServiceClient.Delete should have been called exactly once', () => {

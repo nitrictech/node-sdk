@@ -27,6 +27,7 @@ import { DocumentRef, DocumentStructure } from './document-ref';
 import { CollectionRef } from './collection-ref';
 import { DocumentSnapshot } from './document-snapshot';
 import { ServiceError } from '@grpc/grpc-js';
+import { fromGrpcError } from '../../errors';
 
 type PagingToken = Map<string, string>;
 
@@ -168,7 +169,7 @@ export class Query<T extends DocumentStructure> {
         request,
         (error, response: DocumentQueryResponse) => {
           if (error) {
-            reject(error);
+            reject(fromGrpcError(error));
           } else {
             const pagingTokenMap = protoMapToMap(response.getPagingTokenMap());
 

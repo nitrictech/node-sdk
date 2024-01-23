@@ -38,6 +38,7 @@ import {
 } from '@nitric/proto/topics/v1/topics_pb';
 import { MessageContext } from '../context/message';
 import { MessageMiddleware, createHandler } from '../helpers/handler';
+import { fromGrpcError } from '../api/errors';
 
 type TopicPermission = 'publishing';
 
@@ -52,7 +53,7 @@ export class SubscriptionWorkerOptions {
 /**
  * Creates a subscription worker
  */
-class Subscription<T extends Record<string, any> = Record<string, any>> {
+export class Subscription<T extends Record<string, any> = Record<string, any>> {
   private readonly options: SubscriptionWorkerOptions;
   private readonly handler: MessageMiddleware;
 
@@ -144,7 +145,7 @@ export class TopicResource<
         req,
         (error, response: ResourceDeclareResponse) => {
           if (error) {
-            reject(error);
+            reject(fromGrpcError(error));
           } else {
             resolve(resource);
           }
@@ -185,17 +186,6 @@ export class TopicResource<
 
   protected resourceType() {
     return ResourceType.TOPIC;
-  }
-
-  /**
-   * Unwraps the response details.
-   *
-   * Not used for topics.
-   *
-   * @param resp {never}
-   */
-  protected unwrapDetails(resp: ResourceDeclareResponse): never {
-    throw new Error('details unimplemented for topic');
   }
 
   /**

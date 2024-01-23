@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import { status, ServiceError, Metadata } from '@grpc/grpc-js';
 import { ResourcesClient } from '@nitric/proto/resources/v1/resources_grpc_pb';
 import { UnimplementedError } from '../api/errors';
 import { collection } from '.';
@@ -21,7 +22,7 @@ import { CollectionRef } from '../api/documents/v1/collection-ref';
 describe('Registering collection resources', () => {
   describe('Given declare returns an error from the resource server', () => {
     const MOCK_ERROR = {
-      code: 2,
+      code: status.UNIMPLEMENTED,
       message: 'UNIMPLEMENTED',
     };
 
@@ -43,9 +44,7 @@ describe('Registering collection resources', () => {
     });
 
     it('Should throw the error', async () => {
-      await expect(collection(validName)['registerPromise']).rejects.toEqual(
-        new UnimplementedError('UNIMPLEMENTED')
-      );
+      await expect(collection(validName)['registerPromise']).rejects.toBeInstanceOf(UnimplementedError);
     });
 
     it('Should call the resource server', () => {

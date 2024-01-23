@@ -28,6 +28,7 @@ import {
 } from '@nitric/sdk/resources';
 import { toDuration } from '@nitric/sdk/resources/common';
 import { FileNotificationMiddleware } from '@nitric/sdk/helpers/handler';
+import { fromGrpcError } from '../../errors';
 
 /**
  * Nitric storage client, facilitates writing and reading from blob storage (buckets).
@@ -78,13 +79,13 @@ export class Bucket {
 
     request.setBucketName(this.name);
 
-    return await new Promise<File[]>((res, rej) => {
+    return await new Promise<File[]>((resolve, reject) => {
       this.storage.StorageClient.listBlobs(request, (err, data) => {
         if (err) {
-          rej(err);
+          reject(fromGrpcError(err));
         }
 
-        res(
+        resolve(
           data.getBlobsList().map((f) => {
             return new File(this.storage, this, f.getKey());
           })
@@ -180,10 +181,9 @@ export class File {
    * @param mode the mode the url will access the file with. E.g. reading or writing.
    * @param opts file URL signing options.
    * @param opts.expiry how long the URL should be valid for in seconds.
-   * @deprecated for simplicity we suggest using getUploadUrl or getDownloadUrl.
    * @returns a presigned url string.
    */
-  public async signUrl(
+  async signUrl(
     mode: FileMode,
     opts: SignUrlOptions = DEFAULT_SIGN_URL_OPTS
   ): Promise<string> {
@@ -201,7 +201,7 @@ export class File {
     return new Promise((resolve, reject) => {
       this.storage.StorageClient.preSignUrl(request, (error, response) => {
         if (error) {
-          reject(error);
+          reject(fromGrpcError(error));
         } else {
           resolve(response.getUrl());
         }
@@ -238,7 +238,7 @@ export class File {
     return new Promise((resolve, reject) => {
       this.storage.StorageClient.write(request, (error) => {
         if (error) {
-          reject(error);
+          reject(fromGrpcError(error));
         } else {
           resolve();
         }
@@ -268,7 +268,7 @@ export class File {
     return new Promise((resolve, reject) => {
       this.storage.StorageClient.read(request, (error, response) => {
         if (error) {
-          reject(error);
+          reject(fromGrpcError(error));
         } else {
           resolve(response.getBody_asU8());
         }
@@ -298,7 +298,7 @@ export class File {
     return new Promise((resolve, reject) => {
       this.storage.StorageClient.delete(request, (error) => {
         if (error) {
-          reject(error);
+          reject(fromGrpcError(error));
         } else {
           resolve();
         }
@@ -328,7 +328,7 @@ export class File {
     return new Promise((resolve, reject) => {
       this.storage.StorageClient.exists(request, (error, response) => {
         if (error) {
-          reject(error);
+          reject(fromGrpcError(error));
         } else {
           resolve(response.getExists());
         }

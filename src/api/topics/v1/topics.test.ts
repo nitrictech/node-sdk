@@ -11,129 +11,69 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Eventing } from './topics';
+import { Eventing, Topic } from './topics';
 import { TopicPublishResponse } from '@nitric/proto/topics/v1/topics_pb';
 import { TopicsClient as GrpcTopicServiceClient } from '@nitric/proto/topics/v1/topics_grpc_pb';
 import { UnimplementedError } from '../../errors';
+import { TopicsClient } from '@nitric/sdk/gen/nitric/proto/topics/v1/topics_grpc_pb';
+import { status } from '@grpc/grpc-js';
 
 describe('Event Client Tests', () => {
-  // describe('Given nitric.interfaces.event.EventServiceClient.publish throws an error', () => {
-  //   const MOCK_ERROR = {
-  //     code: 2,
-  //     message: 'UNIMPLEMENTED',
-  //   };
-  //   let publishMock;
-  //   beforeAll(() => {
-  //     publishMock = jest
-  //       .spyOn(GrpcEventServiceClient.prototype, 'publish')
-  //       .mockImplementation((request, callback: any) => {
-  //         callback(MOCK_ERROR, null);
-  //         return null as any;
-  //       });
-  //   });
-  //   afterAll(() => {
-  //     jest.resetAllMocks();
-  //   });
-  //   test('Then Eventing.Topic.publish should reject', async () => {
-  //     const topic = new Eventing().topic('test');
-  //     await expect(
-  //       topic.publish({
-  //         id: 'test',
-  //         payloadType: 'Test Payload',
-  //         payload: {
-  //           test: 'test',
-  //         },
-  //       })
-  //     ).rejects.toEqual(new UnimplementedError('UNIMPLEMENTED'));
-  //   });
-  //   test('The Grpc client for Eventing.publish should have been called exactly once', () => {
-  //     expect(publishMock).toBeCalledTimes(1);
-  //   });
-  // });
-  // describe('Given nitric.api.event.Eventing.Publish succeeds', () => {
-  //   describe('And a id is provided', () => {
-  //     let publishMock;
-  //     beforeAll(() => {
-  //       publishMock = jest
-  //         .spyOn(GrpcEventServiceClient.prototype, 'publish')
-  //         .mockImplementation((request, callback: any) => {
-  //           const response = new EventPublishResponse();
-  //           response.setId(request.getEvent().getId());
-  //           callback(null, response);
-  //           return null as any;
-  //         });
-  //     });
-  //     afterAll(() => {
-  //       jest.resetAllMocks();
-  //     });
-  //     test('Then Eventing.publish should resolve with the provided id', async () => {
-  //       const client = new Eventing();
-  //       const event = new NitricEvent({ test: 'test' }, 'test', 'Test Payload');
-  //       await expect(
-  //         client
-  //           .topic('test')
-  //           .publish(new NitricEvent({ test: 'test' }, 'test', 'Test Payload'))
-  //       ).resolves.toStrictEqual(event);
-  //     });
-  //     test('The Grpc client for Eventing.publish should have been called exactly once', () => {
-  //       expect(publishMock).toBeCalledTimes(1);
-  //     });
-  //   });
-  // });
-  // describe('Given nitric.api.event.TopicServiceClient.List throws an error', () => {
-  //   const MOCK_ERROR = {
-  //     code: 2,
-  //     message: 'UNIMPLEMENTED',
-  //   };
-  //   let listMock;
-  //   beforeAll(() => {
-  //     listMock = jest
-  //       .spyOn(GrpcTopicServiceClient.prototype, 'list')
-  //       .mockImplementation((_, callback: any) => {
-  //         callback(MOCK_ERROR, null);
-  //         return null as any;
-  //       });
-  //   });
-  //   afterAll(() => {
-  //     jest.resetAllMocks();
-  //   });
-  //   test('Then TopicServiceClient.publish should reject', async () => {
-  //     const eventing = new Eventing();
-  //     await expect(eventing.topics()).rejects.toEqual(
-  //       new UnimplementedError('UNIMPLEMENTED')
-  //     );
-  //   });
-  //   test('The Grpc client for TopicServiceClient.publish should have been called exactly once', () => {
-  //     expect(listMock).toBeCalledTimes(1);
-  //   });
-  // });
-  // describe('Given nitric.api.event.TopicServiceClient.List succeeds', () => {
-  //   const MOCK_TOPIC = new NitricTopic();
-  //   MOCK_TOPIC.setName('test-topic');
-  //   const MOCK_TOPICS: NitricTopic[] = [MOCK_TOPIC];
-  //   const MOCK_TOPICS_REPLY = new TopicListResponse();
-  //   MOCK_TOPICS_REPLY.setTopicsList(MOCK_TOPICS);
-  //   let listMock;
-  //   beforeAll(() => {
-  //     listMock = jest
-  //       .spyOn(GrpcTopicServiceClient.prototype, 'list')
-  //       .mockImplementation((_, callback: any) => {
-  //         callback(null, MOCK_TOPICS_REPLY);
-  //         return null as any;
-  //       });
-  //   });
-  //   afterAll(() => {
-  //     jest.resetAllMocks();
-  //   });
-  //   test('Then TopicServiceClient.publish should resolve with available topics', async () => {
-  //     const eventing = new Eventing();
-  //     (await eventing.topics()).forEach((topic) => {
-  //       expect(topic.eventing).toBe(eventing);
-  //       expect(topic.name).toEqual('test-topic');
-  //     });
-  //   });
-  //   test('The Grpc client for TopicServiceClient.list should have been called exactly once', () => {
-  //     expect(listMock).toBeCalledTimes(1);
-  //   });
-  // });
+  describe('Given the grpc client returns an unimplemented error status', () => {
+    const MOCK_ERROR = {
+      code: status.UNIMPLEMENTED,
+      message: 'UNIMPLEMENTED',
+    };
+    let publishMock;
+    beforeAll(() => {
+      publishMock = jest
+        .spyOn(TopicsClient.prototype, 'publish')
+        .mockImplementation((request, callback: any) => {
+          callback(MOCK_ERROR, null);
+          return null as any;
+        });
+    });
+    afterAll(() => {
+      jest.resetAllMocks();
+    });
+    test('Then publish call should return an UnimplementedError', async () => {
+      const topic = new Eventing().topic('test');
+      await expect(
+        topic.publish({
+          id: 'test',
+          payloadType: 'Test Payload',
+          payload: {
+            test: 'test',
+          },
+        })
+      ).rejects.toBeInstanceOf(UnimplementedError);
+    });
+    test('The Grpc client for Eventing.publish should have been called exactly once', () => {
+      expect(publishMock).toBeCalledTimes(1);
+    });
+  });
+  describe('Given the grpc returns successfully', () => {
+    let publishMock;
+    beforeAll(() => {
+      publishMock = jest
+        .spyOn(TopicsClient.prototype, 'publish')
+        .mockImplementation((request, callback: any) => {
+          const response = new TopicPublishResponse();
+          callback(null, response);
+          return null as any;
+        });
+    });
+    afterAll(() => {
+      jest.resetAllMocks();
+    });
+    test('Then Eventing.publish should resolve with the provided id', async () => {
+      const client = new Eventing();
+      await expect(
+        client.topic('test').publish({ message: 'Test Payload' })
+      ).resolves.toBeUndefined();
+    });
+    test('The Grpc client for Eventing.publish should have been called exactly once', () => {
+      expect(publishMock).toBeCalledTimes(1);
+    });
+  });
 });

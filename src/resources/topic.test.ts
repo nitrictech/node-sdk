@@ -14,17 +14,15 @@
 
 import { ResourcesClient } from '@nitric/proto/resources/v1/resources_grpc_pb';
 import { UnimplementedError } from '../api/errors';
-import { topic, SubscriptionWorkerOptions } from '.';
+import { topic, SubscriptionWorkerOptions, TopicResource, Subscription } from '.';
 import { ResourceDeclareResponse } from '@nitric/proto/resources/v1/resources_pb';
 import { Topic } from '..';
-import * as faas from '../faas/index';
-
-jest.mock('../faas/index');
+import { Metadata, status } from '@grpc/grpc-js';
 
 describe('Registering topic resources', () => {
   describe('Given declare returns an error from the resource server', () => {
     const MOCK_ERROR = {
-      code: 2,
+      code: status.UNIMPLEMENTED,
       message: 'UNIMPLEMENTED',
     };
 
@@ -46,9 +44,7 @@ describe('Registering topic resources', () => {
     });
 
     it('Should throw the error', async () => {
-      await expect(topic(validName)['registerPromise']).rejects.toEqual(
-        new UnimplementedError('UNIMPLEMENTED')
-      );
+      await expect(topic(validName)['registerPromise']).rejects.toBeInstanceOf(UnimplementedError);
     });
 
     it('Should call the resource server', () => {
@@ -99,7 +95,7 @@ describe('Registering topic resources', () => {
         .mockImplementation((request, callback: any) => {
           const response = new ResourceDeclareResponse();
           callback(null, response);
-          return null as any;
+          return null;
         });
 
       // register the resource for the first time
@@ -139,7 +135,7 @@ describe('Registering topic resources', () => {
 
 describe('subscription', () => {
   const startSpy = jest
-    .spyOn(faas.Faas.prototype, 'start')
+    .spyOn(Subscription.prototype as any, 'start')
     .mockReturnValue(Promise.resolve());
   const mockFn = jest.fn();
 
@@ -156,16 +152,7 @@ describe('subscription', () => {
       await topic('test-subscribe').subscribe(mockFn);
     });
 
-    it('should create a new FaasClient', () => {
-      expect(faas.Faas).toBeCalledTimes(1);
-    });
-
-    it('should provide Faas with SubscriptionWorkerOptions', () => {
-      const expectedOpts = new SubscriptionWorkerOptions('test-subscribe');
-      expect(faas.Faas).toBeCalledWith(expectedOpts);
-    });
-
-    it('should call FaasClient::start()', () => {
+    it('should call Subscription start()', () => {
       expect(startSpy).toBeCalledTimes(1);
     });
   });

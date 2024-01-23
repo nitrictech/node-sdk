@@ -20,6 +20,7 @@ import {
 import { Struct } from 'google-protobuf/google/protobuf/struct_pb';
 import * as grpc from '@grpc/grpc-js';
 import { toDuration } from '@nitric/sdk/resources/common';
+import { fromGrpcError } from '../../errors';
 
 export interface PublishOptions {
   /** Number of seconds to delay message publishing by */
@@ -71,7 +72,7 @@ export class Topic<T extends Record<string, any> = Record<string, any>> {
   async publish(
     event: T,
     opts: PublishOptions = DEFAULT_PUBLISH_OPTS
-  ): Promise<T> {
+  ): Promise<void> {
     const publishOpts = {
       ...DEFAULT_PUBLISH_OPTS,
       ...opts,
@@ -85,12 +86,12 @@ export class Topic<T extends Record<string, any> = Record<string, any>> {
     request.setMessage(msg);
     request.setDelay(toDuration(publishOpts.delay));
 
-    return new Promise<T>((resolve, reject) => {
+    return new Promise<void>((resolve, reject) => {
       this.eventing.TopicServiceClient.publish(request, (error, response) => {
         if (error) {
-          reject(error);
+          reject(fromGrpcError(error));
         } else {
-          resolve(response as unknown as T);
+          resolve();
         }
       });
     });

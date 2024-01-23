@@ -21,6 +21,7 @@ import {
 import resourceClient from './client';
 import { secrets, Secret } from '../api/secrets';
 import { ActionsList, make, SecureResource } from './common';
+import { fromGrpcError } from '../api/errors';
 
 type SecretPermission = 'put' | 'access';
 
@@ -43,7 +44,7 @@ export class SecretResource extends SecureResource<SecretPermission> {
         req,
         (error, response: ResourceDeclareResponse) => {
           if (error) {
-            reject(error);
+            reject(fromGrpcError(error));
           } else {
             resolve(resource);
           }
