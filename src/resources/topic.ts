@@ -203,8 +203,16 @@ export class TopicResource<
   }
 }
 
-export const topic = make(TopicResource) as <
-  T extends Record<string, any> = Record<string, any>
->(
+/**
+ * Create a reference to a named topic in this project.
+ *
+ * If the topic hasn't been referenced before this is a request for a new resource. Otherwise, the existing topic with the same name will be used.
+ *
+ * @param name the name of the topic.
+ * @returns a reference to the topic.
+ */
+export function topic<T extends Record<string, any> = Record<string, any>>(
   name: string
-) => TopicResource<T>;
+): TopicResource<T> {
+  return make<TopicResource<T>>(TopicResource)(name);
+}

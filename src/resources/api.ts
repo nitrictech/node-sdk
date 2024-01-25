@@ -611,7 +611,7 @@ export class Api<SecurityDefs extends string> extends Base<ApiDetails> {
 }
 
 /**
- * Register a new API Resource.
+ * Register an API Resource. If the API has already been registered, the existing API will be returned.
  *
  * The returned API object can be used to register Routes and Methods, with Handlers.
  * e.g. api.route('/customers').get(getCustomerHandler)

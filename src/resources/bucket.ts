@@ -300,4 +300,12 @@ export class BucketResource extends SecureResource<BucketPermission> {
   }
 }
 
-export const bucket = make(BucketResource);
+/**
+ * Create a reference to a named bucket in this project.
+ *
+ * If the bucket hasn't been referenced before this is a request for a new resource. Otherwise, the existing bucket with the same name will be used.
+ *
+ * @param name the name of the bucket.
+ * @returns a reference to the bucket.
+ */
+export const bucket: (name: string) => BucketResource = make(BucketResource);

@@ -100,8 +100,6 @@ export class KeyValueStoreResource<
   }
 }
 
-const newStore = make(KeyValueStoreResource);
-
 /**
  * Create a reference to a named key/value store in this project.
  *
@@ -113,5 +111,5 @@ const newStore = make(KeyValueStoreResource);
 export function kv<T extends ValueStructure>(
   name: string
 ): KeyValueStoreResource<T> {
-  return newStore(name) as KeyValueStoreResource<T>;
+  return make<KeyValueStoreResource<T>>(KeyValueStoreResource)(name);
 }

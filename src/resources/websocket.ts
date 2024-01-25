@@ -250,4 +250,13 @@ export class WebsocketResource extends Base<any> {
   }
 }
 
-export const websocket = make(WebsocketResource);
+/**
+ * Register a Websocket Resource. If the Websocket has already been registered, the existing Websocket will be returned.
+ *
+ * The returned Websocket object can be used to register handlers for websocket events.
+ * e.g. socket.on('connect', async (ctx) => { ... })
+ *
+ * @param name the name of the Websocket
+ * @returns a Websocket resource
+ */
+export const websocket: (name: string) => WebsocketResource = make(WebsocketResource);

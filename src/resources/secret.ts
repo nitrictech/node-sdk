@@ -81,4 +81,12 @@ export class SecretResource extends SecureResource<SecretPermission> {
   }
 }
 
-export const secret = make(SecretResource);
+/**
+ * Create a reference to a named secret in this project.
+ *
+ * If the secret hasn't been referenced before this is a request for a new resource. Otherwise, the existing secret with the same name will be used.
+ *
+ * @param name the name of the secret.
+ * @returns a reference to the secret.
+ */
+export const secret: (name: string) => SecretResource = make(SecretResource);

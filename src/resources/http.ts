@@ -77,6 +77,13 @@ const createWorker = async (
   httpClient.proxy(httpProxyRequest, callback);
 };
 
+
+/**
+ * Register an HTTP Proxy to the provided application.
+ *
+ * @param app the http application to run behind the proxy
+ * @returns void
+ */
 export const http = (
   app: NodeApplication | ListenerFunction,
   callback?: () => void

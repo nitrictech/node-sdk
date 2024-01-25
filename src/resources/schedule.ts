@@ -226,9 +226,11 @@ export class Schedule {
 
 /**
  * Provides a new schedule, which can be configured with a rate/cron and a callback to run on the schedule.
+ * 
+ * The schedule name must be unique within the project.
  *
  * @param name of the schedule, e.g. "Nightly"
- * @returns a named schedule.
+ * @returns a named schedule builder.
  */
 export const schedule = (name: string): Schedule => {
   return new Schedule(name);
