@@ -248,16 +248,6 @@ export class WebsocketResource extends Base<any> {
   protected resourceType() {
     return ResourceType.WEBSOCKET;
   }
-
-  protected unwrapDetails(resp: ResourceDetailsResponse) {
-    if (resp.hasWebsocket()) {
-      return {
-        url: resp.getWebsocket().getUrl(),
-      };
-    }
-
-    throw new Error('Unexpected details in response. Expected API details');
-  }
 }
 
 export const websocket = make(WebsocketResource);

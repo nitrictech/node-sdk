@@ -15,18 +15,18 @@
 import { status, ServiceError, Metadata } from '@grpc/grpc-js';
 import { ResourcesClient } from '@nitric/proto/resources/v1/resources_grpc_pb';
 import { UnimplementedError } from '../api/errors';
-import { collection } from '.';
+import { kv } from '.';
 import { ResourceDeclareResponse } from '@nitric/proto/resources/v1/resources_pb';
-import { CollectionRef } from '../api/documents/v1/collection-ref';
+import { StoreRef } from '../api/keyvalue/v1/store';
 
-describe('Registering collection resources', () => {
+describe('Registering key/value store resources', () => {
   describe('Given declare returns an error from the resource server', () => {
     const MOCK_ERROR = {
       code: status.UNIMPLEMENTED,
       message: 'UNIMPLEMENTED',
     };
 
-    const validName = 'my-collection';
+    const validName = 'my-store';
     let declareSpy;
 
     beforeAll(() => {
@@ -34,7 +34,7 @@ describe('Registering collection resources', () => {
         .spyOn(ResourcesClient.prototype, 'declare')
         .mockImplementationOnce((request, callback: any) => {
           callback(MOCK_ERROR, null);
-
+1
           return null as any;
         });
     });
@@ -44,7 +44,7 @@ describe('Registering collection resources', () => {
     });
 
     it('Should throw the error', async () => {
-      await expect(collection(validName)['registerPromise']).rejects.toBeInstanceOf(UnimplementedError);
+      await expect(kv(validName)['registerPromise']).rejects.toBeInstanceOf(UnimplementedError);
     });
 
     it('Should call the resource server', () => {
@@ -54,7 +54,7 @@ describe('Registering collection resources', () => {
 
   describe('Given declare succeeds on the resource server', () => {
     describe('When the service succeeds', () => {
-      const validName = 'my-collection2';
+      const validName = 'my-store2';
       let otherSpy;
 
       beforeAll(() => {
@@ -73,7 +73,7 @@ describe('Registering collection resources', () => {
 
       it('Should succeed', async () => {
         await expect(
-          collection(validName)['registerPromise']
+          kv(validName)['registerPromise']
         ).resolves.not.toBeNull();
       });
 
@@ -83,9 +83,9 @@ describe('Registering collection resources', () => {
     });
   });
 
-  describe('Given a collection is already registered', () => {
-    const collectionName = 'already-exists';
-    let collectionResource;
+  describe('Given a store is already registered', () => {
+    const storeName = 'already-exists';
+    let store;
     let existsSpy;
 
     beforeEach(() => {
@@ -99,20 +99,20 @@ describe('Registering collection resources', () => {
         });
 
       // register the resource for the first time
-      collectionResource = collection(collectionName);
+      store = kv(storeName);
     });
 
     afterEach(() => {
       jest.resetAllMocks();
     });
 
-    describe('When registering a collection with the same name', () => {
-      let secondTopic;
+    describe('When registering a store with the same name', () => {
+      let secondStore;
 
       beforeEach(() => {
         // make sure the initial registration isn't counted for these tests.
         existsSpy.mockClear();
-        secondTopic = collection(collectionName);
+        secondStore = kv(storeName);
       });
 
       it('Should not call the server again', () => {
@@ -120,14 +120,14 @@ describe('Registering collection resources', () => {
       });
 
       it('Should return the same resource object', () => {
-        expect(collectionResource === secondTopic).toEqual(true);
+        expect(store === secondStore).toEqual(true);
       });
     });
 
     describe('When declaring usage', () => {
-      it('Should return a collection reference', () => {
-        const ref = collectionResource.for('reading');
-        expect(ref).toBeInstanceOf(CollectionRef);
+      it('Should return a store reference', () => {
+        const ref = store.for('getting');
+        expect(ref).toBeInstanceOf(StoreRef);
       });
     });
   });

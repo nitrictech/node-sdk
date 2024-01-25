@@ -82,10 +82,10 @@ export class ResourceDeclareRequest extends jspb.Message {
   getTopic(): TopicResource | undefined;
   setTopic(value?: TopicResource): void;
 
-  hasCollection(): boolean;
-  clearCollection(): void;
-  getCollection(): CollectionResource | undefined;
-  setCollection(value?: CollectionResource): void;
+  hasKeyValueStore(): boolean;
+  clearKeyValueStore(): void;
+  getKeyValueStore(): KeyValueStoreResource | undefined;
+  setKeyValueStore(value?: KeyValueStoreResource): void;
 
   hasSecret(): boolean;
   clearSecret(): void;
@@ -119,7 +119,7 @@ export namespace ResourceDeclareRequest {
     policy?: PolicyResource.AsObject,
     bucket?: BucketResource.AsObject,
     topic?: TopicResource.AsObject,
-    collection?: CollectionResource.AsObject,
+    keyValueStore?: KeyValueStoreResource.AsObject,
     secret?: SecretResource.AsObject,
     api?: ApiResource.AsObject,
     apiSecurityDefinition?: ApiSecurityDefinitionResource.AsObject,
@@ -130,7 +130,7 @@ export namespace ResourceDeclareRequest {
     POLICY = 10,
     BUCKET = 11,
     TOPIC = 12,
-    COLLECTION = 13,
+    KEY_VALUE_STORE = 13,
     SECRET = 14,
     API = 15,
     API_SECURITY_DEFINITION = 16,
@@ -169,18 +169,18 @@ export namespace TopicResource {
   }
 }
 
-export class CollectionResource extends jspb.Message {
+export class KeyValueStoreResource extends jspb.Message {
   serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): CollectionResource.AsObject;
-  static toObject(includeInstance: boolean, msg: CollectionResource): CollectionResource.AsObject;
+  toObject(includeInstance?: boolean): KeyValueStoreResource.AsObject;
+  static toObject(includeInstance: boolean, msg: KeyValueStoreResource): KeyValueStoreResource.AsObject;
   static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
   static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
-  static serializeBinaryToWriter(message: CollectionResource, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): CollectionResource;
-  static deserializeBinaryFromReader(message: CollectionResource, reader: jspb.BinaryReader): CollectionResource;
+  static serializeBinaryToWriter(message: KeyValueStoreResource, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): KeyValueStoreResource;
+  static deserializeBinaryFromReader(message: KeyValueStoreResource, reader: jspb.BinaryReader): KeyValueStoreResource;
 }
 
-export namespace CollectionResource {
+export namespace KeyValueStoreResource {
   export type AsObject = {
   }
 }
@@ -323,7 +323,7 @@ export interface ResourceTypeMap {
   TOPIC: 3;
   SCHEDULE: 4;
   SUBSCRIPTION: 5;
-  COLLECTION: 6;
+  KEYVALUESTORE: 6;
   POLICY: 7;
   SECRET: 8;
   BUCKETLISTENER: 9;
@@ -342,11 +342,9 @@ export interface ActionMap {
   TOPICLIST: 200;
   TOPICDETAIL: 201;
   TOPICEVENTPUBLISH: 202;
-  COLLECTIONDOCUMENTREAD: 300;
-  COLLECTIONDOCUMENTWRITE: 301;
-  COLLECTIONDOCUMENTDELETE: 302;
-  COLLECTIONQUERY: 303;
-  COLLECTIONLIST: 304;
+  KEYVALUESTOREREAD: 300;
+  KEYVALUESTOREWRITE: 301;
+  KEYVALUESTOREDELETE: 302;
   SECRETPUT: 400;
   SECRETACCESS: 401;
   WEBSOCKETMANAGE: 500;

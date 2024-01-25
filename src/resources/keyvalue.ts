@@ -18,22 +18,20 @@ import {
   ResourceType,
   Action,
 } from '@nitric/proto/resources/v1/resources_pb';
-import { documents } from '../api/documents';
+import { keyvalue, ValueStructure } from '../api/keyvalue';
 import resourceClient from './client';
 import { make, SecureResource } from './common';
-import { DocumentStructure } from '../api/documents/v1/document-ref';
 import { fromGrpcError } from '../api/errors';
 
-type CollectionPermission = 'reading' | 'writing' | 'deleting';
-
-const everything: CollectionPermission[] = ['reading', 'writing', 'deleting'];
+type StorePermission = 'getting' | 'setting' | 'deleting';
+const everything: StorePermission[] = ['getting', 'setting', 'deleting'];
 
 /**
- * A document collection resources, such as a collection/table in a document database.
+ * A key/value store resource.
  */
-export class CollectionResource<
-  T extends DocumentStructure
-> extends SecureResource<CollectionPermission> {
+export class KeyValueStoreResource<
+  T extends ValueStructure
+> extends SecureResource<StorePermission> {
   /**
    * Register this collection as a required resource for the calling function/container
    *
@@ -44,7 +42,7 @@ export class CollectionResource<
 
     const resource = new ResourceIdentifier();
     resource.setName(this.name);
-    resource.setType(ResourceType.COLLECTION);
+    resource.setType(ResourceType.KEYVALUESTORE);
     req.setId(resource);
 
     return new Promise<ResourceIdentifier>((resolve, reject) => {
@@ -61,19 +59,15 @@ export class CollectionResource<
     });
   }
 
-  protected permsToActions(...perms: CollectionPermission[]) {
+  protected permsToActions(...perms: StorePermission[]) {
     let actions = perms.reduce((actions, perm) => {
       switch (perm) {
-        case 'reading':
-          return [
-            ...actions,
-            Action.COLLECTIONDOCUMENTREAD,
-            Action.COLLECTIONQUERY,
-          ];
-        case 'writing':
-          return [...actions, Action.COLLECTIONDOCUMENTWRITE];
+        case 'getting':
+          return [...actions, Action.KEYVALUESTOREREAD];
+        case 'setting':
+          return [...actions, Action.KEYVALUESTOREWRITE];
         case 'deleting':
-          return [...actions, Action.COLLECTIONDOCUMENTDELETE];
+          return [...actions, Action.KEYVALUESTOREDELETE];
         default:
           throw new Error(
             `unknown collection permission ${perm}, supported permissions are ${everything.join(
@@ -83,15 +77,11 @@ export class CollectionResource<
       }
     }, []);
 
-    if (actions.length > 0) {
-      actions = [...actions, Action.COLLECTIONLIST];
-    }
-
     return actions;
   }
 
   protected resourceType() {
-    return ResourceType.COLLECTION;
+    return ResourceType.KEYVALUESTORE;
   }
 
   /**
@@ -103,25 +93,25 @@ export class CollectionResource<
    * @param perms additional required permissions set
    * @returns a usable collection reference
    */
-  public for(perm: CollectionPermission, ...perms: CollectionPermission[]) {
+  public for(perm: StorePermission, ...perms: StorePermission[]) {
     this.registerPolicy(perm, ...perms);
 
-    return documents().collection<T>(this.name);
+    return keyvalue().store<T>(this.name);
   }
 }
 
-const newCollection = make(CollectionResource);
+const newStore = make(KeyValueStoreResource);
 
 /**
- * Create a reference to a named queue in this project.
+ * Create a reference to a named key/value store in this project.
  *
- * If the queue hasn't been referenced before, this is a request for a new resource. Otherwise, the existing queue with the same name will be used.
+ * If the key/value store hasn't been referenced before this is a request for a new resource. Otherwise, the existing store with the same name will be used.
  *
- * @param name the name of the queue.
- * @returns a reference to the queue.
+ * @param name the name of the key/value store.
+ * @returns a reference to the key/value store.
  */
-export function collection<T extends DocumentStructure>(
+export function kv<T extends ValueStructure>(
   name: string
-): CollectionResource<T> {
-  return newCollection(name) as CollectionResource<T>;
+): KeyValueStoreResource<T> {
+  return newStore(name) as KeyValueStoreResource<T>;
 }

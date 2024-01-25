@@ -371,18 +371,18 @@ export namespace Topic {
   }
 }
 
-export class Collection extends jspb.Message {
+export class KeyValueStore extends jspb.Message {
   serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): Collection.AsObject;
-  static toObject(includeInstance: boolean, msg: Collection): Collection.AsObject;
+  toObject(includeInstance?: boolean): KeyValueStore.AsObject;
+  static toObject(includeInstance: boolean, msg: KeyValueStore): KeyValueStore.AsObject;
   static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
   static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
-  static serializeBinaryToWriter(message: Collection, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): Collection;
-  static deserializeBinaryFromReader(message: Collection, reader: jspb.BinaryReader): Collection;
+  static serializeBinaryToWriter(message: KeyValueStore, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): KeyValueStore;
+  static deserializeBinaryFromReader(message: KeyValueStore, reader: jspb.BinaryReader): KeyValueStore;
 }
 
-export namespace Collection {
+export namespace KeyValueStore {
   export type AsObject = {
   }
 }
@@ -738,10 +738,10 @@ export class Resource extends jspb.Message {
   getSchedule(): Schedule | undefined;
   setSchedule(value?: Schedule): void;
 
-  hasCollection(): boolean;
-  clearCollection(): void;
-  getCollection(): Collection | undefined;
-  setCollection(value?: Collection): void;
+  hasKeyValueStore(): boolean;
+  clearKeyValueStore(): void;
+  getKeyValueStore(): KeyValueStore | undefined;
+  setKeyValueStore(value?: KeyValueStore): void;
 
   hasSecret(): boolean;
   clearSecret(): void;
@@ -778,7 +778,7 @@ export namespace Resource {
     api?: Api.AsObject,
     policy?: Policy.AsObject,
     schedule?: Schedule.AsObject,
-    collection?: Collection.AsObject,
+    keyValueStore?: KeyValueStore.AsObject,
     secret?: Secret.AsObject,
     websocket?: Websocket.AsObject,
     http?: Http.AsObject,
@@ -792,7 +792,7 @@ export namespace Resource {
     API = 13,
     POLICY = 14,
     SCHEDULE = 15,
-    COLLECTION = 16,
+    KEY_VALUE_STORE = 16,
     SECRET = 17,
     WEBSOCKET = 18,
     HTTP = 19,

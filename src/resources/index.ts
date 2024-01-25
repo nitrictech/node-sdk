@@ -13,7 +13,7 @@
 // limitations under the License.
 export * from './api';
 export * from './topic';
-export * from './collection';
+export * from './keyvalue';
 export * from './bucket';
 export * from './schedule';
 export * from './secret';

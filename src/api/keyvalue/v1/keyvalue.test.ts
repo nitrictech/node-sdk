@@ -11,18 +11,14 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { DocumentRef, DocumentStructure } from './document-ref';
+import { keyvalue } from './keyvalue';
 
-export class DocumentSnapshot<T extends DocumentStructure> {
-  public readonly ref: DocumentRef<T>;
-  public readonly content: T;
+describe('KeyValue Client Tests', () => {
+  describe('Given a new store', () => {
+    test('Then store should contain correct store reference', () => {
+      const store = keyvalue().store('customers');
 
-  constructor(ref: DocumentRef<T>, content: T) {
-    this.ref = ref;
-    this.content = content;
-  }
-
-  get id(): string {
-    return this.ref.id;
-  }
-}
+      expect(store.name).toEqual('customers');
+    });
+  });
+});
