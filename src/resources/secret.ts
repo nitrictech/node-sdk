@@ -80,7 +80,7 @@ export class SecretResource extends SecureResource<SecretPermission> {
   }
 
   public for(perm: SecretPermission, ...perms: SecretPermission[]): Secret {
-    this.registerPolicy(...perms);
+    this.registerPolicy(perm, ...perms);
 
     return secrets().secret(this.name);
   }
