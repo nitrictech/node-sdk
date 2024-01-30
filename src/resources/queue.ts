@@ -93,7 +93,7 @@ export class QueueResource<
    * @returns a useable queue.
    */
   public for(perm: QueuePermission, ...perms: QueuePermission[]): Queue<T> {
-    this.registerPolicy(...perms);
+    this.registerPolicy(perm, ...perms);
 
     return queues().queue(this.name);
   }

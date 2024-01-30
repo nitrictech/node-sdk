@@ -212,7 +212,7 @@ export class BucketResource extends SecureResource<BucketPermission> {
    * @returns a usable bucket reference
    */
   public for(perm: BucketPermission, ...perms: BucketPermission[]): Bucket {
-    this.registerPolicy(...perms);
+    this.registerPolicy(perm, ...perms);
 
     return storage().bucket(this.name);
   }

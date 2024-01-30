@@ -137,7 +137,7 @@ export class TopicResource<
    * @returns a usable topic reference
    */
   public for(perm: TopicPermission, ...perms: TopicPermission[]): Topic<T> {
-    this.registerPolicy(...perms);
+    this.registerPolicy(perm, ...perms);
     return events().topic(this.name);
   }
 }

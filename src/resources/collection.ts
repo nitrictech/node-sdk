@@ -108,7 +108,7 @@ export class CollectionResource<
    * @returns a usable collection reference
    */
   public for(perm: CollectionPermission, ...perms: CollectionPermission[]) {
-    this.registerPolicy(...perms);
+    this.registerPolicy(perm, ...perms);
 
     return documents().collection<T>(this.name);
   }
