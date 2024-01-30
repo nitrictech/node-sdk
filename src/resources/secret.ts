@@ -23,9 +23,9 @@ import { secrets, Secret } from '../api/secrets';
 import { ActionsList, make, SecureResource } from './common';
 import { fromGrpcError } from '../api/errors';
 
-type SecretPermission = 'put' | 'access';
+type SecretPermission = 'putting' | 'accessing';
 
-const everything: SecretPermission[] = ['put', 'access'];
+const everything: SecretPermission[] = ['putting', 'accessing'];
 
 /**
  * Cloud secret resource for secret storage
@@ -56,9 +56,9 @@ export class SecretResource extends SecureResource<SecretPermission> {
   protected permsToActions(...perms: SecretPermission[]): ActionsList {
     return perms.reduce((actions, perm) => {
       switch (perm) {
-        case 'put':
+        case 'putting':
           return [...actions, Action.SECRETPUT];
-        case 'access':
+        case 'accessing':
           return [...actions, Action.SECRETACCESS];
         default:
           throw new Error(
