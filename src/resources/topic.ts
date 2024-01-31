@@ -19,6 +19,7 @@ import {
   ResourceDeclareResponse,
   ResourceType,
   Action,
+  ResourceTypeMap,
 } from '@nitric/proto/resources/v1/resources_pb';
 import {
   ActionsList,
@@ -143,7 +144,7 @@ export class TopicResource<
     return new Promise<ResourceIdentifier>((resolve, reject) => {
       resourceClient.declare(
         req,
-        (error, response: ResourceDeclareResponse) => {
+        (error, _response: ResourceDeclareResponse) => {
           if (error) {
             reject(fromGrpcError(error));
           } else {
@@ -184,7 +185,7 @@ export class TopicResource<
     return sub['start']();
   }
 
-  protected resourceType() {
+  protected resourceType(): ResourceTypeMap[keyof ResourceTypeMap]{
     return ResourceType.TOPIC;
   }
 

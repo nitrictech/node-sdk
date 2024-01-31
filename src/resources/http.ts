@@ -61,6 +61,7 @@ class HttpWorker {
 }
 
 const createWorker = async (
+  // FIXME: both app and port unused.
   app: NodeApplication,
   port: number,
   callback?: () => void
@@ -82,12 +83,13 @@ const createWorker = async (
  * Register an HTTP Proxy to the provided application.
  *
  * @param app the http application to run behind the proxy
+ * @param callback an optional callback to run after the proxy has started
  * @returns void
  */
 export const http = (
   app: NodeApplication | ListenerFunction,
   callback?: () => void
-) => {
+): void => {
   const unknownApp = app as any;
 
   const nodeApp =

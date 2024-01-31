@@ -15,7 +15,6 @@ import * as grpc from '@grpc/grpc-js';
 import {
   ApiResource,
   ApiScopes,
-  ApiSecurityDefinitionResource,
   ResourceDeclareRequest,
   ResourceDeclareResponse,
   ResourceIdentifier,
@@ -355,10 +354,11 @@ export interface ApiOptions<Defs extends string> {
    */
   middleware?: HttpMiddleware[] | HttpMiddleware;
 
+  // FIXME: remove?
   /**
    * Optional security definitions for the API
    */
-  securityDefinitions?: Record<Defs, SecurityDefinition>;
+  // securityDefinitions?: Record<Defs, SecurityDefinition>;
 
   /**
    * Optional root level security for the API
@@ -375,15 +375,15 @@ interface ApiDetails {
  *
  * Represents an HTTP API, capable of routing and securing incoming HTTP requests to handlers.
  */
-export class Api<SecurityDefs extends string> extends Base<ApiDetails> {
+export class Api<SecurityDefs extends string> extends Base {
   // public readonly name: string;
   public readonly path: string;
   public readonly middleware?: HttpMiddleware[];
   private readonly routes: Route<SecurityDefs>[];
-  private readonly securityDefinitions?: Record<
-    SecurityDefs,
-    SecurityDefinition
-  >;
+  // private readonly securityDefinitions?: Record<
+  //   SecurityDefs,
+  //   SecurityDefinition
+  // >;
   private readonly security?: Record<SecurityDefs, string[]>;
 
   constructor(name: string, options: ApiOptions<SecurityDefs> = {}) {
@@ -391,13 +391,13 @@ export class Api<SecurityDefs extends string> extends Base<ApiDetails> {
     const {
       middleware,
       path = '/',
-      securityDefinitions = null,
+      // securityDefinitions = null,
       security = {} as Record<SecurityDefs, string[]>,
     } = options;
     // prepend / to path if its not there
     this.path = path.replace(/^\/?/, '/');
     this.middleware = composeMiddleware(middleware);
-    this.securityDefinitions = securityDefinitions;
+    // this.securityDefinitions = securityDefinitions;
     this.security = security;
     this.routes = [];
   }
@@ -582,7 +582,7 @@ export class Api<SecurityDefs extends string> extends Base<ApiDetails> {
     const req = new ResourceDeclareRequest();
     const resourceId = new ResourceIdentifier();
     const apiResource = new ApiResource();
-    const { security, securityDefinitions } = this;
+    const { security } = this;
 
     if (security) {
       Object.keys(security).forEach((k) => {

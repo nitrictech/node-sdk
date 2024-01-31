@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { KeyValueDeleteRequest, KeyValueGetRequest, KeyValueGetResponse, KeyValueSetRequest, Store, ValueRef } from '@nitric/proto/keyvalue/v1/keyvalue_pb';
+import { KeyValueDeleteRequest, KeyValueGetRequest, KeyValueGetResponse, KeyValueSetRequest, ValueRef } from '@nitric/proto/keyvalue/v1/keyvalue_pb';
 import { KeyValueClient } from '@nitric/proto/keyvalue/v1/keyvalue_grpc_pb';
 import { fromGrpcError } from '../../errors';
 import { Struct } from 'google-protobuf/google/protobuf/struct_pb';

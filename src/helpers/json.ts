@@ -40,7 +40,7 @@ export const json = (): HttpMiddleware => (ctx: HttpContext, next) => {
  */
 export const jsonResponse =
   (ctx: HttpContext) =>
-  (data: string | number | boolean | Record<string, any>) => {
+  (data: string | number | boolean | Record<string, any>): HttpContext => {
     ctx.res.body = new TextEncoder().encode(JSON.stringify(data));
     ctx.res.headers['Content-Type'] = ['application/json'];
 

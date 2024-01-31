@@ -41,7 +41,7 @@ export class IntervalContext extends BaseContext<
     return ctx;
   }
 
-  static toResponse(ctx: IntervalContext): IntervalResponsePb {
+  static toResponse(_: IntervalContext): IntervalResponsePb {
     const intervalResponse = new IntervalResponsePb();
 
     return intervalResponse;

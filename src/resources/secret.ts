@@ -17,6 +17,7 @@ import {
   ResourceType,
   ResourceDeclareRequest,
   ResourceDeclareResponse,
+  ResourceTypeMap,
 } from '@nitric/proto/resources/v1/resources_pb';
 import resourceClient from './client';
 import { secrets, Secret } from '../api/secrets';
@@ -42,7 +43,7 @@ export class SecretResource extends SecureResource<SecretPermission> {
     return new Promise<ResourceIdentifier>((resolve, reject) => {
       resourceClient.declare(
         req,
-        (error, response: ResourceDeclareResponse) => {
+        (error, _response: ResourceDeclareResponse) => {
           if (error) {
             reject(fromGrpcError(error));
           } else {
@@ -70,7 +71,7 @@ export class SecretResource extends SecureResource<SecretPermission> {
     }, []);
   }
 
-  protected resourceType() {
+  protected resourceType(): ResourceTypeMap[keyof ResourceTypeMap]{
     return ResourceType.SECRET;
   }
 

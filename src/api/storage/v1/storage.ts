@@ -94,7 +94,7 @@ export class Bucket {
     });
   }
 
-  public file(name: string) {
+  public file(name: string): File {
     if (!name) {
       throw new Error('A file name/path is required to use a File.');
     }

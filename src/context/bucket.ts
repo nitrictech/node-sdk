@@ -49,7 +49,7 @@ export class BucketEventContext extends BaseContext<
     return this;
   }
 
-  static fromRequest(request: BlobEventRequestPb) {
+  static fromRequest(request: BlobEventRequestPb): BucketEventContext {
     const ctx = new BucketEventContext();
     const blobEvent = request.getBlobEvent();
 

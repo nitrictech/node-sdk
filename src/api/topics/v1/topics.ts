@@ -87,7 +87,7 @@ export class Topic<T extends Record<string, any> = Record<string, any>> {
     request.setDelay(toDuration(publishOpts.delay));
 
     return new Promise<void>((resolve, reject) => {
-      this.eventing.TopicServiceClient.publish(request, (error, response) => {
+      this.eventing.TopicServiceClient.publish(request, (error, _response) => {
         if (error) {
           reject(fromGrpcError(error));
         } else {

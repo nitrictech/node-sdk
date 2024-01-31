@@ -26,14 +26,7 @@ import { fromGrpcError } from '../api/errors';
 
 export type ActionsList = ActionMap[keyof ActionMap][];
 
-export interface ResourceDetails<T> {
-  id: string;
-  provider: string;
-  service: string;
-  details: T;
-}
-
-export abstract class Resource<Detail = any> {
+export abstract class Resource {
   /**
    * Unique name for the resource by type within the stack.
    *
@@ -130,7 +123,7 @@ export const make = <T extends Resource>(
   };
 };
 
-export const toDuration = (seconds: number) => {
+export const toDuration = (seconds: number): Duration => {
   const duration = new Duration();
   duration.setSeconds(seconds);
 
@@ -139,7 +132,7 @@ export const toDuration = (seconds: number) => {
 
 export const startStreamHandler = async (
   handler: () => Promise<ClientDuplexStream<any, any>>
-) => {
+): Promise<void> => {
   // const provider = newTracerProvider(); TODO add back later
   const stream = await handler();
 

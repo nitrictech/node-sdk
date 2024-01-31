@@ -38,7 +38,7 @@ export class KeyValue {
    * @param name The name of the store (required)
    * @returns The Store instance
    */
-  public store<T extends ValueStructure>(name: string) {
+  public store<T extends ValueStructure>(name: string): StoreRef<T> {
     return new StoreRef<T>(this.kvClient, name);
   }
 }

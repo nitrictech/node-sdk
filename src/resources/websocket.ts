@@ -21,6 +21,7 @@ import {
   ResourceIdentifier,
   ResourceDeclareRequest,
   ResourceType,
+  ResourceTypeMap,
 } from '@nitric/proto/resources/v1/resources_pb';
 import {
   ClientMessage,
@@ -245,7 +246,7 @@ export class WebsocketResource extends Base<any> {
     return notification['start']();
   }
 
-  protected resourceType() {
+  protected resourceType(): ResourceTypeMap[keyof ResourceTypeMap] {
     return ResourceType.WEBSOCKET;
   }
 }

@@ -68,7 +68,7 @@ export class HttpResponse {
    *
    * @returns HttpContext with body property set with an encoded JSON string and json headers set.
    */
-  get json() {
+  get json(): (data: string | number | boolean | Record<string, any>) => HttpContext {
     return jsonResponse(this.ctx);
   }
 }

@@ -17,6 +17,7 @@ import {
   ResourceDeclareRequest,
   ResourceDeclareResponse,
   ResourceType,
+  ResourceTypeMap,
 } from '@nitric/proto/resources/v1/resources_pb';
 import resourceClient from './client';
 import { storage, Bucket } from '../api/storage';
@@ -280,7 +281,7 @@ export class BucketResource extends SecureResource<BucketPermission> {
     }, []);
   }
 
-  protected resourceType() {
+  protected resourceType(): ResourceTypeMap[keyof ResourceTypeMap] {
     return ResourceType.BUCKET;
   }
 

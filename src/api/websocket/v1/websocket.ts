@@ -55,7 +55,7 @@ export class Websocket {
     sendRequest.setData(payload);
 
     return new Promise((res, rej) => {
-      this.client.send(sendRequest, (error, data) => {
+      this.client.send(sendRequest, (error, _data) => {
         if (error) {
           rej(error);
         }

@@ -31,7 +31,6 @@ import {
   UnimplementedError,
   UnknownError,
 } from './provider-error';
-import { parse } from '@nitric/grpc-error-status';
 
 // Accept all codes except Status OK
 type codes = Exclude<status, status.OK>;

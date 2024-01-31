@@ -17,11 +17,14 @@ import {
   ResourceDeclareResponse,
   ResourceType,
   Action,
+  ResourceTypeMap,
+  ActionMap,
 } from '@nitric/proto/resources/v1/resources_pb';
 import { keyvalue, ValueStructure } from '../api/keyvalue';
 import resourceClient from './client';
 import { make, SecureResource } from './common';
 import { fromGrpcError } from '../api/errors';
+import { StoreRef } from '../api/keyvalue/v1/store';
 
 type StorePermission = 'getting' | 'setting' | 'deleting';
 const everything: StorePermission[] = ['getting', 'setting', 'deleting'];
@@ -33,7 +36,7 @@ export class KeyValueStoreResource<
   T extends ValueStructure
 > extends SecureResource<StorePermission> {
   /**
-   * Register this collection as a required resource for the calling function/container
+   * Register this key/value store as a required resource for the calling service
    *
    * @returns a promise that resolves when the registration is complete
    */
@@ -48,7 +51,7 @@ export class KeyValueStoreResource<
     return new Promise<ResourceIdentifier>((resolve, reject) => {
       resourceClient.declare(
         req,
-        (error, response: ResourceDeclareResponse) => {
+        (error, _response: ResourceDeclareResponse) => {
           if (error) {
             reject(fromGrpcError(error));
           } else {
@@ -59,8 +62,8 @@ export class KeyValueStoreResource<
     });
   }
 
-  protected permsToActions(...perms: StorePermission[]) {
-    let actions = perms.reduce((actions, perm) => {
+  protected permsToActions(...perms: StorePermission[]): ActionMap[keyof ActionMap][] {
+    const actions = perms.reduce((actions, perm) => {
       switch (perm) {
         case 'getting':
           return [...actions, Action.KEYVALUESTOREREAD];
@@ -70,7 +73,7 @@ export class KeyValueStoreResource<
           return [...actions, Action.KEYVALUESTOREDELETE];
         default:
           throw new Error(
-            `unknown collection permission ${perm}, supported permissions are ${everything.join(
+            `unknown key/value store permission ${perm}, supported permissions are ${everything.join(
               ', '
             )}`
           );
@@ -80,20 +83,20 @@ export class KeyValueStoreResource<
     return actions;
   }
 
-  protected resourceType() {
+  protected resourceType(): ResourceTypeMap[keyof ResourceTypeMap]{
     return ResourceType.KEYVALUESTORE;
   }
 
   /**
-   * Return a collection reference and register the permissions required by the currently scoped function for this resource.
+   * Return a key/value store reference and register the permissions required by the currently scoped service for this resource.
    *
-   * e.g. const customers = resources.collection('customers').for('reading', 'writing')
+   * e.g. const customers = resources.kv('customers').for('getting', 'setting')
    *
    * @param perm  the required permission set
    * @param perms additional required permissions set
-   * @returns a usable collection reference
+   * @returns a usable key/value store reference
    */
-  public for(perm: StorePermission, ...perms: StorePermission[]) {
+  public for(perm: StorePermission, ...perms: StorePermission[]): StoreRef<T> {
     this.registerPolicy(perm, ...perms);
 
     return keyvalue().store<T>(this.name);
