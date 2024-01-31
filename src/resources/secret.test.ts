@@ -126,7 +126,7 @@ describe('Registering secret resources', () => {
 
     describe('When declaring usage', () => {
       it('Should return a secret reference', () => {
-        const ref = secretResource.for('access');
+        const ref = secretResource.for('accessing');
         expect(ref).toBeInstanceOf(Secret);
       });
     });
