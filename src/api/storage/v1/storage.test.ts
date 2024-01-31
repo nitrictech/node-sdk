@@ -496,9 +496,6 @@ describe('Storage Client Tests', () => {
   });
 });
 
-// FIXME:
-// jest.mock('../../../faas/index');
-
 describe('bucket notification', () => {
   const startSpy = jest
     .spyOn(BucketNotification.prototype as any, 'start')
