@@ -138,7 +138,7 @@ interface WebsocketDetails {
 /**
  * Websocket resource for bi-di HTTP communication.
  */
-export class WebsocketResource extends Base<any> {
+export class WebsocketResource extends Base {
   private readonly wsClient: WsClient;
 
   constructor(name: string) {
