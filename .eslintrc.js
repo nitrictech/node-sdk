@@ -20,5 +20,6 @@ module.exports = {
     '@typescript-eslint/ban-ts-ignore': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
     'jsdoc/tag-lines': 'off', // not documented on jsdoc plugin site, unsure how to correct.
+    "@typescript-eslint/no-unused-vars": ["error", { "args": "all", "argsIgnorePattern": "^_" }],
   },
 };

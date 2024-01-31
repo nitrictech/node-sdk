@@ -20,10 +20,10 @@ import {
   ResourceDeclareResponse,
   ResourceType,
   Action,
+  ResourceTypeMap,
 } from '@nitric/api/proto/resource/v1/resource_pb';
 import { ActionsList, make, SecureResource } from './common';
 import { fromGrpcError } from '../api/errors';
-import { NitricEvent } from '../types';
 
 type TopicPermission = 'publishing';
 
@@ -72,7 +72,7 @@ export class TopicResource<
     return new Promise<Resource>((resolve, reject) => {
       resourceClient.declare(
         req,
-        (error, response: ResourceDeclareResponse) => {
+        (error, _response: ResourceDeclareResponse) => {
           if (error) {
             reject(fromGrpcError(error));
           } else {
@@ -113,7 +113,7 @@ export class TopicResource<
     return sub['start']();
   }
 
-  protected resourceType() {
+  protected resourceType(): ResourceTypeMap[keyof ResourceTypeMap] {
     return ResourceType.TOPIC;
   }
 
@@ -122,8 +122,9 @@ export class TopicResource<
    *
    * Not used for topics.
    *
-   * @param resp {never}
+   * @param resp {object}
    */
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   protected unwrapDetails(resp: ResourceDeclareResponse): never {
     throw new Error('details unimplemented for topic');
   }
@@ -133,7 +134,8 @@ export class TopicResource<
    *
    * e.g. const updates = resources.topic('updates').for('publishing')
    *
-   * @param perms the required permission set
+   * @param perm the access that the currently scoped function is requesting to this resource.
+   * @param perms additional access that the currently scoped function is requesting to this resource.
    * @returns a usable topic reference
    */
   public for(perm: TopicPermission, ...perms: TopicPermission[]): Topic<T> {

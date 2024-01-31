@@ -17,6 +17,7 @@ import {
   ResourceType,
   Action,
   ResourceDeclareResponse,
+  ResourceTypeMap,
 } from '@nitric/api/proto/resource/v1/resource_pb';
 import resourceClient from './client';
 import { queues, Queue } from '../api/';
@@ -76,11 +77,11 @@ export class QueueResource<
     return actions;
   }
 
-  protected resourceType() {
+  protected resourceType(): ResourceTypeMap[keyof ResourceTypeMap] {
     return ResourceType.QUEUE;
   }
 
-  protected unwrapDetails(resp: ResourceDeclareResponse): never {
+  protected unwrapDetails(_resp: ResourceDeclareResponse): never {
     throw new Error('details unimplemented for queue');
   }
 
@@ -89,7 +90,8 @@ export class QueueResource<
    *
    * e.g. const taskQueue = resources.queue('work').for('sending')
    *
-   * @param perms the access that the currently scoped function is requesting to this resource.
+   * @param perm the access that the currently scoped function is requesting to this resource.
+   * @param perms additional access that the currently scoped function is requesting to this resource.
    * @returns a useable queue.
    */
   public for(perm: QueuePermission, ...perms: QueuePermission[]): Queue<T> {

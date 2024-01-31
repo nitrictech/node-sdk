@@ -14,7 +14,6 @@
 import { QueueServiceClient } from '@nitric/api/proto/queue/v1/queue_grpc_pb';
 import {
   NitricTask as NitricTaskPb,
-  QueueSendRequest,
   QueueSendBatchRequest,
   QueueReceiveRequest,
   QueueCompleteRequest,
@@ -23,11 +22,7 @@ import { SERVICE_BIND } from '../../../constants';
 import * as grpc from '@grpc/grpc-js';
 import { NitricTask } from '../../../types';
 import { Struct } from 'google-protobuf/google/protobuf/struct_pb';
-import {
-  fromGrpcError,
-  InvalidArgumentError,
-  InternalError,
-} from '../../errors';
+import { fromGrpcError } from '../../errors';
 
 /**
  * A message that has failed to be enqueued

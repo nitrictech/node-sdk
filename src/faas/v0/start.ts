@@ -35,7 +35,6 @@ import {
   HttpWorker,
   WebsocketResponseContext,
   WebsocketWorker,
-  WebsocketEvent,
 } from '@nitric/api/proto/faas/v1/faas_pb';
 
 import {

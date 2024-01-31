@@ -22,13 +22,9 @@ import {
   StorageExistsRequest,
 } from '@nitric/api/proto/storage/v1/storage_pb';
 import * as grpc from '@grpc/grpc-js';
-import { fromGrpcError, InvalidArgumentError } from '../../errors';
+import { fromGrpcError } from '../../errors';
+import { FileNotificationMiddleware } from '@nitric/sdk/faas';
 import {
-  BucketNotificationMiddleware,
-  FileNotificationMiddleware,
-} from '@nitric/sdk/faas';
-import {
-  BucketNotification,
   BucketNotificationType,
   FileNotification,
 } from '@nitric/sdk/resources';
@@ -97,7 +93,7 @@ export class Bucket {
     });
   }
 
-  public file(name: string) {
+  public file(name: string): File {
     if (!name) {
       throw new Error('A file name/path is required to use a File.');
     }

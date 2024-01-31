@@ -22,7 +22,7 @@ import {
   Secret as GrpcSecret,
 } from '@nitric/api/proto/secret/v1/secret_pb';
 import * as grpc from '@grpc/grpc-js';
-import { fromGrpcError, InvalidArgumentError } from '../../errors';
+import { fromGrpcError } from '../../errors';
 
 const ENCODER = new TextEncoder();
 const DECODER = new TextDecoder();

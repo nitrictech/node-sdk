@@ -12,10 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import {
-  ErrorDetails,
-  ErrorScope,
-} from '@nitric/sdk/gen/proto/error/v1/error_pb';
+import { ErrorDetails } from '@nitric/sdk/gen/proto/error/v1/error_pb';
 import { NitricPluginError } from './plugin-error';
 
 /**

@@ -26,7 +26,7 @@ import type { Map as ProtobufMap } from 'google-protobuf';
 import { DocumentRef, DocumentStructure } from './document-ref';
 import { CollectionRef } from './collection-ref';
 import { DocumentSnapshot } from './document-snapshot';
-import { fromGrpcError, InvalidArgumentError } from '../../errors';
+import { fromGrpcError } from '../../errors';
 import { ServiceError } from '@grpc/grpc-js';
 
 type PagingToken = Map<string, string>;
@@ -146,7 +146,7 @@ export class Query<T extends DocumentStructure> {
     return this;
   }
 
-  public async fetch() {
+  public async fetch(): Promise<FetchResponse<T>> {
     const request = new DocumentQueryRequest();
 
     request.setCollection(this.collection['toWire']());
@@ -203,7 +203,7 @@ export class Query<T extends DocumentStructure> {
     });
   }
 
-  protected getStreamRequest() {
+  protected getStreamRequest(): DocumentQueryStreamRequest {
     const request = new DocumentQueryStreamRequest();
 
     request.setCollection(this.collection['toWire']());
@@ -247,7 +247,7 @@ export class Query<T extends DocumentStructure> {
 
     const transform = new Transform({
       objectMode: true,
-      transform: (result: DocumentQueryStreamResponse, encoding, callback) => {
+      transform: (result: DocumentQueryStreamResponse, _encoding, callback) => {
         const doc = result.getDocument();
 
         callback(
