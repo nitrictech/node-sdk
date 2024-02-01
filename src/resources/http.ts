@@ -17,6 +17,7 @@ import { HttpClient } from '@nitric/proto/http/v1/http_grpc_pb';
 import { SERVICE_BIND } from '../constants';
 import * as grpc from '@grpc/grpc-js';
 import { HttpProxyRequest } from '@nitric/proto/http/v1/http_pb';
+import { HttpContext } from '../context/http';
 
 type ListenerFunction =
   | ((port: number, callback?: () => void) => void)
@@ -45,23 +46,7 @@ export class HttpWorkerOptions {
   }
 }
 
-/**
- * Creates a http worker
- */
-class HttpWorker {
-  public readonly app: NodeApplication;
-  public readonly port: number;
-  public readonly callback: () => void;
-
-  constructor(app: NodeApplication, port: number, callback?: () => void) {
-    this.app = app;
-    this.port = port;
-    this.callback = callback;
-  }
-}
-
-const createWorker = async (
-  // FIXME: both app and port unused.
+const createWorker = (
   app: NodeApplication,
   port: number,
   callback?: () => void
@@ -71,13 +56,20 @@ const createWorker = async (
     grpc.ChannelCredentials.createInsecure()
   );
 
-  // Begin Bi-Di streaming
   const httpProxyRequest = new HttpProxyRequest();
-  httpProxyRequest.setHost(`:port`);
+  httpProxyRequest.setHost(`:${port}`);
 
-  httpClient.proxy(httpProxyRequest, callback);
+  httpClient.proxy(httpProxyRequest, (err) => {
+    if (err) {
+      console.error(err);
+    }
+  });
+
+  // Start Node application that HTTP proxy sits on
+  if (process.env.NITRIC_ENVIRONMENT !== 'build') {
+    app.listen(port, callback);
+  }
 };
-
 
 /**
  * Register an HTTP Proxy to the provided application.
