@@ -39,7 +39,9 @@ export class Documents {
    * @param name The name of the collection (required)
    * @returns The Collection instance
    */
-  public collection<T extends DocumentStructure>(name: string) {
+  public collection<T extends DocumentStructure>(
+    name: string
+  ): CollectionRef<T> {
     return new CollectionRef<T>(this.documentClient, name);
   }
 }

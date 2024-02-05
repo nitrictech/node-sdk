@@ -31,7 +31,6 @@ import {
   BucketNotificationWorkerOptions,
   FileNotificationWorkerOptions,
   SubscriptionWorkerOptions,
-  bucket,
 } from '@nitric/sdk';
 import { FaasWorkerOptions } from './start';
 
@@ -244,7 +243,9 @@ export class HttpResponse {
    *
    * @returns HttpContext with body property set with an encoded JSON string and json headers set.
    */
-  get json() {
+  get json(): (
+    data: string | number | boolean | Record<string, any>
+  ) => HttpContext {
     return jsonResponse(this.ctx);
   }
 }
@@ -288,7 +289,7 @@ export class HttpContext extends TriggerContext<HttpRequest, HttpResponse> {
 
   static fromGrpcTriggerRequest(
     trigger: TriggerRequest,
-    options?: ApiWorkerOptions
+    _options?: ApiWorkerOptions
   ): HttpContext {
     const http = trigger.getHttp();
     const ctx = new HttpContext();
@@ -443,7 +444,7 @@ export class EventContext<T> extends TriggerContext<
 
   static fromGrpcTriggerRequest(
     trigger: TriggerRequest,
-    options?: SubscriptionWorkerOptions
+    _options?: SubscriptionWorkerOptions
   ): EventContext<unknown> {
     const topic = trigger.getTopic();
     const ctx = new EventContext();
@@ -482,7 +483,7 @@ export class BucketNotificationContext extends TriggerContext<
 
   static fromGrpcTriggerRequest(
     trigger: TriggerRequest,
-    options?: BucketNotificationWorkerOptions
+    _options?: BucketNotificationWorkerOptions
   ): BucketNotificationContext {
     const ctx = new BucketNotificationContext();
     const bucketConfig = trigger.getNotification().getBucket();

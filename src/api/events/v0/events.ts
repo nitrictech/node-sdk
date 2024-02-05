@@ -23,7 +23,7 @@ import {
 import { Struct } from 'google-protobuf/google/protobuf/struct_pb';
 import * as grpc from '@grpc/grpc-js';
 import { NitricEvent } from '../../../types';
-import { fromGrpcError, InvalidArgumentError } from '../../errors';
+import { fromGrpcError } from '../../errors';
 
 /**
  * Construct event and topic service clients.

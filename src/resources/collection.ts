@@ -18,12 +18,15 @@ import {
   ResourceType,
   Action,
   ResourceDetailsResponse,
+  ResourceTypeMap,
+  ActionMap,
 } from '@nitric/api/proto/resource/v1/resource_pb';
 import { fromGrpcError } from '../api/errors';
 import { documents } from '../api/documents';
 import resourceClient from './client';
 import { make, SecureResource } from './common';
 import { DocumentStructure } from '../api/documents/v0/document-ref';
+import { CollectionRef } from '../api/documents/v0/collection-ref';
 
 type CollectionPermission = 'reading' | 'writing' | 'deleting';
 
@@ -51,7 +54,7 @@ export class CollectionResource<
     return new Promise<Resource>((resolve, reject) => {
       resourceClient.declare(
         req,
-        (error, response: ResourceDeclareResponse) => {
+        (error, _response: ResourceDeclareResponse) => {
           if (error) {
             reject(fromGrpcError(error));
           } else {
@@ -62,7 +65,9 @@ export class CollectionResource<
     });
   }
 
-  protected permsToActions(...perms: CollectionPermission[]) {
+  protected permsToActions(
+    ...perms: CollectionPermission[]
+  ): ActionMap[keyof ActionMap][] {
     let actions = perms.reduce((actions, perm) => {
       switch (perm) {
         case 'reading':
@@ -91,10 +96,11 @@ export class CollectionResource<
     return actions;
   }
 
-  protected resourceType() {
+  protected resourceType(): ResourceTypeMap[keyof ResourceTypeMap] {
     return ResourceType.COLLECTION;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   protected unwrapDetails(resp: ResourceDetailsResponse): never {
     throw new Error('details unimplemented for collection');
   }
@@ -104,10 +110,14 @@ export class CollectionResource<
    *
    * e.g. const customers = resources.collection('customers').for('reading', 'writing')
    *
-   * @param perms the required permission set
+   * @param perm the access that the currently scoped function is requesting to this resource.
+   * @param perms additional access that the currently scoped function is requesting to this resource.
    * @returns a usable collection reference
    */
-  public for(perm: CollectionPermission, ...perms: CollectionPermission[]) {
+  public for(
+    perm: CollectionPermission,
+    ...perms: CollectionPermission[]
+  ): CollectionRef<T> {
     this.registerPolicy(perm, ...perms);
 
     return documents().collection<T>(this.name);

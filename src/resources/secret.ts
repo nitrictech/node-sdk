@@ -18,6 +18,7 @@ import {
   ResourceDeclareRequest,
   ResourceDeclareResponse,
   ResourceDetailsResponse,
+  ResourceTypeMap,
 } from '@nitric/api/proto/resource/v1/resource_pb';
 import resourceClient from './client';
 import { secrets, Secret } from '../api/secrets';
@@ -43,7 +44,7 @@ export class SecretResource extends SecureResource<SecretPermission> {
     return new Promise<Resource>((resolve, reject) => {
       resourceClient.declare(
         req,
-        (error, response: ResourceDeclareResponse) => {
+        (error, _response: ResourceDeclareResponse) => {
           if (error) {
             reject(fromGrpcError(error));
           } else {
@@ -71,10 +72,11 @@ export class SecretResource extends SecureResource<SecretPermission> {
     }, []);
   }
 
-  protected resourceType() {
+  protected resourceType(): ResourceTypeMap[keyof ResourceTypeMap] {
     return ResourceType.SECRET;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   protected unwrapDetails(resp: ResourceDetailsResponse): never {
     throw new Error('details unimplemented for secret');
   }

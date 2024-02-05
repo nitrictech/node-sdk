@@ -57,7 +57,7 @@ class HttpWorker {
 export const http = (
   app: NodeApplication | ListenerFunction,
   callback?: () => void
-) => {
+): void => {
   const unknownApp = app as any;
 
   const nodeApp =

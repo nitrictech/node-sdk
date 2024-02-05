@@ -25,6 +25,7 @@ import {
   ResourceDeclareRequest,
   ResourceDetailsResponse,
   ResourceType,
+  ResourceTypeMap,
 } from '../gen/proto/resource/v1/resource_pb';
 import resourceClient from './client';
 import { make, Resource as Base } from './common';
@@ -164,11 +165,11 @@ export class WebsocketResource extends Base<any> {
     return notification['start']();
   }
 
-  protected resourceType() {
+  protected resourceType(): ResourceTypeMap[keyof ResourceTypeMap] {
     return ResourceType.WEBSOCKET;
   }
 
-  protected unwrapDetails(resp: ResourceDetailsResponse) {
+  protected unwrapDetails(resp: ResourceDetailsResponse): { url: string } {
     if (resp.hasWebsocket()) {
       return {
         url: resp.getWebsocket().getUrl(),

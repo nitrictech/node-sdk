@@ -18,6 +18,7 @@ import {
   ResourceDeclareResponse,
   ResourceDetailsResponse,
   ResourceType,
+  ResourceTypeMap,
 } from '@nitric/api/proto/resource/v1/resource_pb';
 import resourceClient from './client';
 import { storage, Bucket } from '../api/storage';
@@ -84,7 +85,7 @@ export class BucketNotification {
   constructor(
     bucket: string,
     notificationType: BucketNotificationType,
-    notificationPrefixFilter,
+    notificationPrefixFilter: string,
     ...middleware: BucketNotificationMiddleware[]
   ) {
     this.faas = new Faas(
@@ -108,7 +109,7 @@ export class FileNotification {
   constructor(
     bucket: Bucket,
     notificationType: BucketNotificationType,
-    notificationPrefixFilter,
+    notificationPrefixFilter: string,
     ...middleware: FileNotificationMiddleware[]
   ) {
     this.faas = new Faas(
@@ -195,10 +196,11 @@ export class BucketResource extends SecureResource<BucketPermission> {
     }, []);
   }
 
-  protected resourceType() {
+  protected resourceType(): ResourceTypeMap[keyof ResourceTypeMap] {
     return ResourceType.BUCKET;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   protected unwrapDetails(resp: ResourceDetailsResponse): never {
     throw new Error('details unimplemented for bucket');
   }
@@ -208,7 +210,8 @@ export class BucketResource extends SecureResource<BucketPermission> {
    *
    * e.g. const imgs = resources.bucket('image').for('writing')
    *
-   * @param perms the required permission set
+   * @param perm the access that the currently scoped function is requesting to this resource.
+   * @param perms additional access that the currently scoped function is requesting to this resource.
    * @returns a usable bucket reference
    */
   public for(perm: BucketPermission, ...perms: BucketPermission[]): Bucket {
