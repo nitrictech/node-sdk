@@ -57,7 +57,7 @@ const createWorker = (
   );
 
   const httpProxyRequest = new HttpProxyRequest();
-  httpProxyRequest.setHost(`:${port}`);
+  httpProxyRequest.setHost(`localhost:${port}`);
 
   httpClient.proxy(httpProxyRequest, (err) => {
     if (err) {
