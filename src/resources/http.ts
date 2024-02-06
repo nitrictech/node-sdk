@@ -17,7 +17,6 @@ import { HttpClient } from '@nitric/proto/http/v1/http_grpc_pb';
 import { SERVICE_BIND } from '../constants';
 import * as grpc from '@grpc/grpc-js';
 import { ClientMessage, HttpProxyRequest } from '@nitric/proto/http/v1/http_pb';
-import { HttpContext } from '../context/http';
 import * as nodeHttp from 'http';
 
 type ListenerFunction =
@@ -62,27 +61,21 @@ const createWorker = (
 
   const httpProxyStream = httpClient.proxy();
 
-  httpProxyStream.on('data', () => {
-    // NO-OP for now
-  });
+  httpProxyStream.on('data', NO_OP);
 
   const clientMessage = new ClientMessage();
   clientMessage.setRequest(httpProxyRequest);
+  console.log("writing registration request to proxy stream");
   httpProxyStream.write(clientMessage);
-
-  // httpClient.proxy(httpProxyRequest, (err) => {
-  //   if (err) {
-  //     console.error(err);
-  //   }
-  // });
 
   // Start Node application that HTTP proxy sits on
   if (process.env.NITRIC_ENVIRONMENT !== 'build') {
     const srv = app.listen(port, callback);
 
     srv.on('close', () => {
+      console.log("closing http proxy stream");
       httpProxyStream.cancel();
-    })
+    });
   }
 };
 
