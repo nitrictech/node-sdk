@@ -2,6 +2,7 @@ import * as jspb from 'google-protobuf';
 import * as google_protobuf_struct_pb from 'google-protobuf/google/protobuf/struct_pb';
 import * as google_protobuf_duration_pb from 'google-protobuf/google/protobuf/duration_pb';
 import * as grpc from '@grpc/grpc-js';
+import * as nodeHttp from 'http';
 
 // package: nitric.proto.topics.v1
 
@@ -2254,7 +2255,7 @@ declare class SecretResource extends SecureResource<SecretPermission> {
  */
 declare const secret: (name: string) => SecretResource;
 
-type ListenerFunction = ((port: number, callback?: () => void) => void) | ((port: number) => void);
+type ListenerFunction = ((port: number, callback?: () => void) => nodeHttp.Server) | ((port: number) => nodeHttp.Server);
 interface NodeApplication {
     listen: ListenerFunction;
 }
