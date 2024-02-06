@@ -17,11 +17,11 @@ import { HttpClient } from '@nitric/proto/http/v1/http_grpc_pb';
 import { SERVICE_BIND } from '../constants';
 import * as grpc from '@grpc/grpc-js';
 import { ClientMessage, HttpProxyRequest } from '@nitric/proto/http/v1/http_pb';
-import { HttpContext } from '../context/http';
+import * as nodeHttp from 'http';
 
 type ListenerFunction =
-  | ((port: number, callback?: () => void) => void)
-  | ((port: number) => void);
+  | ((port: number, callback?: () => void) => nodeHttp.Server)
+  | ((port: number) => nodeHttp.Server);
 
 interface NodeApplication {
   listen: ListenerFunction;
@@ -61,25 +61,28 @@ const createWorker = (
 
   const httpProxyStream = httpClient.proxy();
 
-  httpProxyStream.on('data', () => {
-    // NO-OP for now
+  httpProxyStream.on('data', NO_OP);
+
+  httpProxyStream.on('error', (err) => {
+    console.log('An error occurred:', err);
   });
 
   const clientMessage = new ClientMessage();
   clientMessage.setRequest(httpProxyRequest);
+  console.log("writing registration request to proxy stream");
   httpProxyStream.write(clientMessage);
-
-  // httpClient.proxy(httpProxyRequest, (err) => {
-  //   if (err) {
-  //     console.error(err);
-  //   }
-  // });
-
+  console.log("proxy stream request written");
   // Start Node application that HTTP proxy sits on
   if (process.env.NITRIC_ENVIRONMENT !== 'build') {
-    app.listen(port, callback);
-    // close the stream once the server closes
-    httpProxyStream.cancel();
+    const srv = app.listen(port, callback);
+    console.log("started listening on server:", port);
+
+   
+
+    srv.on('close', () => {
+      console.log("closing http proxy stream");
+      httpProxyStream.cancel();
+    });
   }
 };
 
