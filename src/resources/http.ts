@@ -63,6 +63,10 @@ const createWorker = (
 
   httpProxyStream.on('data', NO_OP);
 
+  httpProxyStream.on('error', (err) => {
+    console.log('An error occurred:', err);
+  });
+
   const clientMessage = new ClientMessage();
   clientMessage.setRequest(httpProxyRequest);
   console.log("writing registration request to proxy stream");
@@ -72,6 +76,8 @@ const createWorker = (
   if (process.env.NITRIC_ENVIRONMENT !== 'build') {
     const srv = app.listen(port, callback);
     console.log("started listening on server:", port);
+
+   
 
     srv.on('close', () => {
       console.log("closing http proxy stream");
