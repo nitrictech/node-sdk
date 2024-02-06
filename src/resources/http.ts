@@ -17,11 +17,11 @@ import { HttpClient } from '@nitric/proto/http/v1/http_grpc_pb';
 import { SERVICE_BIND } from '../constants';
 import * as grpc from '@grpc/grpc-js';
 import { ClientMessage, HttpProxyRequest } from '@nitric/proto/http/v1/http_pb';
-import * as nodeHttp from 'http';
+import { Server } from 'http';
 
 type ListenerFunction =
-  | ((port: number, callback?: () => void) => nodeHttp.Server)
-  | ((port: number) => nodeHttp.Server);
+  | ((port: number, callback?: () => void) => Server)
+  | ((port: number) => Server);
 
 interface NodeApplication {
   listen: ListenerFunction;
