@@ -67,10 +67,11 @@ const createWorker = (
   clientMessage.setRequest(httpProxyRequest);
   console.log("writing registration request to proxy stream");
   httpProxyStream.write(clientMessage);
-
+  console.log("proxy stream request written");
   // Start Node application that HTTP proxy sits on
   if (process.env.NITRIC_ENVIRONMENT !== 'build') {
     const srv = app.listen(port, callback);
+    console.log("started listening on server:", port);
 
     srv.on('close', () => {
       console.log("closing http proxy stream");
