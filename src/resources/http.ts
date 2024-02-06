@@ -16,7 +16,7 @@ import portfinder from 'portfinder';
 import { HttpClient } from '@nitric/proto/http/v1/http_grpc_pb';
 import { SERVICE_BIND } from '../constants';
 import * as grpc from '@grpc/grpc-js';
-import { HttpProxyRequest } from '@nitric/proto/http/v1/http_pb';
+import { ClientMessage, HttpProxyRequest } from '@nitric/proto/http/v1/http_pb';
 import { HttpContext } from '../context/http';
 
 type ListenerFunction =
@@ -59,15 +59,27 @@ const createWorker = (
   const httpProxyRequest = new HttpProxyRequest();
   httpProxyRequest.setHost(`localhost:${port}`);
 
-  httpClient.proxy(httpProxyRequest, (err) => {
-    if (err) {
-      console.error(err);
-    }
+  const httpProxyStream = httpClient.proxy();
+
+  httpProxyStream.on('data', () => {
+    // NO-OP for now
   });
+
+  const clientMessage = new ClientMessage();
+  clientMessage.setRequest(httpProxyRequest);
+  httpProxyStream.write(clientMessage);
+
+  // httpClient.proxy(httpProxyRequest, (err) => {
+  //   if (err) {
+  //     console.error(err);
+  //   }
+  // });
 
   // Start Node application that HTTP proxy sits on
   if (process.env.NITRIC_ENVIRONMENT !== 'build') {
     app.listen(port, callback);
+    // close the stream once the server closes
+    httpProxyStream.cancel();
   }
 };
 
