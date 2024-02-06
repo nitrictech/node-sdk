@@ -102,6 +102,11 @@ export class ResourceDeclareRequest extends jspb.Message {
   getApiSecurityDefinition(): ApiSecurityDefinitionResource | undefined;
   setApiSecurityDefinition(value?: ApiSecurityDefinitionResource): void;
 
+  hasQueue(): boolean;
+  clearQueue(): void;
+  getQueue(): QueueResource | undefined;
+  setQueue(value?: QueueResource): void;
+
   getConfigCase(): ResourceDeclareRequest.ConfigCase;
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): ResourceDeclareRequest.AsObject;
@@ -123,6 +128,7 @@ export namespace ResourceDeclareRequest {
     secret?: SecretResource.AsObject,
     api?: ApiResource.AsObject,
     apiSecurityDefinition?: ApiSecurityDefinitionResource.AsObject,
+    queue?: QueueResource.AsObject,
   }
 
   export enum ConfigCase {
@@ -134,6 +140,7 @@ export namespace ResourceDeclareRequest {
     SECRET = 14,
     API = 15,
     API_SECURITY_DEFINITION = 16,
+    QUEUE = 17,
   }
 }
 
@@ -165,6 +172,22 @@ export class TopicResource extends jspb.Message {
 }
 
 export namespace TopicResource {
+  export type AsObject = {
+  }
+}
+
+export class QueueResource extends jspb.Message {
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): QueueResource.AsObject;
+  static toObject(includeInstance: boolean, msg: QueueResource): QueueResource.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: QueueResource, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): QueueResource;
+  static deserializeBinaryFromReader(message: QueueResource, reader: jspb.BinaryReader): QueueResource;
+}
+
+export namespace QueueResource {
   export type AsObject = {
   }
 }
@@ -330,6 +353,7 @@ export interface ResourceTypeMap {
   WEBSOCKET: 10;
   HTTP: 11;
   APISECURITYDEFINITION: 12;
+  QUEUE: 13;
 }
 
 export const ResourceType: ResourceTypeMap;
@@ -348,6 +372,10 @@ export interface ActionMap {
   SECRETPUT: 400;
   SECRETACCESS: 401;
   WEBSOCKETMANAGE: 500;
+  QUEUESEND: 600;
+  QUEUERECEIVE: 601;
+  QUEUELIST: 602;
+  QUEUEDETAIL: 603;
 }
 
 export const Action: ActionMap;

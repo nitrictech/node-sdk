@@ -371,6 +371,22 @@ export namespace Topic {
   }
 }
 
+export class Queue extends jspb.Message {
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): Queue.AsObject;
+  static toObject(includeInstance: boolean, msg: Queue): Queue.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: Queue, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): Queue;
+  static deserializeBinaryFromReader(message: Queue, reader: jspb.BinaryReader): Queue;
+}
+
+export namespace Queue {
+  export type AsObject = {
+  }
+}
+
 export class KeyValueStore extends jspb.Message {
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): KeyValueStore.AsObject;
@@ -758,6 +774,11 @@ export class Resource extends jspb.Message {
   getHttp(): Http | undefined;
   setHttp(value?: Http): void;
 
+  hasQueue(): boolean;
+  clearQueue(): void;
+  getQueue(): Queue | undefined;
+  setQueue(value?: Queue): void;
+
   getConfigCase(): Resource.ConfigCase;
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): Resource.AsObject;
@@ -782,6 +803,7 @@ export namespace Resource {
     secret?: Secret.AsObject,
     websocket?: Websocket.AsObject,
     http?: Http.AsObject,
+    queue?: Queue.AsObject,
   }
 
   export enum ConfigCase {
@@ -796,6 +818,7 @@ export namespace Resource {
     SECRET = 17,
     WEBSOCKET = 18,
     HTTP = 19,
+    QUEUE = 20,
   }
 }
 
