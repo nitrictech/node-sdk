@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 export * from './topics';
+export * from './queues';
 export * from './keyvalue';
 export * from './storage';
 export * from './secrets';
