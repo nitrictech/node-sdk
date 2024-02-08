@@ -18,6 +18,7 @@ import {
   ResourceDeclareResponse,
   ResourceType,
   ResourceTypeMap,
+  BucketResource as NitricBucketResource,
 } from '@nitric/proto/resources/v1/resources_pb';
 import resourceClient from './client';
 import { storage, Bucket } from '../api/storage';
@@ -228,6 +229,7 @@ export class BucketResource extends SecureResource<BucketPermission> {
     resource.setType(ResourceType.BUCKET);
 
     req.setId(resource);
+    req.setBucket(new NitricBucketResource());
 
     return new Promise<ResourceIdentifier>((resolve, reject) => {
       resourceClient.declare(req, (error, _: ResourceDeclareResponse) => {

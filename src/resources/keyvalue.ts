@@ -19,6 +19,7 @@ import {
   Action,
   ResourceTypeMap,
   ActionMap,
+  KeyValueStoreResource as NitricKeyValueStoreResource,
 } from '@nitric/proto/resources/v1/resources_pb';
 import { keyvalue, ValueStructure } from '../api/keyvalue';
 import resourceClient from './client';
@@ -47,6 +48,8 @@ export class KeyValueStoreResource<
     resource.setName(this.name);
     resource.setType(ResourceType.KEYVALUESTORE);
     req.setId(resource);
+
+    req.setKeyValueStore(new NitricKeyValueStoreResource());
 
     return new Promise<ResourceIdentifier>((resolve, reject) => {
       resourceClient.declare(

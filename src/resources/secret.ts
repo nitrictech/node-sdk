@@ -18,6 +18,7 @@ import {
   ResourceDeclareRequest,
   ResourceDeclareResponse,
   ResourceTypeMap,
+  SecretResource as NitricSecretResource,
 } from '@nitric/proto/resources/v1/resources_pb';
 import resourceClient from './client';
 import { secrets, Secret } from '../api/secrets';
@@ -38,7 +39,9 @@ export class SecretResource extends SecureResource<SecretPermission> {
     resource.setName(this.name);
     resource.setType(ResourceType.SECRET);
 
+    req.setSecret(new NitricSecretResource());
     req.setId(resource);
+    
 
     return new Promise<ResourceIdentifier>((resolve, reject) => {
       resourceClient.declare(

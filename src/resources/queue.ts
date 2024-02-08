@@ -18,6 +18,7 @@ import {
   ResourceDeclareResponse,
   ResourceType,
   Action,
+  QueueResource as NitricQueueResource,
   ResourceTypeMap,
 } from '@nitric/proto/resources/v1/resources_pb';
 import resourceClient from './client';
@@ -43,6 +44,7 @@ export class QueueResource<
     resource.setName(this.name);
     resource.setType(ResourceType.QUEUE);
     req.setId(resource);
+    req.setQueue(new NitricQueueResource())
 
     return new Promise<ResourceIdentifier>((resolve, reject) => {
       resourceClient.declare(req, (error) => {
