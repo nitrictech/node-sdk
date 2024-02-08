@@ -20,6 +20,7 @@ import {
   ResourceType,
   Action,
   ResourceTypeMap,
+  TopicResource as NitricTopicResource,
 } from '@nitric/proto/resources/v1/resources_pb';
 import {
   ActionsList,
@@ -140,6 +141,7 @@ export class TopicResource<
     resource.setName(this.name);
     resource.setType(ResourceType.TOPIC);
     req.setId(resource);
+    req.setTopic(new NitricTopicResource());
 
     return new Promise<ResourceIdentifier>((resolve, reject) => {
       resourceClient.declare(
