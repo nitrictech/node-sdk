@@ -13,6 +13,8 @@
 // limitations under the License.
 
 import { ServiceError } from '@grpc/grpc-js';
+import { parse } from '@nitric/grpc-error-status';
+import { Struct } from 'google-protobuf/google/protobuf/struct_pb';
 
 /**
  * Nitric Provider Error
@@ -21,10 +23,31 @@ import { ServiceError } from '@grpc/grpc-js';
  */
 export class NitricProviderError extends Error {
   constructor(grpcError: ServiceError) {
-      const message = `${grpcError.message};
+    const errorStatus = parse(grpcError);
+
+    let errorDetails: Struct | undefined = undefined;
+
+    if (errorStatus) {
+      const allDetails = errorStatus.parseDetails(Struct);
+  
+      if (allDetails.length > 0) {
+        errorDetails = allDetails[0];
+      }
+    }
+
+    let details = grpcError.details;
+    try {
+      details = JSON.stringify(errorDetails?.toJavaScript());
+    } catch (e) {
+      // Ignore
+      console.debug('provider returned error details in a format other than Struct. Unable to parse details')
+    }
+
+      const message = `${grpcError.message}
 Nitric Provider Error: ${grpcError.name}
   Code: ${grpcError.code}
-  Details: ${grpcError.details}
+  Message: ${grpcError.message}
+  Details: ${details}
   Metadata: ${JSON.stringify(grpcError.metadata)}`;
     super(message);
   }
