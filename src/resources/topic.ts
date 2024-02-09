@@ -39,7 +39,7 @@ import {
   ServerMessage,
 } from '@nitric/proto/topics/v1/topics_pb';
 import { MessageContext } from '../context/message';
-import { MessageMiddleware, createHandler } from '../helpers/handler';
+import { MessageMiddleware, createHandler } from '../handlers/handler';
 import { fromGrpcError } from '../api/errors';
 
 type TopicPermission = 'publishing';

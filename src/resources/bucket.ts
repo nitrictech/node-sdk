@@ -43,7 +43,7 @@ import {
   BucketNotificationMiddleware,
   FileNotificationMiddleware,
   createHandler,
-} from '../helpers/handler';
+} from '../handlers/handler';
 import { BlobEventContext, BucketEventContext } from '../context/bucket';
 import { fromGrpcError } from '../api/errors';
 

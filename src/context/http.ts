@@ -4,7 +4,7 @@ import {
   HttpResponse as HttpResponsePb,
 } from '@nitric/proto/apis/v1/apis_pb';
 import { AbstractRequest, BaseContext } from './base';
-import { jsonResponse } from '../helpers/json';
+import { jsonResponse } from '../handlers/json';
 
 type Method = 'GET' | 'POST' | 'DELETE' | 'PATCH' | 'PUT' | 'HEAD';
 

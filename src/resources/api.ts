@@ -41,7 +41,7 @@ import {
   GenericMiddleware,
   HttpMiddleware,
   createHandler,
-} from '../helpers/handler';
+} from '../handlers/handler';
 import { HttpContext } from '../context/http';
 import { fromGrpcError } from '../api/errors';
 

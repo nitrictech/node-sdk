@@ -22,7 +22,7 @@ import {
   ScheduleEvery,
   ServerMessage,
 } from '@nitric/proto/schedules/v1/schedules_pb';
-import { ScheduleMiddleware, createHandler } from '../helpers/handler';
+import { ScheduleMiddleware, createHandler } from '../handlers/handler';
 import { IntervalContext } from '../context/interval';
 
 const Frequencies = ['days', 'hours', 'minutes'] as const;

@@ -38,7 +38,7 @@ import { WebsocketHandlerClient } from '../gen/nitric/proto/websockets/v1/websoc
 import { SERVICE_BIND } from '../constants';
 import * as grpc from '@grpc/grpc-js';
 import { WebsocketNotificationContext } from '../context/websocket';
-import { WebsocketMiddleware, createHandler } from '../helpers/handler';
+import { WebsocketMiddleware, createHandler } from '../handlers/handler';
 import { JSONTypes } from '../context/base';
 import { fromGrpcError } from '../api/errors';
 

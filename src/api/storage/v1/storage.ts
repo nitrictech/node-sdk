@@ -27,7 +27,7 @@ import {
   FileNotification,
 } from '@nitric/sdk/resources';
 import { toDuration } from '@nitric/sdk/resources/common';
-import { FileNotificationMiddleware } from '@nitric/sdk/helpers/handler';
+import { FileNotificationMiddleware } from '@nitric/sdk/handlers/handler';
 import { fromGrpcError } from '../../errors';
 
 /**
