@@ -18,6 +18,7 @@ import {
   WebsocketCloseRequest,
 } from '@nitric/proto/websockets/v1/websockets_pb';
 import * as grpc from '@grpc/grpc-js';
+import { fromGrpcError } from '../../errors';
 
 /**
  * Nitric websocket client, facilitates sending messages to connections on this websocket.
@@ -57,7 +58,7 @@ export class Websocket {
     return new Promise((res, rej) => {
       this.client.send(sendRequest, (error, _data) => {
         if (error) {
-          rej(error);
+          rej(fromGrpcError(error));
         }
 
         res();
@@ -74,7 +75,7 @@ export class Websocket {
     return new Promise((res, rej) => {
       this.client.close(closeRequest, (error) => {
         if (error) {
-          rej(error);
+          rej(fromGrpcError(error));
         }
 
         res();
