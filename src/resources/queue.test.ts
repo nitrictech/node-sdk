@@ -30,6 +30,7 @@ describe('Registering queue resources', () => {
     let declareSpy;
 
     beforeAll(() => {
+      jest.spyOn(console, 'error').mockImplementation(() => {});
       declareSpy = jest
         .spyOn(ResourcesClient.prototype, 'declare')
         .mockImplementationOnce((request, callback: any) => {
@@ -40,7 +41,7 @@ describe('Registering queue resources', () => {
     });
 
     afterAll(() => {
-      declareSpy.mockClear();
+      jest.restoreAllMocks();
     });
 
     it('Should throw the error', async () => {

@@ -30,21 +30,24 @@ describe('Registering key/value store resources', () => {
     let declareSpy;
 
     beforeAll(() => {
+      jest.spyOn(console, 'error').mockImplementation(() => {});
       declareSpy = jest
         .spyOn(ResourcesClient.prototype, 'declare')
         .mockImplementationOnce((request, callback: any) => {
           callback(MOCK_ERROR, null);
-1
+          1;
           return null as any;
         });
     });
 
     afterAll(() => {
-      declareSpy.mockClear();
+      jest.restoreAllMocks();
     });
 
     it('Should throw the error', async () => {
-      await expect(kv(validName)['registerPromise']).rejects.toBeInstanceOf(UnimplementedError);
+      await expect(kv(validName)['registerPromise']).rejects.toBeInstanceOf(
+        UnimplementedError
+      );
     });
 
     it('Should call the resource server', () => {
@@ -72,9 +75,7 @@ describe('Registering key/value store resources', () => {
       });
 
       it('Should succeed', async () => {
-        await expect(
-          kv(validName)['registerPromise']
-        ).resolves.not.toBeNull();
+        await expect(kv(validName)['registerPromise']).resolves.not.toBeNull();
       });
 
       it('Should call the resource server', () => {

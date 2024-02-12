@@ -23,20 +23,26 @@ describe('Api', () => {
     message: 'UNIMPLEMENTED',
   };
 
-  const declareSpy = jest
-        .spyOn(ResourcesClient.prototype, 'declare')
-        .mockImplementationOnce((request, callback: any) => {
-          callback(MOCK_ERROR, null);
+  let declareSpy;
+  let startSpy;
+  let mockFn;
+  beforeAll(() => {
+    jest.spyOn(console, 'error').mockImplementation(() => {});
+    declareSpy = jest
+      .spyOn(ResourcesClient.prototype, 'declare')
+      .mockImplementationOnce((request, callback: any) => {
+        callback(MOCK_ERROR, null);
 
-          return null as any;
-        });
-  const startSpy = jest
-    .spyOn(Method.prototype as any, 'start')
-    .mockReturnValue(Promise.resolve());
-  const mockFn = jest.fn();
+        return null as any;
+      });
+    startSpy = jest
+      .spyOn(Method.prototype as any, 'start')
+      .mockReturnValue(Promise.resolve());
+    mockFn = jest.fn();
+  });
 
   afterAll(() => {
-    jest.clearAllMocks();
+    jest.restoreAllMocks();
   });
 
   describe('when create a new route', () => {

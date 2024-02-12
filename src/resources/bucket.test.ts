@@ -41,6 +41,7 @@ describe('Registering bucket resources', () => {
       let declareSpy;
 
       beforeAll(() => {
+        jest.spyOn(console, 'error').mockImplementation(() => {});
         declareSpy = jest
           .spyOn(ResourcesClient.prototype, 'declare')
           .mockImplementationOnce((request, callback: any) => {
@@ -51,11 +52,13 @@ describe('Registering bucket resources', () => {
       });
 
       afterAll(() => {
-        declareSpy.mockClear();
+        jest.restoreAllMocks();
       });
 
       it('Should throw the error', async () => {
-        await expect(bucket(validName)['registerPromise']).rejects.toBeInstanceOf(UnimplementedError);
+        await expect(
+          bucket(validName)['registerPromise']
+        ).rejects.toBeInstanceOf(UnimplementedError);
       });
 
       it('Should call the resource server', () => {

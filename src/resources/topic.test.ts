@@ -14,7 +14,12 @@
 
 import { ResourcesClient } from '@nitric/proto/resources/v1/resources_grpc_pb';
 import { UnimplementedError } from '../api/errors';
-import { topic, SubscriptionWorkerOptions, TopicResource, Subscription } from '.';
+import {
+  topic,
+  SubscriptionWorkerOptions,
+  TopicResource,
+  Subscription,
+} from '.';
 import { ResourceDeclareResponse } from '@nitric/proto/resources/v1/resources_pb';
 import { Topic } from '..';
 import { Metadata, status } from '@grpc/grpc-js';
@@ -30,6 +35,7 @@ describe('Registering topic resources', () => {
     let declareSpy;
 
     beforeAll(() => {
+      jest.spyOn(console, 'error').mockImplementation(() => {});
       declareSpy = jest
         .spyOn(ResourcesClient.prototype, 'declare')
         .mockImplementationOnce((request, callback: any) => {
@@ -40,11 +46,13 @@ describe('Registering topic resources', () => {
     });
 
     afterAll(() => {
-      declareSpy.mockClear();
+      jest.restoreAllMocks();
     });
 
     it('Should throw the error', async () => {
-      await expect(topic(validName)['registerPromise']).rejects.toBeInstanceOf(UnimplementedError);
+      await expect(topic(validName)['registerPromise']).rejects.toBeInstanceOf(
+        UnimplementedError
+      );
     });
 
     it('Should call the resource server', () => {
@@ -134,10 +142,15 @@ describe('Registering topic resources', () => {
 });
 
 describe('subscription', () => {
-  const startSpy = jest
-    .spyOn(Subscription.prototype as any, 'start')
-    .mockReturnValue(Promise.resolve());
-  const mockFn = jest.fn();
+  let startSpy;
+  let mockFn;
+  
+  beforeAll(() => {
+    startSpy = jest
+      .spyOn(Subscription.prototype as any, 'start')
+      .mockReturnValue(Promise.resolve());
+    mockFn = jest.fn();
+  });
 
   afterAll(() => {
     jest.clearAllMocks();
