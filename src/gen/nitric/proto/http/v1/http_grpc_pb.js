@@ -29,7 +29,7 @@ function deserialize_nitric_proto_http_v1_ServerMessage(buffer_arg) {
 
 // Service for publishing asynchronous messages
 var HttpService = exports.HttpService = {
-  // Serve a route on an API Gateway
+  // Proxy an HTTP server
 proxy: {
     path: '/nitric.proto.http.v1.Http/Proxy',
     requestStream: true,
