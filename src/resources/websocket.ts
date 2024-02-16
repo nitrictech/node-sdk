@@ -216,7 +216,7 @@ export class WebsocketResource extends Base {
     request.setSocketName(this.name);
 
     const details = await new Promise<WebsocketDetails>((resolve, reject) => {
-      this.wsClient.client.details(request, (error, data) => {
+      this.wsClient.client.socketDetails(request, (error, data) => {
         if (error) {
           reject(fromGrpcError(error));
         } else {
