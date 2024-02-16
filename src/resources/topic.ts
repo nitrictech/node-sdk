@@ -162,9 +162,7 @@ export class TopicResource<
         case 'publishing':
           return [
             ...actions,
-            Action.TOPICEVENTPUBLISH,
-            Action.TOPICLIST,
-            Action.TOPICDETAIL,
+            Action.TOPICPUBLISH,
           ];
         default:
           throw new Error(

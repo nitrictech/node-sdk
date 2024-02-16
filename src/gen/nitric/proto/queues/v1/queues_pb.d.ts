@@ -78,9 +78,9 @@ export namespace QueueDequeueRequest {
 
 export class QueueDequeueResponse extends jspb.Message {
   clearMessagesList(): void;
-  getMessagesList(): Array<ReceivedMessage>;
-  setMessagesList(value: Array<ReceivedMessage>): void;
-  addMessages(value?: ReceivedMessage, index?: number): ReceivedMessage;
+  getMessagesList(): Array<DequeuedMessage>;
+  setMessagesList(value: Array<DequeuedMessage>): void;
+  addMessages(value?: DequeuedMessage, index?: number): DequeuedMessage;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): QueueDequeueResponse.AsObject;
@@ -94,7 +94,7 @@ export class QueueDequeueResponse extends jspb.Message {
 
 export namespace QueueDequeueResponse {
   export type AsObject = {
-    messagesList: Array<ReceivedMessage.AsObject>,
+    messagesList: Array<DequeuedMessage.AsObject>,
   }
 }
 
@@ -166,7 +166,7 @@ export namespace QueueMessage {
   }
 }
 
-export class ReceivedMessage extends jspb.Message {
+export class DequeuedMessage extends jspb.Message {
   getLeaseId(): string;
   setLeaseId(value: string): void;
 
@@ -176,16 +176,16 @@ export class ReceivedMessage extends jspb.Message {
   setMessage(value?: QueueMessage): void;
 
   serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): ReceivedMessage.AsObject;
-  static toObject(includeInstance: boolean, msg: ReceivedMessage): ReceivedMessage.AsObject;
+  toObject(includeInstance?: boolean): DequeuedMessage.AsObject;
+  static toObject(includeInstance: boolean, msg: DequeuedMessage): DequeuedMessage.AsObject;
   static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
   static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
-  static serializeBinaryToWriter(message: ReceivedMessage, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): ReceivedMessage;
-  static deserializeBinaryFromReader(message: ReceivedMessage, reader: jspb.BinaryReader): ReceivedMessage;
+  static serializeBinaryToWriter(message: DequeuedMessage, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): DequeuedMessage;
+  static deserializeBinaryFromReader(message: DequeuedMessage, reader: jspb.BinaryReader): DequeuedMessage;
 }
 
-export namespace ReceivedMessage {
+export namespace DequeuedMessage {
   export type AsObject = {
     leaseId: string,
     message?: QueueMessage.AsObject,

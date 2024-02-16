@@ -61,9 +61,9 @@ export class QueueResource<
     let actions: ActionsList = perms.reduce((actions, p) => {
       switch (p) {
         case 'sending':
-          return [...actions, Action.QUEUESEND];
+          return [...actions, Action.QUEUEENQUEUE];
         case 'receiving':
-          return [...actions, Action.QUEUERECEIVE];
+          return [...actions, Action.QUEUEDEQUEUE];
         default:
           throw new Error(
             `unknown permission ${p}, supported permissions is publishing.}
@@ -71,10 +71,6 @@ export class QueueResource<
           );
       }
     }, []);
-
-    if (actions.length > 0) {
-      actions = [...actions, Action.QUEUELIST, Action.QUEUEDETAIL];
-    }
 
     return actions;
   }
