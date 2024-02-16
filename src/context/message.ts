@@ -26,7 +26,7 @@ export class MessageContext<T> extends BaseContext<
   MessageRequest<T>,
   MessageResponse
 > {
-  public get event(): MessageContext<T> {
+  public get message(): MessageContext<T> {
     return this;
   }
 
@@ -48,7 +48,7 @@ export class MessageContext<T> extends BaseContext<
   }
 
   static toMessageResponse(ctx: MessageContext<any>): MessageResponsePb {
-    const evtCtx = ctx.event;
+    const evtCtx = ctx.message;
     const messageResponse = new MessageResponsePb();
     messageResponse.setSuccess(evtCtx.res.success);
 

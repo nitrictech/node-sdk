@@ -174,9 +174,9 @@ export class TopicResource<
   }
 
   /**
-   * Register and start a subscription handler that will be called for all events from this topic.
+   * Register and start a subscription handler that will be called for all messages from this topic.
    *
-   * @param middleware handler middleware which will be run for every incoming event
+   * @param middleware handler middleware which will be run for every incoming message
    * @returns Promise which resolves when the handler server terminates
    */
   subscribe(...middleware: MessageMiddleware<T>[]): Promise<void> {

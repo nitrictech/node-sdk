@@ -41,11 +41,11 @@ export class Topic<T extends Record<string, any> = Record<string, any>> {
   }
 
   /**
-   * Publishes an event to a nitric topic.
+   * Publishes a message to a topic.
    *
-   * @param event The event to publish
+   * @param message The message to publish
    * @param opts Additional publishing options
-   * @returns NitricEvent containing the unique id of the event (if not provided it will be generated)
+   * @returns a promise that resolves when the message is published
    *
    * @example
    * ```typescript
@@ -56,10 +56,7 @@ export class Topic<T extends Record<string, any> = Record<string, any>> {
    * async function publishEvent(): NitricEvent {
    *   const topic = eventing.topic("my-topic");
    *   const event = {
-   *     payloadType: "my-payload",
-   *     payload: {
-   *       value: "Hello World!"
-   *     }
+   *     value: "Hello World!"
    *   };
    *   // Publish immediately
    *   await topic.publish(event);
@@ -70,7 +67,7 @@ export class Topic<T extends Record<string, any> = Record<string, any>> {
    * ```
    */
   async publish(
-    event: T,
+    message: T,
     opts: PublishOptions = DEFAULT_PUBLISH_OPTS
   ): Promise<void> {
     const publishOpts = {
@@ -80,7 +77,7 @@ export class Topic<T extends Record<string, any> = Record<string, any>> {
     const request = new TopicPublishRequest();
     const msg = new TopicMessage();
 
-    msg.setStructPayload(Struct.fromJavaScript(event));
+    msg.setStructPayload(Struct.fromJavaScript(message));
 
     request.setTopicName(this.name);
     request.setMessage(msg);
