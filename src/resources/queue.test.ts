@@ -127,7 +127,7 @@ describe('Registering queue resources', () => {
 
     describe('When declaring usage', () => {
       it('Should return a topic reference', () => {
-        const ref = queueResource.for('receiving');
+        const ref = queueResource.for('dequeue');
         expect(ref).toBeInstanceOf(Queue);
       });
     });

@@ -25,16 +25,16 @@ import resourceClient from './client';
 import { fromGrpcError } from '../api/errors';
 import { ActionsList, make, SecureResource } from './common';
 
-export type QueuePermission = 'sending' | 'receiving';
+export type QueuePermission = 'enqueue' | 'dequeue';
 
 /**
- * Queue resource for async send/receive messaging
+ * Queue resource for async messaging
  */
 export class QueueResource<
   T extends Record<string, any> = Record<string, any>
 > extends SecureResource<QueuePermission> {
   /**
-   * Register this queue as a required resource for the calling function/container.
+   * Register this queue as a required resource for the calling service/container.
    *
    * @returns a promise that resolves when the registration is complete
    */
@@ -60,9 +60,9 @@ export class QueueResource<
   protected permsToActions(...perms: QueuePermission[]): ActionsList {
     let actions: ActionsList = perms.reduce((actions, p) => {
       switch (p) {
-        case 'sending':
+        case 'enqueue':
           return [...actions, Action.QUEUEENQUEUE];
-        case 'receiving':
+        case 'dequeue':
           return [...actions, Action.QUEUEDEQUEUE];
         default:
           throw new Error(
@@ -86,7 +86,7 @@ export class QueueResource<
   /**
    * Return a queue reference and registers the permissions required by the currently scoped function for this resource.
    *
-   * e.g. const taskQueue = resources.queue('work').for('sending')
+   * e.g. const taskQueue = resources.queue('work').for('enqueue')
    *
    * @param perms the access that the currently scoped function is requesting to this resource.
    * @returns a useable queue.

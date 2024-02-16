@@ -20,7 +20,7 @@ import {
   QueueDequeueResponse,
   QueueEnqueueResponse,
   QueueMessage,
-  ReceivedMessage,
+  DequeuedMessage,
 } from '@nitric/proto/queues/v1/queues_pb';
 
 import { Struct } from 'google-protobuf/google/protobuf/struct_pb';
@@ -169,7 +169,7 @@ describe('Queue Client Tests', () => {
               mockMessages.map((e) => {
                 const originalMessage = new QueueMessage();
                 originalMessage.setStructPayload(Struct.fromJavaScript(e));
-                const message = new ReceivedMessage();
+                const message = new DequeuedMessage();
 
                 message.setMessage(originalMessage);
                 message.setLeaseId("test-lease-id");

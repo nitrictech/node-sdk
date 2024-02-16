@@ -30,10 +30,10 @@ describe('Secrets Client Tests', () => {
       code: status.UNIMPLEMENTED,
       message: 'UNIMPLEMENTED',
     };
-    let sendMock;
+    let putMock;
 
     beforeAll(() => {
-      sendMock = jest
+      putMock = jest
         .spyOn(GrpcSecretClient.prototype, 'put')
         .mockImplementation((request, callback: any) => {
           callback(MOCK_ERROR, null);
@@ -52,15 +52,15 @@ describe('Secrets Client Tests', () => {
     });
 
     it('then Secret.put should be called once', () => {
-      expect(sendMock).toBeCalledTimes(1);
+      expect(putMock).toBeCalledTimes(1);
     });
   });
 
   describe('Given nitric.api.secrets.SecretsClient.Put succeeds', () => {
-    let sendMock;
+    let putMock;
 
     beforeAll(() => {
-      sendMock = jest
+      putMock = jest
         .spyOn(GrpcSecretClient.prototype, 'put')
         .mockImplementation((request, callback: any) => {
           const mockResponse = new SecretPutResponse();
@@ -91,7 +91,7 @@ describe('Secrets Client Tests', () => {
     });
 
     it('Then Secret.Put should be called once', async () => {
-      expect(sendMock).toBeCalledTimes(1);
+      expect(putMock).toBeCalledTimes(1);
     });
   });
 
@@ -128,10 +128,10 @@ describe('Secrets Client Tests', () => {
   });
 
   describe('Given nitric.api.secrets.SecretsClient.Access succeeds', () => {
-    let sendMock;
+    let accessMock;
 
     beforeAll(() => {
-      sendMock = jest
+      accessMock = jest
         .spyOn(GrpcSecretClient.prototype, 'access')
         .mockImplementation((request, callback: any) => {
           const mockResponse = new SecretAccessResponse();
@@ -166,7 +166,7 @@ describe('Secrets Client Tests', () => {
     });
 
     it('Then Secret.access should be called once', async () => {
-      expect(sendMock).toBeCalledTimes(1);
+      expect(accessMock).toBeCalledTimes(1);
     });
   });
 });

@@ -15,7 +15,7 @@ import { SERVICE_BIND } from '../../../constants';
 import { WebsocketClient } from '@nitric/proto/websockets/v1/websockets_grpc_pb';
 import {
   WebsocketSendRequest,
-  WebsocketCloseRequest,
+  WebsocketCloseConnectionRequest,
 } from '@nitric/proto/websockets/v1/websockets_pb';
 import * as grpc from '@grpc/grpc-js';
 import { fromGrpcError } from '../../errors';
@@ -56,7 +56,7 @@ export class Websocket {
     sendRequest.setData(payload);
 
     return new Promise((res, rej) => {
-      this.client.send(sendRequest, (error, _data) => {
+      this.client.sendMessage(sendRequest, (error, _data) => {
         if (error) {
           rej(fromGrpcError(error));
         }
@@ -67,13 +67,13 @@ export class Websocket {
   }
 
   async close(socket: string, connectionId: string): Promise<void> {
-    const closeRequest = new WebsocketCloseRequest();
+    const closeRequest = new WebsocketCloseConnectionRequest();
 
     closeRequest.setSocketName(socket);
     closeRequest.setConnectionId(connectionId);
 
     return new Promise((res, rej) => {
-      this.client.close(closeRequest, (error) => {
+      this.client.closeConnection(closeRequest, (error) => {
         if (error) {
           rej(fromGrpcError(error));
         }
