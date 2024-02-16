@@ -13,10 +13,10 @@
 // limitations under the License.
 import { QueuesClient as QueueServiceClient } from '@nitric/proto/queues/v1/queues_grpc_pb';
 import {
-  QueueSendRequest,
-  QueueReceiveRequest,
+  QueueEnqueueRequest,
+  QueueDequeueRequest,
   QueueCompleteRequest,
-  QueueSendRequestBatch,
+  QueueMessage,
 } from '@nitric/proto/queues/v1/queues_pb';
 import { SERVICE_BIND } from '../../../constants';
 import * as grpc from '@grpc/grpc-js';
@@ -31,8 +31,8 @@ import {
  * A message that has failed to be enqueued
  */
 interface FailedMessage<T> {
-  task: T;
-  message: string;
+  message: T;
+  details: string;
 }
 
 /**
@@ -76,16 +76,16 @@ export class Queue<T extends Record<string, any> = Record<string, any>> {
   }
 
   /**
-   * Send an task to a queue, which can be retrieved by other services.
+   * Send an message to a queue, which can be retrieved by other services.
    *
-   * If an array of tasks is provided the returns promise will resolve to an array containing
-   * any tasks that failed to be sent to the queue.
+   * If an array of messages is provided the returns promise will resolve to an array containing
+   * any messages that failed to be sent to the queue.
    *
-   * When a single task is provided a void promise will be returned, which rejects if the
-   * task fails to be sent to the queue.
+   * When a single message is provided a void promise will be returned, which rejects if the
+   * message fails to be sent to the queue.
    *
-   * @param tasks one or more tasks to push to the queue
-   * @returns A void promise for a single task or a list of failed tasks when sending an array of tasks.
+   * @param messages one or more messages to push to the queue
+   * @returns A void promise for a single message or a list of failed messages when sending an array of messages.
    *
    * Example:
    * ```typescript
@@ -95,42 +95,41 @@ export class Queue<T extends Record<string, any> = Record<string, any>> {
    * const queue = queueing.queue("my-queue")
    * await queue.send({ value: "test" });
    */
-  public async send(tasks: T[]): Promise<FailedMessage<T>[]>;
-  public async send(tasks: T): Promise<void>;
+  public async send(messages: T[]): Promise<FailedMessage<T>[]>;
+  public async send(messages: T): Promise<void>;
   public async send(
-    tasks: T[] | T
+    messages: T[] | T
   ): Promise<void | FailedMessage<T>[]> {
     return new Promise((resolve, reject) => {
-      const request = new QueueSendRequestBatch();
+      const request = new QueueEnqueueRequest();
 
-      // Convert to NitricTask if not specified
-      const tasksArray = Array.isArray(tasks) ? tasks : [tasks];
+      const messagesArray = Array.isArray(messages) ? messages : [messages];
 
-      request.setRequestsList(tasksArray.map(inputTask => {
-        const task = new QueueSendRequest();
-        task.setPayload(Struct.fromJavaScript(inputTask));
-        return task;
+      request.setMessagesList(messagesArray.map(inputMsg => {
+        const message = new QueueMessage();
+        message.setStructPayload(Struct.fromJavaScript(inputMsg));
+        return message;
       }))
       request.setQueueName(this.name);
 
-      this.queueing.QueueServiceClient.send(request, (error, response) => {
+      this.queueing.QueueServiceClient.enqueue(request, (error, response) => {
         if (error) {
           reject(fromGrpcError(error));
           return;
         }
-        const failedTasks = response.getFailedRequestsList().map((m) => ({
-          task: m.getRequest().getPayload().toJavaScript() as T,
-          message: m.getMessage(),
+        const failed = response.getFailedMessagesList().map((m) => ({
+          message: m.getMessage().getStructPayload().toJavaScript() as T,
+          details: m.getDetails(),
         }));
-        if (!Array.isArray(tasks)) {
-          // Single Task returns
-          if (failedTasks.length > 0) {
-            reject(new Error(failedTasks[0].message));
+        if (!Array.isArray(messages)) {
+          // Single message returns
+          if (failed.length > 0) {
+            reject(new Error(failed[0].details));
           }
           resolve();
         } else {
-          // Array of Tasks return
-          resolve(failedTasks);
+          // Multiple messages returns
+          resolve(failed);
         }
       });
     });
@@ -139,13 +138,13 @@ export class Queue<T extends Record<string, any> = Record<string, any>> {
   /**
    * Pop 1 or more queue items from the specified queue up to the depth limit.
    *
-   * Nitric Tasks are leased for a limited period of time, where they may be worked on.
+   * Queue Messages are leased for a limited period of time, where they may be worked on.
    * Once complete or failed they must be acknowledged using request specified leaseId.
    *
-   * If the lease on a queue item expires before it is acknowledged or the lease is extended the task will be returned to the queue for reprocessing.
+   * If the lease on a queue item expires before it is acknowledged the message will be returned to the queue for reprocessing.
    *
    * @param depth the maximum number of items to return. Default 1, Min 1.
-   * @returns The list of received tasks
+   * @returns The list of received messages
    *
    * Example:
    * ```typescript
@@ -153,14 +152,14 @@ export class Queue<T extends Record<string, any> = Record<string, any>> {
    *
    * const queueing = new Queueing();
    *
-   * const [task] = await queueing.queue("my-queue").receive();
+   * const [message] = await queueing.queue("my-queue").receive();
    *
-   * // do something with task
+   * // do something with the message
    * ```
    */
-  public async receive(depth?: number): Promise<ReceivedTask<T>[]> {
+  public async receive(depth?: number): Promise<ReceivedMessage<T>[]> {
     return new Promise((resolve, reject) => {
-      const request = new QueueReceiveRequest();
+      const request = new QueueDequeueRequest();
 
       // Set the default and min depth to 1.
       if (Number.isNaN(depth) || depth < 1) {
@@ -170,14 +169,14 @@ export class Queue<T extends Record<string, any> = Record<string, any>> {
       request.setQueueName(this.name);
       request.setDepth(depth);
 
-      this.queueing.QueueServiceClient.receive(request, (error, response) => {
+      this.queueing.QueueServiceClient.dequeue(request, (error, response) => {
         if (error) {
           reject(fromGrpcError(error));
         } else {
           resolve(
-            response.getTasksList().map((m) => {
-              return new ReceivedTask({
-                task: m.getPayload().toJavaScript() as T,
+            response.getMessagesList().map((m) => {
+              return new ReceivedMessage({
+                message: m.getMessage().getStructPayload().toJavaScript() as T,
                 leaseId: m.getLeaseId(),
                 queue: this,
               });
@@ -189,7 +188,7 @@ export class Queue<T extends Record<string, any> = Record<string, any>> {
   }
 }
 
-export class ReceivedTask<
+export class ReceivedMessage<
   T extends Record<string, any> = Record<string, any>
 > {
   payload: T;
@@ -198,10 +197,10 @@ export class ReceivedTask<
 
   constructor({
     leaseId,
-    task: payload,
+    message: payload,
     queue,
   }: {
-    task: T;
+    message: T;
     leaseId: string;
     queue: Queue;
   }) {
@@ -221,12 +220,12 @@ export class ReceivedTask<
    *
    * const queueing = new Queueing();
    *
-   * const [task] = await queueing.queue("my-queue").receive();
+   * const [message] = await queueing.queue("my-queue").receive();
    *
-   * // do something with task
+   * // do something with the message
    *
-   * // complete the task
-   * await task.complete();
+   * // remove the message from the queue
+   * await message.complete();
    * ```
    */
   public async complete(): Promise<void> {

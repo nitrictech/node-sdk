@@ -27,7 +27,7 @@ function deserialize_nitric_proto_http_v1_ServerMessage(buffer_arg) {
 }
 
 
-// Service for publishing asynchronous messages
+// Service for proxying HTTP requests
 var HttpService = exports.HttpService = {
   // Proxy an HTTP server
 proxy: {

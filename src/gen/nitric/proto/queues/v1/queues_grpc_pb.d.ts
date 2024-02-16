@@ -7,27 +7,27 @@ import * as nitric_proto_queues_v1_queues_pb from "../../../../nitric/proto/queu
 import * as grpc from "@grpc/grpc-js";
 
 interface IQueuesService extends grpc.ServiceDefinition<grpc.UntypedServiceImplementation> {
-  send: grpc.MethodDefinition<nitric_proto_queues_v1_queues_pb.QueueSendRequestBatch, nitric_proto_queues_v1_queues_pb.QueueSendResponse>;
-  receive: grpc.MethodDefinition<nitric_proto_queues_v1_queues_pb.QueueReceiveRequest, nitric_proto_queues_v1_queues_pb.QueueReceiveResponse>;
+  enqueue: grpc.MethodDefinition<nitric_proto_queues_v1_queues_pb.QueueEnqueueRequest, nitric_proto_queues_v1_queues_pb.QueueEnqueueResponse>;
+  dequeue: grpc.MethodDefinition<nitric_proto_queues_v1_queues_pb.QueueDequeueRequest, nitric_proto_queues_v1_queues_pb.QueueDequeueResponse>;
   complete: grpc.MethodDefinition<nitric_proto_queues_v1_queues_pb.QueueCompleteRequest, nitric_proto_queues_v1_queues_pb.QueueCompleteResponse>;
 }
 
 export const QueuesService: IQueuesService;
 
 export interface IQueuesServer extends grpc.UntypedServiceImplementation {
-  send: grpc.handleUnaryCall<nitric_proto_queues_v1_queues_pb.QueueSendRequestBatch, nitric_proto_queues_v1_queues_pb.QueueSendResponse>;
-  receive: grpc.handleUnaryCall<nitric_proto_queues_v1_queues_pb.QueueReceiveRequest, nitric_proto_queues_v1_queues_pb.QueueReceiveResponse>;
+  enqueue: grpc.handleUnaryCall<nitric_proto_queues_v1_queues_pb.QueueEnqueueRequest, nitric_proto_queues_v1_queues_pb.QueueEnqueueResponse>;
+  dequeue: grpc.handleUnaryCall<nitric_proto_queues_v1_queues_pb.QueueDequeueRequest, nitric_proto_queues_v1_queues_pb.QueueDequeueResponse>;
   complete: grpc.handleUnaryCall<nitric_proto_queues_v1_queues_pb.QueueCompleteRequest, nitric_proto_queues_v1_queues_pb.QueueCompleteResponse>;
 }
 
 export class QueuesClient extends grpc.Client {
   constructor(address: string, credentials: grpc.ChannelCredentials, options?: object);
-  send(argument: nitric_proto_queues_v1_queues_pb.QueueSendRequestBatch, callback: grpc.requestCallback<nitric_proto_queues_v1_queues_pb.QueueSendResponse>): grpc.ClientUnaryCall;
-  send(argument: nitric_proto_queues_v1_queues_pb.QueueSendRequestBatch, metadataOrOptions: grpc.Metadata | grpc.CallOptions | null, callback: grpc.requestCallback<nitric_proto_queues_v1_queues_pb.QueueSendResponse>): grpc.ClientUnaryCall;
-  send(argument: nitric_proto_queues_v1_queues_pb.QueueSendRequestBatch, metadata: grpc.Metadata | null, options: grpc.CallOptions | null, callback: grpc.requestCallback<nitric_proto_queues_v1_queues_pb.QueueSendResponse>): grpc.ClientUnaryCall;
-  receive(argument: nitric_proto_queues_v1_queues_pb.QueueReceiveRequest, callback: grpc.requestCallback<nitric_proto_queues_v1_queues_pb.QueueReceiveResponse>): grpc.ClientUnaryCall;
-  receive(argument: nitric_proto_queues_v1_queues_pb.QueueReceiveRequest, metadataOrOptions: grpc.Metadata | grpc.CallOptions | null, callback: grpc.requestCallback<nitric_proto_queues_v1_queues_pb.QueueReceiveResponse>): grpc.ClientUnaryCall;
-  receive(argument: nitric_proto_queues_v1_queues_pb.QueueReceiveRequest, metadata: grpc.Metadata | null, options: grpc.CallOptions | null, callback: grpc.requestCallback<nitric_proto_queues_v1_queues_pb.QueueReceiveResponse>): grpc.ClientUnaryCall;
+  enqueue(argument: nitric_proto_queues_v1_queues_pb.QueueEnqueueRequest, callback: grpc.requestCallback<nitric_proto_queues_v1_queues_pb.QueueEnqueueResponse>): grpc.ClientUnaryCall;
+  enqueue(argument: nitric_proto_queues_v1_queues_pb.QueueEnqueueRequest, metadataOrOptions: grpc.Metadata | grpc.CallOptions | null, callback: grpc.requestCallback<nitric_proto_queues_v1_queues_pb.QueueEnqueueResponse>): grpc.ClientUnaryCall;
+  enqueue(argument: nitric_proto_queues_v1_queues_pb.QueueEnqueueRequest, metadata: grpc.Metadata | null, options: grpc.CallOptions | null, callback: grpc.requestCallback<nitric_proto_queues_v1_queues_pb.QueueEnqueueResponse>): grpc.ClientUnaryCall;
+  dequeue(argument: nitric_proto_queues_v1_queues_pb.QueueDequeueRequest, callback: grpc.requestCallback<nitric_proto_queues_v1_queues_pb.QueueDequeueResponse>): grpc.ClientUnaryCall;
+  dequeue(argument: nitric_proto_queues_v1_queues_pb.QueueDequeueRequest, metadataOrOptions: grpc.Metadata | grpc.CallOptions | null, callback: grpc.requestCallback<nitric_proto_queues_v1_queues_pb.QueueDequeueResponse>): grpc.ClientUnaryCall;
+  dequeue(argument: nitric_proto_queues_v1_queues_pb.QueueDequeueRequest, metadata: grpc.Metadata | null, options: grpc.CallOptions | null, callback: grpc.requestCallback<nitric_proto_queues_v1_queues_pb.QueueDequeueResponse>): grpc.ClientUnaryCall;
   complete(argument: nitric_proto_queues_v1_queues_pb.QueueCompleteRequest, callback: grpc.requestCallback<nitric_proto_queues_v1_queues_pb.QueueCompleteResponse>): grpc.ClientUnaryCall;
   complete(argument: nitric_proto_queues_v1_queues_pb.QueueCompleteRequest, metadataOrOptions: grpc.Metadata | grpc.CallOptions | null, callback: grpc.requestCallback<nitric_proto_queues_v1_queues_pb.QueueCompleteResponse>): grpc.ClientUnaryCall;
   complete(argument: nitric_proto_queues_v1_queues_pb.QueueCompleteRequest, metadata: grpc.Metadata | null, options: grpc.CallOptions | null, callback: grpc.requestCallback<nitric_proto_queues_v1_queues_pb.QueueCompleteResponse>): grpc.ClientUnaryCall;

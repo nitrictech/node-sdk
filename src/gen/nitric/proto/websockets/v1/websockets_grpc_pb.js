@@ -26,26 +26,26 @@ function deserialize_nitric_proto_websockets_v1_ServerMessage(buffer_arg) {
   return nitric_proto_websockets_v1_websockets_pb.ServerMessage.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
-function serialize_nitric_proto_websockets_v1_WebsocketCloseRequest(arg) {
-  if (!(arg instanceof nitric_proto_websockets_v1_websockets_pb.WebsocketCloseRequest)) {
-    throw new Error('Expected argument of type nitric.proto.websockets.v1.WebsocketCloseRequest');
+function serialize_nitric_proto_websockets_v1_WebsocketCloseConnectionRequest(arg) {
+  if (!(arg instanceof nitric_proto_websockets_v1_websockets_pb.WebsocketCloseConnectionRequest)) {
+    throw new Error('Expected argument of type nitric.proto.websockets.v1.WebsocketCloseConnectionRequest');
   }
   return Buffer.from(arg.serializeBinary());
 }
 
-function deserialize_nitric_proto_websockets_v1_WebsocketCloseRequest(buffer_arg) {
-  return nitric_proto_websockets_v1_websockets_pb.WebsocketCloseRequest.deserializeBinary(new Uint8Array(buffer_arg));
+function deserialize_nitric_proto_websockets_v1_WebsocketCloseConnectionRequest(buffer_arg) {
+  return nitric_proto_websockets_v1_websockets_pb.WebsocketCloseConnectionRequest.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
-function serialize_nitric_proto_websockets_v1_WebsocketCloseResponse(arg) {
-  if (!(arg instanceof nitric_proto_websockets_v1_websockets_pb.WebsocketCloseResponse)) {
-    throw new Error('Expected argument of type nitric.proto.websockets.v1.WebsocketCloseResponse');
+function serialize_nitric_proto_websockets_v1_WebsocketCloseConnectionResponse(arg) {
+  if (!(arg instanceof nitric_proto_websockets_v1_websockets_pb.WebsocketCloseConnectionResponse)) {
+    throw new Error('Expected argument of type nitric.proto.websockets.v1.WebsocketCloseConnectionResponse');
   }
   return Buffer.from(arg.serializeBinary());
 }
 
-function deserialize_nitric_proto_websockets_v1_WebsocketCloseResponse(buffer_arg) {
-  return nitric_proto_websockets_v1_websockets_pb.WebsocketCloseResponse.deserializeBinary(new Uint8Array(buffer_arg));
+function deserialize_nitric_proto_websockets_v1_WebsocketCloseConnectionResponse(buffer_arg) {
+  return nitric_proto_websockets_v1_websockets_pb.WebsocketCloseConnectionResponse.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
 function serialize_nitric_proto_websockets_v1_WebsocketDetailsRequest(arg) {
@@ -95,8 +95,8 @@ function deserialize_nitric_proto_websockets_v1_WebsocketSendResponse(buffer_arg
 
 var WebsocketService = exports.WebsocketService = {
   // Send a messages to a websocket
-send: {
-    path: '/nitric.proto.websockets.v1.Websocket/Send',
+sendMessage: {
+    path: '/nitric.proto.websockets.v1.Websocket/SendMessage',
     requestStream: false,
     responseStream: false,
     requestType: nitric_proto_websockets_v1_websockets_pb.WebsocketSendRequest,
@@ -108,20 +108,20 @@ send: {
   },
   // Close a websocket connection
 // This can be used to force a client to disconnect
-close: {
-    path: '/nitric.proto.websockets.v1.Websocket/Close',
+closeConnection: {
+    path: '/nitric.proto.websockets.v1.Websocket/CloseConnection',
     requestStream: false,
     responseStream: false,
-    requestType: nitric_proto_websockets_v1_websockets_pb.WebsocketCloseRequest,
-    responseType: nitric_proto_websockets_v1_websockets_pb.WebsocketCloseResponse,
-    requestSerialize: serialize_nitric_proto_websockets_v1_WebsocketCloseRequest,
-    requestDeserialize: deserialize_nitric_proto_websockets_v1_WebsocketCloseRequest,
-    responseSerialize: serialize_nitric_proto_websockets_v1_WebsocketCloseResponse,
-    responseDeserialize: deserialize_nitric_proto_websockets_v1_WebsocketCloseResponse,
+    requestType: nitric_proto_websockets_v1_websockets_pb.WebsocketCloseConnectionRequest,
+    responseType: nitric_proto_websockets_v1_websockets_pb.WebsocketCloseConnectionResponse,
+    requestSerialize: serialize_nitric_proto_websockets_v1_WebsocketCloseConnectionRequest,
+    requestDeserialize: deserialize_nitric_proto_websockets_v1_WebsocketCloseConnectionRequest,
+    responseSerialize: serialize_nitric_proto_websockets_v1_WebsocketCloseConnectionResponse,
+    responseDeserialize: deserialize_nitric_proto_websockets_v1_WebsocketCloseConnectionResponse,
   },
   // Retrieve details about an API
-details: {
-    path: '/nitric.proto.websockets.v1.Websocket/Details',
+socketDetails: {
+    path: '/nitric.proto.websockets.v1.Websocket/SocketDetails',
     requestStream: false,
     responseStream: false,
     requestType: nitric_proto_websockets_v1_websockets_pb.WebsocketDetailsRequest,

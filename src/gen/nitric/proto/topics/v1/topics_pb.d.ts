@@ -50,8 +50,8 @@ export class MessageRequest extends jspb.Message {
 
   hasMessage(): boolean;
   clearMessage(): void;
-  getMessage(): Message | undefined;
-  setMessage(value?: Message): void;
+  getMessage(): TopicMessage | undefined;
+  setMessage(value?: TopicMessage): void;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): MessageRequest.AsObject;
@@ -66,7 +66,7 @@ export class MessageRequest extends jspb.Message {
 export namespace MessageRequest {
   export type AsObject = {
     topicName: string,
-    message?: Message.AsObject,
+    message?: TopicMessage.AsObject,
   }
 }
 
@@ -165,24 +165,24 @@ export namespace RegistrationResponse {
   }
 }
 
-export class Message extends jspb.Message {
+export class TopicMessage extends jspb.Message {
   hasStructPayload(): boolean;
   clearStructPayload(): void;
   getStructPayload(): google_protobuf_struct_pb.Struct | undefined;
   setStructPayload(value?: google_protobuf_struct_pb.Struct): void;
 
-  getContentCase(): Message.ContentCase;
+  getContentCase(): TopicMessage.ContentCase;
   serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): Message.AsObject;
-  static toObject(includeInstance: boolean, msg: Message): Message.AsObject;
+  toObject(includeInstance?: boolean): TopicMessage.AsObject;
+  static toObject(includeInstance: boolean, msg: TopicMessage): TopicMessage.AsObject;
   static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
   static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
-  static serializeBinaryToWriter(message: Message, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): Message;
-  static deserializeBinaryFromReader(message: Message, reader: jspb.BinaryReader): Message;
+  static serializeBinaryToWriter(message: TopicMessage, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): TopicMessage;
+  static deserializeBinaryFromReader(message: TopicMessage, reader: jspb.BinaryReader): TopicMessage;
 }
 
-export namespace Message {
+export namespace TopicMessage {
   export type AsObject = {
     structPayload?: google_protobuf_struct_pb.Struct.AsObject,
   }
@@ -199,8 +199,8 @@ export class TopicPublishRequest extends jspb.Message {
 
   hasMessage(): boolean;
   clearMessage(): void;
-  getMessage(): Message | undefined;
-  setMessage(value?: Message): void;
+  getMessage(): TopicMessage | undefined;
+  setMessage(value?: TopicMessage): void;
 
   hasDelay(): boolean;
   clearDelay(): void;
@@ -220,7 +220,7 @@ export class TopicPublishRequest extends jspb.Message {
 export namespace TopicPublishRequest {
   export type AsObject = {
     topicName: string,
-    message?: Message.AsObject,
+    message?: TopicMessage.AsObject,
     delay?: google_protobuf_duration_pb.Duration.AsObject,
   }
 }

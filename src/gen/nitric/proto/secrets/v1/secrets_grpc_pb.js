@@ -49,6 +49,7 @@ function deserialize_nitric_proto_secrets_v1_SecretPutResponse(buffer_arg) {
 }
 
 
+// The Nitric Secret Service
 var SecretManagerService = exports.SecretManagerService = {
   // Updates a secret, creating a new one if it doesn't already exist
 put: {

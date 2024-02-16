@@ -49,7 +49,7 @@ function deserialize_nitric_proto_apis_v1_ServerMessage(buffer_arg) {
 }
 
 
-// Service for publishing asynchronous messages
+// Service for API routing and handlers
 var ApiService = exports.ApiService = {
   // Serve a route on an API
 serve: {
@@ -64,8 +64,8 @@ serve: {
     responseDeserialize: deserialize_nitric_proto_apis_v1_ServerMessage,
   },
   // Retrieve details about an API
-details: {
-    path: '/nitric.proto.apis.v1.Api/Details',
+apiDetails: {
+    path: '/nitric.proto.apis.v1.Api/ApiDetails',
     requestStream: false,
     responseStream: false,
     requestType: nitric_proto_apis_v1_apis_pb.ApiDetailsRequest,

@@ -74,7 +74,7 @@ function deserialize_nitric_proto_KeyValue_v1_KeyValueSetResponse(buffer_arg) {
 
 // Service for storage and retrieval of simple JSON keyValue
 var KeyValueService = exports.KeyValueService = {
-  // Get an existing document
+  // Get an existing value
 get: {
     path: '/nitric.proto.KeyValue.v1.KeyValue/Get',
     requestStream: false,
@@ -86,7 +86,7 @@ get: {
     responseSerialize: serialize_nitric_proto_KeyValue_v1_KeyValueGetResponse,
     responseDeserialize: deserialize_nitric_proto_KeyValue_v1_KeyValueGetResponse,
   },
-  // Create a new or overwrite an existing document
+  // Create a new or overwrite an existing value
 set: {
     path: '/nitric.proto.KeyValue.v1.KeyValue/Set',
     requestStream: false,
@@ -98,7 +98,7 @@ set: {
     responseSerialize: serialize_nitric_proto_KeyValue_v1_KeyValueSetResponse,
     responseDeserialize: deserialize_nitric_proto_KeyValue_v1_KeyValueSetResponse,
   },
-  // Delete an existing document
+  // Delete a key and its value
 delete: {
     path: '/nitric.proto.KeyValue.v1.KeyValue/Delete',
     requestStream: false,

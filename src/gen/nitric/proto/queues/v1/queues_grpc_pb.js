@@ -27,78 +27,78 @@ function deserialize_nitric_proto_queues_v1_QueueCompleteResponse(buffer_arg) {
   return nitric_proto_queues_v1_queues_pb.QueueCompleteResponse.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
-function serialize_nitric_proto_queues_v1_QueueReceiveRequest(arg) {
-  if (!(arg instanceof nitric_proto_queues_v1_queues_pb.QueueReceiveRequest)) {
-    throw new Error('Expected argument of type nitric.proto.queues.v1.QueueReceiveRequest');
+function serialize_nitric_proto_queues_v1_QueueDequeueRequest(arg) {
+  if (!(arg instanceof nitric_proto_queues_v1_queues_pb.QueueDequeueRequest)) {
+    throw new Error('Expected argument of type nitric.proto.queues.v1.QueueDequeueRequest');
   }
   return Buffer.from(arg.serializeBinary());
 }
 
-function deserialize_nitric_proto_queues_v1_QueueReceiveRequest(buffer_arg) {
-  return nitric_proto_queues_v1_queues_pb.QueueReceiveRequest.deserializeBinary(new Uint8Array(buffer_arg));
+function deserialize_nitric_proto_queues_v1_QueueDequeueRequest(buffer_arg) {
+  return nitric_proto_queues_v1_queues_pb.QueueDequeueRequest.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
-function serialize_nitric_proto_queues_v1_QueueReceiveResponse(arg) {
-  if (!(arg instanceof nitric_proto_queues_v1_queues_pb.QueueReceiveResponse)) {
-    throw new Error('Expected argument of type nitric.proto.queues.v1.QueueReceiveResponse');
+function serialize_nitric_proto_queues_v1_QueueDequeueResponse(arg) {
+  if (!(arg instanceof nitric_proto_queues_v1_queues_pb.QueueDequeueResponse)) {
+    throw new Error('Expected argument of type nitric.proto.queues.v1.QueueDequeueResponse');
   }
   return Buffer.from(arg.serializeBinary());
 }
 
-function deserialize_nitric_proto_queues_v1_QueueReceiveResponse(buffer_arg) {
-  return nitric_proto_queues_v1_queues_pb.QueueReceiveResponse.deserializeBinary(new Uint8Array(buffer_arg));
+function deserialize_nitric_proto_queues_v1_QueueDequeueResponse(buffer_arg) {
+  return nitric_proto_queues_v1_queues_pb.QueueDequeueResponse.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
-function serialize_nitric_proto_queues_v1_QueueSendRequestBatch(arg) {
-  if (!(arg instanceof nitric_proto_queues_v1_queues_pb.QueueSendRequestBatch)) {
-    throw new Error('Expected argument of type nitric.proto.queues.v1.QueueSendRequestBatch');
+function serialize_nitric_proto_queues_v1_QueueEnqueueRequest(arg) {
+  if (!(arg instanceof nitric_proto_queues_v1_queues_pb.QueueEnqueueRequest)) {
+    throw new Error('Expected argument of type nitric.proto.queues.v1.QueueEnqueueRequest');
   }
   return Buffer.from(arg.serializeBinary());
 }
 
-function deserialize_nitric_proto_queues_v1_QueueSendRequestBatch(buffer_arg) {
-  return nitric_proto_queues_v1_queues_pb.QueueSendRequestBatch.deserializeBinary(new Uint8Array(buffer_arg));
+function deserialize_nitric_proto_queues_v1_QueueEnqueueRequest(buffer_arg) {
+  return nitric_proto_queues_v1_queues_pb.QueueEnqueueRequest.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
-function serialize_nitric_proto_queues_v1_QueueSendResponse(arg) {
-  if (!(arg instanceof nitric_proto_queues_v1_queues_pb.QueueSendResponse)) {
-    throw new Error('Expected argument of type nitric.proto.queues.v1.QueueSendResponse');
+function serialize_nitric_proto_queues_v1_QueueEnqueueResponse(arg) {
+  if (!(arg instanceof nitric_proto_queues_v1_queues_pb.QueueEnqueueResponse)) {
+    throw new Error('Expected argument of type nitric.proto.queues.v1.QueueEnqueueResponse');
   }
   return Buffer.from(arg.serializeBinary());
 }
 
-function deserialize_nitric_proto_queues_v1_QueueSendResponse(buffer_arg) {
-  return nitric_proto_queues_v1_queues_pb.QueueSendResponse.deserializeBinary(new Uint8Array(buffer_arg));
+function deserialize_nitric_proto_queues_v1_QueueEnqueueResponse(buffer_arg) {
+  return nitric_proto_queues_v1_queues_pb.QueueEnqueueResponse.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
 
 // The Nitric Queue Service contract
 var QueuesService = exports.QueuesService = {
-  // Send messages to a queue
-send: {
-    path: '/nitric.proto.queues.v1.Queues/Send',
+  // Send message(s) to a queue
+enqueue: {
+    path: '/nitric.proto.queues.v1.Queues/Enqueue',
     requestStream: false,
     responseStream: false,
-    requestType: nitric_proto_queues_v1_queues_pb.QueueSendRequestBatch,
-    responseType: nitric_proto_queues_v1_queues_pb.QueueSendResponse,
-    requestSerialize: serialize_nitric_proto_queues_v1_QueueSendRequestBatch,
-    requestDeserialize: deserialize_nitric_proto_queues_v1_QueueSendRequestBatch,
-    responseSerialize: serialize_nitric_proto_queues_v1_QueueSendResponse,
-    responseDeserialize: deserialize_nitric_proto_queues_v1_QueueSendResponse,
+    requestType: nitric_proto_queues_v1_queues_pb.QueueEnqueueRequest,
+    responseType: nitric_proto_queues_v1_queues_pb.QueueEnqueueResponse,
+    requestSerialize: serialize_nitric_proto_queues_v1_QueueEnqueueRequest,
+    requestDeserialize: deserialize_nitric_proto_queues_v1_QueueEnqueueRequest,
+    responseSerialize: serialize_nitric_proto_queues_v1_QueueEnqueueResponse,
+    responseDeserialize: deserialize_nitric_proto_queues_v1_QueueEnqueueResponse,
   },
   // Receive message(s) from a queue
-receive: {
-    path: '/nitric.proto.queues.v1.Queues/Receive',
+dequeue: {
+    path: '/nitric.proto.queues.v1.Queues/Dequeue',
     requestStream: false,
     responseStream: false,
-    requestType: nitric_proto_queues_v1_queues_pb.QueueReceiveRequest,
-    responseType: nitric_proto_queues_v1_queues_pb.QueueReceiveResponse,
-    requestSerialize: serialize_nitric_proto_queues_v1_QueueReceiveRequest,
-    requestDeserialize: deserialize_nitric_proto_queues_v1_QueueReceiveRequest,
-    responseSerialize: serialize_nitric_proto_queues_v1_QueueReceiveResponse,
-    responseDeserialize: deserialize_nitric_proto_queues_v1_QueueReceiveResponse,
+    requestType: nitric_proto_queues_v1_queues_pb.QueueDequeueRequest,
+    responseType: nitric_proto_queues_v1_queues_pb.QueueDequeueResponse,
+    requestSerialize: serialize_nitric_proto_queues_v1_QueueDequeueRequest,
+    requestDeserialize: deserialize_nitric_proto_queues_v1_QueueDequeueRequest,
+    responseSerialize: serialize_nitric_proto_queues_v1_QueueDequeueResponse,
+    responseDeserialize: deserialize_nitric_proto_queues_v1_QueueDequeueResponse,
   },
-  // Complete an item previously popped from a queue
+  // Complete an message previously popped from a queue
 complete: {
     path: '/nitric.proto.queues.v1.Queues/Complete',
     requestStream: false,

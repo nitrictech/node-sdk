@@ -94,7 +94,7 @@ describe('Api', () => {
       beforeAll(async () => {
         // mock the details api
         detailsSpy = jest
-          .spyOn(ApiClient.prototype, 'details')
+          .spyOn(ApiClient.prototype, 'apiDetails')
           .mockImplementationOnce((request, callback: any) => {
             const resp = new ApiDetailsResponse();
             resp.setUrl('http://localhost:9001/test');

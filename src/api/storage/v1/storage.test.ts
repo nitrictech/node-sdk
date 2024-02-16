@@ -253,7 +253,9 @@ describe('Storage Client Tests', () => {
 
     test('Then StorageClient.delete should reject', async () => {
       const client = new Storage();
-      await expect(client.bucket('test').file('test').delete()).rejects.toBeInstanceOf(UnimplementedError);
+      await expect(
+        client.bucket('test').file('test').delete()
+      ).rejects.toBeInstanceOf(UnimplementedError);
     });
 
     test('The Grpc client for Storage.delete should have been called exactly once', () => {
@@ -433,6 +435,7 @@ describe('Storage Client Tests', () => {
     let listFilesMock;
 
     beforeAll(() => {
+      jest.spyOn(console, 'error').mockImplementation(() => {});
       listFilesMock = jest
         .spyOn(GrpcStorageClient.prototype, 'listBlobs')
         .mockImplementation((_, callback: any) => {
@@ -443,12 +446,14 @@ describe('Storage Client Tests', () => {
     });
 
     afterAll(() => {
-      jest.resetAllMocks();
+      jest.restoreAllMocks();
     });
 
     test('Then StorageClient.listBlobs should reject', async () => {
       const client = new Storage();
-      await expect(client.bucket('test').files()).rejects.toBeInstanceOf(UnimplementedError);
+      await expect(client.bucket('test').files()).rejects.toBeInstanceOf(
+        UnimplementedError
+      );
     });
 
     test('The Grpc client for Storage.listBlobs should have been called exactly once', () => {
@@ -497,10 +502,14 @@ describe('Storage Client Tests', () => {
 });
 
 describe('bucket notification', () => {
-  const startSpy = jest
-    .spyOn(BucketNotification.prototype as any, 'start')
-    .mockReturnValue(Promise.resolve());
-  const mockFn = jest.fn();
+  let startSpy;
+  let mockFn;
+  beforeAll(() => {
+    startSpy = jest
+      .spyOn(BucketNotification.prototype as any, 'start')
+      .mockReturnValue(Promise.resolve());
+    mockFn = jest.fn();
+  });
 
   afterAll(() => {
     jest.clearAllMocks();
@@ -536,29 +545,37 @@ describe('bucket notification', () => {
 });
 
 describe('file notification', () => {
-  const startSpy = jest
-    .spyOn(FileNotification.prototype as any, 'start')
-    .mockReturnValue(Promise.resolve());
+  let startSpy;
+  let existsSpy;
+  let mockFn;
 
-  const existsSpy = jest
-    .spyOn(ResourcesClient.prototype, 'declare')
-    .mockImplementation((_, callback: any) => {
-      const response = new ResourceDeclareResponse();
-      callback(null, response);
-      return null as any;
-    });
+  beforeAll(() => {
+    jest.spyOn(console, 'error').mockImplementation(() => {});
+    startSpy = jest
+      .spyOn(FileNotification.prototype as any, 'start')
+      .mockReturnValue(Promise.resolve());
 
-  const mockFn = jest.fn();
+    existsSpy = jest
+      .spyOn(ResourcesClient.prototype, 'declare')
+      .mockImplementation((_, callback: any) => {
+        const response = new ResourceDeclareResponse();
+        callback(null, response);
+        return null as any;
+      });
+
+    mockFn = jest.fn();
+  });
+
+  afterAll(() => {
+    jest.restoreAllMocks();
+  });
 
   describe('When registering a file notification for creating', () => {
     let bucketResource: Bucket;
     beforeAll(async () => {
+      jest.resetAllMocks();
       bucketResource = bucket('test-bucket-create').for('reading');
       await bucketResource.on('write', 'test.png', mockFn);
-    });
-
-    afterAll(() => {
-      jest.resetAllMocks();
     });
 
     it('should declare the new resource', () => {
@@ -573,12 +590,9 @@ describe('file notification', () => {
   describe('When registering a file notification for deleting', () => {
     let bucketResource: Bucket;
     beforeAll(async () => {
+      jest.resetAllMocks();
       bucketResource = bucket('test-bucket-delete').for('reading');
       await bucketResource.on('delete', 'test.png', mockFn);
-    });
-
-    afterAll(() => {
-      jest.resetAllMocks();
     });
 
     it('should declare the new resource', () => {

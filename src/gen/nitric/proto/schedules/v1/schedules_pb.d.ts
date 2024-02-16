@@ -62,26 +62,6 @@ export namespace IntervalRequest {
   }
 }
 
-export class MessageResponse extends jspb.Message {
-  getSuccess(): boolean;
-  setSuccess(value: boolean): void;
-
-  serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): MessageResponse.AsObject;
-  static toObject(includeInstance: boolean, msg: MessageResponse): MessageResponse.AsObject;
-  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
-  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
-  static serializeBinaryToWriter(message: MessageResponse, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): MessageResponse;
-  static deserializeBinaryFromReader(message: MessageResponse, reader: jspb.BinaryReader): MessageResponse;
-}
-
-export namespace MessageResponse {
-  export type AsObject = {
-    success: boolean,
-  }
-}
-
 export class ServerMessage extends jspb.Message {
   getId(): string;
   setId(value: string): void;

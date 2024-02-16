@@ -554,7 +554,7 @@ export class Api<SecurityDefs extends string> extends Base {
     );
 
     const details = await new Promise<ApiDetails>((resolve, reject) => {
-      apiClient.details(request, (error, data) => {
+      apiClient.apiDetails(request, (error, data) => {
         if (error) {
           reject(fromGrpcError(error));
         } else {

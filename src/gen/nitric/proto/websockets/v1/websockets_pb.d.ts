@@ -89,7 +89,7 @@ export namespace WebsocketSendResponse {
   }
 }
 
-export class WebsocketCloseRequest extends jspb.Message {
+export class WebsocketCloseConnectionRequest extends jspb.Message {
   getSocketName(): string;
   setSocketName(value: string): void;
 
@@ -97,34 +97,34 @@ export class WebsocketCloseRequest extends jspb.Message {
   setConnectionId(value: string): void;
 
   serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): WebsocketCloseRequest.AsObject;
-  static toObject(includeInstance: boolean, msg: WebsocketCloseRequest): WebsocketCloseRequest.AsObject;
+  toObject(includeInstance?: boolean): WebsocketCloseConnectionRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: WebsocketCloseConnectionRequest): WebsocketCloseConnectionRequest.AsObject;
   static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
   static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
-  static serializeBinaryToWriter(message: WebsocketCloseRequest, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): WebsocketCloseRequest;
-  static deserializeBinaryFromReader(message: WebsocketCloseRequest, reader: jspb.BinaryReader): WebsocketCloseRequest;
+  static serializeBinaryToWriter(message: WebsocketCloseConnectionRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): WebsocketCloseConnectionRequest;
+  static deserializeBinaryFromReader(message: WebsocketCloseConnectionRequest, reader: jspb.BinaryReader): WebsocketCloseConnectionRequest;
 }
 
-export namespace WebsocketCloseRequest {
+export namespace WebsocketCloseConnectionRequest {
   export type AsObject = {
     socketName: string,
     connectionId: string,
   }
 }
 
-export class WebsocketCloseResponse extends jspb.Message {
+export class WebsocketCloseConnectionResponse extends jspb.Message {
   serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): WebsocketCloseResponse.AsObject;
-  static toObject(includeInstance: boolean, msg: WebsocketCloseResponse): WebsocketCloseResponse.AsObject;
+  toObject(includeInstance?: boolean): WebsocketCloseConnectionResponse.AsObject;
+  static toObject(includeInstance: boolean, msg: WebsocketCloseConnectionResponse): WebsocketCloseConnectionResponse.AsObject;
   static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
   static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
-  static serializeBinaryToWriter(message: WebsocketCloseResponse, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): WebsocketCloseResponse;
-  static deserializeBinaryFromReader(message: WebsocketCloseResponse, reader: jspb.BinaryReader): WebsocketCloseResponse;
+  static serializeBinaryToWriter(message: WebsocketCloseConnectionResponse, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): WebsocketCloseConnectionResponse;
+  static deserializeBinaryFromReader(message: WebsocketCloseConnectionResponse, reader: jspb.BinaryReader): WebsocketCloseConnectionResponse;
 }
 
-export namespace WebsocketCloseResponse {
+export namespace WebsocketCloseConnectionResponse {
   export type AsObject = {
   }
 }

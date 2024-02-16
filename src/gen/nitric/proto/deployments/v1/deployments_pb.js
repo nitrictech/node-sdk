@@ -66,6 +66,7 @@ goog.exportSymbol('proto.nitric.proto.deployments.v1.SubscriptionTarget.TargetCa
 goog.exportSymbol('proto.nitric.proto.deployments.v1.Topic', null, global);
 goog.exportSymbol('proto.nitric.proto.deployments.v1.TopicSubscription', null, global);
 goog.exportSymbol('proto.nitric.proto.deployments.v1.UpResult', null, global);
+goog.exportSymbol('proto.nitric.proto.deployments.v1.UpResult.ContentCase', null, global);
 goog.exportSymbol('proto.nitric.proto.deployments.v1.Websocket', null, global);
 goog.exportSymbol('proto.nitric.proto.deployments.v1.WebsocketTarget', null, global);
 goog.exportSymbol('proto.nitric.proto.deployments.v1.WebsocketTarget.TargetCase', null, global);
@@ -143,7 +144,7 @@ if (goog.DEBUG && !COMPILED) {
  * @constructor
  */
 proto.nitric.proto.deployments.v1.UpResult = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
+  jspb.Message.initialize(this, opt_data, 0, -1, null, proto.nitric.proto.deployments.v1.UpResult.oneofGroups_);
 };
 goog.inherits(proto.nitric.proto.deployments.v1.UpResult, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
@@ -1459,6 +1460,31 @@ proto.nitric.proto.deployments.v1.ResourceUpdate.prototype.setMessage = function
 
 
 
+/**
+ * Oneof group definitions for this message. Each group defines the field
+ * numbers belonging to that group. When of these fields' value is set, all
+ * other fields in the group are cleared. During deserialization, if multiple
+ * fields are encountered for a group, only the last value seen will be kept.
+ * @private {!Array<!Array<number>>}
+ * @const
+ */
+proto.nitric.proto.deployments.v1.UpResult.oneofGroups_ = [[2]];
+
+/**
+ * @enum {number}
+ */
+proto.nitric.proto.deployments.v1.UpResult.ContentCase = {
+  CONTENT_NOT_SET: 0,
+  TEXT: 2
+};
+
+/**
+ * @return {proto.nitric.proto.deployments.v1.UpResult.ContentCase}
+ */
+proto.nitric.proto.deployments.v1.UpResult.prototype.getContentCase = function() {
+  return /** @type {proto.nitric.proto.deployments.v1.UpResult.ContentCase} */(jspb.Message.computeOneofCase(this, proto.nitric.proto.deployments.v1.UpResult.oneofGroups_[0]));
+};
+
 
 
 if (jspb.Message.GENERATE_TO_OBJECT) {
@@ -1491,7 +1517,7 @@ proto.nitric.proto.deployments.v1.UpResult.prototype.toObject = function(opt_inc
 proto.nitric.proto.deployments.v1.UpResult.toObject = function(includeInstance, msg) {
   var f, obj = {
     success: jspb.Message.getBooleanFieldWithDefault(msg, 1, false),
-    details: jspb.Message.getFieldWithDefault(msg, 2, "")
+    text: jspb.Message.getFieldWithDefault(msg, 2, "")
   };
 
   if (includeInstance) {
@@ -1534,7 +1560,7 @@ proto.nitric.proto.deployments.v1.UpResult.deserializeBinaryFromReader = functio
       break;
     case 2:
       var value = /** @type {string} */ (reader.readString());
-      msg.setDetails(value);
+      msg.setText(value);
       break;
     default:
       reader.skipField();
@@ -1572,8 +1598,8 @@ proto.nitric.proto.deployments.v1.UpResult.serializeBinaryToWriter = function(me
       f
     );
   }
-  f = message.getDetails();
-  if (f.length > 0) {
+  f = /** @type {string} */ (jspb.Message.getField(message, 2));
+  if (f != null) {
     writer.writeString(
       2,
       f
@@ -1601,10 +1627,10 @@ proto.nitric.proto.deployments.v1.UpResult.prototype.setSuccess = function(value
 
 
 /**
- * optional string details = 2;
+ * optional string Text = 2;
  * @return {string}
  */
-proto.nitric.proto.deployments.v1.UpResult.prototype.getDetails = function() {
+proto.nitric.proto.deployments.v1.UpResult.prototype.getText = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 2, ""));
 };
 
@@ -1613,8 +1639,26 @@ proto.nitric.proto.deployments.v1.UpResult.prototype.getDetails = function() {
  * @param {string} value
  * @return {!proto.nitric.proto.deployments.v1.UpResult} returns this
  */
-proto.nitric.proto.deployments.v1.UpResult.prototype.setDetails = function(value) {
-  return jspb.Message.setProto3StringField(this, 2, value);
+proto.nitric.proto.deployments.v1.UpResult.prototype.setText = function(value) {
+  return jspb.Message.setOneofField(this, 2, proto.nitric.proto.deployments.v1.UpResult.oneofGroups_[0], value);
+};
+
+
+/**
+ * Clears the field making it undefined.
+ * @return {!proto.nitric.proto.deployments.v1.UpResult} returns this
+ */
+proto.nitric.proto.deployments.v1.UpResult.prototype.clearText = function() {
+  return jspb.Message.setOneofField(this, 2, proto.nitric.proto.deployments.v1.UpResult.oneofGroups_[0], undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.nitric.proto.deployments.v1.UpResult.prototype.hasText = function() {
+  return jspb.Message.getField(this, 2) != null;
 };
 
 

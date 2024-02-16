@@ -122,9 +122,12 @@ export class UpResult extends jspb.Message {
   getSuccess(): boolean;
   setSuccess(value: boolean): void;
 
-  getDetails(): string;
-  setDetails(value: string): void;
+  hasText(): boolean;
+  clearText(): void;
+  getText(): string;
+  setText(value: string): void;
 
+  getContentCase(): UpResult.ContentCase;
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): UpResult.AsObject;
   static toObject(includeInstance: boolean, msg: UpResult): UpResult.AsObject;
@@ -138,7 +141,12 @@ export class UpResult extends jspb.Message {
 export namespace UpResult {
   export type AsObject = {
     success: boolean,
-    details: string,
+    text: string,
+  }
+
+  export enum ContentCase {
+    CONTENT_NOT_SET = 0,
+    TEXT = 2,
   }
 }
 

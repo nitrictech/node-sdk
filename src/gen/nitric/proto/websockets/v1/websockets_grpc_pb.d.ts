@@ -7,30 +7,30 @@ import * as nitric_proto_websockets_v1_websockets_pb from "../../../../nitric/pr
 import * as grpc from "@grpc/grpc-js";
 
 interface IWebsocketService extends grpc.ServiceDefinition<grpc.UntypedServiceImplementation> {
-  send: grpc.MethodDefinition<nitric_proto_websockets_v1_websockets_pb.WebsocketSendRequest, nitric_proto_websockets_v1_websockets_pb.WebsocketSendResponse>;
-  close: grpc.MethodDefinition<nitric_proto_websockets_v1_websockets_pb.WebsocketCloseRequest, nitric_proto_websockets_v1_websockets_pb.WebsocketCloseResponse>;
-  details: grpc.MethodDefinition<nitric_proto_websockets_v1_websockets_pb.WebsocketDetailsRequest, nitric_proto_websockets_v1_websockets_pb.WebsocketDetailsResponse>;
+  sendMessage: grpc.MethodDefinition<nitric_proto_websockets_v1_websockets_pb.WebsocketSendRequest, nitric_proto_websockets_v1_websockets_pb.WebsocketSendResponse>;
+  closeConnection: grpc.MethodDefinition<nitric_proto_websockets_v1_websockets_pb.WebsocketCloseConnectionRequest, nitric_proto_websockets_v1_websockets_pb.WebsocketCloseConnectionResponse>;
+  socketDetails: grpc.MethodDefinition<nitric_proto_websockets_v1_websockets_pb.WebsocketDetailsRequest, nitric_proto_websockets_v1_websockets_pb.WebsocketDetailsResponse>;
 }
 
 export const WebsocketService: IWebsocketService;
 
 export interface IWebsocketServer extends grpc.UntypedServiceImplementation {
-  send: grpc.handleUnaryCall<nitric_proto_websockets_v1_websockets_pb.WebsocketSendRequest, nitric_proto_websockets_v1_websockets_pb.WebsocketSendResponse>;
-  close: grpc.handleUnaryCall<nitric_proto_websockets_v1_websockets_pb.WebsocketCloseRequest, nitric_proto_websockets_v1_websockets_pb.WebsocketCloseResponse>;
-  details: grpc.handleUnaryCall<nitric_proto_websockets_v1_websockets_pb.WebsocketDetailsRequest, nitric_proto_websockets_v1_websockets_pb.WebsocketDetailsResponse>;
+  sendMessage: grpc.handleUnaryCall<nitric_proto_websockets_v1_websockets_pb.WebsocketSendRequest, nitric_proto_websockets_v1_websockets_pb.WebsocketSendResponse>;
+  closeConnection: grpc.handleUnaryCall<nitric_proto_websockets_v1_websockets_pb.WebsocketCloseConnectionRequest, nitric_proto_websockets_v1_websockets_pb.WebsocketCloseConnectionResponse>;
+  socketDetails: grpc.handleUnaryCall<nitric_proto_websockets_v1_websockets_pb.WebsocketDetailsRequest, nitric_proto_websockets_v1_websockets_pb.WebsocketDetailsResponse>;
 }
 
 export class WebsocketClient extends grpc.Client {
   constructor(address: string, credentials: grpc.ChannelCredentials, options?: object);
-  send(argument: nitric_proto_websockets_v1_websockets_pb.WebsocketSendRequest, callback: grpc.requestCallback<nitric_proto_websockets_v1_websockets_pb.WebsocketSendResponse>): grpc.ClientUnaryCall;
-  send(argument: nitric_proto_websockets_v1_websockets_pb.WebsocketSendRequest, metadataOrOptions: grpc.Metadata | grpc.CallOptions | null, callback: grpc.requestCallback<nitric_proto_websockets_v1_websockets_pb.WebsocketSendResponse>): grpc.ClientUnaryCall;
-  send(argument: nitric_proto_websockets_v1_websockets_pb.WebsocketSendRequest, metadata: grpc.Metadata | null, options: grpc.CallOptions | null, callback: grpc.requestCallback<nitric_proto_websockets_v1_websockets_pb.WebsocketSendResponse>): grpc.ClientUnaryCall;
-  close(argument: nitric_proto_websockets_v1_websockets_pb.WebsocketCloseRequest, callback: grpc.requestCallback<nitric_proto_websockets_v1_websockets_pb.WebsocketCloseResponse>): grpc.ClientUnaryCall;
-  close(argument: nitric_proto_websockets_v1_websockets_pb.WebsocketCloseRequest, metadataOrOptions: grpc.Metadata | grpc.CallOptions | null, callback: grpc.requestCallback<nitric_proto_websockets_v1_websockets_pb.WebsocketCloseResponse>): grpc.ClientUnaryCall;
-  close(argument: nitric_proto_websockets_v1_websockets_pb.WebsocketCloseRequest, metadata: grpc.Metadata | null, options: grpc.CallOptions | null, callback: grpc.requestCallback<nitric_proto_websockets_v1_websockets_pb.WebsocketCloseResponse>): grpc.ClientUnaryCall;
-  details(argument: nitric_proto_websockets_v1_websockets_pb.WebsocketDetailsRequest, callback: grpc.requestCallback<nitric_proto_websockets_v1_websockets_pb.WebsocketDetailsResponse>): grpc.ClientUnaryCall;
-  details(argument: nitric_proto_websockets_v1_websockets_pb.WebsocketDetailsRequest, metadataOrOptions: grpc.Metadata | grpc.CallOptions | null, callback: grpc.requestCallback<nitric_proto_websockets_v1_websockets_pb.WebsocketDetailsResponse>): grpc.ClientUnaryCall;
-  details(argument: nitric_proto_websockets_v1_websockets_pb.WebsocketDetailsRequest, metadata: grpc.Metadata | null, options: grpc.CallOptions | null, callback: grpc.requestCallback<nitric_proto_websockets_v1_websockets_pb.WebsocketDetailsResponse>): grpc.ClientUnaryCall;
+  sendMessage(argument: nitric_proto_websockets_v1_websockets_pb.WebsocketSendRequest, callback: grpc.requestCallback<nitric_proto_websockets_v1_websockets_pb.WebsocketSendResponse>): grpc.ClientUnaryCall;
+  sendMessage(argument: nitric_proto_websockets_v1_websockets_pb.WebsocketSendRequest, metadataOrOptions: grpc.Metadata | grpc.CallOptions | null, callback: grpc.requestCallback<nitric_proto_websockets_v1_websockets_pb.WebsocketSendResponse>): grpc.ClientUnaryCall;
+  sendMessage(argument: nitric_proto_websockets_v1_websockets_pb.WebsocketSendRequest, metadata: grpc.Metadata | null, options: grpc.CallOptions | null, callback: grpc.requestCallback<nitric_proto_websockets_v1_websockets_pb.WebsocketSendResponse>): grpc.ClientUnaryCall;
+  closeConnection(argument: nitric_proto_websockets_v1_websockets_pb.WebsocketCloseConnectionRequest, callback: grpc.requestCallback<nitric_proto_websockets_v1_websockets_pb.WebsocketCloseConnectionResponse>): grpc.ClientUnaryCall;
+  closeConnection(argument: nitric_proto_websockets_v1_websockets_pb.WebsocketCloseConnectionRequest, metadataOrOptions: grpc.Metadata | grpc.CallOptions | null, callback: grpc.requestCallback<nitric_proto_websockets_v1_websockets_pb.WebsocketCloseConnectionResponse>): grpc.ClientUnaryCall;
+  closeConnection(argument: nitric_proto_websockets_v1_websockets_pb.WebsocketCloseConnectionRequest, metadata: grpc.Metadata | null, options: grpc.CallOptions | null, callback: grpc.requestCallback<nitric_proto_websockets_v1_websockets_pb.WebsocketCloseConnectionResponse>): grpc.ClientUnaryCall;
+  socketDetails(argument: nitric_proto_websockets_v1_websockets_pb.WebsocketDetailsRequest, callback: grpc.requestCallback<nitric_proto_websockets_v1_websockets_pb.WebsocketDetailsResponse>): grpc.ClientUnaryCall;
+  socketDetails(argument: nitric_proto_websockets_v1_websockets_pb.WebsocketDetailsRequest, metadataOrOptions: grpc.Metadata | grpc.CallOptions | null, callback: grpc.requestCallback<nitric_proto_websockets_v1_websockets_pb.WebsocketDetailsResponse>): grpc.ClientUnaryCall;
+  socketDetails(argument: nitric_proto_websockets_v1_websockets_pb.WebsocketDetailsRequest, metadata: grpc.Metadata | null, options: grpc.CallOptions | null, callback: grpc.requestCallback<nitric_proto_websockets_v1_websockets_pb.WebsocketDetailsResponse>): grpc.ClientUnaryCall;
 }
 
 interface IWebsocketHandlerService extends grpc.ServiceDefinition<grpc.UntypedServiceImplementation> {

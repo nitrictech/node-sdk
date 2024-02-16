@@ -11,15 +11,16 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Queueing, ReceivedTask as QueueItem } from './queues';
+import { Queueing, ReceivedMessage as QueueItem } from './queues';
 
 import { QueuesClient } from '@nitric/proto/queues/v1/queues_grpc_pb';
 import {
-  FailedSendRequest,
+  FailedEnqueueMessage,
   QueueCompleteResponse,
-  QueueReceiveResponse,
-  QueueSendResponse,
-  ReceivedTask,
+  QueueDequeueResponse,
+  QueueEnqueueResponse,
+  QueueMessage,
+  ReceivedMessage,
 } from '@nitric/proto/queues/v1/queues_pb';
 
 import { Struct } from 'google-protobuf/google/protobuf/struct_pb';
@@ -36,7 +37,7 @@ describe('Queue Client Tests', () => {
 
       beforeAll(() => {
         sendMock = jest
-          .spyOn(QueuesClient.prototype, 'send')
+          .spyOn(QueuesClient.prototype, 'enqueue')
           .mockImplementation((request, callback: any) => {
             callback(MOCK_ERROR, null);
 
@@ -61,14 +62,14 @@ describe('Queue Client Tests', () => {
       });
     });
 
-    describe('Given nitric.api.queue.QueueServiceClient.Send succeeds when an array of tasks are sent', () => {
+    describe('Given nitric.api.queue.QueueServiceClient.Send succeeds when an array of messages are sent', () => {
       let sendMock;
 
       beforeAll(() => {
         sendMock = jest
-          .spyOn(QueuesClient.prototype, 'send')
+          .spyOn(QueuesClient.prototype, 'enqueue')
           .mockImplementation((request, callback: any) => {
-            const mockResponse = new QueueSendResponse();
+            const mockResponse = new QueueEnqueueResponse();
 
             callback(null, mockResponse);
 
@@ -80,14 +81,14 @@ describe('Queue Client Tests', () => {
         jest.resetAllMocks();
       });
 
-      it('Then Queue.Send with an array of tasks should resolve with no failed messages', async () => {
+      it('Then Queue.Send with an array of messages should resolve with no failed messages', async () => {
         const queueing = new Queueing();
         await expect(
           queueing.queue('test').send([{test: 1}])
         ).resolves.toEqual([]);
       });
 
-      it('Then Queue.Send with one task should resolve with no failed messages', async () => {
+      it('Then Queue.Send with one message should resolve with no failed messages', async () => {
         const queueing = new Queueing();
         await expect(
           queueing.queue('test').send({test: 1})
@@ -100,8 +101,8 @@ describe('Queue Client Tests', () => {
     });
   });
 
-  describe('Receive', () => {
-    describe('Given nitric.api.queue.QueueServiceClient.Receive throws an error', () => {
+  describe('Dequeue', () => {
+    describe('Given nitric.api.queue.QueueServiceClient.Dequeue throws an error', () => {
       const MOCK_ERROR = {
         code: 12,
         message: 'UNIMPLEMENTED',
@@ -110,7 +111,7 @@ describe('Queue Client Tests', () => {
 
       beforeAll(() => {
         receiveMock = jest
-          .spyOn(QueuesClient.prototype, 'receive')
+          .spyOn(QueuesClient.prototype, 'dequeue')
           .mockImplementation((request, callback: any) => {
             callback(MOCK_ERROR, null);
 
@@ -132,10 +133,10 @@ describe('Queue Client Tests', () => {
     describe('Given no queue items are returned', () => {
       beforeAll(() => {
         jest
-          .spyOn(QueuesClient.prototype, 'receive')
+          .spyOn(QueuesClient.prototype, 'dequeue')
           .mockImplementation((request, callback: any) => {
-            const mockResponse = new QueueReceiveResponse();
-            mockResponse.setTasksList([]);
+            const mockResponse = new QueueDequeueResponse();
+            mockResponse.setMessagesList([]);
 
             // const mockResponse = new PushResponse()
             // mockResponse.setFailedmessagesList([])
@@ -157,21 +158,23 @@ describe('Queue Client Tests', () => {
 
     describe('Given queue items are returned', () => {
       const queueName = 'test';
-      const mockTasks = [{test: 'test'}];
+      const mockMessages = [{test: 'test'}];
 
       beforeAll(() => {
         jest
-          .spyOn(QueuesClient.prototype, 'receive')
+          .spyOn(QueuesClient.prototype, 'dequeue')
           .mockImplementation((request, callback: any) => {
-            const mockResponse = new QueueReceiveResponse();
-            mockResponse.setTasksList(
-              mockTasks.map((e) => {
-                const task = new ReceivedTask();
+            const mockResponse = new QueueDequeueResponse();
+            mockResponse.setMessagesList(
+              mockMessages.map((e) => {
+                const originalMessage = new QueueMessage();
+                originalMessage.setStructPayload(Struct.fromJavaScript(e));
+                const message = new ReceivedMessage();
 
-                task.setPayload(Struct.fromJavaScript(e));
-                task.setLeaseId("test-lease-id");
+                message.setMessage(originalMessage);
+                message.setLeaseId("test-lease-id");
 
-                return task;
+                return message;
               })
             );
 
@@ -185,11 +188,11 @@ describe('Queue Client Tests', () => {
         jest.resetAllMocks();
       });
 
-      it('Then Queue.receive should resolve with an array of tasks', async () => {
+      it('Then Queue.receive should resolve with an array of messages', async () => {
         const queueing = new Queueing();
         const queue = queueing.queue('test');
         await expect(queue.receive(1)).resolves.toEqual(
-          mockTasks.map((e) => {
+          mockMessages.map((e) => {
             return expect.objectContaining({
               leaseId: "test-lease-id",
               queue: queue,
@@ -225,13 +228,13 @@ describe('Queue Client Tests', () => {
 
       it('Then Queue.complete should reject', async () => {
         const queueing = new Queueing();
-        const task = new QueueItem({
+        const message = new QueueItem({
           leaseId: '1',
-          task: { test: 1 },
+          message: { test: 1 },
           queue: queueing.queue('test'),
         });
 
-        await expect(task.complete()).rejects.toBeInstanceOf(UnimplementedError);
+        await expect(message.complete()).rejects.toBeInstanceOf(UnimplementedError);
       });
 
       it('Then Queue.complete should be called once', async () => {
@@ -260,13 +263,13 @@ describe('Queue Client Tests', () => {
 
       it('Then Queue.Complete should resolve with no failed messages', async () => {
         const queueing = new Queueing();
-        const task = new QueueItem({
+        const message = new QueueItem({
           leaseId: '1',
-          task: { test: 1 },
+          message: { test: 1 },
           queue: queueing.queue('test'),
         });
 
-        await expect(task.complete()).resolves.toBeUndefined();
+        await expect(message.complete()).resolves.toBeUndefined();
       });
 
       it('Then Queue.complete should be called once', async () => {

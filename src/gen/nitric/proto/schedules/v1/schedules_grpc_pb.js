@@ -27,7 +27,7 @@ function deserialize_nitric_proto_schedules_v1_ServerMessage(buffer_arg) {
 }
 
 
-// Service for publishing asynchronous messages
+// Service for scheduling callbacks on a cadence
 var SchedulesService = exports.SchedulesService = {
   schedule: {
     path: '/nitric.proto.schedules.v1.Schedules/Schedule',

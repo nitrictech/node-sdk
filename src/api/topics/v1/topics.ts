@@ -15,7 +15,7 @@ import { SERVICE_BIND } from '../../../constants';
 import { TopicsClient } from '@nitric/proto/topics/v1/topics_grpc_pb';
 import {
   TopicPublishRequest,
-  Message,
+  TopicMessage,
 } from '@nitric/proto/topics/v1/topics_pb';
 import { Struct } from 'google-protobuf/google/protobuf/struct_pb';
 import * as grpc from '@grpc/grpc-js';
@@ -78,7 +78,7 @@ export class Topic<T extends Record<string, any> = Record<string, any>> {
       ...opts,
     };
     const request = new TopicPublishRequest();
-    const msg = new Message();
+    const msg = new TopicMessage();
 
     msg.setStructPayload(Struct.fromJavaScript(event));
 
