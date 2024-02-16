@@ -85,7 +85,7 @@ export class Queue<T extends Record<string, any> = Record<string, any>> {
    * message fails to be sent to the queue.
    *
    * @param messages one or more messages to push to the queue
-   * @returns A void promise for a single message or a list of failed messages when sending an array of messages.
+   * @returns A void promise for a single message or a list of failed messages when enqueueing an array of messages.
    *
    * Example:
    * ```typescript
@@ -93,11 +93,11 @@ export class Queue<T extends Record<string, any> = Record<string, any>> {
    *
    * const queueing = new Queueing();
    * const queue = queueing.queue("my-queue")
-   * await queue.send({ value: "test" });
+   * await queue.enqueue({ value: "test" });
    */
-  public async send(messages: T[]): Promise<FailedMessage<T>[]>;
-  public async send(messages: T): Promise<void>;
-  public async send(
+  public async enqueue(messages: T[]): Promise<FailedMessage<T>[]>;
+  public async enqueue(messages: T): Promise<void>;
+  public async enqueue(
     messages: T[] | T
   ): Promise<void | FailedMessage<T>[]> {
     return new Promise((resolve, reject) => {
@@ -144,7 +144,7 @@ export class Queue<T extends Record<string, any> = Record<string, any>> {
    * If the lease on a queue item expires before it is acknowledged the message will be returned to the queue for reprocessing.
    *
    * @param depth the maximum number of items to return. Default 1, Min 1.
-   * @returns The list of received messages
+   * @returns The list of dequeued messages
    *
    * Example:
    * ```typescript
@@ -152,12 +152,12 @@ export class Queue<T extends Record<string, any> = Record<string, any>> {
    *
    * const queueing = new Queueing();
    *
-   * const [message] = await queueing.queue("my-queue").receive();
+   * const [message] = await queueing.queue("my-queue").dequeue();
    *
    * // do something with the message
    * ```
    */
-  public async receive(depth?: number): Promise<ReceivedMessage<T>[]> {
+  public async dequeue(depth?: number): Promise<DequeuedMessage<T>[]> {
     return new Promise((resolve, reject) => {
       const request = new QueueDequeueRequest();
 
@@ -175,7 +175,7 @@ export class Queue<T extends Record<string, any> = Record<string, any>> {
         } else {
           resolve(
             response.getMessagesList().map((m) => {
-              return new ReceivedMessage({
+              return new DequeuedMessage({
                 message: m.getMessage().getStructPayload().toJavaScript() as T,
                 leaseId: m.getLeaseId(),
                 queue: this,
@@ -188,7 +188,7 @@ export class Queue<T extends Record<string, any> = Record<string, any>> {
   }
 }
 
-export class ReceivedMessage<
+export class DequeuedMessage<
   T extends Record<string, any> = Record<string, any>
 > {
   payload: T;
@@ -220,7 +220,7 @@ export class ReceivedMessage<
    *
    * const queueing = new Queueing();
    *
-   * const [message] = await queueing.queue("my-queue").receive();
+   * const [message] = await queueing.queue("my-queue").dequeue();
    *
    * // do something with the message
    *
@@ -264,7 +264,7 @@ let QUEUES = undefined;
  * async function publishToQueue() {
  *  await queues()
  *  .queue('my-queue')
- *  .send({
+ *  .enqueue({
  *    payload: {
  *      example: 'payload',
  *    },
