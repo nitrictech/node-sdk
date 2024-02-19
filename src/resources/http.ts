@@ -13,11 +13,15 @@
 // limitations under the License.
 
 import portfinder from 'portfinder';
-import { Faas } from '../faas';
+import { HttpClient } from '@nitric/proto/http/v1/http_grpc_pb';
+import { SERVICE_BIND } from '../constants';
+import * as grpc from '@grpc/grpc-js';
+import { ClientMessage, HttpProxyRequest } from '@nitric/proto/http/v1/http_pb';
+import { Server } from 'http';
 
 type ListenerFunction =
-  | ((port: number, callback?: () => void) => void)
-  | ((port: number) => void);
+  | ((port: number, callback?: () => void) => Server)
+  | ((port: number) => Server);
 
 interface NodeApplication {
   listen: ListenerFunction;
@@ -42,18 +46,47 @@ export class HttpWorkerOptions {
   }
 }
 
-/**
- * Creates a http worker
- */
-class HttpWorker {
-  private readonly faas: Faas;
+const createWorker = (
+  app: NodeApplication,
+  port: number,
+  callback?: () => void
+) => {
+  const httpClient = new HttpClient(
+    SERVICE_BIND,
+    grpc.ChannelCredentials.createInsecure()
+  );
 
-  constructor(app: NodeApplication, port: number, callback?: () => void) {
-    this.faas = new Faas(new HttpWorkerOptions(app, port, callback));
-    this.faas.start();
+  const httpProxyRequest = new HttpProxyRequest();
+  httpProxyRequest.setHost(`localhost:${port}`);
+
+  const httpProxyStream = httpClient.proxy();
+
+  httpProxyStream.on('data', NO_OP);
+
+  httpProxyStream.on('error', (err) => {
+    console.error('An error occurred:', err);
+  });
+
+  const clientMessage = new ClientMessage();
+  clientMessage.setRequest(httpProxyRequest);
+  httpProxyStream.write(clientMessage);
+  // Start Node application that HTTP proxy sits on
+  if (process.env.NITRIC_ENVIRONMENT !== 'build') {
+    const srv = app.listen(port, callback);
+
+    srv.on('close', () => {
+      httpProxyStream.cancel();
+    });
   }
-}
+};
 
+/**
+ * Register an HTTP Proxy to the provided application.
+ *
+ * @param app the http application to run behind the proxy
+ * @param callback an optional callback to run after the proxy has started
+ * @returns void
+ */
 export const http = (
   app: NodeApplication | ListenerFunction,
   callback?: () => void
@@ -77,11 +110,11 @@ export const http = (
         );
       }
 
-      new HttpWorker(nodeApp, port, callback);
+      createWorker(nodeApp, port, callback);
     });
 
     return;
   }
 
-  new HttpWorker(nodeApp, port, callback);
+  createWorker(nodeApp, port, callback);
 };

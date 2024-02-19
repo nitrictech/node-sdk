@@ -11,8 +11,8 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import * as faas from '../faas/index';
 import { HttpWorkerOptions, http } from '.';
+import { HttpClient } from '../gen/nitric/proto/http/v1/http_grpc_pb';
 
 jest.mock('portfinder', () => {
   const originalModule = jest.requireActual('portfinder');
@@ -26,12 +26,10 @@ jest.mock('portfinder', () => {
   };
 });
 
-jest.mock('../faas/index');
-
 describe('HTTP Proxy', () => {
-  const startSpy = jest
-    .spyOn(faas.Faas.prototype, 'start')
-    .mockReturnValue(Promise.resolve());
+  const httpProxySpy = jest
+    .spyOn(HttpClient.prototype, 'proxy')
+    .mockReturnValue({} as any);
 
   const mockApp = {
     listen: () => {},
@@ -71,17 +69,8 @@ describe('HTTP Proxy', () => {
       http(mockApp, fakeCallback);
     });
 
-    it('should create a new FaasClient', () => {
-      expect(faas.Faas).toBeCalledTimes(1);
-    });
-
-    it('should provide Faas with HttpWorkerOptions', () => {
-      const expectedOpts = new HttpWorkerOptions(mockApp, 1234, fakeCallback);
-      expect(faas.Faas).toBeCalledWith(expectedOpts);
-    });
-
-    it('should call FaasClient::start()', () => {
-      expect(startSpy).toBeCalledTimes(1);
+    it('should call HttpClient::proxy()', () => {
+      expect(httpProxySpy).toBeCalledTimes(1);
     });
   });
 
@@ -97,21 +86,8 @@ describe('HTTP Proxy', () => {
       http(fakeFunc, fakeCallback);
     });
 
-    it('should create a new FaasClient', () => {
-      expect(faas.Faas).toBeCalledTimes(1);
-    });
-
-    it('should provide Faas with HttpWorkerOptions', () => {
-      const expectedOpts = new HttpWorkerOptions(
-        { listen: fakeFunc },
-        1234,
-        fakeCallback
-      );
-      expect(faas.Faas).toBeCalledWith(expectedOpts);
-    });
-
-    it('should call FaasClient::start()', () => {
-      expect(startSpy).toBeCalledTimes(1);
+    it('should call HttpClient::proxy()', () => {
+      expect(httpProxySpy).toBeCalledTimes(1);
     });
   });
 });

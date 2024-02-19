@@ -13,35 +13,37 @@
 // limitations under the License.
 import {
   Action,
-  Resource,
+  ResourceIdentifier,
   ResourceType,
   ResourceDeclareRequest,
   ResourceDeclareResponse,
-  ResourceDetailsResponse,
   ResourceTypeMap,
-} from '@nitric/api/proto/resource/v1/resource_pb';
+  SecretResource as NitricSecretResource,
+} from '@nitric/proto/resources/v1/resources_pb';
 import resourceClient from './client';
 import { secrets, Secret } from '../api/secrets';
 import { ActionsList, make, SecureResource } from './common';
 import { fromGrpcError } from '../api/errors';
 
-type SecretPermission = 'put' | 'access';
+type SecretPermission = 'putting' | 'accessing';
 
-const everything: SecretPermission[] = ['put', 'access'];
+const everything: SecretPermission[] = ['putting', 'accessing'];
 
 /**
  * Cloud secret resource for secret storage
  */
 export class SecretResource extends SecureResource<SecretPermission> {
-  protected async register(): Promise<Resource> {
+  protected async register(): Promise<ResourceIdentifier> {
     const req = new ResourceDeclareRequest();
-    const resource = new Resource();
+    const resource = new ResourceIdentifier();
     resource.setName(this.name);
     resource.setType(ResourceType.SECRET);
 
-    req.setResource(resource);
+    req.setSecret(new NitricSecretResource());
+    req.setId(resource);
+    
 
-    return new Promise<Resource>((resolve, reject) => {
+    return new Promise<ResourceIdentifier>((resolve, reject) => {
       resourceClient.declare(
         req,
         (error, _response: ResourceDeclareResponse) => {
@@ -58,9 +60,9 @@ export class SecretResource extends SecureResource<SecretPermission> {
   protected permsToActions(...perms: SecretPermission[]): ActionsList {
     return perms.reduce((actions, perm) => {
       switch (perm) {
-        case 'put':
+        case 'putting':
           return [...actions, Action.SECRETPUT];
-        case 'access':
+        case 'accessing':
           return [...actions, Action.SECRETACCESS];
         default:
           throw new Error(
@@ -72,13 +74,8 @@ export class SecretResource extends SecureResource<SecretPermission> {
     }, []);
   }
 
-  protected resourceType(): ResourceTypeMap[keyof ResourceTypeMap] {
+  protected resourceType(): ResourceTypeMap[keyof ResourceTypeMap]{
     return ResourceType.SECRET;
-  }
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  protected unwrapDetails(resp: ResourceDetailsResponse): never {
-    throw new Error('details unimplemented for secret');
   }
 
   public for(perm: SecretPermission, ...perms: SecretPermission[]): Secret {
@@ -88,4 +85,12 @@ export class SecretResource extends SecureResource<SecretPermission> {
   }
 }
 
-export const secret = make(SecretResource);
+/**
+ * Create a reference to a named secret in this project.
+ *
+ * If the secret hasn't been referenced before this is a request for a new resource. Otherwise, the existing secret with the same name will be used.
+ *
+ * @param name the name of the secret.
+ * @returns a reference to the secret.
+ */
+export const secret: (name: string) => SecretResource = make(SecretResource);

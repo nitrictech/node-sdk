@@ -11,11 +11,11 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { ResourceServiceClient } from '@nitric/api/proto/resource/v1/resource_grpc_pb';
+import { ResourcesClient } from '@nitric/proto/resources/v1/resources_grpc_pb';
 import { SERVICE_BIND } from '../constants';
 import * as grpc from '@grpc/grpc-js';
 
-const resourceClient = new ResourceServiceClient(
+const resourceClient = new ResourcesClient(
   SERVICE_BIND,
   grpc.ChannelCredentials.createInsecure()
 );

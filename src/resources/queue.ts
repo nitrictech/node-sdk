@@ -11,40 +11,42 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+import { Queue, queues } from '@nitric/sdk/api/queues';
 import {
-  Resource,
+  ResourceIdentifier,
   ResourceDeclareRequest,
+  ResourceDeclareResponse,
   ResourceType,
   Action,
-  ResourceDeclareResponse,
+  QueueResource as NitricQueueResource,
   ResourceTypeMap,
-} from '@nitric/api/proto/resource/v1/resource_pb';
+} from '@nitric/proto/resources/v1/resources_pb';
 import resourceClient from './client';
-import { queues, Queue } from '../api/';
 import { fromGrpcError } from '../api/errors';
 import { ActionsList, make, SecureResource } from './common';
 
-export type QueuePermission = 'sending' | 'receiving';
+export type QueuePermission = 'enqueue' | 'dequeue';
 
 /**
- * Queue resource for async send/receive messaging
+ * Queue resource for async messaging
  */
 export class QueueResource<
   T extends Record<string, any> = Record<string, any>
 > extends SecureResource<QueuePermission> {
   /**
-   * Register this queue as a required resource for the calling function/container.
+   * Register this queue as a required resource for the calling service/container.
    *
    * @returns a promise that resolves when the registration is complete
    */
-  protected async register(): Promise<Resource> {
+  protected async register(): Promise<ResourceIdentifier> {
     const req = new ResourceDeclareRequest();
-    const resource = new Resource();
+    const resource = new ResourceIdentifier();
     resource.setName(this.name);
     resource.setType(ResourceType.QUEUE);
-    req.setResource(resource);
+    req.setId(resource);
+    req.setQueue(new NitricQueueResource())
 
-    return new Promise<Resource>((resolve, reject) => {
+    return new Promise<ResourceIdentifier>((resolve, reject) => {
       resourceClient.declare(req, (error) => {
         if (error) {
           reject(fromGrpcError(error));
@@ -58,10 +60,10 @@ export class QueueResource<
   protected permsToActions(...perms: QueuePermission[]): ActionsList {
     let actions: ActionsList = perms.reduce((actions, p) => {
       switch (p) {
-        case 'sending':
-          return [...actions, Action.QUEUESEND];
-        case 'receiving':
-          return [...actions, Action.QUEUERECEIVE];
+        case 'enqueue':
+          return [...actions, Action.QUEUEENQUEUE];
+        case 'dequeue':
+          return [...actions, Action.QUEUEDEQUEUE];
         default:
           throw new Error(
             `unknown permission ${p}, supported permissions is publishing.}
@@ -70,28 +72,23 @@ export class QueueResource<
       }
     }, []);
 
-    if (actions.length > 0) {
-      actions = [...actions, Action.QUEUELIST, Action.QUEUEDETAIL];
-    }
-
     return actions;
   }
 
-  protected resourceType(): ResourceTypeMap[keyof ResourceTypeMap] {
+  protected resourceType() {
     return ResourceType.QUEUE;
   }
 
-  protected unwrapDetails(_resp: ResourceDeclareResponse): never {
+  protected unwrapDetails(resp: ResourceDeclareResponse): never {
     throw new Error('details unimplemented for queue');
   }
 
   /**
    * Return a queue reference and registers the permissions required by the currently scoped function for this resource.
    *
-   * e.g. const taskQueue = resources.queue('work').for('sending')
+   * e.g. const taskQueue = resources.queue('work').for('enqueue')
    *
-   * @param perm the access that the currently scoped function is requesting to this resource.
-   * @param perms additional access that the currently scoped function is requesting to this resource.
+   * @param perms the access that the currently scoped function is requesting to this resource.
    * @returns a useable queue.
    */
   public for(perm: QueuePermission, ...perms: QueuePermission[]): Queue<T> {
@@ -101,8 +98,22 @@ export class QueueResource<
   }
 }
 
-export const queue = make(QueueResource) as <
-  T extends Record<string, any> = Record<string, any>
->(
+// export const queue = make(QueueResource) as <
+//   T extends Record<string, any> = Record<string, any>
+// >(
+//   name: string
+// ) => QueueResource<T>;
+
+/**
+ * Create a reference to a named queue in this project.
+ *
+ * If the queue hasn't been referenced before this is a request for a new resource. Otherwise, the existing queue with the same name will be used.
+ *
+ * @param name the name of the queue.
+ * @returns a reference to the queue.
+ */
+export function queue<T extends Record<string, any> = Record<string, any>>(
   name: string
-) => QueueResource<T>;
+): QueueResource<T> {
+  return make<QueueResource<T>>(QueueResource)(name);
+}

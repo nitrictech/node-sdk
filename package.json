@@ -22,8 +22,9 @@
     "license:header:check": "license-check-and-add check -f ./licenseconfig.json",
     "license:check": "licensee --production",
     "download:contracts": "curl -L https://github.com/nitrictech/nitric/releases/download/${npm_package_nitric}/contracts.tgz -o contracts.tgz && tar xvzf contracts.tgz && rm contracts.tgz",
+    "download:contracts:local": "rm -r ./nitric && mkdir ./nitric && cp -r $NITRIC_CORE_HOME/nitric/proto ./nitric",
     "gen:proto": "yarn run download:contracts && yarn run gen:sources",
-    "gen:sources": "mkdir -p ./src/gen && grpc_tools_node_protoc --ts_out=service=grpc-node,mode=grpc-js:./src/gen --js_out=import_style=commonjs,binary:./src/gen --grpc_out=grpc_js:./src/gen -I ./contracts ./contracts/**/*.proto ./contracts/proto/**/*/*.proto"
+    "gen:sources": "mkdir -p ./src/gen && grpc_tools_node_protoc --ts_out=service=grpc-node,mode=grpc-js:./src/gen --js_out=import_style=commonjs,binary:./src/gen --grpc_out=grpc_js:./src/gen -I ./ ./nitric/proto/**/*/*.proto"
   },
   "contributors": [
     "Jye Cusch <jye.cusch@nitric.io>",
@@ -31,16 +32,16 @@
     "David Moore <david.moore@nitric.io>"
   ],
   "dependencies": {
-    "@grpc/grpc-js": "1.8.1",
+    "@grpc/grpc-js": "1.10.0",
     "@nitric/grpc-error-status": "^0.0.2",
     "@opentelemetry/api": "^1.4.1",
-    "@opentelemetry/exporter-trace-otlp-http": "^0.36.1",
-    "@opentelemetry/instrumentation": "^0.36.1",
-    "@opentelemetry/instrumentation-grpc": "^0.36.1",
-    "@opentelemetry/instrumentation-http": "^0.36.1",
-    "@opentelemetry/resources": "^1.10.1",
-    "@opentelemetry/sdk-trace-node": "^1.10.1",
-    "@opentelemetry/semantic-conventions": "^1.10.1",
+    "@opentelemetry/exporter-trace-otlp-http": "^0.48.0",
+    "@opentelemetry/instrumentation": "^0.48.0",
+    "@opentelemetry/instrumentation-grpc": "^0.48.0",
+    "@opentelemetry/instrumentation-http": "^0.48.0",
+    "@opentelemetry/resources": "^1.21.0",
+    "@opentelemetry/sdk-trace-node": "^1.21.0",
+    "@opentelemetry/semantic-conventions": "^1.21.0",
     "google-protobuf": "3.14.0",
     "portfinder": "^1.0.32",
     "tslib": "^2.1.0"
@@ -57,11 +58,12 @@
   "devDependencies": {
     "@types/google-protobuf": "^3.15.6",
     "@types/jest": "^26.0.15",
+    "@types/node": "^20.11.17",
     "@typescript-eslint/eslint-plugin": "^4.22.0",
     "@typescript-eslint/parser": "^4.22.0",
     "codecov": "^3.8.3",
     "eslint": "^7.24.0",
-    "eslint-plugin-jsdoc": "^40.1.0",
+    "eslint-plugin-jsdoc": "^46.9.1",
     "glob-run": "^0.1.7",
     "grpc-tools": "^1.11.3",
     "husky": "^6.0.0",

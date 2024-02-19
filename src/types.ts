@@ -11,39 +11,6 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-
-export class NitricEvent<T extends Record<string, any> = Record<string, any>> {
-  public readonly payload: T;
-  public readonly id?: string;
-  public readonly payloadType: string;
-
-  constructor(payload: T, id?: string, payloadType?: string) {
-    this.payload = payload;
-    this.id = id;
-    this.payloadType = payloadType || 'none';
-  }
-}
-
-export class NitricTask<T extends Record<string, any> = Record<string, any>> {
-  public readonly id: string | undefined;
-  public readonly payloadType: string;
-  public readonly payload: T;
-
-  constructor({
-    id = undefined,
-    payload,
-    payloadType = 'none',
-  }: {
-    id?: string;
-    payloadType?: string;
-    payload: T;
-  }) {
-    this.id = id;
-    this.payload = payload;
-    this.payloadType = payloadType;
-  }
-}
-
 export type WhereQueryOperator =
   | '<'
   | '<='

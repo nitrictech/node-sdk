@@ -13,31 +13,31 @@
 // limitations under the License.
 
 import { status, ServiceError } from '@grpc/grpc-js';
-import { AbortedError } from './aborted';
-import { AlreadyExistsError } from './already-exists';
-import { CancelledError } from './cancelled';
-import { DataLossError } from './data-loss';
-import { DeadlineExceededError } from './deadline-exceeded';
-import { FailedPreconditionError } from './failed-precondition';
-import { InternalError } from './internal';
-import { InvalidArgumentError } from './invalid-argument';
-import { NotFoundError } from './not-found';
-import { OutOfRangeError } from './out-of-range';
-import { PermissionDeniedError } from './permission-denied';
-import { ResourceExhaustedError } from './resource-exhausted';
-import { UnauthenticatedError } from './unauthenticated';
-import { UnavailableError } from './unavailable';
-import { UnimplementedError } from './unimplemented';
-import { UnknownError } from './unknown';
-import { parse } from '@nitric/grpc-error-status';
-import { ErrorDetails } from '@nitric/api/proto/error/v1/error_pb';
+import {
+  AbortedError,
+  AlreadyExistsError,
+  CancelledError,
+  DataLossError,
+  DeadlineExceededError,
+  FailedPreconditionError,
+  InternalError,
+  InvalidArgumentError,
+  NotFoundError,
+  OutOfRangeError,
+  PermissionDeniedError,
+  ResourceExhaustedError,
+  UnauthenticatedError,
+  UnavailableError,
+  UnimplementedError,
+  UnknownError,
+} from './provider-error';
 
 // Accept all codes except Status OK
 type codes = Exclude<status, status.OK>;
 
 const STATUS_CODE_MAP: Record<
   codes,
-  new (message: string, details: ErrorDetails) => Error
+  new (grpcError: ServiceError) => Error
 > = {
   [status.CANCELLED]: CancelledError,
   [status.UNKNOWN]: UnknownError,
@@ -66,23 +66,11 @@ const STATUS_CODE_MAP: Record<
 export const fromGrpcError = (error: ServiceError): Error => {
   const construct = STATUS_CODE_MAP[error.code];
 
-  const errorStatus = parse(error);
-
-  let errorDetails: ErrorDetails | undefined = undefined;
-
-  if (errorStatus) {
-    const allDetails = errorStatus.parseDetails(ErrorDetails);
-
-    if (allDetails.length > 0) {
-      errorDetails = allDetails[0];
-    }
-  }
-
   if (construct) {
-    return new construct(error.message, errorDetails);
+    return new construct(error);
   }
 
-  return new UnknownError(error.message, errorDetails);
+  return new UnknownError(error);
 };
 
 // Re-export errors

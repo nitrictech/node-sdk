@@ -12,17 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { ResourceServiceClient } from '@nitric/api/proto/resource/v1/resource_grpc_pb';
+import { ResourcesClient } from '@nitric/proto/resources/v1/resources_grpc_pb';
 import { UnimplementedError } from '../api/errors';
 import { secret } from '.';
-import { ResourceDeclareResponse } from '@nitric/api/proto/resource/v1/resource_pb';
+import { ResourceDeclareResponse } from '@nitric/proto/resources/v1/resources_pb';
 import { Secret } from '..';
+import { status } from '@grpc/grpc-js';
 
 describe('Registering secret resources', () => {
   describe('Given the server is unimplemented', () => {
     describe('When a secret is registered', () => {
       const MOCK_ERROR = {
-        code: 2,
+        code: status.UNIMPLEMENTED,
         message: 'UNIMPLEMENTED',
       };
 
@@ -30,8 +31,9 @@ describe('Registering secret resources', () => {
       let declareSpy;
 
       beforeAll(() => {
+        jest.spyOn(console, 'error').mockImplementation(() => {});
         declareSpy = jest
-          .spyOn(ResourceServiceClient.prototype, 'declare')
+          .spyOn(ResourcesClient.prototype, 'declare')
           .mockImplementationOnce((request, callback: any) => {
             callback(MOCK_ERROR, null);
 
@@ -40,13 +42,11 @@ describe('Registering secret resources', () => {
       });
 
       afterAll(() => {
-        declareSpy.mockClear();
+        jest.restoreAllMocks();
       });
 
       it('Should throw the error', async () => {
-        await expect(secret(validName)['registerPromise']).rejects.toEqual(
-          new UnimplementedError('UNIMPLEMENTED')
-        );
+        await expect(secret(validName)['registerPromise']).rejects.toBeInstanceOf(UnimplementedError);
       });
 
       it('Should call the resource server', () => {
@@ -62,7 +62,7 @@ describe('Registering secret resources', () => {
 
       beforeAll(() => {
         otherSpy = jest
-          .spyOn(ResourceServiceClient.prototype, 'declare')
+          .spyOn(ResourcesClient.prototype, 'declare')
           .mockImplementationOnce((request, callback: any) => {
             const response = new ResourceDeclareResponse();
             callback(null, response);
@@ -94,7 +94,7 @@ describe('Registering secret resources', () => {
     beforeEach(() => {
       // ensure a success is returned and calls can be counted
       existsSpy = jest
-        .spyOn(ResourceServiceClient.prototype, 'declare')
+        .spyOn(ResourcesClient.prototype, 'declare')
         .mockImplementation((request, callback: any) => {
           const response = new ResourceDeclareResponse();
           callback(null, response);
@@ -127,7 +127,7 @@ describe('Registering secret resources', () => {
 
     describe('When declaring usage', () => {
       it('Should return a secret reference', () => {
-        const ref = secretResource.for('access');
+        const ref = secretResource.for('accessing');
         expect(ref).toBeInstanceOf(Secret);
       });
     });

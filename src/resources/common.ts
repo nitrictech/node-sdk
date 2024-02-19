@@ -12,28 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import {
-  Resource as ProtoResource,
+  ResourceIdentifier as ProtoResource,
   ResourceType,
   PolicyResource,
   ResourceDeclareRequest,
   ActionMap,
-  ResourceDetailsRequest,
-  ResourceDetailsResponse,
   ResourceTypeMap,
-} from '@nitric/api/proto/resource/v1/resource_pb';
+} from '@nitric/proto/resources/v1/resources_pb';
 import resourceClient from './client';
+import { Duration } from 'google-protobuf/google/protobuf/duration_pb';
+import type { ClientDuplexStream } from '@grpc/grpc-js';
 import { fromGrpcError } from '../api/errors';
 
 export type ActionsList = ActionMap[keyof ActionMap][];
 
-export interface ResourceDetails<T> {
-  id: string;
-  provider: string;
-  service: string;
-  details: T;
-}
-
-export abstract class Resource<Detail = any> {
+export abstract class Resource {
   /**
    * Unique name for the resource by type within the stack.
    *
@@ -57,35 +50,7 @@ export abstract class Resource<Detail = any> {
     this._registerPromise = promise;
   }
 
-  /**
-   * Returns details of this
-   */
-  protected async details(): Promise<ResourceDetails<Detail>> {
-    const req = new ResourceDetailsRequest();
-    const res = new ProtoResource();
-    res.setName(this.name);
-    res.setType(this.resourceType());
-
-    req.setResource(res);
-    return new Promise<ResourceDetails<Detail>>((resolve, reject) => {
-      resourceClient.details(req, (err, resp) => {
-        if (err) {
-          reject(fromGrpcError(err));
-        } else {
-          resolve({
-            id: resp.getId(),
-            provider: resp.getProvider(),
-            service: resp.getService(),
-            details: this.unwrapDetails(resp),
-          });
-        }
-      });
-    });
-  }
-
   protected abstract resourceType(): ResourceTypeMap[keyof ResourceTypeMap];
-
-  protected abstract unwrapDetails(resp: ResourceDetailsResponse): Detail;
 
   protected abstract register(): Promise<ProtoResource>;
 }
@@ -101,14 +66,14 @@ export abstract class SecureResource<P> extends Resource {
     // Send an unnamed function as the principle. This is interpreted to mean the currently running function, making the request.
     const policy = new PolicyResource();
     const defaultPrincipal = new ProtoResource();
-    defaultPrincipal.setType(ResourceType.FUNCTION);
+    defaultPrincipal.setType(ResourceType.SERVICE);
     policy.setPrincipalsList([defaultPrincipal]);
 
     // Convert the permissions to an action set.
     const actions = this.permsToActions(...perms);
     policy.setActionsList(actions);
 
-    req.setResource(policyResource);
+    req.setId(policyResource);
     req.setPolicy(policy);
 
     this.registerPromise.then((resource) => {
@@ -151,9 +116,35 @@ export const make = <T extends Resource>(
       cache[typename][name]['registerPromise'] = prom;
 
       prom.catch((err) => {
-        console.log(err);
+        console.error(err);
       });
     }
     return cache[typename][name] as T;
   };
+};
+
+export const toDuration = (seconds: number): Duration => {
+  const duration = new Duration();
+  duration.setSeconds(seconds);
+
+  return duration;
+};
+
+export const startStreamHandler = async (
+  handler: () => Promise<ClientDuplexStream<any, any>>
+): Promise<void> => {
+  // const provider = newTracerProvider(); TODO add back later
+  const stream = await handler();
+
+  // Block until the stream has closed...
+  await new Promise<void>((res) => {
+    // The server has determined this stream must close
+    stream.on('end', () => {
+      console.log('Membrane has terminated the trigger stream');
+      res();
+    });
+  });
+
+  // Shutdown the trace provider, flushing the stream and stopping listeners
+  // await provider?.shutdown(); TODO add back later
 };

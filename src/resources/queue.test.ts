@@ -12,16 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { ResourceServiceClient } from '@nitric/api/proto/resource/v1/resource_grpc_pb';
+import { ResourcesClient } from '@nitric/proto/resources/v1/resources_grpc_pb';
 import { UnimplementedError } from '../api/errors';
 import { Queue } from '../api';
 import { queue, QueueResource } from '.';
-import { ResourceDeclareResponse } from '@nitric/api/proto/resource/v1/resource_pb';
+import { ResourceDeclareResponse } from '@nitric/proto/resources/v1/resources_pb';
+import { status } from '@grpc/grpc-js';
 
 describe('Registering queue resources', () => {
   describe('Given declare returns an error from the resource server', () => {
     const MOCK_ERROR = {
-      code: 2,
+      code: status.UNIMPLEMENTED,
       message: 'UNIMPLEMENTED',
     };
 
@@ -29,8 +30,9 @@ describe('Registering queue resources', () => {
     let declareSpy;
 
     beforeAll(() => {
+      jest.spyOn(console, 'error').mockImplementation(() => {});
       declareSpy = jest
-        .spyOn(ResourceServiceClient.prototype, 'declare')
+        .spyOn(ResourcesClient.prototype, 'declare')
         .mockImplementationOnce((request, callback: any) => {
           callback(MOCK_ERROR, null);
 
@@ -39,13 +41,11 @@ describe('Registering queue resources', () => {
     });
 
     afterAll(() => {
-      declareSpy.mockClear();
+      jest.restoreAllMocks();
     });
 
     it('Should throw the error', async () => {
-      await expect(queue(validName)['registerPromise']).rejects.toEqual(
-        new UnimplementedError('UNIMPLEMENTED')
-      );
+      await expect(queue(validName)['registerPromise']).rejects.toBeInstanceOf(UnimplementedError);
     });
 
     it('Should call the resource server', () => {
@@ -60,7 +60,7 @@ describe('Registering queue resources', () => {
 
       beforeAll(() => {
         otherSpy = jest
-          .spyOn(ResourceServiceClient.prototype, 'declare')
+          .spyOn(ResourcesClient.prototype, 'declare')
           .mockImplementationOnce((request, callback: any) => {
             const response = new ResourceDeclareResponse();
             callback(null, response);
@@ -92,7 +92,7 @@ describe('Registering queue resources', () => {
     beforeEach(() => {
       // ensure a success is returned and calls can be counted.
       existsSpy = jest
-        .spyOn(ResourceServiceClient.prototype, 'declare')
+        .spyOn(ResourcesClient.prototype, 'declare')
         .mockImplementation((request, callback: any) => {
           const response = new ResourceDeclareResponse();
           callback(null, response);
@@ -127,7 +127,7 @@ describe('Registering queue resources', () => {
 
     describe('When declaring usage', () => {
       it('Should return a topic reference', () => {
-        const ref = queueResource.for('receiving');
+        const ref = queueResource.for('dequeue');
         expect(ref).toBeInstanceOf(Queue);
       });
     });
