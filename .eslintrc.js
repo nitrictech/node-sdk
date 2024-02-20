@@ -1,15 +1,10 @@
 module.exports = {
   parser: '@typescript-eslint/parser',
-  ignorePatterns: [
-    'src/gen/**/*.ts',
-    'src/**/*.test.ts',
-  ],
+  ignorePatterns: ['src/gen/**/*.ts', 'src/**/*.test.ts'],
   env: {
     node: true,
   },
-  plugins: [
-    "jsdoc",
-  ],
+  plugins: ['jsdoc'],
   extends: [
     'plugin:@typescript-eslint/eslint-recommended',
     'plugin:@typescript-eslint/recommended',
@@ -20,5 +15,16 @@ module.exports = {
     '@typescript-eslint/ban-ts-ignore': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
     'jsdoc/tag-lines': 'off', // not documented on jsdoc plugin site, unsure how to correct.
+    '@typescript-eslint/no-unused-vars': [
+      'error',
+      { args: 'all', argsIgnorePattern: '^_' },
+    ],
+    'no-warning-comments': [
+      'error',
+      {
+        terms: ['todo', 'fixme'],
+        location: 'anywhere',
+      },
+    ],
   },
 };

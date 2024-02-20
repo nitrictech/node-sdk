@@ -12,19 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { ResourceServiceClient } from '@nitric/api/proto/resource/v1/resource_grpc_pb';
+import { ResourcesClient } from '@nitric/proto/resources/v1/resources_grpc_pb';
 import { UnimplementedError } from '../api/errors';
-import { topic, SubscriptionWorkerOptions } from '.';
-import { ResourceDeclareResponse } from '@nitric/api/proto/resource/v1/resource_pb';
+import {
+  topic,
+  SubscriptionWorkerOptions,
+  TopicResource,
+  Subscription,
+} from '.';
+import { ResourceDeclareResponse } from '@nitric/proto/resources/v1/resources_pb';
 import { Topic } from '..';
-import * as faas from '../faas/index';
-
-jest.mock('../faas/index');
+import { Metadata, status } from '@grpc/grpc-js';
 
 describe('Registering topic resources', () => {
   describe('Given declare returns an error from the resource server', () => {
     const MOCK_ERROR = {
-      code: 2,
+      code: status.UNIMPLEMENTED,
       message: 'UNIMPLEMENTED',
     };
 
@@ -32,8 +35,9 @@ describe('Registering topic resources', () => {
     let declareSpy;
 
     beforeAll(() => {
+      jest.spyOn(console, 'error').mockImplementation(() => {});
       declareSpy = jest
-        .spyOn(ResourceServiceClient.prototype, 'declare')
+        .spyOn(ResourcesClient.prototype, 'declare')
         .mockImplementationOnce((request, callback: any) => {
           callback(MOCK_ERROR, null);
 
@@ -42,12 +46,12 @@ describe('Registering topic resources', () => {
     });
 
     afterAll(() => {
-      declareSpy.mockClear();
+      jest.restoreAllMocks();
     });
 
     it('Should throw the error', async () => {
-      await expect(topic(validName)['registerPromise']).rejects.toEqual(
-        new UnimplementedError('UNIMPLEMENTED')
+      await expect(topic(validName)['registerPromise']).rejects.toBeInstanceOf(
+        UnimplementedError
       );
     });
 
@@ -63,7 +67,7 @@ describe('Registering topic resources', () => {
 
       beforeAll(() => {
         otherSpy = jest
-          .spyOn(ResourceServiceClient.prototype, 'declare')
+          .spyOn(ResourcesClient.prototype, 'declare')
           .mockImplementationOnce((request, callback: any) => {
             const response = new ResourceDeclareResponse();
             callback(null, response);
@@ -95,11 +99,11 @@ describe('Registering topic resources', () => {
     beforeEach(() => {
       // ensure a success is returned and calls can be counted.
       existsSpy = jest
-        .spyOn(ResourceServiceClient.prototype, 'declare')
+        .spyOn(ResourcesClient.prototype, 'declare')
         .mockImplementation((request, callback: any) => {
           const response = new ResourceDeclareResponse();
           callback(null, response);
-          return null as any;
+          return null;
         });
 
       // register the resource for the first time
@@ -138,10 +142,15 @@ describe('Registering topic resources', () => {
 });
 
 describe('subscription', () => {
-  const startSpy = jest
-    .spyOn(faas.Faas.prototype, 'start')
-    .mockReturnValue(Promise.resolve());
-  const mockFn = jest.fn();
+  let startSpy;
+  let mockFn;
+
+  beforeAll(() => {
+    startSpy = jest
+      .spyOn(Subscription.prototype as any, 'start')
+      .mockReturnValue(Promise.resolve());
+    mockFn = jest.fn();
+  });
 
   afterAll(() => {
     jest.clearAllMocks();
@@ -156,16 +165,7 @@ describe('subscription', () => {
       await topic('test-subscribe').subscribe(mockFn);
     });
 
-    it('should create a new FaasClient', () => {
-      expect(faas.Faas).toBeCalledTimes(1);
-    });
-
-    it('should provide Faas with SubscriptionWorkerOptions', () => {
-      const expectedOpts = new SubscriptionWorkerOptions('test-subscribe');
-      expect(faas.Faas).toBeCalledWith(expectedOpts);
-    });
-
-    it('should call FaasClient::start()', () => {
+    it('should call Subscription start()', () => {
       expect(startSpy).toBeCalledTimes(1);
     });
   });

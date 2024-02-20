@@ -12,15 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { ResourceServiceClient } from '@nitric/api/proto/resource/v1/resource_grpc_pb';
+import { ResourcesClient } from '@nitric/proto/resources/v1/resources_grpc_pb';
 import { UnimplementedError } from '../api/errors';
 import { bucket } from '.';
 import {
   BucketResource,
   ResourceDeclareResponse,
-} from '@nitric/api/proto/resource/v1/resource_pb';
+} from '@nitric/proto/resources/v1/resources_pb';
 import { Resource } from './common';
 import { Bucket } from '..';
+import { Metadata, status } from '@grpc/grpc-js';
 
 // What we need to test about buckets
 // 1. register with the name
@@ -32,7 +33,7 @@ describe('Registering bucket resources', () => {
   describe('Given the server is unimplemented', () => {
     describe('When a bucket is registered', () => {
       const MOCK_ERROR = {
-        code: 2,
+        code: status.UNIMPLEMENTED,
         message: 'UNIMPLEMENTED',
       };
 
@@ -40,8 +41,9 @@ describe('Registering bucket resources', () => {
       let declareSpy;
 
       beforeAll(() => {
+        jest.spyOn(console, 'error').mockImplementation(() => {});
         declareSpy = jest
-          .spyOn(ResourceServiceClient.prototype, 'declare')
+          .spyOn(ResourcesClient.prototype, 'declare')
           .mockImplementationOnce((request, callback: any) => {
             callback(MOCK_ERROR, null);
 
@@ -50,13 +52,13 @@ describe('Registering bucket resources', () => {
       });
 
       afterAll(() => {
-        declareSpy.mockClear();
+        jest.restoreAllMocks();
       });
 
       it('Should throw the error', async () => {
-        await expect(bucket(validName)['registerPromise']).rejects.toEqual(
-          new UnimplementedError('UNIMPLEMENTED')
-        );
+        await expect(
+          bucket(validName)['registerPromise']
+        ).rejects.toBeInstanceOf(UnimplementedError);
       });
 
       it('Should call the resource server', () => {
@@ -72,7 +74,7 @@ describe('Registering bucket resources', () => {
 
       beforeAll(() => {
         otherSpy = jest
-          .spyOn(ResourceServiceClient.prototype, 'declare')
+          .spyOn(ResourcesClient.prototype, 'declare')
           .mockImplementationOnce((request, callback: any) => {
             const response = new ResourceDeclareResponse();
             callback(null, response);
@@ -103,7 +105,7 @@ describe('Registering bucket resources', () => {
       beforeEach(() => {
         // ensure a success is returned and calls can be counted.
         existsSpy = jest
-          .spyOn(ResourceServiceClient.prototype, 'declare')
+          .spyOn(ResourcesClient.prototype, 'declare')
           .mockImplementation((request, callback: any) => {
             const response = new ResourceDeclareResponse();
             callback(null, response);

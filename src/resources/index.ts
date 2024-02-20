@@ -14,9 +14,10 @@
 export * from './api';
 export * from './topic';
 export * from './queue';
-export * from './collection';
+export * from './keyvalue';
 export * from './bucket';
 export * from './schedule';
 export * from './secret';
 export * from './http';
 export * from './websocket';
+export { oidcRule } from './oidc';

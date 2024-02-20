@@ -11,24 +11,38 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import * as faas from '../faas/index';
-import { api, ApiWorkerOptions } from '.';
-import { ResourceServiceClient } from '@nitric/api/proto/resource/v1/resource_grpc_pb';
-import {
-  ApiResourceDetails,
-  ResourceDetailsResponse,
-} from '@nitric/api/proto/resource/v1/resource_pb';
-
-jest.mock('../faas/index');
+import { api, Method } from '.';
+import { ResourcesClient } from '@nitric/proto/resources/v1/resources_grpc_pb';
+import { ApiDetailsResponse } from '../gen/nitric/proto/apis/v1/apis_pb';
+import { ApiClient } from '../gen/nitric/proto/apis/v1/apis_grpc_pb';
+import { status } from '@grpc/grpc-js';
 
 describe('Api', () => {
-  const startSpy = jest
-    .spyOn(faas.Faas.prototype, 'start')
-    .mockReturnValue(Promise.resolve());
-  const mockFn = jest.fn();
+  const MOCK_ERROR = {
+    code: status.UNIMPLEMENTED,
+    message: 'UNIMPLEMENTED',
+  };
+
+  let declareSpy;
+  let startSpy;
+  let mockFn;
+  beforeAll(() => {
+    jest.spyOn(console, 'error').mockImplementation(() => {});
+    declareSpy = jest
+      .spyOn(ResourcesClient.prototype, 'declare')
+      .mockImplementationOnce((request, callback: any) => {
+        callback(MOCK_ERROR, null);
+
+        return null as any;
+      });
+    startSpy = jest
+      .spyOn(Method.prototype as any, 'start')
+      .mockReturnValue(Promise.resolve());
+    mockFn = jest.fn();
+  });
 
   afterAll(() => {
-    jest.clearAllMocks();
+    jest.restoreAllMocks();
   });
 
   describe('when create a new route', () => {
@@ -38,28 +52,12 @@ describe('Api', () => {
 
     const route = api('main').route('/newroute/');
 
-    describe('when registing a catch all handler', () => {
+    describe('when registering a catch all handler', () => {
       beforeAll(async () => {
         await route.all(mockFn);
       });
 
-      it('should create a new FaasClient', () => {
-        expect(faas.Faas).toBeCalledTimes(1);
-      });
-
-      it('should provide Faas with ApiWorkerOptions', () => {
-        const expectedOpts = new ApiWorkerOptions('main', '/newroute/', [
-          'GET',
-          'POST',
-          'PATCH',
-          'PUT',
-          'DELETE',
-          'OPTIONS',
-        ]);
-        expect(faas.Faas).toBeCalledWith(expectedOpts);
-      });
-
-      it('should call FaasClient::start()', () => {
+      it('should call Method::start()', () => {
         expect(startSpy).toBeCalledTimes(1);
       });
     });
@@ -82,22 +80,6 @@ describe('Api', () => {
         jest.resetAllMocks();
       });
 
-      it('should create a new FaasClient', () => {
-        expect(faas.Faas).toBeCalledTimes(1);
-      });
-
-      it('should provide Faas with ApiWorkerOptions', () => {
-        const expectedOpts = new ApiWorkerOptions(
-          'main1',
-          '/v1/test/',
-          [method.toUpperCase() as any],
-          {
-            security: { test: [] },
-          }
-        );
-        expect(faas.Faas).toBeCalledWith(expectedOpts);
-      });
-
       it('should call FaasClient::start()', () => {
         expect(startSpy).toBeCalledTimes(1);
       });
@@ -112,16 +94,10 @@ describe('Api', () => {
       beforeAll(async () => {
         // mock the details api
         detailsSpy = jest
-          .spyOn(ResourceServiceClient.prototype, 'details')
+          .spyOn(ApiClient.prototype, 'apiDetails')
           .mockImplementationOnce((request, callback: any) => {
-            const resp = new ResourceDetailsResponse();
-            resp.setId('mock-id');
-            resp.setProvider('mock-provider');
-            resp.setService('mock-service');
-
-            const api = new ApiResourceDetails();
-            api.setUrl('http://localhost:9001/test');
-            resp.setApi(api);
+            const resp = new ApiDetailsResponse();
+            resp.setUrl('http://localhost:9001/test');
 
             callback(null, resp);
 
@@ -137,39 +113,6 @@ describe('Api', () => {
 
       it('should return the url', async () => {
         await expect(a.url()).resolves.toBe('http://localhost:9001/test');
-      });
-    });
-
-    describe('when non api details are returned', () => {
-      let a;
-      let detailsSpy;
-
-      beforeAll(async () => {
-        // mock the details api
-        detailsSpy = jest
-          .spyOn(ResourceServiceClient.prototype, 'details')
-          .mockImplementationOnce((request, callback: any) => {
-            const resp = new ResourceDetailsResponse();
-            resp.setId('mock-id');
-            resp.setProvider('mock-provider');
-            resp.setService('mock-service');
-
-            callback(null, resp);
-
-            return null as any;
-          });
-
-        a = await api('main');
-      });
-
-      afterAll(() => {
-        jest.resetAllMocks();
-      });
-
-      it('should throw an error', async () => {
-        await expect(a.url()).rejects.toThrowError(
-          'Unexpected details in response. Expected API details'
-        );
       });
     });
   });

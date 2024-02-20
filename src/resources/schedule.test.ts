@@ -11,37 +11,16 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import * as faas from '../faas/index';
-import { schedule, RateWorkerOptions, Frequency } from '.';
-jest.mock('../faas/index');
+import { schedule, Frequency, Rate, Cron, Schedule } from '.';
 
-describe('Schedule', () => {
+describe('Rate Schedules', () => {
   const startSpy = jest
-    .spyOn(faas.Faas.prototype, 'start')
-    .mockReturnValue(Promise.resolve());
+    .spyOn(Rate.prototype as any, 'start')
+    .mockResolvedValue(undefined as never);
   const mockFn = jest.fn();
 
   afterAll(() => {
     jest.clearAllMocks();
-  });
-
-  describe('when creating a new schedule with cron expression', () => {
-    let error = undefined;
-    afterAll(() => {
-      jest.resetAllMocks();
-    });
-
-    beforeAll(async () => {
-      try {
-        await schedule('main').cron('0 10 * * *', mockFn);
-      } catch (err) {
-        error = err;
-      }
-    });
-
-    it('should not return an error', () => {
-      expect(error).toBe(undefined);
-    });
   });
 
   describe('when creating a new schedule with an invalid rate', () => {
@@ -50,16 +29,21 @@ describe('Schedule', () => {
       jest.resetAllMocks();
     });
 
-    beforeAll(async () => {
-      try {
-        await schedule('main').every('fleventy days', mockFn);
-      } catch (err) {
-        error = err;
-      }
-    });
+    // beforeAll(async () => {
+    //   try {
+    //     await schedule('main').every('fleventy days', mockFn);
+    //   } catch (err) {
+    //     error = err;
+    //   }
+    // });
 
-    it('should return an error', () => {
-      expect(error).not.toBe(undefined);
+    it('should return an error', async () => {
+      await expect(async () => {
+        await schedule('main').every('fleventy days', mockFn);
+      }).rejects.toThrowError(
+        'invalid rate expression, expression must begin with a number'
+      );
+      // expect(error).not.toBe(undefined);
     });
   });
 
@@ -83,7 +67,7 @@ describe('Schedule', () => {
   });
 
   ['day', 'hour', 'minute'].forEach((rate: Frequency) => {
-    describe(`when create a new schedule with rate ${rate}`, () => {
+    describe(`when creating a new schedule with rate ${rate}`, () => {
       afterAll(() => {
         jest.resetAllMocks();
       });
@@ -92,47 +76,43 @@ describe('Schedule', () => {
         await schedule('main').every(rate, mockFn);
       });
 
-      it('should create a new FaasClient', () => {
-        expect(faas.Faas).toBeCalledTimes(1);
-      });
-
-      it('should provide Faas with RateWorkerOptions', () => {
-        const expectedOpts = new RateWorkerOptions(
-          'main',
-          1,
-          `${rate}s` as Frequency
-        );
-        expect(faas.Faas).toBeCalledWith(expectedOpts);
-      });
-
-      it('should call FaasClient::start()', () => {
+      it('should call Rate start()', () => {
         expect(startSpy).toBeCalledTimes(1);
       });
     });
   });
+});
 
-  ['days', 'hours', 'minutes'].forEach((rate: Frequency) => {
-    describe(`when create a new schedule with rate ${rate}`, () => {
-      afterAll(() => {
-        jest.resetAllMocks();
-      });
+describe('Cron Schedules', () => {
+  const cronSpy = jest
+    .spyOn(Cron.prototype as any, 'start')
+    .mockResolvedValue(undefined as never);
+  const mockFn = jest.fn();
 
-      beforeAll(async () => {
-        await schedule('main').every(`7 ${rate}`, mockFn);
-      });
+  afterAll(() => {
+    jest.clearAllMocks();
+  });
 
-      it('should create a new FaasClient', () => {
-        expect(faas.Faas).toBeCalledTimes(1);
-      });
+  describe('when creating a new schedule with cron expression', () => {
+    let error = undefined;
+    afterAll(() => {
+      jest.resetAllMocks();
+    });
 
-      it('should provide Faas with RateWorkerOptions', () => {
-        const expectedOpts = new RateWorkerOptions('main', 7, rate);
-        expect(faas.Faas).toBeCalledWith(expectedOpts);
-      });
+    beforeAll(async () => {
+      try {
+        await schedule('main').cron('0 10 * * *', mockFn);
+      } catch (err) {
+        error = err;
+      }
+    });
 
-      it('should call FaasClient::start()', () => {
-        expect(startSpy).toBeCalledTimes(1);
-      });
+    it('should call Cron start()', () => {
+      expect(cronSpy).toBeCalledTimes(1);
+    });
+
+    it('should not return an error', () => {
+      expect(error).toBe(undefined);
     });
   });
 });
