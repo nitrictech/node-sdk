@@ -133,7 +133,6 @@ export const toDuration = (seconds: number): Duration => {
 export const startStreamHandler = async (
   handler: () => Promise<ClientDuplexStream<any, any>>
 ): Promise<void> => {
-  // const provider = newTracerProvider(); TODO add back later
   const stream = await handler();
 
   // Block until the stream has closed...
@@ -144,7 +143,4 @@ export const startStreamHandler = async (
       res();
     });
   });
-
-  // Shutdown the trace provider, flushing the stream and stopping listeners
-  // await provider?.shutdown(); TODO add back later
 };

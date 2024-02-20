@@ -23,8 +23,6 @@ import * as grpc from '@grpc/grpc-js';
 import { Struct } from 'google-protobuf/google/protobuf/struct_pb';
 import {
   fromGrpcError,
-  InvalidArgumentError,
-  InternalError,
 } from '../../errors';
 
 /**

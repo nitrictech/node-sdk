@@ -19,7 +19,6 @@ import {
   ResourceType,
   Action,
   QueueResource as NitricQueueResource,
-  ResourceTypeMap,
 } from '@nitric/proto/resources/v1/resources_pb';
 import resourceClient from './client';
 import { fromGrpcError } from '../api/errors';
@@ -60,7 +59,7 @@ export class QueueResource<
   }
 
   protected permsToActions(...perms: QueuePermission[]): ActionsList {
-    let actions: ActionsList = perms.reduce((actions, p) => {
+    const actions: ActionsList = perms.reduce((actions, p) => {
       switch (p) {
         case 'enqueue':
           return [...actions, Action.QUEUEENQUEUE];
@@ -82,7 +81,7 @@ export class QueueResource<
     return ResourceType.QUEUE;
   }
 
-  protected unwrapDetails(resp: ResourceDeclareResponse): never {
+  protected unwrapDetails(_: ResourceDeclareResponse): never {
     throw new Error('details unimplemented for queue');
   }
 
@@ -91,7 +90,8 @@ export class QueueResource<
    *
    * e.g. const taskQueue = resources.queue('work').for('enqueue')
    *
-   * @param perms the access that the currently scoped function is requesting to this resource.
+   * @param perm - the access that the currently scoped function is requesting to this resource.
+   * @param perms - the access that the currently scoped function is requesting to this resource.
    * @returns a useable queue.
    */
   public for(perm: QueuePermission, ...perms: QueuePermission[]): Queue<T> {

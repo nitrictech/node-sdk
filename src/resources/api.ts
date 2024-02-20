@@ -338,7 +338,6 @@ export interface JwtSecurityDefinition extends BaseSecurityDefinition<'jwt'> {
   audiences: string[];
 }
 
-// TODO: Union type for multiple security definition mappings
 export type SecurityDefinition = JwtSecurityDefinition;
 
 export interface ApiOptions {
@@ -353,12 +352,6 @@ export interface ApiOptions {
    * Optional middleware to apply to all routes/methods in the API. Useful for universal middleware such as CORS or Auth.
    */
   middleware?: HttpMiddleware[] | HttpMiddleware;
-
-  // FIXME: remove?
-  /**
-   * Optional security definitions for the API
-   */
-  // securityDefinitions?: Record<Defs, SecurityDefinition>;
 
   /**
    * Optional root level security for the API
@@ -618,18 +611,6 @@ export class Api extends Base {
  * @returns an API resource
  */
 export const api: (name: string, options?: ApiOptions) => Api = make(Api);
-
-/**
- * Create a JWT security definition.
- *
- * @param options security definition options
- * @returns the new security definition.
- */
-// export const jwt = (
-//   options: Omit<JwtSecurityDefinition, 'kind'>
-// ): JwtSecurityDefinition => {
-//   return { kind: 'jwt', issuer: options.issuer, audiences: options.audiences };
-// };
 
 const composeMiddleware = (middleware: HttpMiddleware | HttpMiddleware[]) =>
   Array.isArray(middleware) ? middleware : middleware ? [middleware] : [];
