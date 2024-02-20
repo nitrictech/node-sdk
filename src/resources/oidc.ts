@@ -84,8 +84,25 @@ export class OidcSecurityDefinition extends Resource {
 }
 
 export interface OidcOptions {
+    name: string;
     issuer: string;
     audiences: string[];
+    scopes: string[];
+}
+
+export type UnscopedOicdOptions = Omit<OidcOptions, "scopes">
+
+export type SecurityOption = (scopes: string[]) => OidcOptions;
+
+export const oidcRule = ({name, issuer, audiences}: UnscopedOicdOptions): SecurityOption => {
+    return (scopes: string[] = []): OidcOptions => {
+        return {
+            name,
+            issuer,
+            audiences,
+            scopes,
+        }
+    }
 }
 
 const baseMaker = make(OidcSecurityDefinition)
@@ -93,6 +110,6 @@ const baseMaker = make(OidcSecurityDefinition)
 /**
  * 
  */
-export const attachOidc: newer<OidcSecurityDefinition> = (ruleName: string, apiName: string, options: OidcOptions) => {
-    return baseMaker(`${ruleName}-${apiName}`, apiName, options);
+export const attachOidc: newer<OidcSecurityDefinition> = (apiName: string, options: UnscopedOicdOptions) => {
+    return baseMaker(`${options.name}-${apiName}`, apiName, options);
 };

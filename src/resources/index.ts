@@ -20,3 +20,4 @@ export * from './schedule';
 export * from './secret';
 export * from './http';
 export * from './websocket';
+export { oidcRule } from './oidc';

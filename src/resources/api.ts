@@ -44,18 +44,19 @@ import {
 } from '../handlers/handler';
 import { HttpContext } from '../context/http';
 import { fromGrpcError } from '../api/errors';
+import { attachOidc, OidcOptions } from './oidc';
 
 export class ApiWorkerOptions {
   public readonly api: string;
   public readonly route: string;
   public readonly methods: HttpMethod[];
-  public readonly opts: MethodOptions<string>;
+  public readonly opts: MethodOptions;
 
   constructor(
     api: string,
     route: string,
     methods: HttpMethod[],
-    opts: MethodOptions<string> = {}
+    opts: MethodOptions = {}
   ) {
     this.api = api;
     this.route = route;
@@ -64,25 +65,25 @@ export class ApiWorkerOptions {
   }
 }
 
-export interface MethodOptions<SecurityDefs extends string> {
+export interface MethodOptions {
   /**
    * Optional security definitions for this method
    */
   // security?: Partial<Record<SecurityDefs, string[]>>;
 
-  security?: []OidcOptions;
+  security?: OidcOptions[];
 }
 
-export class Method<SecurityDefs extends string> {
+export class Method {
   private readonly options: ApiWorkerOptions;
   private readonly handler: GenericMiddleware<HttpContext>;
-  public readonly route: Route<SecurityDefs>;
+  public readonly route: Route;
   public readonly methods: HttpMethod[];
 
   constructor(
-    route: Route<SecurityDefs>,
+    route: Route,
     methods: HttpMethod[],
-    opts: MethodOptions<SecurityDefs>,
+    opts: MethodOptions,
     ...middleware: HttpMiddleware[]
   ) {
     this.route = route;
@@ -164,15 +165,17 @@ export class Method<SecurityDefs extends string> {
 
         const opts = new ApiWorkerOptionsPb();
         if (this.options.opts && this.options.opts.security) {
-          if (Object.keys(this.options.opts.security).length == 0) {
+          if (this.options.opts.security.length == 0) {
             // disable security if empty security is explicitly set
             opts.setSecurityDisabled(true);
           } else {
             const methodOpts = this.options.opts;
-            Object.keys(methodOpts.security).forEach((k) => {
+            methodOpts.security.forEach((opt) => {
+              attachOidc(this.options.api, opt);
+
               const scopes = new ApiWorkerScopes();
-              scopes.setScopesList(methodOpts.security[k]);
-              opts.getSecurityMap().set(k, scopes);
+              scopes.setScopesList(opt.scopes);
+              opts.getSecurityMap().set(opt.name, scopes);
             });
           }
         }
@@ -196,13 +199,13 @@ export interface RouteOptions {
   middleware?: HttpMiddleware[] | HttpMiddleware;
 }
 
-export class Route<SecurityDefs extends string> {
-  public readonly api: Api<SecurityDefs>;
+export class Route {
+  public readonly api: Api;
   public readonly path: string;
   public readonly middleware: HttpMiddleware[];
 
   constructor(
-    api: Api<SecurityDefs>,
+    api: Api,
     path: string,
     options: RouteOptions = {}
   ) {
@@ -214,7 +217,7 @@ export class Route<SecurityDefs extends string> {
 
   async method(
     methods: HttpMethod[],
-    options: MethodOptions<SecurityDefs>,
+    options: MethodOptions,
     ...middleware: HttpMiddleware[]
   ): Promise<void> {
     const getHandler = new Method(
@@ -236,7 +239,7 @@ export class Route<SecurityDefs extends string> {
    */
   async get(
     middleware: HttpMiddleware | HttpMiddleware[],
-    options: MethodOptions<SecurityDefs> = {}
+    options: MethodOptions = {}
   ): Promise<void> {
     return this.method(['GET'], options, ...composeMiddleware(middleware));
   }
@@ -250,7 +253,7 @@ export class Route<SecurityDefs extends string> {
    */
   async post(
     middleware: HttpMiddleware | HttpMiddleware[],
-    options: MethodOptions<SecurityDefs> = {}
+    options: MethodOptions = {}
   ): Promise<void> {
     return this.method(['POST'], options, ...composeMiddleware(middleware));
   }
@@ -264,7 +267,7 @@ export class Route<SecurityDefs extends string> {
    */
   async put(
     middleware: HttpMiddleware | HttpMiddleware[],
-    options: MethodOptions<SecurityDefs> = {}
+    options: MethodOptions = {}
   ): Promise<void> {
     return this.method(['PUT'], options, ...composeMiddleware(middleware));
   }
@@ -278,7 +281,7 @@ export class Route<SecurityDefs extends string> {
    */
   async patch(
     middleware: HttpMiddleware | HttpMiddleware[],
-    options: MethodOptions<SecurityDefs> = {}
+    options: MethodOptions = {}
   ): Promise<void> {
     return this.method(['PATCH'], options, ...composeMiddleware(middleware));
   }
@@ -292,7 +295,7 @@ export class Route<SecurityDefs extends string> {
    */
   async delete(
     middleware: HttpMiddleware | HttpMiddleware[],
-    options: MethodOptions<SecurityDefs> = {}
+    options: MethodOptions = {}
   ): Promise<void> {
     return this.method(['DELETE'], options, ...composeMiddleware(middleware));
   }
@@ -306,7 +309,7 @@ export class Route<SecurityDefs extends string> {
    */
   async options(
     middleware: HttpMiddleware | HttpMiddleware[],
-    options: MethodOptions<SecurityDefs> = {}
+    options: MethodOptions = {}
   ): Promise<void> {
     return this.method(['OPTIONS'], options, ...composeMiddleware(middleware));
   }
@@ -320,7 +323,7 @@ export class Route<SecurityDefs extends string> {
    */
   async all(
     middleware: HttpMiddleware | HttpMiddleware[],
-    options: MethodOptions<SecurityDefs> = {}
+    options: MethodOptions = {}
   ): Promise<void> {
     return this.method(
       ['GET', 'POST', 'PATCH', 'PUT', 'DELETE', 'OPTIONS'],
@@ -342,7 +345,7 @@ export interface JwtSecurityDefinition extends BaseSecurityDefinition<'jwt'> {
 // TODO: Union type for multiple security definition mappings
 export type SecurityDefinition = JwtSecurityDefinition;
 
-export interface ApiOptions<Defs extends string> {
+export interface ApiOptions {
   /**
    * The base path for all routes in the API.
    *
@@ -364,7 +367,7 @@ export interface ApiOptions<Defs extends string> {
   /**
    * Optional root level security for the API
    */
-  security?: Record<Defs, string[]>;
+  security?: OidcOptions[];
 }
 
 interface ApiDetails {
@@ -376,30 +379,26 @@ interface ApiDetails {
  *
  * Represents an HTTP API, capable of routing and securing incoming HTTP requests to handlers.
  */
-export class Api<SecurityDefs extends string> extends Base {
+export class Api extends Base {
   // public readonly name: string;
   public readonly path: string;
   public readonly middleware?: HttpMiddleware[];
-  private readonly routes: Route<SecurityDefs>[];
-  // private readonly securityDefinitions?: Record<
-  //   SecurityDefs,
-  //   SecurityDefinition
-  // >;
-  private readonly security?: Record<SecurityDefs, string[]>;
+  private readonly routes: Route[];
+  private readonly oidcOptions: OidcOptions[];
 
-  constructor(name: string, options: ApiOptions<SecurityDefs> = {}) {
+  constructor(name: string, options: ApiOptions = {}) {
     super(name);
     const {
       middleware,
       path = '/',
       // securityDefinitions = null,
-      security = {} as Record<SecurityDefs, string[]>,
+      security = [],
     } = options;
     // prepend / to path if its not there
     this.path = path.replace(/^\/?/, '/');
     this.middleware = composeMiddleware(middleware);
     // this.securityDefinitions = securityDefinitions;
-    this.security = security;
+    this.oidcOptions = security;
     this.routes = [];
   }
 
@@ -420,7 +419,7 @@ export class Api<SecurityDefs extends string> extends Base {
    * @param options route options such as setting middleware which applies to all methods in the route
    * @returns the route object, which can be used to register method handlers
    */
-  route(match: string, options?: RouteOptions): Route<SecurityDefs> {
+  route(match: string, options?: RouteOptions): Route {
     // ensure path seperator is always foward slash (for windows)
     const apiRoute = path.join(this.path, match).split(path.sep).join('/');
 
@@ -456,7 +455,7 @@ export class Api<SecurityDefs extends string> extends Base {
   async get(
     match: string,
     middleware: HttpMiddleware | HttpMiddleware[],
-    options: MethodOptions<SecurityDefs> = {}
+    options: MethodOptions = {}
   ): Promise<void> {
     return this.route(match).get(composeMiddleware(middleware), options);
   }
@@ -472,7 +471,7 @@ export class Api<SecurityDefs extends string> extends Base {
   async post(
     match: string,
     middleware: HttpMiddleware | HttpMiddleware[],
-    options: MethodOptions<SecurityDefs> = {}
+    options: MethodOptions = {}
   ): Promise<void> {
     return this.route(match).post(composeMiddleware(middleware), options);
   }
@@ -488,7 +487,7 @@ export class Api<SecurityDefs extends string> extends Base {
   async put(
     match: string,
     middleware: HttpMiddleware | HttpMiddleware[],
-    options: MethodOptions<SecurityDefs> = {}
+    options: MethodOptions = {}
   ): Promise<void> {
     return this.route(match).put(composeMiddleware(middleware), options);
   }
@@ -504,7 +503,7 @@ export class Api<SecurityDefs extends string> extends Base {
   async patch(
     match: string,
     middleware: HttpMiddleware | HttpMiddleware[],
-    options: MethodOptions<SecurityDefs> = {}
+    options: MethodOptions = {}
   ): Promise<void> {
     return this.route(match).patch(composeMiddleware(middleware), options);
   }
@@ -520,7 +519,7 @@ export class Api<SecurityDefs extends string> extends Base {
   async delete(
     match: string,
     middleware: HttpMiddleware | HttpMiddleware[],
-    options: MethodOptions<SecurityDefs> = {}
+    options: MethodOptions = {}
   ): Promise<void> {
     return this.route(match).delete(composeMiddleware(middleware), options);
   }
@@ -536,7 +535,7 @@ export class Api<SecurityDefs extends string> extends Base {
   async options(
     match: string,
     middleware: HttpMiddleware | HttpMiddleware[],
-    options: MethodOptions<SecurityDefs> = {}
+    options: MethodOptions = {}
   ): Promise<void> {
     return this.route(match).options(composeMiddleware(middleware), options);
   }
@@ -583,13 +582,15 @@ export class Api<SecurityDefs extends string> extends Base {
     const req = new ResourceDeclareRequest();
     const resourceId = new ResourceIdentifier();
     const apiResource = new ApiResource();
-    const { security } = this;
+    const { oidcOptions } = this;
 
-    if (security) {
-      Object.keys(security).forEach((k) => {
+    if (oidcOptions) {
+      attachOidc(this.name, oidcOptions)
+
+      oidcOptions.forEach((opt) => {
         const scopes = new ApiScopes();
-        scopes.setScopesList(security[k]);
-        apiResource.getSecurityMap().set(k, scopes);
+        scopes.setScopesList(opt.scopes);
+        apiResource.getSecurityMap().set(opt.name, scopes);
       });
     }
 
@@ -621,10 +622,10 @@ export class Api<SecurityDefs extends string> extends Base {
  * @param options additional options for creating the API
  * @returns an API resource
  */
-export const api: <Defs extends string>(
+export const api: (
   name: string,
-  options?: ApiOptions<Defs>
-) => Api<Defs> = make(Api);
+  options?: ApiOptions
+) => Api = make(Api);
 
 /**
  * Create a JWT security definition.
@@ -632,11 +633,11 @@ export const api: <Defs extends string>(
  * @param options security definition options
  * @returns the new security definition.
  */
-export const jwt = (
-  options: Omit<JwtSecurityDefinition, 'kind'>
-): JwtSecurityDefinition => {
-  return { kind: 'jwt', issuer: options.issuer, audiences: options.audiences };
-};
+// export const jwt = (
+//   options: Omit<JwtSecurityDefinition, 'kind'>
+// ): JwtSecurityDefinition => {
+//   return { kind: 'jwt', issuer: options.issuer, audiences: options.audiences };
+// };
 
 const composeMiddleware = (middleware: HttpMiddleware | HttpMiddleware[]) =>
   Array.isArray(middleware) ? middleware : middleware ? [middleware] : [];
