@@ -35,7 +35,7 @@ describe.skip('HTTP Proxy', () => {
     listen: () => {
       return {
         on: () => {},
-      } as any
+      } as any;
     },
   };
 
@@ -82,7 +82,7 @@ describe.skip('HTTP Proxy', () => {
     const fakeFunc = () => {
       return {
         on: () => {},
-      } as any
+      } as any;
     };
     const fakeCallback = () => {};
 
