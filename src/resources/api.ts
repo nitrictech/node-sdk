@@ -584,10 +584,9 @@ export class Api extends Base {
     const apiResource = new ApiResource();
     const { oidcOptions } = this;
 
-    if (oidcOptions) {
-      attachOidc(this.name, oidcOptions)
-
+    if (oidcOptions && oidcOptions.length > 0) {
       oidcOptions.forEach((opt) => {
+        attachOidc(this.name, opt)
         const scopes = new ApiScopes();
         scopes.setScopesList(opt.scopes);
         apiResource.getSecurityMap().set(opt.name, scopes);
