@@ -20,10 +20,10 @@ jobs:
           path: 'node_modules'
           key: ${{ runner.os }}-modules-${{ hashFiles('yarn.lock') }}
 
-      - name: Use Node 14
+      - name: Use Node 20
         uses: actions/setup-node@v1
         with:
-          node-version: 14
+          node-version: 20
           registry-url: 'https://registry.npmjs.org'
           always-auth: true
 
