@@ -68,7 +68,9 @@ export interface MethodOptions<SecurityDefs extends string> {
   /**
    * Optional security definitions for this method
    */
-  security?: Partial<Record<SecurityDefs, string[]>>;
+  // security?: Partial<Record<SecurityDefs, string[]>>;
+
+  security?: []OidcOptions;
 }
 
 export class Method<SecurityDefs extends string> {
