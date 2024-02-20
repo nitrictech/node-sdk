@@ -96,7 +96,7 @@ export type SecurityOption = (...scopes: string[]) => OidcOptions;
  *
  * This rule can be applied with various scopes, which are used to restrict access to the API.
  * @param options - The options for the OIDC security definition.
- * 
+ *
  * @param options.name - The name of the OIDC security definition.
  * @param options.issuer - The OIDC issuer URL.
  * @param options.audiences - The OIDC audiences.
@@ -123,7 +123,7 @@ const baseMaker = make(OidcSecurityDefinition);
  *
  * @param apiName - The name of the API to attach the OIDC security definition to.
  * @param options - The options for the OIDC security definition.
- * 
+ *
  * @returns factory function for creating a new OIDC security definition
  */
 export const attachOidc: newer<OidcSecurityDefinition> = (

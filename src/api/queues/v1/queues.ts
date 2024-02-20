@@ -21,9 +21,7 @@ import {
 import { SERVICE_BIND } from '../../../constants';
 import * as grpc from '@grpc/grpc-js';
 import { Struct } from 'google-protobuf/google/protobuf/struct_pb';
-import {
-  fromGrpcError,
-} from '../../errors';
+import { fromGrpcError } from '../../errors';
 
 /**
  * A message that has failed to be enqueued
