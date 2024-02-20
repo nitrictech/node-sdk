@@ -35,13 +35,15 @@ import { fromGrpcError } from '../api/errors';
 export class OidcSecurityDefinition extends Resource {
     private apiName: string;
     private issuer: string;
+    private ruleName: string;
     private audiences: string[];
 
-    constructor(name: string, apiName: string, issuer: string, audiences: string[] = []) {
+    constructor(name: string, apiName: string, options: UnscopedOicdOptions) {
         super(name);
         this.apiName = apiName;
-        this.issuer = issuer;
-        this.audiences = audiences;
+        this.issuer = options.issuer;
+        this.audiences = options.audiences;
+        this.ruleName = options.name;
     }
 
     protected resourceType(): ResourceTypeMap[keyof ResourceTypeMap] {
@@ -56,12 +58,12 @@ export class OidcSecurityDefinition extends Resource {
     protected async register(): Promise<ResourceIdentifier> {
         const req = new ResourceDeclareRequest();
         const resource = new ResourceIdentifier();
-        resource.setName(this.name);
+        resource.setName(this.ruleName);
         resource.setType(ResourceType.APISECURITYDEFINITION);
 
         const securityDefinition = new ApiSecurityDefinitionResource();
         const oidcDefinition = new ApiOpenIdConnectionDefinition();
-
+        
         oidcDefinition.setAudiencesList(this.audiences);
         oidcDefinition.setIssuer(this.issuer);
 
@@ -92,10 +94,15 @@ export interface OidcOptions {
 
 export type UnscopedOicdOptions = Omit<OidcOptions, "scopes">
 
-export type SecurityOption = (scopes: string[]) => OidcOptions;
+export type SecurityOption = (...scopes: string[]) => OidcOptions;
 
+/**
+ * Constructs a new OpenID Connect (OIDC) security definition, which can be applied to APIs and their routes.
+ * 
+ * This rule can be applied with various scopes, which are used to restrict access to the API.
+ */
 export const oidcRule = ({name, issuer, audiences}: UnscopedOicdOptions): SecurityOption => {
-    return (scopes: string[] = []): OidcOptions => {
+    return (...scopes: string[]): OidcOptions => {
         return {
             name,
             issuer,

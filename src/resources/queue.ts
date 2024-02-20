@@ -27,6 +27,8 @@ import { ActionsList, make, SecureResource } from './common';
 
 export type QueuePermission = 'enqueue' | 'dequeue';
 
+const everything: QueuePermission[] = ['enqueue', 'dequeue'];
+
 /**
  * Queue resource for async messaging
  */
@@ -66,7 +68,8 @@ export class QueueResource<
           return [...actions, Action.QUEUEDEQUEUE];
         default:
           throw new Error(
-            `unknown permission ${p}, supported permissions is publishing.}
+            `unknown permission ${p}, supported permissions are ${everything.join(
+              ', '
             )}`
           );
       }
