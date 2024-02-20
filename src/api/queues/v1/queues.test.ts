@@ -84,14 +84,14 @@ describe('Queue Client Tests', () => {
       it('Then Queue.Send with an array of messages should resolve with no failed messages', async () => {
         const queueing = new Queueing();
         await expect(
-          queueing.queue('test').enqueue([{test: 1}])
+          queueing.queue('test').enqueue([{ test: 1 }])
         ).resolves.toEqual([]);
       });
 
       it('Then Queue.Send with one message should resolve with no failed messages', async () => {
         const queueing = new Queueing();
         await expect(
-          queueing.queue('test').enqueue({test: 1})
+          queueing.queue('test').enqueue({ test: 1 })
         ).resolves.toEqual(undefined);
       });
 
@@ -126,7 +126,9 @@ describe('Queue Client Tests', () => {
       it('Then Queue.dequeue should reject', async () => {
         const queueing = new Queueing();
 
-        await expect(queueing.queue('test').dequeue(1)).rejects.toBeInstanceOf(UnimplementedError);
+        await expect(queueing.queue('test').dequeue(1)).rejects.toBeInstanceOf(
+          UnimplementedError
+        );
       });
     });
 
@@ -158,7 +160,7 @@ describe('Queue Client Tests', () => {
 
     describe('Given queue items are returned', () => {
       const queueName = 'test';
-      const mockMessages = [{test: 'test'}];
+      const mockMessages = [{ test: 'test' }];
 
       beforeAll(() => {
         jest
@@ -172,7 +174,7 @@ describe('Queue Client Tests', () => {
                 const message = new DequeuedMessage();
 
                 message.setMessage(originalMessage);
-                message.setLeaseId("test-lease-id");
+                message.setLeaseId('test-lease-id');
 
                 return message;
               })
@@ -194,7 +196,7 @@ describe('Queue Client Tests', () => {
         await expect(queue.dequeue(1)).resolves.toEqual(
           mockMessages.map((e) => {
             return expect.objectContaining({
-              leaseId: "test-lease-id",
+              leaseId: 'test-lease-id',
               queue: queue,
               payload: e,
             });
@@ -234,7 +236,9 @@ describe('Queue Client Tests', () => {
           queue: queueing.queue('test'),
         });
 
-        await expect(message.complete()).rejects.toBeInstanceOf(UnimplementedError);
+        await expect(message.complete()).rejects.toBeInstanceOf(
+          UnimplementedError
+        );
       });
 
       it('Then Queue.complete should be called once', async () => {

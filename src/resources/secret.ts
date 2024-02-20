@@ -41,7 +41,6 @@ export class SecretResource extends SecureResource<SecretPermission> {
 
     req.setSecret(new NitricSecretResource());
     req.setId(resource);
-    
 
     return new Promise<ResourceIdentifier>((resolve, reject) => {
       resourceClient.declare(
@@ -74,7 +73,7 @@ export class SecretResource extends SecureResource<SecretPermission> {
     }, []);
   }
 
-  protected resourceType(): ResourceTypeMap[keyof ResourceTypeMap]{
+  protected resourceType(): ResourceTypeMap[keyof ResourceTypeMap] {
     return ResourceType.SECRET;
   }
 

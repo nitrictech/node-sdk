@@ -196,7 +196,6 @@ export class WebsocketResource extends Base {
 
   async send(
     connectionId: string,
-    // TODO: add less raw data types
     data: string | Uint8Array | Record<string, any>
   ): Promise<void> {
     await this.wsClient.send(this.name, connectionId, data);
@@ -259,4 +258,5 @@ export class WebsocketResource extends Base {
  * @param name the name of the Websocket
  * @returns a Websocket resource
  */
-export const websocket: (name: string) => WebsocketResource = make(WebsocketResource);
+export const websocket: (name: string) => WebsocketResource =
+  make(WebsocketResource);

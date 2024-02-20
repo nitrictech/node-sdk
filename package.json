@@ -1,7 +1,7 @@
 {
   "name": "@nitric/sdk",
   "description": "Nitric NodeJS client sdk",
-  "nitric": "v0.33.0",
+  "nitric": "v1.0.0",
   "author": "Nitric <https://github.com/nitrictech>",
   "repository": "https://github.com/nitrictech/node-sdk",
   "main": "lib/index.js",
@@ -21,7 +21,7 @@
     "license:header:add": "license-check-and-add add -f ./licenseconfig.json",
     "license:header:check": "license-check-and-add check -f ./licenseconfig.json",
     "license:check": "licensee --production",
-    "download:contracts": "curl -L https://github.com/nitrictech/nitric/releases/download/${npm_package_nitric}/contracts.tgz -o contracts.tgz && tar xvzf contracts.tgz && rm contracts.tgz",
+    "download:contracts": "curl -L https://github.com/nitrictech/nitric/releases/download/${npm_package_nitric}/proto.tgz -o nitric.tgz && tar xvzf nitric.tgz && rm nitric.tgz",
     "download:contracts:local": "rm -r ./nitric && mkdir ./nitric && cp -r $NITRIC_CORE_HOME/nitric/proto ./nitric",
     "gen:proto": "yarn run download:contracts && yarn run gen:sources",
     "gen:sources": "mkdir -p ./src/gen && grpc_tools_node_protoc --ts_out=service=grpc-node,mode=grpc-js:./src/gen --js_out=import_style=commonjs,binary:./src/gen --grpc_out=grpc_js:./src/gen -I ./ ./nitric/proto/**/*/*.proto"

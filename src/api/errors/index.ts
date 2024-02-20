@@ -35,10 +35,7 @@ import {
 // Accept all codes except Status OK
 type codes = Exclude<status, status.OK>;
 
-const STATUS_CODE_MAP: Record<
-  codes,
-  new (grpcError: ServiceError) => Error
-> = {
+const STATUS_CODE_MAP: Record<codes, new (grpcError: ServiceError) => Error> = {
   [status.CANCELLED]: CancelledError,
   [status.UNKNOWN]: UnknownError,
   [status.INVALID_ARGUMENT]: InvalidArgumentError,

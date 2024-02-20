@@ -45,7 +45,9 @@ describe('Registering queue resources', () => {
     });
 
     it('Should throw the error', async () => {
-      await expect(queue(validName)['registerPromise']).rejects.toBeInstanceOf(UnimplementedError);
+      await expect(queue(validName)['registerPromise']).rejects.toBeInstanceOf(
+        UnimplementedError
+      );
     });
 
     it('Should call the resource server', () => {

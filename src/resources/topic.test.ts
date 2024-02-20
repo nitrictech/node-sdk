@@ -144,7 +144,7 @@ describe('Registering topic resources', () => {
 describe('subscription', () => {
   let startSpy;
   let mockFn;
-  
+
   beforeAll(() => {
     startSpy = jest
       .spyOn(Subscription.prototype as any, 'start')

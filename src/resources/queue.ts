@@ -19,13 +19,14 @@ import {
   ResourceType,
   Action,
   QueueResource as NitricQueueResource,
-  ResourceTypeMap,
 } from '@nitric/proto/resources/v1/resources_pb';
 import resourceClient from './client';
 import { fromGrpcError } from '../api/errors';
 import { ActionsList, make, SecureResource } from './common';
 
 export type QueuePermission = 'enqueue' | 'dequeue';
+
+const everything: QueuePermission[] = ['enqueue', 'dequeue'];
 
 /**
  * Queue resource for async messaging
@@ -44,7 +45,7 @@ export class QueueResource<
     resource.setName(this.name);
     resource.setType(ResourceType.QUEUE);
     req.setId(resource);
-    req.setQueue(new NitricQueueResource())
+    req.setQueue(new NitricQueueResource());
 
     return new Promise<ResourceIdentifier>((resolve, reject) => {
       resourceClient.declare(req, (error) => {
@@ -58,7 +59,7 @@ export class QueueResource<
   }
 
   protected permsToActions(...perms: QueuePermission[]): ActionsList {
-    let actions: ActionsList = perms.reduce((actions, p) => {
+    const actions: ActionsList = perms.reduce((actions, p) => {
       switch (p) {
         case 'enqueue':
           return [...actions, Action.QUEUEENQUEUE];
@@ -66,7 +67,8 @@ export class QueueResource<
           return [...actions, Action.QUEUEDEQUEUE];
         default:
           throw new Error(
-            `unknown permission ${p}, supported permissions is publishing.}
+            `unknown permission ${p}, supported permissions are ${everything.join(
+              ', '
             )}`
           );
       }
@@ -79,7 +81,7 @@ export class QueueResource<
     return ResourceType.QUEUE;
   }
 
-  protected unwrapDetails(resp: ResourceDeclareResponse): never {
+  protected unwrapDetails(_: ResourceDeclareResponse): never {
     throw new Error('details unimplemented for queue');
   }
 
@@ -88,7 +90,8 @@ export class QueueResource<
    *
    * e.g. const taskQueue = resources.queue('work').for('enqueue')
    *
-   * @param perms the access that the currently scoped function is requesting to this resource.
+   * @param perm - the access that the currently scoped function is requesting to this resource.
+   * @param perms - the access that the currently scoped function is requesting to this resource.
    * @returns a useable queue.
    */
   public for(perm: QueuePermission, ...perms: QueuePermission[]): Queue<T> {

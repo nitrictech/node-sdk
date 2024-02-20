@@ -65,7 +65,9 @@ export class KeyValueStoreResource<
     });
   }
 
-  protected permsToActions(...perms: StorePermission[]): ActionMap[keyof ActionMap][] {
+  protected permsToActions(
+    ...perms: StorePermission[]
+  ): ActionMap[keyof ActionMap][] {
     const actions = perms.reduce((actions, perm) => {
       switch (perm) {
         case 'getting':
@@ -86,7 +88,7 @@ export class KeyValueStoreResource<
     return actions;
   }
 
-  protected resourceType(): ResourceTypeMap[keyof ResourceTypeMap]{
+  protected resourceType(): ResourceTypeMap[keyof ResourceTypeMap] {
     return ResourceType.KEYVALUESTORE;
   }
 

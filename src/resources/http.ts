@@ -85,7 +85,6 @@ const createWorker = (
  *
  * @param app the http application to run behind the proxy
  * @param callback an optional callback to run after the proxy has started
- * @returns void
  */
 export const http = (
   app: NodeApplication | ListenerFunction,
