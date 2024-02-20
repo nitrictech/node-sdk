@@ -39,9 +39,9 @@ describe('Rate Schedules', () => {
 
     it('should return an error', async () => {
       await expect(async () => {
-        await schedule('main').every('fleventy days', mockFn)
+        await schedule('main').every('fleventy days', mockFn);
       }).rejects.toThrowError(
-        "invalid rate expression, expression must begin with a number"
+        'invalid rate expression, expression must begin with a number'
       );
       // expect(error).not.toBe(undefined);
     });

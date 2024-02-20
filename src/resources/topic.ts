@@ -160,10 +160,7 @@ export class TopicResource<
     return perms.reduce((actions, p) => {
       switch (p) {
         case 'publishing':
-          return [
-            ...actions,
-            Action.TOPICPUBLISH,
-          ];
+          return [...actions, Action.TOPICPUBLISH];
         default:
           throw new Error(
             `unknown permission ${p}, supported permissions is publishing.}
@@ -184,7 +181,7 @@ export class TopicResource<
     return sub['start']();
   }
 
-  protected resourceType(): ResourceTypeMap[keyof ResourceTypeMap]{
+  protected resourceType(): ResourceTypeMap[keyof ResourceTypeMap] {
     return ResourceType.TOPIC;
   }
 

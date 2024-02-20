@@ -44,7 +44,9 @@ describe('Registering websocket resources', () => {
     });
 
     it('Should throw the error', async () => {
-      await expect(websocket(validName)['registerPromise']).rejects.toBeInstanceOf(UnimplementedError);
+      await expect(
+        websocket(validName)['registerPromise']
+      ).rejects.toBeInstanceOf(UnimplementedError);
     });
 
     it('Should call the resource server', () => {

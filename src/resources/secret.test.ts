@@ -46,7 +46,9 @@ describe('Registering secret resources', () => {
       });
 
       it('Should throw the error', async () => {
-        await expect(secret(validName)['registerPromise']).rejects.toBeInstanceOf(UnimplementedError);
+        await expect(
+          secret(validName)['registerPromise']
+        ).rejects.toBeInstanceOf(UnimplementedError);
       });
 
       it('Should call the resource server', () => {

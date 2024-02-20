@@ -18,7 +18,7 @@ import { Struct } from 'google-protobuf/google/protobuf/struct_pb';
 
 /**
  * Nitric Provider Error
- * 
+ *
  * Generic error for Nitric Provider errors
  */
 export class NitricProviderError extends Error {
@@ -29,7 +29,7 @@ export class NitricProviderError extends Error {
 
     if (errorStatus) {
       const allDetails = errorStatus.parseDetails(Struct);
-  
+
       if (allDetails.length > 0) {
         errorDetails = allDetails[0];
       }
@@ -40,10 +40,12 @@ export class NitricProviderError extends Error {
       details = JSON.stringify(errorDetails?.toJavaScript());
     } catch (e) {
       // Ignore
-      console.debug('provider returned error details in a format other than Struct. Unable to parse details')
+      console.debug(
+        'provider returned error details in a format other than Struct. Unable to parse details'
+      );
     }
 
-      const message = `${grpcError.message}
+    const message = `${grpcError.message}
 Nitric Provider Error: ${grpcError.name}
   Code: ${grpcError.code}
   Message: ${grpcError.message}

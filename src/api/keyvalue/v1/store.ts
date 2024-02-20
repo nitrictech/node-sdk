@@ -11,7 +11,13 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { KeyValueDeleteRequest, KeyValueGetRequest, KeyValueGetResponse, KeyValueSetRequest, ValueRef } from '@nitric/proto/keyvalue/v1/keyvalue_pb';
+import {
+  KeyValueDeleteRequest,
+  KeyValueGetRequest,
+  KeyValueGetResponse,
+  KeyValueSetRequest,
+  ValueRef,
+} from '@nitric/proto/keyvalue/v1/keyvalue_pb';
 import { KeyValueClient } from '@nitric/proto/keyvalue/v1/keyvalue_grpc_pb';
 import { fromGrpcError } from '../../errors';
 import { Struct } from 'google-protobuf/google/protobuf/struct_pb';
@@ -27,17 +33,14 @@ export class StoreRef<T extends ValueStructure> {
   private kvClient: KeyValueClient;
   public readonly name: string;
 
-  constructor(
-    kvClient: KeyValueClient,
-    name: string,
-  ) {
+  constructor(kvClient: KeyValueClient, name: string) {
     this.kvClient = kvClient;
     this.name = name;
   }
 
   /**
    * Return a value from the store
-   * 
+   *
    * @param key The key of the value to retrieve
    *
    * @returns the value or null if not found
@@ -50,21 +53,18 @@ export class StoreRef<T extends ValueStructure> {
     request.setRef(ref);
 
     return new Promise<T>((resolve, reject) => {
-      this.kvClient.get(
-        request,
-        (error, response: KeyValueGetResponse) => {
-          if (error) {
-            reject(fromGrpcError(error));
-          } else if (response.hasValue()) {
-            const value = response.getValue();
-            const content = value.getContent().toJavaScript() as T;
+      this.kvClient.get(request, (error, response: KeyValueGetResponse) => {
+        if (error) {
+          reject(fromGrpcError(error));
+        } else if (response.hasValue()) {
+          const value = response.getValue();
+          const content = value.getContent().toJavaScript() as T;
 
-            resolve(content);
-          } else {
-            resolve(null);
-          }
+          resolve(content);
+        } else {
+          resolve(null);
         }
-      );
+      });
     });
   }
 
@@ -73,7 +73,7 @@ export class StoreRef<T extends ValueStructure> {
    *
    * @param key The key to store the value against
    * @param value The value to store
-   * 
+   *
    * @returns void
    */
   public async set(key: string, value: T): Promise<void> {
@@ -86,22 +86,19 @@ export class StoreRef<T extends ValueStructure> {
     request.setContent(content);
 
     return new Promise<void>((resolve, reject) => {
-      this.kvClient.set(
-        request,
-        (error) => {
-          if (error) {
-            reject(fromGrpcError(error));
-          } else {
-            resolve();
-          }
+      this.kvClient.set(request, (error) => {
+        if (error) {
+          reject(fromGrpcError(error));
+        } else {
+          resolve();
         }
-      );
+      });
     });
   }
 
   /**
    * Delete a value from the store
-   * 
+   *
    * @param key The key of the key/value pair to delete
    *
    * @returns void
@@ -114,16 +111,13 @@ export class StoreRef<T extends ValueStructure> {
     request.setRef(ref);
 
     return new Promise<void>((resolve, reject) => {
-      this.kvClient.delete(
-        request,
-        (error) => {
-          if (error) {
-            reject(fromGrpcError(error));
-          } else {
-            resolve();
-          }
+      this.kvClient.delete(request, (error) => {
+        if (error) {
+          reject(fromGrpcError(error));
+        } else {
+          resolve();
         }
-      );
+      });
     });
   }
 }

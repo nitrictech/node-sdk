@@ -259,4 +259,5 @@ export class WebsocketResource extends Base {
  * @param name the name of the Websocket
  * @returns a Websocket resource
  */
-export const websocket: (name: string) => WebsocketResource = make(WebsocketResource);
+export const websocket: (name: string) => WebsocketResource =
+  make(WebsocketResource);

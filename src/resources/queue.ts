@@ -46,7 +46,7 @@ export class QueueResource<
     resource.setName(this.name);
     resource.setType(ResourceType.QUEUE);
     req.setId(resource);
-    req.setQueue(new NitricQueueResource())
+    req.setQueue(new NitricQueueResource());
 
     return new Promise<ResourceIdentifier>((resolve, reject) => {
       resourceClient.declare(req, (error) => {

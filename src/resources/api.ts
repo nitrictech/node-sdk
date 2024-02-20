@@ -204,11 +204,7 @@ export class Route {
   public readonly path: string;
   public readonly middleware: HttpMiddleware[];
 
-  constructor(
-    api: Api,
-    path: string,
-    options: RouteOptions = {}
-  ) {
+  constructor(api: Api, path: string, options: RouteOptions = {}) {
     this.api = api;
     this.path = path;
     const { middleware = [] } = options;
@@ -586,7 +582,7 @@ export class Api extends Base {
 
     if (oidcOptions && oidcOptions.length > 0) {
       oidcOptions.forEach((opt) => {
-        attachOidc(this.name, opt)
+        attachOidc(this.name, opt);
         const scopes = new ApiScopes();
         scopes.setScopesList(opt.scopes);
         apiResource.getSecurityMap().set(opt.name, scopes);
@@ -621,10 +617,7 @@ export class Api extends Base {
  * @param options additional options for creating the API
  * @returns an API resource
  */
-export const api: (
-  name: string,
-  options?: ApiOptions
-) => Api = make(Api);
+export const api: (name: string, options?: ApiOptions) => Api = make(Api);
 
 /**
  * Create a JWT security definition.

@@ -97,19 +97,19 @@ export class Queue<T extends Record<string, any> = Record<string, any>> {
    */
   public async enqueue(messages: T[]): Promise<FailedMessage<T>[]>;
   public async enqueue(messages: T): Promise<void>;
-  public async enqueue(
-    messages: T[] | T
-  ): Promise<void | FailedMessage<T>[]> {
+  public async enqueue(messages: T[] | T): Promise<void | FailedMessage<T>[]> {
     return new Promise((resolve, reject) => {
       const request = new QueueEnqueueRequest();
 
       const messagesArray = Array.isArray(messages) ? messages : [messages];
 
-      request.setMessagesList(messagesArray.map(inputMsg => {
-        const message = new QueueMessage();
-        message.setStructPayload(Struct.fromJavaScript(inputMsg));
-        return message;
-      }))
+      request.setMessagesList(
+        messagesArray.map((inputMsg) => {
+          const message = new QueueMessage();
+          message.setStructPayload(Struct.fromJavaScript(inputMsg));
+          return message;
+        })
+      );
       request.setQueueName(this.name);
 
       this.queueing.QueueServiceClient.enqueue(request, (error, response) => {

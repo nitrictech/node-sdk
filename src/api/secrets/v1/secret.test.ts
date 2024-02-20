@@ -48,7 +48,9 @@ describe('Secrets Client Tests', () => {
 
     it('then Secret.put should reject', async () => {
       const secrets = new Secrets();
-      await expect(secrets.secret('test').put('test-secret')).rejects.toBeInstanceOf(UnimplementedError);
+      await expect(
+        secrets.secret('test').put('test-secret')
+      ).rejects.toBeInstanceOf(UnimplementedError);
     });
 
     it('then Secret.put should be called once', () => {
@@ -119,7 +121,9 @@ describe('Secrets Client Tests', () => {
     it('then Secret.access should reject', async () => {
       const secrets = new Secrets();
 
-      await expect(secrets.secret('test').latest().access()).rejects.toBeInstanceOf(UnimplementedError);
+      await expect(
+        secrets.secret('test').latest().access()
+      ).rejects.toBeInstanceOf(UnimplementedError);
     });
 
     it('then Secret.access should be called once', () => {
