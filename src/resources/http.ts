@@ -20,8 +20,8 @@ import { ClientMessage, HttpProxyRequest } from '@nitric/proto/http/v1/http_pb';
 import { Server } from 'http';
 
 type ListenerFunction =
-  | ((port: number, callback?: () => void) => Server)
-  | ((port: number) => Server);
+  | ((port: number, callback?: () => void) => Server | Promise<Server>)
+  | ((port: number) => Server | Promise<Server>);
 
 interface NodeApplication {
   listen: ListenerFunction;
@@ -46,7 +46,7 @@ export class HttpWorkerOptions {
   }
 }
 
-const createWorker = (
+const createWorker = async (
   app: NodeApplication,
   port: number,
   callback?: () => void
@@ -72,7 +72,7 @@ const createWorker = (
   httpProxyStream.write(clientMessage);
   // Start Node application that HTTP proxy sits on
   if (process.env.NITRIC_ENVIRONMENT !== 'build') {
-    const srv = app.listen(port, callback);
+    const srv = await app.listen(port, callback);
 
     srv.on('close', () => {
       httpProxyStream.cancel();
