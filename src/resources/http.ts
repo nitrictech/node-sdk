@@ -18,10 +18,13 @@ import { SERVICE_BIND } from '../constants';
 import * as grpc from '@grpc/grpc-js';
 import { ClientMessage, HttpProxyRequest } from '@nitric/proto/http/v1/http_pb';
 import { Server } from 'http';
+import { Http2SecureServer, Http2Server } from 'http2';
+
+type ServerType = Server | Http2Server | Http2SecureServer;
 
 type ListenerFunction =
-  | ((port: number, callback?: () => void) => Server)
-  | ((port: number) => Server);
+  | ((port: number, callback?: () => void) => ServerType | Promise<ServerType>)
+  | ((port: number) => ServerType | Promise<ServerType>);
 
 interface NodeApplication {
   listen: ListenerFunction;
@@ -46,7 +49,7 @@ export class HttpWorkerOptions {
   }
 }
 
-const createWorker = (
+const createWorker = async (
   app: NodeApplication,
   port: number,
   callback?: () => void
@@ -72,7 +75,7 @@ const createWorker = (
   httpProxyStream.write(clientMessage);
   // Start Node application that HTTP proxy sits on
   if (process.env.NITRIC_ENVIRONMENT !== 'build') {
-    const srv = app.listen(port, callback);
+    const srv = await app.listen(port, callback);
 
     srv.on('close', () => {
       httpProxyStream.cancel();
