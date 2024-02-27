@@ -18,6 +18,7 @@ import {
   KeyValueKeysRequest,
   KeyValueKeysResponse,
   KeyValueSetRequest,
+  Store,
   ValueRef,
 } from '@nitric/proto/keyvalue/v1/keyvalue_pb';
 import { KeyValueClient } from '@nitric/proto/keyvalue/v1/keyvalue_grpc_pb';
@@ -132,8 +133,11 @@ export class StoreRef<T extends ValueStructure> {
    * @param prefix The prefix to filter keys by, if not provided all keys will be returned
    * @returns an async iterable of keys
    */
-  public keys(prefix: string): AsyncIterable<string> {
+  public keys(prefix: string = ""): AsyncIterable<string> {
+    const store = new Store();
+    store.setName(this.name);
     const request = new KeyValueKeysRequest();
+    request.setStore(store);
     request.setPrefix(prefix);
 
     const respStream = this.kvClient.keys(request);
