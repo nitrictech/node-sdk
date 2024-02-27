@@ -202,3 +202,49 @@ export namespace KeyValueDeleteResponse {
   }
 }
 
+export class KeyValueKeysRequest extends jspb.Message {
+  hasStore(): boolean;
+  clearStore(): void;
+  getStore(): Store | undefined;
+  setStore(value?: Store): void;
+
+  getPrefix(): string;
+  setPrefix(value: string): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): KeyValueKeysRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: KeyValueKeysRequest): KeyValueKeysRequest.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: KeyValueKeysRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): KeyValueKeysRequest;
+  static deserializeBinaryFromReader(message: KeyValueKeysRequest, reader: jspb.BinaryReader): KeyValueKeysRequest;
+}
+
+export namespace KeyValueKeysRequest {
+  export type AsObject = {
+    store?: Store.AsObject,
+    prefix: string,
+  }
+}
+
+export class KeyValueKeysResponse extends jspb.Message {
+  getKey(): string;
+  setKey(value: string): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): KeyValueKeysResponse.AsObject;
+  static toObject(includeInstance: boolean, msg: KeyValueKeysResponse): KeyValueKeysResponse.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: KeyValueKeysResponse, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): KeyValueKeysResponse;
+  static deserializeBinaryFromReader(message: KeyValueKeysResponse, reader: jspb.BinaryReader): KeyValueKeysResponse;
+}
+
+export namespace KeyValueKeysResponse {
+  export type AsObject = {
+    key: string,
+  }
+}
+

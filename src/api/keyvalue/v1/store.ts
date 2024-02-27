@@ -15,12 +15,16 @@ import {
   KeyValueDeleteRequest,
   KeyValueGetRequest,
   KeyValueGetResponse,
+  KeyValueKeysRequest,
+  KeyValueKeysResponse,
   KeyValueSetRequest,
   ValueRef,
 } from '@nitric/proto/keyvalue/v1/keyvalue_pb';
 import { KeyValueClient } from '@nitric/proto/keyvalue/v1/keyvalue_grpc_pb';
 import { fromGrpcError } from '../../errors';
 import { Struct } from 'google-protobuf/google/protobuf/struct_pb';
+import { Readable, Transform } from 'stream';
+import { ServiceError } from '@grpc/grpc-js';
 
 export type ValueStructure = Record<string, any>;
 
@@ -119,5 +123,38 @@ export class StoreRef<T extends ValueStructure> {
         }
       });
     });
+  }
+
+
+  /**
+   * Return an async iterable of keys in the store
+   * 
+   * @param prefix The prefix to filter keys by, if not provided all keys will be returned
+   * @returns an async iterable of keys
+   */
+  public keys(prefix: string): AsyncIterable<string> {
+    const request = new KeyValueKeysRequest();
+    request.setPrefix(prefix);
+
+    const respStream = this.kvClient.keys(request);
+    
+    const transform = new Transform({
+      objectMode: true,
+      transform(result: KeyValueKeysResponse, encoding, callback) {
+        callback(null, result.getKey());
+      },
+    });
+
+    respStream.on('error', (e) => {
+      transform.destroy(fromGrpcError(e as ServiceError));
+    });
+    respStream.pipe(transform);
+
+    const iterator = transform[Symbol.asyncIterator]();
+    return {
+      [Symbol.asyncIterator]() {
+        return iterator;
+      },
+    } as any;
   }
 }

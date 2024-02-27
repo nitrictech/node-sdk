@@ -10,6 +10,7 @@ interface IKeyValueService extends grpc.ServiceDefinition<grpc.UntypedServiceImp
   get: grpc.MethodDefinition<nitric_proto_keyvalue_v1_keyvalue_pb.KeyValueGetRequest, nitric_proto_keyvalue_v1_keyvalue_pb.KeyValueGetResponse>;
   set: grpc.MethodDefinition<nitric_proto_keyvalue_v1_keyvalue_pb.KeyValueSetRequest, nitric_proto_keyvalue_v1_keyvalue_pb.KeyValueSetResponse>;
   delete: grpc.MethodDefinition<nitric_proto_keyvalue_v1_keyvalue_pb.KeyValueDeleteRequest, nitric_proto_keyvalue_v1_keyvalue_pb.KeyValueDeleteResponse>;
+  keys: grpc.MethodDefinition<nitric_proto_keyvalue_v1_keyvalue_pb.KeyValueKeysRequest, nitric_proto_keyvalue_v1_keyvalue_pb.KeyValueKeysResponse>;
 }
 
 export const KeyValueService: IKeyValueService;
@@ -18,6 +19,7 @@ export interface IKeyValueServer extends grpc.UntypedServiceImplementation {
   get: grpc.handleUnaryCall<nitric_proto_keyvalue_v1_keyvalue_pb.KeyValueGetRequest, nitric_proto_keyvalue_v1_keyvalue_pb.KeyValueGetResponse>;
   set: grpc.handleUnaryCall<nitric_proto_keyvalue_v1_keyvalue_pb.KeyValueSetRequest, nitric_proto_keyvalue_v1_keyvalue_pb.KeyValueSetResponse>;
   delete: grpc.handleUnaryCall<nitric_proto_keyvalue_v1_keyvalue_pb.KeyValueDeleteRequest, nitric_proto_keyvalue_v1_keyvalue_pb.KeyValueDeleteResponse>;
+  keys: grpc.handleServerStreamingCall<nitric_proto_keyvalue_v1_keyvalue_pb.KeyValueKeysRequest, nitric_proto_keyvalue_v1_keyvalue_pb.KeyValueKeysResponse>;
 }
 
 export class KeyValueClient extends grpc.Client {
@@ -31,4 +33,6 @@ export class KeyValueClient extends grpc.Client {
   delete(argument: nitric_proto_keyvalue_v1_keyvalue_pb.KeyValueDeleteRequest, callback: grpc.requestCallback<nitric_proto_keyvalue_v1_keyvalue_pb.KeyValueDeleteResponse>): grpc.ClientUnaryCall;
   delete(argument: nitric_proto_keyvalue_v1_keyvalue_pb.KeyValueDeleteRequest, metadataOrOptions: grpc.Metadata | grpc.CallOptions | null, callback: grpc.requestCallback<nitric_proto_keyvalue_v1_keyvalue_pb.KeyValueDeleteResponse>): grpc.ClientUnaryCall;
   delete(argument: nitric_proto_keyvalue_v1_keyvalue_pb.KeyValueDeleteRequest, metadata: grpc.Metadata | null, options: grpc.CallOptions | null, callback: grpc.requestCallback<nitric_proto_keyvalue_v1_keyvalue_pb.KeyValueDeleteResponse>): grpc.ClientUnaryCall;
+  keys(argument: nitric_proto_keyvalue_v1_keyvalue_pb.KeyValueKeysRequest, metadataOrOptions?: grpc.Metadata | grpc.CallOptions | null): grpc.ClientReadableStream<nitric_proto_keyvalue_v1_keyvalue_pb.KeyValueKeysResponse>;
+  keys(argument: nitric_proto_keyvalue_v1_keyvalue_pb.KeyValueKeysRequest, metadata?: grpc.Metadata | null, options?: grpc.CallOptions | null): grpc.ClientReadableStream<nitric_proto_keyvalue_v1_keyvalue_pb.KeyValueKeysResponse>;
 }

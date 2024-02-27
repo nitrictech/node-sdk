@@ -49,6 +49,28 @@ function deserialize_nitric_proto_KeyValue_v1_KeyValueGetResponse(buffer_arg) {
   return nitric_proto_keyvalue_v1_keyvalue_pb.KeyValueGetResponse.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
+function serialize_nitric_proto_KeyValue_v1_KeyValueKeysRequest(arg) {
+  if (!(arg instanceof nitric_proto_keyvalue_v1_keyvalue_pb.KeyValueKeysRequest)) {
+    throw new Error('Expected argument of type nitric.proto.KeyValue.v1.KeyValueKeysRequest');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_nitric_proto_KeyValue_v1_KeyValueKeysRequest(buffer_arg) {
+  return nitric_proto_keyvalue_v1_keyvalue_pb.KeyValueKeysRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_nitric_proto_KeyValue_v1_KeyValueKeysResponse(arg) {
+  if (!(arg instanceof nitric_proto_keyvalue_v1_keyvalue_pb.KeyValueKeysResponse)) {
+    throw new Error('Expected argument of type nitric.proto.KeyValue.v1.KeyValueKeysResponse');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_nitric_proto_KeyValue_v1_KeyValueKeysResponse(buffer_arg) {
+  return nitric_proto_keyvalue_v1_keyvalue_pb.KeyValueKeysResponse.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
 function serialize_nitric_proto_KeyValue_v1_KeyValueSetRequest(arg) {
   if (!(arg instanceof nitric_proto_keyvalue_v1_keyvalue_pb.KeyValueSetRequest)) {
     throw new Error('Expected argument of type nitric.proto.KeyValue.v1.KeyValueSetRequest');
@@ -109,6 +131,18 @@ delete: {
     requestDeserialize: deserialize_nitric_proto_KeyValue_v1_KeyValueDeleteRequest,
     responseSerialize: serialize_nitric_proto_KeyValue_v1_KeyValueDeleteResponse,
     responseDeserialize: deserialize_nitric_proto_KeyValue_v1_KeyValueDeleteResponse,
+  },
+  // Iterate over all keys in a store
+keys: {
+    path: '/nitric.proto.KeyValue.v1.KeyValue/Keys',
+    requestStream: false,
+    responseStream: true,
+    requestType: nitric_proto_keyvalue_v1_keyvalue_pb.KeyValueKeysRequest,
+    responseType: nitric_proto_keyvalue_v1_keyvalue_pb.KeyValueKeysResponse,
+    requestSerialize: serialize_nitric_proto_KeyValue_v1_KeyValueKeysRequest,
+    requestDeserialize: deserialize_nitric_proto_KeyValue_v1_KeyValueKeysRequest,
+    responseSerialize: serialize_nitric_proto_KeyValue_v1_KeyValueKeysResponse,
+    responseDeserialize: deserialize_nitric_proto_KeyValue_v1_KeyValueKeysResponse,
   },
 };
 
