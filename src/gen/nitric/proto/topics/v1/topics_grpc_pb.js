@@ -3,8 +3,8 @@
 'use strict';
 var grpc = require('@grpc/grpc-js');
 var nitric_proto_topics_v1_topics_pb = require('../../../../nitric/proto/topics/v1/topics_pb.js');
-var google_protobuf_struct_pb = require('google-protobuf/google/protobuf/struct_pb.js');
 var google_protobuf_duration_pb = require('google-protobuf/google/protobuf/duration_pb.js');
+var google_protobuf_struct_pb = require('google-protobuf/google/protobuf/struct_pb.js');
 
 function serialize_nitric_proto_topics_v1_ClientMessage(arg) {
   if (!(arg instanceof nitric_proto_topics_v1_topics_pb.ClientMessage)) {

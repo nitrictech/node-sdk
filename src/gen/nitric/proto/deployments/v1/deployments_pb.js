@@ -1627,7 +1627,7 @@ proto.nitric.proto.deployments.v1.UpResult.prototype.setSuccess = function(value
 
 
 /**
- * optional string Text = 2;
+ * optional string text = 2;
  * @return {string}
  */
 proto.nitric.proto.deployments.v1.UpResult.prototype.getText = function() {

@@ -1815,7 +1815,7 @@ proto.nitric.proto.websockets.v1.WebsocketEventRequest.prototype.toObject = func
 proto.nitric.proto.websockets.v1.WebsocketEventRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
     socketName: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    connectionid: jspb.Message.getFieldWithDefault(msg, 2, ""),
+    connectionId: jspb.Message.getFieldWithDefault(msg, 2, ""),
     connection: (f = msg.getConnection()) && proto.nitric.proto.websockets.v1.WebsocketConnectionEvent.toObject(includeInstance, f),
     disconnection: (f = msg.getDisconnection()) && proto.nitric.proto.websockets.v1.WebsocketDisconnectionEvent.toObject(includeInstance, f),
     message: (f = msg.getMessage()) && proto.nitric.proto.websockets.v1.WebsocketMessageEvent.toObject(includeInstance, f)
@@ -1861,7 +1861,7 @@ proto.nitric.proto.websockets.v1.WebsocketEventRequest.deserializeBinaryFromRead
       break;
     case 2:
       var value = /** @type {string} */ (reader.readString());
-      msg.setConnectionid(value);
+      msg.setConnectionId(value);
       break;
     case 10:
       var value = new proto.nitric.proto.websockets.v1.WebsocketConnectionEvent;
@@ -1914,7 +1914,7 @@ proto.nitric.proto.websockets.v1.WebsocketEventRequest.serializeBinaryToWriter =
       f
     );
   }
-  f = message.getConnectionid();
+  f = message.getConnectionId();
   if (f.length > 0) {
     writer.writeString(
       2,
@@ -1967,10 +1967,10 @@ proto.nitric.proto.websockets.v1.WebsocketEventRequest.prototype.setSocketName =
 
 
 /**
- * optional string connectionId = 2;
+ * optional string connection_id = 2;
  * @return {string}
  */
-proto.nitric.proto.websockets.v1.WebsocketEventRequest.prototype.getConnectionid = function() {
+proto.nitric.proto.websockets.v1.WebsocketEventRequest.prototype.getConnectionId = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 2, ""));
 };
 
@@ -1979,7 +1979,7 @@ proto.nitric.proto.websockets.v1.WebsocketEventRequest.prototype.getConnectionid
  * @param {string} value
  * @return {!proto.nitric.proto.websockets.v1.WebsocketEventRequest} returns this
  */
-proto.nitric.proto.websockets.v1.WebsocketEventRequest.prototype.setConnectionid = function(value) {
+proto.nitric.proto.websockets.v1.WebsocketEventRequest.prototype.setConnectionId = function(value) {
   return jspb.Message.setProto3StringField(this, 2, value);
 };
 
