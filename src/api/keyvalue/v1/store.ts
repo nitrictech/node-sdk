@@ -58,18 +58,21 @@ export class StoreRef<T extends ValueStructure> {
     request.setRef(ref);
 
     return new Promise<T>((resolve, reject) => {
-      this.kvClient.getValue(request, (error, response: KvStoreGetValueResponse) => {
-        if (error) {
-          reject(fromGrpcError(error));
-        } else if (response.hasValue()) {
-          const value = response.getValue();
-          const content = value.getContent().toJavaScript() as T;
+      this.kvClient.getValue(
+        request,
+        (error, response: KvStoreGetValueResponse) => {
+          if (error) {
+            reject(fromGrpcError(error));
+          } else if (response.hasValue()) {
+            const value = response.getValue();
+            const content = value.getContent().toJavaScript() as T;
 
-          resolve(content);
-        } else {
-          resolve(null);
+            resolve(content);
+          } else {
+            resolve(null);
+          }
         }
-      });
+      );
     });
   }
 
@@ -126,14 +129,13 @@ export class StoreRef<T extends ValueStructure> {
     });
   }
 
-
   /**
    * Return an async iterable of keys in the store
-   * 
+   *
    * @param prefix The prefix to filter keys by, if not provided all keys will be returned
    * @returns an async iterable of keys
    */
-  public keys(prefix: string = ""): AsyncIterable<string> {
+  public keys(prefix: string = ''): AsyncIterable<string> {
     const store = new Store();
     store.setName(this.name);
     const request = new KvStoreScanKeysRequest();
@@ -141,7 +143,7 @@ export class StoreRef<T extends ValueStructure> {
     request.setPrefix(prefix);
 
     const respStream = this.kvClient.scanKeys(request);
-    
+
     const transform = new Transform({
       objectMode: true,
       transform(result: KvStoreScanKeysResponse, encoding, callback) {
