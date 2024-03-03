@@ -24,7 +24,7 @@ import {
 import { KvStoreClient } from '@nitric/proto/kvstore/v1/kvstore_grpc_pb';
 import { fromGrpcError } from '../../errors';
 import { Struct } from 'google-protobuf/google/protobuf/struct_pb';
-import { Readable, Transform } from 'stream';
+import { Transform } from 'stream';
 import { ServiceError } from '@grpc/grpc-js';
 
 export type ValueStructure = Record<string, any>;
@@ -135,7 +135,7 @@ export class StoreRef<T extends ValueStructure> {
    * @param prefix The prefix to filter keys by, if not provided all keys will be returned
    * @returns an async iterable of keys
    */
-  public keys(prefix: string = ''): AsyncIterable<string> {
+  public keys(prefix = ''): AsyncIterable<string> {
     const store = new Store();
     store.setName(this.name);
     const request = new KvStoreScanKeysRequest();
@@ -146,7 +146,7 @@ export class StoreRef<T extends ValueStructure> {
 
     const transform = new Transform({
       objectMode: true,
-      transform(result: KvStoreScanKeysResponse, encoding, callback) {
+      transform(result: KvStoreScanKeysResponse, _, callback) {
         callback(null, result.getKey());
       },
     });
