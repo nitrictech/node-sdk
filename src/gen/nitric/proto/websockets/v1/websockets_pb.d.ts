@@ -212,8 +212,8 @@ export class WebsocketEventRequest extends jspb.Message {
   getSocketName(): string;
   setSocketName(value: string): void;
 
-  getConnectionid(): string;
-  setConnectionid(value: string): void;
+  getConnectionId(): string;
+  setConnectionId(value: string): void;
 
   hasConnection(): boolean;
   clearConnection(): void;
@@ -244,7 +244,7 @@ export class WebsocketEventRequest extends jspb.Message {
 export namespace WebsocketEventRequest {
   export type AsObject = {
     socketName: string,
-    connectionid: string,
+    connectionId: string,
     connection?: WebsocketConnectionEvent.AsObject,
     disconnection?: WebsocketDisconnectionEvent.AsObject,
     message?: WebsocketMessageEvent.AsObject,

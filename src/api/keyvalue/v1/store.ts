@@ -12,15 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import {
-  KeyValueDeleteRequest,
-  KeyValueGetRequest,
-  KeyValueGetResponse,
-  KeyValueSetRequest,
+  KvStoreDeleteKeyRequest,
+  KvStoreGetValueRequest,
+  KvStoreGetValueResponse,
+  KvStoreScanKeysRequest,
+  KvStoreScanKeysResponse,
+  KvStoreSetValueRequest,
+  Store,
   ValueRef,
-} from '@nitric/proto/keyvalue/v1/keyvalue_pb';
-import { KeyValueClient } from '@nitric/proto/keyvalue/v1/keyvalue_grpc_pb';
+} from '@nitric/proto/kvstore/v1/kvstore_pb';
+import { KvStoreClient } from '@nitric/proto/kvstore/v1/kvstore_grpc_pb';
 import { fromGrpcError } from '../../errors';
 import { Struct } from 'google-protobuf/google/protobuf/struct_pb';
+import { Transform } from 'stream';
+import { ServiceError } from '@grpc/grpc-js';
 
 export type ValueStructure = Record<string, any>;
 
@@ -30,10 +35,10 @@ export type ValueStructure = Record<string, any>;
  * Provides a KeyValue API StoreRef class.
  */
 export class StoreRef<T extends ValueStructure> {
-  private kvClient: KeyValueClient;
+  private kvClient: KvStoreClient;
   public readonly name: string;
 
-  constructor(kvClient: KeyValueClient, name: string) {
+  constructor(kvClient: KvStoreClient, name: string) {
     this.kvClient = kvClient;
     this.name = name;
   }
@@ -46,25 +51,28 @@ export class StoreRef<T extends ValueStructure> {
    * @returns the value or null if not found
    */
   public async get(key: string): Promise<T> {
-    const request = new KeyValueGetRequest();
+    const request = new KvStoreGetValueRequest();
     const ref = new ValueRef();
     ref.setStore(this.name);
     ref.setKey(key);
     request.setRef(ref);
 
     return new Promise<T>((resolve, reject) => {
-      this.kvClient.get(request, (error, response: KeyValueGetResponse) => {
-        if (error) {
-          reject(fromGrpcError(error));
-        } else if (response.hasValue()) {
-          const value = response.getValue();
-          const content = value.getContent().toJavaScript() as T;
+      this.kvClient.getValue(
+        request,
+        (error, response: KvStoreGetValueResponse) => {
+          if (error) {
+            reject(fromGrpcError(error));
+          } else if (response.hasValue()) {
+            const value = response.getValue();
+            const content = value.getContent().toJavaScript() as T;
 
-          resolve(content);
-        } else {
-          resolve(null);
+            resolve(content);
+          } else {
+            resolve(null);
+          }
         }
-      });
+      );
     });
   }
 
@@ -77,7 +85,7 @@ export class StoreRef<T extends ValueStructure> {
    * @returns void
    */
   public async set(key: string, value: T): Promise<void> {
-    const request = new KeyValueSetRequest();
+    const request = new KvStoreSetValueRequest();
     const ref = new ValueRef();
     ref.setStore(this.name);
     ref.setKey(key);
@@ -86,7 +94,7 @@ export class StoreRef<T extends ValueStructure> {
     request.setContent(content);
 
     return new Promise<void>((resolve, reject) => {
-      this.kvClient.set(request, (error) => {
+      this.kvClient.setValue(request, (error) => {
         if (error) {
           reject(fromGrpcError(error));
         } else {
@@ -104,14 +112,14 @@ export class StoreRef<T extends ValueStructure> {
    * @returns void
    */
   public async delete(key: string): Promise<void> {
-    const request = new KeyValueDeleteRequest();
+    const request = new KvStoreDeleteKeyRequest();
     const ref = new ValueRef();
     ref.setStore(this.name);
     ref.setKey(key);
     request.setRef(ref);
 
     return new Promise<void>((resolve, reject) => {
-      this.kvClient.delete(request, (error) => {
+      this.kvClient.deleteKey(request, (error) => {
         if (error) {
           reject(fromGrpcError(error));
         } else {
@@ -119,5 +127,40 @@ export class StoreRef<T extends ValueStructure> {
         }
       });
     });
+  }
+
+  /**
+   * Return an async iterable of keys in the store
+   *
+   * @param prefix The prefix to filter keys by, if not provided all keys will be returned
+   * @returns an async iterable of keys
+   */
+  public keys(prefix = ''): AsyncIterable<string> {
+    const store = new Store();
+    store.setName(this.name);
+    const request = new KvStoreScanKeysRequest();
+    request.setStore(store);
+    request.setPrefix(prefix);
+
+    const respStream = this.kvClient.scanKeys(request);
+
+    const transform = new Transform({
+      objectMode: true,
+      transform(result: KvStoreScanKeysResponse, _, callback) {
+        callback(null, result.getKey());
+      },
+    });
+
+    respStream.on('error', (e) => {
+      transform.destroy(fromGrpcError(e as ServiceError));
+    });
+    respStream.pipe(transform);
+
+    const iterator = transform[Symbol.asyncIterator]();
+    return {
+      [Symbol.asyncIterator]() {
+        return iterator;
+      },
+    } as any;
   }
 }

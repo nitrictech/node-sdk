@@ -54,7 +54,7 @@ export class WebsocketNotificationContext<T> extends BaseContext<
       message ? message.getBody() : '',
       request.getSocketName(),
       request.getWebsocketEventCase(),
-      request.getConnectionid(),
+      request.getConnectionId(),
       query
     );
 

@@ -49,8 +49,7 @@ export class NitricProviderError extends Error {
 Nitric Provider Error: ${grpcError.name}
   Code: ${grpcError.code}
   Message: ${grpcError.message}
-  Details: ${details}
-  Metadata: ${JSON.stringify(grpcError.metadata)}`;
+  Details: ${details}`;
     super(message);
   }
 }

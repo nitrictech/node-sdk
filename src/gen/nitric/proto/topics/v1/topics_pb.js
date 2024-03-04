@@ -21,10 +21,10 @@ var global = (function() {
   return Function('return this')();
 }.call(null));
 
-var google_protobuf_struct_pb = require('google-protobuf/google/protobuf/struct_pb.js');
-goog.object.extend(proto, google_protobuf_struct_pb);
 var google_protobuf_duration_pb = require('google-protobuf/google/protobuf/duration_pb.js');
 goog.object.extend(proto, google_protobuf_duration_pb);
+var google_protobuf_struct_pb = require('google-protobuf/google/protobuf/struct_pb.js');
+goog.object.extend(proto, google_protobuf_struct_pb);
 goog.exportSymbol('proto.nitric.proto.topics.v1.ClientMessage', null, global);
 goog.exportSymbol('proto.nitric.proto.topics.v1.ClientMessage.ContentCase', null, global);
 goog.exportSymbol('proto.nitric.proto.topics.v1.MessageRequest', null, global);

@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { SERVICE_BIND } from '../../../constants';
-import { KeyValueClient } from '@nitric/proto/keyvalue/v1/keyvalue_grpc_pb';
+import { KvStoreClient } from '@nitric/proto/kvstore/v1/kvstore_grpc_pb';
 import * as grpc from '@grpc/grpc-js';
 import { StoreRef, ValueStructure } from './store';
 
@@ -23,10 +23,10 @@ import { StoreRef, ValueStructure } from './store';
  * Used to create references to key/value stores.
  */
 export class KeyValue {
-  private kvClient: KeyValueClient;
+  private kvClient: KvStoreClient;
 
   constructor() {
-    this.kvClient = new KeyValueClient(
+    this.kvClient = new KvStoreClient(
       SERVICE_BIND,
       grpc.ChannelCredentials.createInsecure()
     );
