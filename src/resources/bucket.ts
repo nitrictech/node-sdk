@@ -268,7 +268,6 @@ export class BucketResource extends SecureResource<BucketPermission> {
   protected permsToActions(...perms: BucketPermission[]): ActionsList {
     return perms.reduce((actions, perm) => {
       switch (perm) {
-        // TODO: Remove this case when the legacy for method is removed
         case 'read':
           return [...actions, Action.BUCKETFILEGET, Action.BUCKETFILELIST];
         case 'write':
