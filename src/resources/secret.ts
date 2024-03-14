@@ -25,9 +25,11 @@ import { secrets, Secret } from '../api/secrets';
 import { ActionsList, make, SecureResource } from './common';
 import { fromGrpcError } from '../api/errors';
 
-type SecretPermission = 'putting' | 'accessing';
+type SecretPermission = 'put' | 'access';
 
-const everything: SecretPermission[] = ['putting', 'accessing'];
+type SecretPermissionLegacy = 'putting' | 'accessing';
+
+const everything: SecretPermission[] = ['put', 'access'];
 
 /**
  * Cloud secret resource for secret storage
@@ -59,9 +61,9 @@ export class SecretResource extends SecureResource<SecretPermission> {
   protected permsToActions(...perms: SecretPermission[]): ActionsList {
     return perms.reduce((actions, perm) => {
       switch (perm) {
-        case 'putting':
+        case 'put':
           return [...actions, Action.SECRETPUT];
-        case 'accessing':
+        case 'access':
           return [...actions, Action.SECRETACCESS];
         default:
           throw new Error(
@@ -77,7 +79,30 @@ export class SecretResource extends SecureResource<SecretPermission> {
     return ResourceType.SECRET;
   }
 
-  public for(perm: SecretPermission, ...perms: SecretPermission[]): Secret {
+  public for(perm: SecretPermissionLegacy, ...perms: SecretPermissionLegacy[]): Secret {
+    console.warn("The 'for' method is deprecated, please use 'allow' instead");
+
+    const allPerms = [perm, ...perms].map(p => {
+      switch (p) {
+        case 'putting':
+          return 'put';
+        case 'accessing':
+          return 'access';
+        default:
+          throw new Error(
+            `unknown secret permission ${p}, supported permissions are ${everything.join(
+              ', '
+            )}`
+          );
+      }
+    });
+
+    this.registerPolicy(...allPerms);
+
+    return secrets().secret(this.name);
+  }
+
+  public allow(perm: SecretPermission, ...perms: SecretPermission[]): Secret {
     this.registerPolicy(perm, ...perms);
 
     return secrets().secret(this.name);
