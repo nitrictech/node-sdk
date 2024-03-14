@@ -295,16 +295,19 @@ export class BucketResource extends SecureResource<BucketPermission> {
    * e.g. const imgs = resources.bucket('image').for('writing')
    *
    * @deprecated use allow instead
-   * 
+   *
    * @param perm  the required permission set
    * @param perms additional required permissions set
    * @returns a usable bucket reference
    */
-  public for(perm: BucketPermissionLegacy, ...perms: BucketPermissionLegacy[]): Bucket {
-    console.warn("The 'for' method is deprecated, please use 'allow' instead.")
+  public for(
+    perm: BucketPermissionLegacy,
+    ...perms: BucketPermissionLegacy[]
+  ): Bucket {
+    console.warn("The 'for' method is deprecated, please use 'allow' instead.");
 
     // Translate to new permissions
-    const allPerms = [perm, ...perms].map(p => {
+    const allPerms = [perm, ...perms].map((p) => {
       switch (p) {
         case 'reading':
           return 'read';

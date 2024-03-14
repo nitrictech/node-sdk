@@ -104,10 +104,13 @@ export class KeyValueStoreResource<
    * @param perms additional required permissions set
    * @returns a usable key/value store reference
    */
-  public for(perm: StorePermissionLegacy, ...perms: StorePermissionLegacy[]): StoreRef<T> {
-    console.warn("The 'for' method is deprecated, please use 'allow' instead.")
+  public for(
+    perm: StorePermissionLegacy,
+    ...perms: StorePermissionLegacy[]
+  ): StoreRef<T> {
+    console.warn("The 'for' method is deprecated, please use 'allow' instead.");
 
-    const allPerms = [perm, ...perms].map(p => {
+    const allPerms = [perm, ...perms].map((p) => {
       switch (p) {
         case 'getting':
           return 'get';
@@ -138,7 +141,10 @@ export class KeyValueStoreResource<
    * @param perms additional required permissions set
    * @returns a usable key/value store reference
    */
-  public allow(perm: StorePermission, ...perms: StorePermission[]): StoreRef<T> {
+  public allow(
+    perm: StorePermission,
+    ...perms: StorePermission[]
+  ): StoreRef<T> {
     this.registerPolicy(perm, ...perms);
 
     return keyvalue().store<T>(this.name);

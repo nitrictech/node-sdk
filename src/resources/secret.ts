@@ -79,10 +79,13 @@ export class SecretResource extends SecureResource<SecretPermission> {
     return ResourceType.SECRET;
   }
 
-  public for(perm: SecretPermissionLegacy, ...perms: SecretPermissionLegacy[]): Secret {
+  public for(
+    perm: SecretPermissionLegacy,
+    ...perms: SecretPermissionLegacy[]
+  ): Secret {
     console.warn("The 'for' method is deprecated, please use 'allow' instead");
 
-    const allPerms = [perm, ...perms].map(p => {
+    const allPerms = [perm, ...perms].map((p) => {
       switch (p) {
         case 'putting':
           return 'put';

@@ -196,7 +196,10 @@ export class TopicResource<
    * @param perms additional required permissions set
    * @returns a usable topic reference
    */
-  public for(perm: TopicPermissionLegacy, ...perms: TopicPermissionLegacy[]): Topic<T> {
+  public for(
+    perm: TopicPermissionLegacy,
+    ...perms: TopicPermissionLegacy[]
+  ): Topic<T> {
     console.warn("The 'for' method is deprecated, please use 'allow' instead");
 
     const allPerms = [perm, ...perms].map((p) => {
