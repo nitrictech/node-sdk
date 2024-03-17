@@ -90,11 +90,20 @@ export class QueueResource<
    *
    * e.g. const taskQueue = resources.queue('work').for('enqueue')
    *
+   * @deprecated use allow instead
    * @param perm - the access that the currently scoped function is requesting to this resource.
    * @param perms - the access that the currently scoped function is requesting to this resource.
    * @returns a useable queue.
    */
   public for(perm: QueuePermission, ...perms: QueuePermission[]): Queue<T> {
+    console.warn("The 'for' method is deprecated, please use 'allow' instead");
+
+    this.registerPolicy(perm, ...perms);
+
+    return queues().queue(this.name);
+  }
+
+  public allow(perm: QueuePermission, ...perms: QueuePermission[]): Queue<T> {
     this.registerPolicy(perm, ...perms);
 
     return queues().queue(this.name);

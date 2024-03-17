@@ -47,9 +47,11 @@ import {
 import { BlobEventContext, BucketEventContext } from '../context/bucket';
 import { fromGrpcError } from '../api/errors';
 
-type BucketPermission = 'reading' | 'writing' | 'deleting';
+type BucketPermissionLegacy = 'reading' | 'writing' | 'deleting';
 
-const everything: BucketPermission[] = ['reading', 'writing', 'deleting'];
+type BucketPermission = 'read' | 'write' | 'delete';
+
+const everything: BucketPermission[] = ['read', 'write', 'delete'];
 
 export type BucketNotificationType = 'write' | 'delete';
 
@@ -266,11 +268,11 @@ export class BucketResource extends SecureResource<BucketPermission> {
   protected permsToActions(...perms: BucketPermission[]): ActionsList {
     return perms.reduce((actions, perm) => {
       switch (perm) {
-        case 'reading':
+        case 'read':
           return [...actions, Action.BUCKETFILEGET, Action.BUCKETFILELIST];
-        case 'writing':
+        case 'write':
           return [...actions, Action.BUCKETFILEPUT];
-        case 'deleting':
+        case 'delete':
           return [...actions, Action.BUCKETFILEDELETE];
         default:
           throw new Error(
@@ -291,11 +293,51 @@ export class BucketResource extends SecureResource<BucketPermission> {
    *
    * e.g. const imgs = resources.bucket('image').for('writing')
    *
+   * @deprecated use allow instead
+   *
    * @param perm  the required permission set
    * @param perms additional required permissions set
    * @returns a usable bucket reference
    */
-  public for(perm: BucketPermission, ...perms: BucketPermission[]): Bucket {
+  public for(
+    perm: BucketPermissionLegacy,
+    ...perms: BucketPermissionLegacy[]
+  ): Bucket {
+    console.warn("The 'for' method is deprecated, please use 'allow' instead.");
+
+    // Translate to new permissions
+    const allPerms = [perm, ...perms].map((p) => {
+      switch (p) {
+        case 'reading':
+          return 'read';
+        case 'writing':
+          return 'write';
+        case 'deleting':
+          return 'delete';
+        default:
+          throw new Error(
+            `unknown bucket permission ${p}, supported permissions are ${everything.join(
+              ', '
+            )}`
+          );
+      }
+    });
+
+    this.registerPolicy(...allPerms);
+
+    return storage().bucket(this.name);
+  }
+
+  /**
+   * Return a bucket reference and register the permissions required by the currently scoped function for this resource.
+   *
+   * e.g. const imgs = resources.bucket('image').for('writing')
+   *
+   * @param perm  the required permission set
+   * @param perms additional required permissions set
+   * @returns a usable bucket reference
+   */
+  public allow(perm: BucketPermission, ...perms: BucketPermission[]): Bucket {
     this.registerPolicy(perm, ...perms);
 
     return storage().bucket(this.name);

@@ -27,8 +27,10 @@ import { make, SecureResource } from './common';
 import { fromGrpcError } from '../api/errors';
 import { StoreRef } from '../api/keyvalue/v1/store';
 
-type StorePermission = 'getting' | 'setting' | 'deleting';
-const everything: StorePermission[] = ['getting', 'setting', 'deleting'];
+type StorePermissionLegacy = 'getting' | 'setting' | 'deleting';
+
+type StorePermission = 'get' | 'set' | 'delete';
+const everything: StorePermission[] = ['get', 'set', 'delete'];
 
 /**
  * A key/value store resource.
@@ -70,11 +72,11 @@ export class KeyValueStoreResource<
   ): ActionMap[keyof ActionMap][] {
     const actions = perms.reduce((actions, perm) => {
       switch (perm) {
-        case 'getting':
+        case 'get':
           return [...actions, Action.KEYVALUESTOREREAD];
-        case 'setting':
+        case 'set':
           return [...actions, Action.KEYVALUESTOREWRITE];
-        case 'deleting':
+        case 'delete':
           return [...actions, Action.KEYVALUESTOREDELETE];
         default:
           throw new Error(
@@ -97,11 +99,52 @@ export class KeyValueStoreResource<
    *
    * e.g. const customers = resources.kv('customers').for('getting', 'setting')
    *
+   * @deprecated use allow instead
    * @param perm  the required permission set
    * @param perms additional required permissions set
    * @returns a usable key/value store reference
    */
-  public for(perm: StorePermission, ...perms: StorePermission[]): StoreRef<T> {
+  public for(
+    perm: StorePermissionLegacy,
+    ...perms: StorePermissionLegacy[]
+  ): StoreRef<T> {
+    console.warn("The 'for' method is deprecated, please use 'allow' instead.");
+
+    const allPerms = [perm, ...perms].map((p) => {
+      switch (p) {
+        case 'getting':
+          return 'get';
+        case 'setting':
+          return 'set';
+        case 'deleting':
+          return 'delete';
+        default:
+          throw new Error(
+            `unknown key/value store permission ${p}, supported permissions are ${everything.join(
+              ', '
+            )}`
+          );
+      }
+    });
+
+    this.registerPolicy(...allPerms);
+
+    return keyvalue().store<T>(this.name);
+  }
+
+  /**
+   * Return a key/value store reference and register the permissions required by the currently scoped service for this resource.
+   *
+   * e.g. const customers = resources.kv('customers').for('getting', 'setting')
+   *
+   * @param perm  the required permission set
+   * @param perms additional required permissions set
+   * @returns a usable key/value store reference
+   */
+  public allow(
+    perm: StorePermission,
+    ...perms: StorePermission[]
+  ): StoreRef<T> {
     this.registerPolicy(perm, ...perms);
 
     return keyvalue().store<T>(this.name);

@@ -42,7 +42,9 @@ import { MessageContext } from '../context/message';
 import { MessageMiddleware, createHandler } from '../handlers/handler';
 import { fromGrpcError } from '../api/errors';
 
-type TopicPermission = 'publishing';
+type TopicPermission = 'publish';
+
+type TopicPermissionLegacy = 'publishing';
 
 export class SubscriptionWorkerOptions {
   public readonly topic: string;
@@ -159,12 +161,11 @@ export class TopicResource<
   protected permsToActions(...perms: TopicPermission[]): ActionsList {
     return perms.reduce((actions, p) => {
       switch (p) {
-        case 'publishing':
+        case 'publish':
           return [...actions, Action.TOPICPUBLISH];
         default:
           throw new Error(
-            `unknown permission ${p}, supported permissions is publishing.}
-            )}`
+            `unknown permission ${p}, supported permission is publish`
           );
       }
     }, []);
@@ -190,11 +191,33 @@ export class TopicResource<
    *
    * e.g. const updates = resources.topic('updates').for('publishing')
    *
+   * @deprecated use allow instead
    * @param perm the required permission set
    * @param perms additional required permissions set
    * @returns a usable topic reference
    */
-  public for(perm: TopicPermission, ...perms: TopicPermission[]): Topic<T> {
+  public for(
+    perm: TopicPermissionLegacy,
+    ...perms: TopicPermissionLegacy[]
+  ): Topic<T> {
+    console.warn("The 'for' method is deprecated, please use 'allow' instead");
+
+    const allPerms = [perm, ...perms].map((p) => {
+      switch (p) {
+        case 'publishing':
+          return 'publish';
+        default:
+          throw new Error(
+            `unknown topic permission ${p}, supported permission is publishing`
+          );
+      }
+    }) as TopicPermission[];
+
+    this.registerPolicy(...allPerms);
+    return topics().topic(this.name);
+  }
+
+  public allow(perm: TopicPermission, ...perms: TopicPermission[]): Topic<T> {
     this.registerPolicy(perm, ...perms);
     return topics().topic(this.name);
   }
