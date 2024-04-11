@@ -33,7 +33,6 @@ import {
   ClientMessage,
   RegistrationRequest,
   ServerMessage,
-  BlobEvent,
   BlobEventResponse,
 } from '@nitric/proto/storage/v1/storage_pb';
 import { StorageListenerClient } from '@nitric/proto/storage/v1/storage_grpc_pb';
@@ -138,12 +137,6 @@ export class BucketNotification {
           responseMessage.setId(message.getId());
 
           try {
-            blobEventRequest.setBucketName(this.options.bucket);
-            const blobEvent = new BlobEvent();
-            blobEvent.setKey(this.options.notificationPrefixFilter);
-            blobEvent.setType(this.options.notificationType);
-            blobEventRequest.setBlobEvent(blobEvent);
-
             if (bucket) {
               const ctx = BlobEventContext.fromRequest(
                 blobEventRequest,
