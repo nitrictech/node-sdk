@@ -33,7 +33,6 @@ import {
   ClientMessage,
   RegistrationRequest,
   ServerMessage,
-  BlobEvent,
   BlobEventResponse,
 } from '@nitric/proto/storage/v1/storage_pb';
 import { StorageListenerClient } from '@nitric/proto/storage/v1/storage_grpc_pb';
