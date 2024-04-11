@@ -120,7 +120,7 @@ export class Bucket {
       notificationPrefixFilter,
       ...middleware
     );
-    return notification['start']();
+    return notification['start'](this);
   }
 }
 

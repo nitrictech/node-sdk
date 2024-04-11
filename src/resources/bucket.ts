@@ -138,12 +138,6 @@ export class BucketNotification {
           responseMessage.setId(message.getId());
 
           try {
-            blobEventRequest.setBucketName(this.options.bucket);
-            const blobEvent = new BlobEvent();
-            blobEvent.setKey(this.options.notificationPrefixFilter);
-            blobEvent.setType(this.options.notificationType);
-            blobEventRequest.setBlobEvent(blobEvent);
-
             if (bucket) {
               const ctx = BlobEventContext.fromRequest(
                 blobEventRequest,
