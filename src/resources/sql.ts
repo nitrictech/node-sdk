@@ -16,6 +16,7 @@ import {
   ResourceDeclareRequest,
   ResourceType,
   ResourceTypeMap,
+  SqlDatabaseResource,
 } from '@nitric/proto/resources/v1/resources_pb';
 import { SqlConnectionStringRequest } from '@nitric/proto/sql/v1/sql_pb';
 import resourceClient from './client';
@@ -49,8 +50,10 @@ export class SQLDatabaseResource extends Base {
     const resource = new ResourceIdentifier();
     resource.setName(this.name);
     resource.setType(ResourceType.SQLDATABASE);
-
     req.setId(resource);
+
+    const sqlConfig = new SqlDatabaseResource();
+    req.setSqlDatabase(sqlConfig);
 
     const res = await new Promise<ResourceIdentifier>((resolve, reject) => {
       resourceClient.declare(req, (error, _: ResourceDeclareRequest) => {
@@ -61,29 +64,6 @@ export class SQLDatabaseResource extends Base {
         }
       });
     });
-
-    // const defaultPrincipal = new ResourceIdentifier();
-    // defaultPrincipal.setType(ResourceType.SERVICE);
-
-    // const policyResource = new ResourceIdentifier();
-    // policyResource.setType(ResourceType.POLICY);
-    // const policyReq = new ResourceDeclareRequest();
-    // const policy = new PolicyResource();
-    // policy.setActionsList([Action.WEBSOCKETMANAGE]);
-    // policy.setPrincipalsList([defaultPrincipal]);
-    // policy.setResourcesList([resource]);
-    // policyReq.setPolicy(policy);
-    // policyReq.setId(policyResource);
-
-    // await new Promise<ResourceIdentifier>((resolve, reject) => {
-    //   resourceClient.declare(policyReq, (error, _: ResourceDeclareRequest) => {
-    //     if (error) {
-    //       reject(fromGrpcError(error));
-    //     } else {
-    //       resolve(resource);
-    //     }
-    //   });
-    // });
 
     return res;
   }
