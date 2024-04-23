@@ -107,6 +107,11 @@ export class ResourceDeclareRequest extends jspb.Message {
   getQueue(): QueueResource | undefined;
   setQueue(value?: QueueResource): void;
 
+  hasSqlDatabase(): boolean;
+  clearSqlDatabase(): void;
+  getSqlDatabase(): SqlDatabaseResource | undefined;
+  setSqlDatabase(value?: SqlDatabaseResource): void;
+
   getConfigCase(): ResourceDeclareRequest.ConfigCase;
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): ResourceDeclareRequest.AsObject;
@@ -129,6 +134,7 @@ export namespace ResourceDeclareRequest {
     api?: ApiResource.AsObject,
     apiSecurityDefinition?: ApiSecurityDefinitionResource.AsObject,
     queue?: QueueResource.AsObject,
+    sqlDatabase?: SqlDatabaseResource.AsObject,
   }
 
   export enum ConfigCase {
@@ -141,6 +147,7 @@ export namespace ResourceDeclareRequest {
     API = 15,
     API_SECURITY_DEFINITION = 16,
     QUEUE = 17,
+    SQL_DATABASE = 18,
   }
 }
 
@@ -221,6 +228,26 @@ export class SecretResource extends jspb.Message {
 
 export namespace SecretResource {
   export type AsObject = {
+  }
+}
+
+export class SqlDatabaseResource extends jspb.Message {
+  getEnvVariableName(): string;
+  setEnvVariableName(value: string): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): SqlDatabaseResource.AsObject;
+  static toObject(includeInstance: boolean, msg: SqlDatabaseResource): SqlDatabaseResource.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: SqlDatabaseResource, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): SqlDatabaseResource;
+  static deserializeBinaryFromReader(message: SqlDatabaseResource, reader: jspb.BinaryReader): SqlDatabaseResource;
+}
+
+export namespace SqlDatabaseResource {
+  export type AsObject = {
+    envVariableName: string,
   }
 }
 
@@ -354,6 +381,7 @@ export interface ResourceTypeMap {
   HTTP: 11;
   APISECURITYDEFINITION: 12;
   QUEUE: 13;
+  SQLDATABASE: 14;
 }
 
 export const ResourceType: ResourceTypeMap;

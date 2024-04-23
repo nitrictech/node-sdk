@@ -686,6 +686,25 @@ export namespace Schedule {
   }
 }
 
+export class SqlDatabase extends jspb.Message {
+  getServiceEnvVariableNameMap(): jspb.Map<string, string>;
+  clearServiceEnvVariableNameMap(): void;
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): SqlDatabase.AsObject;
+  static toObject(includeInstance: boolean, msg: SqlDatabase): SqlDatabase.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: SqlDatabase, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): SqlDatabase;
+  static deserializeBinaryFromReader(message: SqlDatabase, reader: jspb.BinaryReader): SqlDatabase;
+}
+
+export namespace SqlDatabase {
+  export type AsObject = {
+    serviceEnvVariableNameMap: Array<[string, string]>,
+  }
+}
+
 export class ScheduleEvery extends jspb.Message {
   getRate(): string;
   setRate(value: string): void;
