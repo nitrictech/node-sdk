@@ -687,8 +687,6 @@ export namespace Schedule {
 }
 
 export class SqlDatabase extends jspb.Message {
-  getServiceEnvVariableNameMap(): jspb.Map<string, string>;
-  clearServiceEnvVariableNameMap(): void;
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): SqlDatabase.AsObject;
   static toObject(includeInstance: boolean, msg: SqlDatabase): SqlDatabase.AsObject;
@@ -701,7 +699,6 @@ export class SqlDatabase extends jspb.Message {
 
 export namespace SqlDatabase {
   export type AsObject = {
-    serviceEnvVariableNameMap: Array<[string, string]>,
   }
 }
 
@@ -806,6 +803,11 @@ export class Resource extends jspb.Message {
   getQueue(): Queue | undefined;
   setQueue(value?: Queue): void;
 
+  hasSqlDatabase(): boolean;
+  clearSqlDatabase(): void;
+  getSqlDatabase(): SqlDatabase | undefined;
+  setSqlDatabase(value?: SqlDatabase): void;
+
   getConfigCase(): Resource.ConfigCase;
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): Resource.AsObject;
@@ -831,6 +833,7 @@ export namespace Resource {
     websocket?: Websocket.AsObject,
     http?: Http.AsObject,
     queue?: Queue.AsObject,
+    sqlDatabase?: SqlDatabase.AsObject,
   }
 
   export enum ConfigCase {
@@ -846,6 +849,7 @@ export namespace Resource {
     WEBSOCKET = 18,
     HTTP = 19,
     QUEUE = 20,
+    SQL_DATABASE = 21,
   }
 }
 

@@ -5280,7 +5280,7 @@ proto.nitric.proto.deployments.v1.SqlDatabase.prototype.toObject = function(opt_
  */
 proto.nitric.proto.deployments.v1.SqlDatabase.toObject = function(includeInstance, msg) {
   var f, obj = {
-    serviceEnvVariableNameMap: (f = msg.getServiceEnvVariableNameMap()) ? f.toObject(includeInstance, undefined) : []
+
   };
 
   if (includeInstance) {
@@ -5317,12 +5317,6 @@ proto.nitric.proto.deployments.v1.SqlDatabase.deserializeBinaryFromReader = func
     }
     var field = reader.getFieldNumber();
     switch (field) {
-    case 1:
-      var value = msg.getServiceEnvVariableNameMap();
-      reader.readMessage(value, function(message, reader) {
-        jspb.Map.deserializeBinary(message, reader, jspb.BinaryReader.prototype.readString, jspb.BinaryReader.prototype.readString, null, "", "");
-         });
-      break;
     default:
       reader.skipField();
       break;
@@ -5352,33 +5346,7 @@ proto.nitric.proto.deployments.v1.SqlDatabase.prototype.serializeBinary = functi
  */
 proto.nitric.proto.deployments.v1.SqlDatabase.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
-  f = message.getServiceEnvVariableNameMap(true);
-  if (f && f.getLength() > 0) {
-    f.serializeBinary(1, writer, jspb.BinaryWriter.prototype.writeString, jspb.BinaryWriter.prototype.writeString);
-  }
 };
-
-
-/**
- * map<string, string> service_env_variable_name = 1;
- * @param {boolean=} opt_noLazyCreate Do not create the map if
- * empty, instead returning `undefined`
- * @return {!jspb.Map<string,string>}
- */
-proto.nitric.proto.deployments.v1.SqlDatabase.prototype.getServiceEnvVariableNameMap = function(opt_noLazyCreate) {
-  return /** @type {!jspb.Map<string,string>} */ (
-      jspb.Message.getMapField(this, 1, opt_noLazyCreate,
-      null));
-};
-
-
-/**
- * Clears values from the map. The map will be non-null.
- * @return {!proto.nitric.proto.deployments.v1.SqlDatabase} returns this
- */
-proto.nitric.proto.deployments.v1.SqlDatabase.prototype.clearServiceEnvVariableNameMap = function() {
-  this.getServiceEnvVariableNameMap().clear();
-  return this;};
 
 
 
@@ -5650,7 +5618,7 @@ proto.nitric.proto.deployments.v1.ScheduleCron.prototype.setExpression = functio
  * @private {!Array<!Array<number>>}
  * @const
  */
-proto.nitric.proto.deployments.v1.Resource.oneofGroups_ = [[10,11,12,13,14,15,16,17,18,19,20]];
+proto.nitric.proto.deployments.v1.Resource.oneofGroups_ = [[10,11,12,13,14,15,16,17,18,19,20,21]];
 
 /**
  * @enum {number}
@@ -5667,7 +5635,8 @@ proto.nitric.proto.deployments.v1.Resource.ConfigCase = {
   SECRET: 17,
   WEBSOCKET: 18,
   HTTP: 19,
-  QUEUE: 20
+  QUEUE: 20,
+  SQL_DATABASE: 21
 };
 
 /**
@@ -5719,7 +5688,8 @@ proto.nitric.proto.deployments.v1.Resource.toObject = function(includeInstance, 
     secret: (f = msg.getSecret()) && proto.nitric.proto.deployments.v1.Secret.toObject(includeInstance, f),
     websocket: (f = msg.getWebsocket()) && proto.nitric.proto.deployments.v1.Websocket.toObject(includeInstance, f),
     http: (f = msg.getHttp()) && proto.nitric.proto.deployments.v1.Http.toObject(includeInstance, f),
-    queue: (f = msg.getQueue()) && proto.nitric.proto.deployments.v1.Queue.toObject(includeInstance, f)
+    queue: (f = msg.getQueue()) && proto.nitric.proto.deployments.v1.Queue.toObject(includeInstance, f),
+    sqlDatabase: (f = msg.getSqlDatabase()) && proto.nitric.proto.deployments.v1.SqlDatabase.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -5815,6 +5785,11 @@ proto.nitric.proto.deployments.v1.Resource.deserializeBinaryFromReader = functio
       var value = new proto.nitric.proto.deployments.v1.Queue;
       reader.readMessage(value,proto.nitric.proto.deployments.v1.Queue.deserializeBinaryFromReader);
       msg.setQueue(value);
+      break;
+    case 21:
+      var value = new proto.nitric.proto.deployments.v1.SqlDatabase;
+      reader.readMessage(value,proto.nitric.proto.deployments.v1.SqlDatabase.deserializeBinaryFromReader);
+      msg.setSqlDatabase(value);
       break;
     default:
       reader.skipField();
@@ -5939,6 +5914,14 @@ proto.nitric.proto.deployments.v1.Resource.serializeBinaryToWriter = function(me
       20,
       f,
       proto.nitric.proto.deployments.v1.Queue.serializeBinaryToWriter
+    );
+  }
+  f = message.getSqlDatabase();
+  if (f != null) {
+    writer.writeMessage(
+      21,
+      f,
+      proto.nitric.proto.deployments.v1.SqlDatabase.serializeBinaryToWriter
     );
   }
 };
@@ -6385,6 +6368,43 @@ proto.nitric.proto.deployments.v1.Resource.prototype.clearQueue = function() {
  */
 proto.nitric.proto.deployments.v1.Resource.prototype.hasQueue = function() {
   return jspb.Message.getField(this, 20) != null;
+};
+
+
+/**
+ * optional SqlDatabase sql_database = 21;
+ * @return {?proto.nitric.proto.deployments.v1.SqlDatabase}
+ */
+proto.nitric.proto.deployments.v1.Resource.prototype.getSqlDatabase = function() {
+  return /** @type{?proto.nitric.proto.deployments.v1.SqlDatabase} */ (
+    jspb.Message.getWrapperField(this, proto.nitric.proto.deployments.v1.SqlDatabase, 21));
+};
+
+
+/**
+ * @param {?proto.nitric.proto.deployments.v1.SqlDatabase|undefined} value
+ * @return {!proto.nitric.proto.deployments.v1.Resource} returns this
+*/
+proto.nitric.proto.deployments.v1.Resource.prototype.setSqlDatabase = function(value) {
+  return jspb.Message.setOneofWrapperField(this, 21, proto.nitric.proto.deployments.v1.Resource.oneofGroups_[0], value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.nitric.proto.deployments.v1.Resource} returns this
+ */
+proto.nitric.proto.deployments.v1.Resource.prototype.clearSqlDatabase = function() {
+  return this.setSqlDatabase(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.nitric.proto.deployments.v1.Resource.prototype.hasSqlDatabase = function() {
+  return jspb.Message.getField(this, 21) != null;
 };
 
 

@@ -232,9 +232,6 @@ export namespace SecretResource {
 }
 
 export class SqlDatabaseResource extends jspb.Message {
-  getEnvVariableName(): string;
-  setEnvVariableName(value: string): void;
-
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): SqlDatabaseResource.AsObject;
   static toObject(includeInstance: boolean, msg: SqlDatabaseResource): SqlDatabaseResource.AsObject;
@@ -247,7 +244,6 @@ export class SqlDatabaseResource extends jspb.Message {
 
 export namespace SqlDatabaseResource {
   export type AsObject = {
-    envVariableName: string,
   }
 }
 
