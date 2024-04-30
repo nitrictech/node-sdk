@@ -62,6 +62,7 @@ goog.exportSymbol('proto.nitric.proto.deployments.v1.Service', null, global);
 goog.exportSymbol('proto.nitric.proto.deployments.v1.Service.SourceCase', null, global);
 goog.exportSymbol('proto.nitric.proto.deployments.v1.Spec', null, global);
 goog.exportSymbol('proto.nitric.proto.deployments.v1.SqlDatabase', null, global);
+goog.exportSymbol('proto.nitric.proto.deployments.v1.SqlDatabase.MigrationsCase', null, global);
 goog.exportSymbol('proto.nitric.proto.deployments.v1.SubscriptionTarget', null, global);
 goog.exportSymbol('proto.nitric.proto.deployments.v1.SubscriptionTarget.TargetCase', null, global);
 goog.exportSymbol('proto.nitric.proto.deployments.v1.Topic', null, global);
@@ -586,7 +587,7 @@ if (goog.DEBUG && !COMPILED) {
  * @constructor
  */
 proto.nitric.proto.deployments.v1.SqlDatabase = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
+  jspb.Message.initialize(this, opt_data, 0, -1, null, proto.nitric.proto.deployments.v1.SqlDatabase.oneofGroups_);
 };
 goog.inherits(proto.nitric.proto.deployments.v1.SqlDatabase, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
@@ -5249,6 +5250,31 @@ proto.nitric.proto.deployments.v1.Schedule.prototype.hasCron = function() {
 
 
 
+/**
+ * Oneof group definitions for this message. Each group defines the field
+ * numbers belonging to that group. When of these fields' value is set, all
+ * other fields in the group are cleared. During deserialization, if multiple
+ * fields are encountered for a group, only the last value seen will be kept.
+ * @private {!Array<!Array<number>>}
+ * @const
+ */
+proto.nitric.proto.deployments.v1.SqlDatabase.oneofGroups_ = [[1]];
+
+/**
+ * @enum {number}
+ */
+proto.nitric.proto.deployments.v1.SqlDatabase.MigrationsCase = {
+  MIGRATIONS_NOT_SET: 0,
+  IMAGE_URI: 1
+};
+
+/**
+ * @return {proto.nitric.proto.deployments.v1.SqlDatabase.MigrationsCase}
+ */
+proto.nitric.proto.deployments.v1.SqlDatabase.prototype.getMigrationsCase = function() {
+  return /** @type {proto.nitric.proto.deployments.v1.SqlDatabase.MigrationsCase} */(jspb.Message.computeOneofCase(this, proto.nitric.proto.deployments.v1.SqlDatabase.oneofGroups_[0]));
+};
+
 
 
 if (jspb.Message.GENERATE_TO_OBJECT) {
@@ -5280,7 +5306,7 @@ proto.nitric.proto.deployments.v1.SqlDatabase.prototype.toObject = function(opt_
  */
 proto.nitric.proto.deployments.v1.SqlDatabase.toObject = function(includeInstance, msg) {
   var f, obj = {
-
+    imageUri: jspb.Message.getFieldWithDefault(msg, 1, "")
   };
 
   if (includeInstance) {
@@ -5317,6 +5343,10 @@ proto.nitric.proto.deployments.v1.SqlDatabase.deserializeBinaryFromReader = func
     }
     var field = reader.getFieldNumber();
     switch (field) {
+    case 1:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setImageUri(value);
+      break;
     default:
       reader.skipField();
       break;
@@ -5346,6 +5376,49 @@ proto.nitric.proto.deployments.v1.SqlDatabase.prototype.serializeBinary = functi
  */
 proto.nitric.proto.deployments.v1.SqlDatabase.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
+  f = /** @type {string} */ (jspb.Message.getField(message, 1));
+  if (f != null) {
+    writer.writeString(
+      1,
+      f
+    );
+  }
+};
+
+
+/**
+ * optional string image_uri = 1;
+ * @return {string}
+ */
+proto.nitric.proto.deployments.v1.SqlDatabase.prototype.getImageUri = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.nitric.proto.deployments.v1.SqlDatabase} returns this
+ */
+proto.nitric.proto.deployments.v1.SqlDatabase.prototype.setImageUri = function(value) {
+  return jspb.Message.setOneofField(this, 1, proto.nitric.proto.deployments.v1.SqlDatabase.oneofGroups_[0], value);
+};
+
+
+/**
+ * Clears the field making it undefined.
+ * @return {!proto.nitric.proto.deployments.v1.SqlDatabase} returns this
+ */
+proto.nitric.proto.deployments.v1.SqlDatabase.prototype.clearImageUri = function() {
+  return jspb.Message.setOneofField(this, 1, proto.nitric.proto.deployments.v1.SqlDatabase.oneofGroups_[0], undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.nitric.proto.deployments.v1.SqlDatabase.prototype.hasImageUri = function() {
+  return jspb.Message.getField(this, 1) != null;
 };
 
 

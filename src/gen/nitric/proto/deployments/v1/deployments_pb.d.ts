@@ -687,6 +687,12 @@ export namespace Schedule {
 }
 
 export class SqlDatabase extends jspb.Message {
+  hasImageUri(): boolean;
+  clearImageUri(): void;
+  getImageUri(): string;
+  setImageUri(value: string): void;
+
+  getMigrationsCase(): SqlDatabase.MigrationsCase;
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): SqlDatabase.AsObject;
   static toObject(includeInstance: boolean, msg: SqlDatabase): SqlDatabase.AsObject;
@@ -699,6 +705,12 @@ export class SqlDatabase extends jspb.Message {
 
 export namespace SqlDatabase {
   export type AsObject = {
+    imageUri: string,
+  }
+
+  export enum MigrationsCase {
+    MIGRATIONS_NOT_SET = 0,
+    IMAGE_URI = 1,
   }
 }
 
