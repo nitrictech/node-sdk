@@ -231,7 +231,40 @@ export namespace SecretResource {
   }
 }
 
+export class SqlDatabaseMigrations extends jspb.Message {
+  hasMigrationsPath(): boolean;
+  clearMigrationsPath(): void;
+  getMigrationsPath(): string;
+  setMigrationsPath(value: string): void;
+
+  getMigrationsCase(): SqlDatabaseMigrations.MigrationsCase;
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): SqlDatabaseMigrations.AsObject;
+  static toObject(includeInstance: boolean, msg: SqlDatabaseMigrations): SqlDatabaseMigrations.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: SqlDatabaseMigrations, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): SqlDatabaseMigrations;
+  static deserializeBinaryFromReader(message: SqlDatabaseMigrations, reader: jspb.BinaryReader): SqlDatabaseMigrations;
+}
+
+export namespace SqlDatabaseMigrations {
+  export type AsObject = {
+    migrationsPath: string,
+  }
+
+  export enum MigrationsCase {
+    MIGRATIONS_NOT_SET = 0,
+    MIGRATIONS_PATH = 1,
+  }
+}
+
 export class SqlDatabaseResource extends jspb.Message {
+  hasMigrations(): boolean;
+  clearMigrations(): void;
+  getMigrations(): SqlDatabaseMigrations | undefined;
+  setMigrations(value?: SqlDatabaseMigrations): void;
+
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): SqlDatabaseResource.AsObject;
   static toObject(includeInstance: boolean, msg: SqlDatabaseResource): SqlDatabaseResource.AsObject;
@@ -244,6 +277,7 @@ export class SqlDatabaseResource extends jspb.Message {
 
 export namespace SqlDatabaseResource {
   export type AsObject = {
+    migrations?: SqlDatabaseMigrations.AsObject,
   }
 }
 
