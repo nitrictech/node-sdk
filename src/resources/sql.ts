@@ -17,6 +17,7 @@ import {
   ResourceType,
   ResourceTypeMap,
   SqlDatabaseResource,
+  SqlDatabaseMigrations
 } from '@nitric/proto/resources/v1/resources_pb';
 import { SqlConnectionStringRequest } from '@nitric/proto/sql/v1/sql_pb';
 import resourceClient from './client';
@@ -26,14 +27,24 @@ import { SERVICE_BIND } from '../constants';
 import * as grpc from '@grpc/grpc-js';
 import { fromGrpcError } from '../api/errors';
 
+interface SQLDatabaseOptions {
+  /**
+   * Location of migrations for the SQL Database
+   * This can be specified as either a local file path or a docker file relative to the nitric project root.
+   * e.g. "file://migrations/main-database" or "dockerfile://path/to/migration.dockerfile"
+   */
+  migrations: string;
+}
 /**
  * Register a SQL resource to the provided application.
  */
 export class SQLDatabaseResource extends Base {
   private readonly sqlClient: SqlClient;
+  private readonly options: SQLDatabaseOptions;
 
-  constructor(name: string) {
+  constructor(name: string, options?: SQLDatabaseOptions) {
     super(name);
+    this.options = options;
     this.sqlClient = new SqlClient(
       SERVICE_BIND,
       grpc.ChannelCredentials.createInsecure()
@@ -53,6 +64,14 @@ export class SQLDatabaseResource extends Base {
     req.setId(resource);
 
     const sqlConfig = new SqlDatabaseResource();
+
+    if (this.options) {
+      const sqlMigrations = new SqlDatabaseMigrations();
+      sqlMigrations.setMigrationsPath(this.options.migrations);
+
+      sqlConfig.setMigrations(sqlMigrations);
+    }
+
     req.setSqlDatabase(sqlConfig);
 
     const res = await new Promise<ResourceIdentifier>((resolve, reject) => {
@@ -95,6 +114,8 @@ export class SQLDatabaseResource extends Base {
   }
 }
 
+const maker = make(SQLDatabaseResource);
+
 /**
  * Register a SQL Database Resource. If the SQL Database has already been registered, the existing SQL will be returned.
  *
@@ -104,5 +125,4 @@ export class SQLDatabaseResource extends Base {
  * @param name the name of the SQL Database
  * @returns a SQL resource
  */
-export const sql: (name: string) => SQLDatabaseResource =
-  make(SQLDatabaseResource);
+export const sql = (name: string, options: SQLDatabaseOptions) => maker(name, options);
