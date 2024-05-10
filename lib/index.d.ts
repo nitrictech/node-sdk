@@ -2825,7 +2825,7 @@ declare class SQLDatabaseResource extends Resource {
  * @param name the name of the SQL Database
  * @returns a SQL resource
  */
-declare const sql: (name: string, options: SQLDatabaseOptions) => SQLDatabaseResource;
+declare const sql: (name: string, options?: SQLDatabaseOptions) => SQLDatabaseResource;
 
 type ServerType = Server | Http2Server | Http2SecureServer;
 type ListenerFunction = ((port: number, callback?: () => void) => ServerType | Promise<ServerType>) | ((port: number) => ServerType | Promise<ServerType>);
