@@ -1,5 +1,6 @@
 {
   "name": "@nitric/sdk",
+  "version": "1.0.0",
   "description": "Nitric NodeJS client sdk",
   "nitric": "v1.1.0",
   "author": "Nitric <https://github.com/nitrictech>",
