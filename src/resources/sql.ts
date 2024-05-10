@@ -40,9 +40,9 @@ interface SQLDatabaseOptions {
  */
 export class SQLDatabaseResource extends Base {
   private readonly sqlClient: SqlClient;
-  private readonly options: SQLDatabaseOptions;
+  private readonly options?: SQLDatabaseOptions;
 
-  constructor(name: string, options?: SQLDatabaseOptions) {
+  constructor(name: string, options: SQLDatabaseOptions = undefined) {
     super(name);
     this.options = options;
     this.sqlClient = new SqlClient(
