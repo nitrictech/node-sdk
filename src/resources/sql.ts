@@ -42,7 +42,7 @@ export class SQLDatabaseResource extends Base {
   private readonly sqlClient: SqlClient;
   private readonly options?: SQLDatabaseOptions;
 
-  constructor(name: string, options: SQLDatabaseOptions = undefined) {
+  constructor(name: string, options?: SQLDatabaseOptions) {
     super(name);
     this.options = options;
     this.sqlClient = new SqlClient(
@@ -125,4 +125,4 @@ const maker = make(SQLDatabaseResource);
  * @param name the name of the SQL Database
  * @returns a SQL resource
  */
-export const sql = (name: string, options: SQLDatabaseOptions) => maker(name, options);
+export const sql = (name: string, options?: SQLDatabaseOptions) => maker(name, options);
