@@ -686,6 +686,34 @@ export namespace Schedule {
   }
 }
 
+export class SqlDatabase extends jspb.Message {
+  hasImageUri(): boolean;
+  clearImageUri(): void;
+  getImageUri(): string;
+  setImageUri(value: string): void;
+
+  getMigrationsCase(): SqlDatabase.MigrationsCase;
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): SqlDatabase.AsObject;
+  static toObject(includeInstance: boolean, msg: SqlDatabase): SqlDatabase.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: SqlDatabase, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): SqlDatabase;
+  static deserializeBinaryFromReader(message: SqlDatabase, reader: jspb.BinaryReader): SqlDatabase;
+}
+
+export namespace SqlDatabase {
+  export type AsObject = {
+    imageUri: string,
+  }
+
+  export enum MigrationsCase {
+    MIGRATIONS_NOT_SET = 0,
+    IMAGE_URI = 1,
+  }
+}
+
 export class ScheduleEvery extends jspb.Message {
   getRate(): string;
   setRate(value: string): void;
@@ -787,6 +815,11 @@ export class Resource extends jspb.Message {
   getQueue(): Queue | undefined;
   setQueue(value?: Queue): void;
 
+  hasSqlDatabase(): boolean;
+  clearSqlDatabase(): void;
+  getSqlDatabase(): SqlDatabase | undefined;
+  setSqlDatabase(value?: SqlDatabase): void;
+
   getConfigCase(): Resource.ConfigCase;
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): Resource.AsObject;
@@ -812,6 +845,7 @@ export namespace Resource {
     websocket?: Websocket.AsObject,
     http?: Http.AsObject,
     queue?: Queue.AsObject,
+    sqlDatabase?: SqlDatabase.AsObject,
   }
 
   export enum ConfigCase {
@@ -827,6 +861,7 @@ export namespace Resource {
     WEBSOCKET = 18,
     HTTP = 19,
     QUEUE = 20,
+    SQL_DATABASE = 21,
   }
 }
 
