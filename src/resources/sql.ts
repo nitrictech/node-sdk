@@ -17,7 +17,7 @@ import {
   ResourceType,
   ResourceTypeMap,
   SqlDatabaseResource,
-  SqlDatabaseMigrations
+  SqlDatabaseMigrations,
 } from '@nitric/proto/resources/v1/resources_pb';
 import { SqlConnectionStringRequest } from '@nitric/proto/sql/v1/sql_pb';
 import resourceClient from './client';
@@ -126,4 +126,5 @@ const maker = make(SQLDatabaseResource);
  * @param options the options for the SQL Database
  * @returns a SQL resource
  */
-export const sql = (name: string, options?: SQLDatabaseOptions) => maker(name, options);
+export const sql = (name: string, options?: SQLDatabaseOptions) =>
+  maker(name, options);
