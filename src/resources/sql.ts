@@ -123,6 +123,7 @@ const maker = make(SQLDatabaseResource);
  * e.g. const connectionString = db.connectionString()
  *
  * @param name the name of the SQL Database
+ * @param options the options for the SQL Database
  * @returns a SQL resource
  */
 export const sql = (name: string, options?: SQLDatabaseOptions) => maker(name, options);
