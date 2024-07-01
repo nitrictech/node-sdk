@@ -112,6 +112,11 @@ export class ResourceDeclareRequest extends jspb.Message {
   getSqlDatabase(): SqlDatabaseResource | undefined;
   setSqlDatabase(value?: SqlDatabaseResource): void;
 
+  hasJob(): boolean;
+  clearJob(): void;
+  getJob(): JobResource | undefined;
+  setJob(value?: JobResource): void;
+
   getConfigCase(): ResourceDeclareRequest.ConfigCase;
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): ResourceDeclareRequest.AsObject;
@@ -135,6 +140,7 @@ export namespace ResourceDeclareRequest {
     apiSecurityDefinition?: ApiSecurityDefinitionResource.AsObject,
     queue?: QueueResource.AsObject,
     sqlDatabase?: SqlDatabaseResource.AsObject,
+    job?: JobResource.AsObject,
   }
 
   export enum ConfigCase {
@@ -148,6 +154,7 @@ export namespace ResourceDeclareRequest {
     API_SECURITY_DEFINITION = 16,
     QUEUE = 17,
     SQL_DATABASE = 18,
+    JOB = 19,
   }
 }
 
@@ -227,6 +234,22 @@ export class SecretResource extends jspb.Message {
 }
 
 export namespace SecretResource {
+  export type AsObject = {
+  }
+}
+
+export class JobResource extends jspb.Message {
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): JobResource.AsObject;
+  static toObject(includeInstance: boolean, msg: JobResource): JobResource.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: JobResource, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): JobResource;
+  static deserializeBinaryFromReader(message: JobResource, reader: jspb.BinaryReader): JobResource;
+}
+
+export namespace JobResource {
   export type AsObject = {
   }
 }
@@ -412,6 +435,8 @@ export interface ResourceTypeMap {
   APISECURITYDEFINITION: 12;
   QUEUE: 13;
   SQLDATABASE: 14;
+  BATCH: 15;
+  JOB: 16;
 }
 
 export const ResourceType: ResourceTypeMap;

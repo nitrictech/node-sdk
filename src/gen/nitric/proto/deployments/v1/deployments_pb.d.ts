@@ -301,6 +301,47 @@ export namespace Service {
   }
 }
 
+export class Batch extends jspb.Message {
+  hasImage(): boolean;
+  clearImage(): void;
+  getImage(): ImageSource | undefined;
+  setImage(value?: ImageSource): void;
+
+  getType(): string;
+  setType(value: string): void;
+
+  getEnvMap(): jspb.Map<string, string>;
+  clearEnvMap(): void;
+  clearJobsList(): void;
+  getJobsList(): Array<string>;
+  setJobsList(value: Array<string>): void;
+  addJobs(value: string, index?: number): string;
+
+  getSourceCase(): Batch.SourceCase;
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): Batch.AsObject;
+  static toObject(includeInstance: boolean, msg: Batch): Batch.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: Batch, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): Batch;
+  static deserializeBinaryFromReader(message: Batch, reader: jspb.BinaryReader): Batch;
+}
+
+export namespace Batch {
+  export type AsObject = {
+    image?: ImageSource.AsObject,
+    type: string,
+    envMap: Array<[string, string]>,
+    jobsList: Array<string>,
+  }
+
+  export enum SourceCase {
+    SOURCE_NOT_SET = 0,
+    IMAGE = 1,
+  }
+}
+
 export class Bucket extends jspb.Message {
   clearListenersList(): void;
   getListenersList(): Array<BucketListener>;
@@ -820,6 +861,11 @@ export class Resource extends jspb.Message {
   getSqlDatabase(): SqlDatabase | undefined;
   setSqlDatabase(value?: SqlDatabase): void;
 
+  hasBatch(): boolean;
+  clearBatch(): void;
+  getBatch(): Batch | undefined;
+  setBatch(value?: Batch): void;
+
   getConfigCase(): Resource.ConfigCase;
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): Resource.AsObject;
@@ -846,6 +892,7 @@ export namespace Resource {
     http?: Http.AsObject,
     queue?: Queue.AsObject,
     sqlDatabase?: SqlDatabase.AsObject,
+    batch?: Batch.AsObject,
   }
 
   export enum ConfigCase {
@@ -862,6 +909,7 @@ export namespace Resource {
     HTTP = 19,
     QUEUE = 20,
     SQL_DATABASE = 21,
+    BATCH = 22,
   }
 }
 
