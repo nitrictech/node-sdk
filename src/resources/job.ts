@@ -59,9 +59,13 @@ class JobDefinitionResource extends Resource {
     
         request.setName(this.name);
     
-        return await new Promise((resolve, reject) => {
+        return await new Promise<void>(async (resolve, reject) => {
             client.createJob(request, (err, data) => {
-    
+                if (err) {
+                    reject(fromGrpcError(err));
+                }
+
+                resolve();
             });
         });
     }
