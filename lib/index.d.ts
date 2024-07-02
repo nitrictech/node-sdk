@@ -2908,7 +2908,7 @@ declare class JobDefinitionResource extends Resource {
     constructor(name: string);
     protected register(): Promise<ResourceIdentifier>;
     define(callback: () => void | Promise<void>): Promise<void>;
-    submit(): Promise<unknown>;
+    submit(): Promise<void>;
     protected resourceType(): ResourceTypeMap[keyof ResourceTypeMap];
 }
 /**
