@@ -27,15 +27,59 @@ Nitric SDKs provide an infrastructure-as-code style that lets you define resourc
 
 You can request the type of access you need to resources such as publishing for topics, without dealing directly with IAM or policy documents.
 
-## Status
+- Reference Documentation: https://nitric.io/docs/reference/nodejs
+- Guides: https://nitric.io/docs/guides/nodejs
 
-The SDK is in early stage development and APIs and interfaces are still subject to breaking changes. We’d love your feedback as we build additional functionality!
+## Usage
+
+### Starting a new project
+
+Install the [Nitric CLI](https://nitric.io/docs/getting-started/installation), then generate your project:
+
+TypeScript:
+
+```bash
+nitric new hello-world ts-starter
+```
+
+JavaScript:
+
+```bash
+nitric new hello-world js-starter
+```
+
+### Adding to an existing project
+
+First of all, you need to install the library:
+
+```bash
+npm install @nitric/sdk
+```
+
+Then you're able to import the library and create cloud resources:
+
+```typescript
+import { api, bucket } from '@nitric/sdk';
+
+const publicApi = api('public');
+const uploads = bucket('uploads').allow('write');
+
+publicApi.get('/upload', async (ctx) => {
+  const photo = uploads.file('images/photo.png');
+
+  const url = await photo.getUploadUrl({
+    expiry: 300,
+  });
+
+  return ctx.res.json({ url });
+});
+```
 
 ## Get in touch:
 
-- Ask questions in [GitHub discussions](https://github.com/nitrictech/nitric/discussions)
+- Join us on [Discord](https://nitric.io/chat)
 
-- Join us on [Discord](https://discord.gg/Webemece5C)
+- Ask questions in [GitHub discussions](https://github.com/nitrictech/nitric/discussions)
 
 - Find us on [Twitter](https://twitter.com/nitric_io)
 
