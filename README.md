@@ -48,7 +48,7 @@ JavaScript:
 nitric new hello-world js-starter
 ```
 
-### Adding to an existing project
+### Add to an existing project
 
 First of all, you need to install the library:
 
