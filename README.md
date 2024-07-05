@@ -75,6 +75,10 @@ publicApi.get('/upload', async (ctx) => {
 });
 ```
 
+## Learn more
+
+Learn more by checking out the [Nitric documentation](https://nitric.io/docs).
+
 ## Get in touch:
 
 - Join us on [Discord](https://nitric.io/chat)
@@ -84,7 +88,3 @@ publicApi.get('/upload', async (ctx) => {
 - Find us on [Twitter](https://twitter.com/nitric_io)
 
 - Send us an [email](mailto:maintainers@nitric.io)
-
-## Get Started
-
-Check out the [Nitric docs](https://nitric.io/docs) to see how to get started using Nitric.
