@@ -1,4 +1,4 @@
-import { pathsToModuleNameMapper } from 'ts-jest/utils';
+import { pathsToModuleNameMapper } from 'ts-jest';
 import { compilerOptions } from './tsconfig.json';
 
 module.exports = {
@@ -8,5 +8,7 @@ module.exports = {
   roots: ['<rootDir>'],
   coveragePathIgnorePatterns: ['src/gen/'],
   modulePaths: [compilerOptions.baseUrl],
-  moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths,/*, { prefix: '<rootDir>/' } */),
+  moduleNameMapper: pathsToModuleNameMapper(
+    compilerOptions.paths /*, { prefix: '<rootDir>/' } */
+  ),
 };
