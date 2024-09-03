@@ -21,4 +21,5 @@ export * from './secret';
 export * from './sql';
 export * from './http';
 export * from './websocket';
+export * from './batch';
 export { oidcRule } from './oidc';

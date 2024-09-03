@@ -16,6 +16,7 @@ import { BaseContext, JSONTypes } from '../context/base';
 import { BlobEventContext, BucketEventContext } from '../context/bucket';
 import { HttpContext } from '../context/http';
 import { IntervalContext } from '../context/interval';
+import { JobContext } from '../context/job';
 import { MessageContext } from '../context/message';
 import { WebsocketNotificationContext } from '../context/websocket';
 
@@ -40,7 +41,7 @@ export type ScheduleMiddleware = GenericMiddleware<IntervalContext>;
 export type BucketNotificationMiddleware =
   GenericMiddleware<BucketEventContext>;
 export type FileNotificationMiddleware = GenericMiddleware<BlobEventContext>;
-
+export type JobMiddleware = GenericMiddleware<JobContext>;
 /**
  * createHandler
  *
