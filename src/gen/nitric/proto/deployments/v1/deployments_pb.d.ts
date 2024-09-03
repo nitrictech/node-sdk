@@ -5,6 +5,7 @@ import * as jspb from "google-protobuf";
 import * as google_protobuf_struct_pb from "google-protobuf/google/protobuf/struct_pb";
 import * as nitric_proto_resources_v1_resources_pb from "../../../../nitric/proto/resources/v1/resources_pb";
 import * as nitric_proto_storage_v1_storage_pb from "../../../../nitric/proto/storage/v1/storage_pb";
+import * as nitric_proto_batch_v1_batch_pb from "../../../../nitric/proto/batch/v1/batch_pb";
 
 export class DeploymentUpRequest extends jspb.Message {
   hasSpec(): boolean;
@@ -293,6 +294,73 @@ export namespace Service {
     memory: number,
     type: string,
     envMap: Array<[string, string]>,
+  }
+
+  export enum SourceCase {
+    SOURCE_NOT_SET = 0,
+    IMAGE = 1,
+  }
+}
+
+export class Job extends jspb.Message {
+  getName(): string;
+  setName(value: string): void;
+
+  hasRequirements(): boolean;
+  clearRequirements(): void;
+  getRequirements(): nitric_proto_batch_v1_batch_pb.JobResourceRequirements | undefined;
+  setRequirements(value?: nitric_proto_batch_v1_batch_pb.JobResourceRequirements): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): Job.AsObject;
+  static toObject(includeInstance: boolean, msg: Job): Job.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: Job, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): Job;
+  static deserializeBinaryFromReader(message: Job, reader: jspb.BinaryReader): Job;
+}
+
+export namespace Job {
+  export type AsObject = {
+    name: string,
+    requirements?: nitric_proto_batch_v1_batch_pb.JobResourceRequirements.AsObject,
+  }
+}
+
+export class Batch extends jspb.Message {
+  hasImage(): boolean;
+  clearImage(): void;
+  getImage(): ImageSource | undefined;
+  setImage(value?: ImageSource): void;
+
+  getType(): string;
+  setType(value: string): void;
+
+  getEnvMap(): jspb.Map<string, string>;
+  clearEnvMap(): void;
+  clearJobsList(): void;
+  getJobsList(): Array<Job>;
+  setJobsList(value: Array<Job>): void;
+  addJobs(value?: Job, index?: number): Job;
+
+  getSourceCase(): Batch.SourceCase;
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): Batch.AsObject;
+  static toObject(includeInstance: boolean, msg: Batch): Batch.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: Batch, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): Batch;
+  static deserializeBinaryFromReader(message: Batch, reader: jspb.BinaryReader): Batch;
+}
+
+export namespace Batch {
+  export type AsObject = {
+    image?: ImageSource.AsObject,
+    type: string,
+    envMap: Array<[string, string]>,
+    jobsList: Array<Job.AsObject>,
   }
 
   export enum SourceCase {
@@ -820,6 +888,11 @@ export class Resource extends jspb.Message {
   getSqlDatabase(): SqlDatabase | undefined;
   setSqlDatabase(value?: SqlDatabase): void;
 
+  hasBatch(): boolean;
+  clearBatch(): void;
+  getBatch(): Batch | undefined;
+  setBatch(value?: Batch): void;
+
   getConfigCase(): Resource.ConfigCase;
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): Resource.AsObject;
@@ -846,6 +919,7 @@ export namespace Resource {
     http?: Http.AsObject,
     queue?: Queue.AsObject,
     sqlDatabase?: SqlDatabase.AsObject,
+    batch?: Batch.AsObject,
   }
 
   export enum ConfigCase {
@@ -862,6 +936,7 @@ export namespace Resource {
     HTTP = 19,
     QUEUE = 20,
     SQL_DATABASE = 21,
+    BATCH = 22,
   }
 }
 

@@ -6,6 +6,7 @@ var nitric_proto_deployments_v1_deployments_pb = require('../../../../nitric/pro
 var google_protobuf_struct_pb = require('google-protobuf/google/protobuf/struct_pb.js');
 var nitric_proto_resources_v1_resources_pb = require('../../../../nitric/proto/resources/v1/resources_pb.js');
 var nitric_proto_storage_v1_storage_pb = require('../../../../nitric/proto/storage/v1/storage_pb.js');
+var nitric_proto_batch_v1_batch_pb = require('../../../../nitric/proto/batch/v1/batch_pb.js');
 
 function serialize_nitric_proto_deployments_v1_DeploymentDownEvent(arg) {
   if (!(arg instanceof nitric_proto_deployments_v1_deployments_pb.DeploymentDownEvent)) {
