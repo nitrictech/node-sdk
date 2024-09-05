@@ -19,6 +19,7 @@ import {
   ResourceType,
   Action,
   QueueResource as NitricQueueResource,
+  ResourceTypeMap,
 } from '@nitric/proto/resources/v1/resources_pb';
 import resourceClient from './client';
 import { fromGrpcError } from '../api/errors';
@@ -77,7 +78,7 @@ export class QueueResource<
     return actions;
   }
 
-  protected resourceType() {
+  protected resourceType(): ResourceTypeMap[keyof ResourceTypeMap] {
     return ResourceType.QUEUE;
   }
 

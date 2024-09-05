@@ -183,6 +183,7 @@ export class JobResource extends SecureResource<JobPermission> {
    * ```
    *
    * @param perm  the required permission set
+   * @param perms additional required permissions set
    * @returns a usable job reference
    */
   public allow(perm: JobPermission, ...perms: JobPermission[]): Job {
@@ -209,7 +210,7 @@ export class JobResource extends SecureResource<JobPermission> {
   public handler(
     requirements: JobResourceRequirements,
     ...middleware: JobMiddleware[]
-  ) {
+  ): Promise<void> {
     const jobHandler = new JobHandler(this.name, requirements, ...middleware);
 
     return jobHandler['start']();
