@@ -25,6 +25,21 @@ export class Job<T extends Record<string, any> = Record<string, any>> {
     this.client = client;
   }
 
+  /**
+   * Submit a job to the batch service
+   *
+   * @example
+   * ```typescript
+   * const analyse = job('analyse').allow('submit');
+   *
+   * await analyse.submit({
+   *  data: 'some data',
+   * });
+   * ```
+   *
+   * @param data - Data to submit to the job
+   * @returns Promise that resolves when the job has been submitted
+   */
   async submit(data: T): Promise<void> {
     const request = new JobSubmitRequest();
     const jobData = new JobData();

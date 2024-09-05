@@ -113,7 +113,7 @@ export class JobHandler {
   }
 }
 
-class JobResource extends SecureResource<JobPermission> {
+export class JobResource extends SecureResource<JobPermission> {
   constructor(name: string) {
     super(name);
   }
@@ -164,7 +164,10 @@ class JobResource extends SecureResource<JobPermission> {
   /**
    * Return a job reference and register the permissions required by the currently scoped function for this resource.
    *
-   * e.g. const job = job('jobName').allow('submit')
+   * @example
+   * ```typescript
+   * const myJob = job('jobName').allow('submit')
+   * ```
    *
    * @param perm  the required permission set
    * @returns a usable job reference
@@ -175,6 +178,21 @@ class JobResource extends SecureResource<JobPermission> {
     return new Job(this.name, getBatchClient());
   }
 
+  /**
+   * Register a handler for the job.
+   *
+   * @example
+   * ```typescript
+   * job('my-job').handler({ cpus: 1, memory: 1024, gpus: 0 }, async (ctx) => {
+   *  console.log('Hello from my-job');
+   *  return ctx;
+   * });
+   * ```
+   *
+   * @param requirements the resource requirements for the job, e.g. cpus, memory, gpus
+   * @param middleware the middleware to be executed for the job
+   * @returns Promise which resolves when the handler server terminates
+   */
   public handler(
     requirements: JobResourceRequirements,
     ...middleware: JobMiddleware[]
