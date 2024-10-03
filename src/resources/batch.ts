@@ -209,8 +209,8 @@ export class JobResource extends SecureResource<JobPermission> {
    * }, { cpus: 1, memory: 1024, gpus: 0 });
    * ```
    *
-   * @param requirements the resource requirements for the job, e.g. cpus, memory, gpus
    * @param middleware the middleware to be executed for the job
+   * @param requirements the resource requirements for the job, e.g. cpus, memory, gpus
    * @returns Promise which resolves when the handler server terminates
    */
   public handler(
