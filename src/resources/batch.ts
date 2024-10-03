@@ -126,6 +126,12 @@ export class JobHandler {
   }
 }
 
+const defaultJobRequirements: JobResourceRequirements = {
+  cpus: 0,
+  memory: 0,
+  gpus: 0,
+};
+
 export class JobResource extends SecureResource<JobPermission> {
   constructor(name: string) {
     super(name);
@@ -197,10 +203,10 @@ export class JobResource extends SecureResource<JobPermission> {
    *
    * @example
    * ```typescript
-   * job('my-job').handler({ cpus: 1, memory: 1024, gpus: 0 }, async (ctx) => {
+   * job('my-job').handler(async (ctx) => {
    *  console.log('Hello from my-job');
    *  return ctx;
-   * });
+   * }, { cpus: 1, memory: 1024, gpus: 0 });
    * ```
    *
    * @param requirements the resource requirements for the job, e.g. cpus, memory, gpus
@@ -208,10 +214,15 @@ export class JobResource extends SecureResource<JobPermission> {
    * @returns Promise which resolves when the handler server terminates
    */
   public handler(
-    requirements: JobResourceRequirements,
-    ...middleware: JobMiddleware[]
+    middleware: JobMiddleware,
+    requirements: JobResourceRequirements = defaultJobRequirements,
   ): Promise<void> {
-    const jobHandler = new JobHandler(this.name, requirements, ...middleware);
+    const jobRequirements = {
+      ...defaultJobRequirements,
+      ...requirements,
+    }
+
+    const jobHandler = new JobHandler(this.name, jobRequirements, middleware);
 
     return jobHandler['start']();
   }
