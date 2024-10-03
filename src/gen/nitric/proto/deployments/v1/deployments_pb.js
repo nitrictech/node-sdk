@@ -23,12 +23,12 @@ var global = (function() {
 
 var google_protobuf_struct_pb = require('google-protobuf/google/protobuf/struct_pb.js');
 goog.object.extend(proto, google_protobuf_struct_pb);
+var nitric_proto_batch_v1_batch_pb = require('../../../../nitric/proto/batch/v1/batch_pb.js');
+goog.object.extend(proto, nitric_proto_batch_v1_batch_pb);
 var nitric_proto_resources_v1_resources_pb = require('../../../../nitric/proto/resources/v1/resources_pb.js');
 goog.object.extend(proto, nitric_proto_resources_v1_resources_pb);
 var nitric_proto_storage_v1_storage_pb = require('../../../../nitric/proto/storage/v1/storage_pb.js');
 goog.object.extend(proto, nitric_proto_storage_v1_storage_pb);
-var nitric_proto_batch_v1_batch_pb = require('../../../../nitric/proto/batch/v1/batch_pb.js');
-goog.object.extend(proto, nitric_proto_batch_v1_batch_pb);
 goog.exportSymbol('proto.nitric.proto.deployments.v1.Api', null, global);
 goog.exportSymbol('proto.nitric.proto.deployments.v1.Api.DocumentCase', null, global);
 goog.exportSymbol('proto.nitric.proto.deployments.v1.Batch', null, global);

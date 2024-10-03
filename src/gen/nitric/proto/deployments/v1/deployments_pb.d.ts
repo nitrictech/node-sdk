@@ -3,9 +3,9 @@
 
 import * as jspb from "google-protobuf";
 import * as google_protobuf_struct_pb from "google-protobuf/google/protobuf/struct_pb";
+import * as nitric_proto_batch_v1_batch_pb from "../../../../nitric/proto/batch/v1/batch_pb";
 import * as nitric_proto_resources_v1_resources_pb from "../../../../nitric/proto/resources/v1/resources_pb";
 import * as nitric_proto_storage_v1_storage_pb from "../../../../nitric/proto/storage/v1/storage_pb";
-import * as nitric_proto_batch_v1_batch_pb from "../../../../nitric/proto/batch/v1/batch_pb";
 
 export class DeploymentUpRequest extends jspb.Message {
   hasSpec(): boolean;
