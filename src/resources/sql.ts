@@ -126,5 +126,7 @@ const maker = make(SQLDatabaseResource);
  * @param options the options for the SQL Database
  * @returns a SQL resource
  */
-export const sql = (name: string, options?: SQLDatabaseOptions) =>
-  maker(name, options);
+export const sql = (
+  name: string,
+  options?: SQLDatabaseOptions
+): SQLDatabaseResource => maker(name, options);

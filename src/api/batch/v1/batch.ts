@@ -11,15 +11,18 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-export * from './api';
-export * from './topic';
-export * from './queue';
-export * from './keyvalue';
-export * from './bucket';
-export * from './schedule';
-export * from './secret';
-export * from './sql';
-export * from './http';
-export * from './websocket';
-export * from './batch';
-export { oidcRule } from './oidc';
+import { SERVICE_BIND } from '@nitric/sdk/constants';
+import { BatchClient } from '@nitric/sdk/gen/nitric/proto/batch/v1/batch_grpc_pb';
+import * as grpc from '@grpc/grpc-js';
+
+let batchClient: BatchClient;
+
+export const getBatchClient = (): BatchClient => {
+  if (!batchClient) {
+    batchClient = new BatchClient(
+      SERVICE_BIND,
+      grpc.ChannelCredentials.createInsecure()
+    );
+  }
+  return batchClient;
+};

@@ -1,7 +1,7 @@
 {
   "name": "@nitric/sdk",
   "description": "Nitric NodeJS client sdk",
-  "nitric": "v1.6.0",
+  "nitric": "v1.14.0",
   "author": "Nitric <https://github.com/nitrictech>",
   "repository": "https://github.com/nitrictech/node-sdk",
   "main": "lib/index.js",
