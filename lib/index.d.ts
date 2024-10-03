@@ -2379,7 +2379,7 @@ declare class QueueResource<T extends Record<string, any> = Record<string, any>>
      */
     protected register(): Promise<ResourceIdentifier>;
     protected permsToActions(...perms: QueuePermission[]): ActionsList;
-    protected resourceType(): 13;
+    protected resourceType(): ResourceTypeMap[keyof ResourceTypeMap];
     protected unwrapDetails(_: ResourceDeclareResponse): never;
     /**
      * Return a queue reference and registers the permissions required by the currently scoped function for this resource.
@@ -3051,6 +3051,21 @@ declare class Job<T extends Record<string, any> = Record<string, any>> {
     private name;
     private client;
     constructor(name: string, client: BatchClient);
+    /**
+     * Submit a job to the batch service
+     *
+     * @example
+     * ```typescript
+     * const analyse = job('analyse').allow('submit');
+     *
+     * await analyse.submit({
+     *  data: 'some data',
+     * });
+     * ```
+     *
+     * @param data - Data to submit to the job
+     * @returns Promise that resolves when the job has been submitted
+     */
     submit(data: T): Promise<void>;
 }
 
@@ -3089,13 +3104,32 @@ declare class JobResource extends SecureResource<JobPermission> {
     /**
      * Return a job reference and register the permissions required by the currently scoped function for this resource.
      *
-     * e.g. const job = job('jobName').allow('submit')
+     * @example
+     * ```typescript
+     * const myJob = job('jobName').allow('submit')
+     * ```
      *
      * @param perm  the required permission set
+     * @param perms additional required permissions set
      * @returns a usable job reference
      */
     allow(perm: JobPermission, ...perms: JobPermission[]): Job;
-    handler(requirements: JobResourceRequirements, ...middleware: JobMiddleware[]): Promise<void>;
+    /**
+     * Register a handler for the job.
+     *
+     * @example
+     * ```typescript
+     * job('my-job').handler(async (ctx) => {
+     *  console.log('Hello from my-job');
+     *  return ctx;
+     * }, { cpus: 1, memory: 1024, gpus: 0 });
+     * ```
+     *
+     * @param requirements the resource requirements for the job, e.g. cpus, memory, gpus
+     * @param middleware the middleware to be executed for the job
+     * @returns Promise which resolves when the handler server terminates
+     */
+    handler(middleware: JobMiddleware, requirements?: JobResourceRequirements): Promise<void>;
 }
 /**
  * Create a reference to a named batch job in this project.
@@ -3267,4 +3301,4 @@ declare class File {
  */
 declare const storage: () => Storage;
 
-export { AbstractRequest, Api, ApiOptions, ApiWorkerOptions, BaseContext, BaseSecurityDefinition, BlobEventContext, BlobEventRequest, BlobEventType, Bucket, BucketEventContext, BucketEventRequest, BucketNotification, BucketNotificationMiddleware, BucketNotificationResponse, BucketNotificationType, BucketNotificationWorkerOptions, BucketResource, Cron, DequeuedMessage, Eventing, File, FileMode, FileNotification, FileNotificationMiddleware, FileNotificationWorkerOptions, Frequency, GenericHandler, GenericMiddleware, HttpContext, HttpHandler, HttpMethod, HttpMiddleware, HttpRequest, HttpResponse, HttpWorkerOptions, IntervalContext, IntervalRequest, IntervalResponse, JSONTypes, JobContext, JobHandler, JobMiddleware, JobRequest, JobResponse, JwtSecurityDefinition, KeyValue, KeyValueStoreResource, MessageContext, MessageMiddleware, MessageRequest, MessageResponse, Method, MethodOptions, PublishOptions, Queue, QueuePermission, QueueResource, Queueing, Rate, Route, RouteOptions, SQLDatabaseResource, Schedule, ScheduleMiddleware, Secret, SecretResource, Secrets, SecurityDefinition, SignUrlOptions, Storage, Subscription, SubscriptionWorkerOptions, Topic, TopicResource, TriggerHandler, TriggerMiddleware, ValueStructure, Websocket, WebsocketEventType$1 as WebsocketEventType, WebsocketMiddleware, WebsocketNotificationContext, WebsocketNotificationRequest, WebsocketNotificationResponse, WebsocketNotificationType, WebsocketResource, WhereQueryOperator, WhereValueExpression, api, bucket, createHandler, http, job, json, jsonResponse, keyvalue, kv, oidcRule, queue, queues, schedule, secret, secrets, sql, storage, topic, topics, websocket };
+export { AbstractRequest, Api, ApiOptions, ApiWorkerOptions, BaseContext, BaseSecurityDefinition, BlobEventContext, BlobEventRequest, BlobEventType, Bucket, BucketEventContext, BucketEventRequest, BucketNotification, BucketNotificationMiddleware, BucketNotificationResponse, BucketNotificationType, BucketNotificationWorkerOptions, BucketResource, Cron, DequeuedMessage, Eventing, File, FileMode, FileNotification, FileNotificationMiddleware, FileNotificationWorkerOptions, Frequency, GenericHandler, GenericMiddleware, HttpContext, HttpHandler, HttpMethod, HttpMiddleware, HttpRequest, HttpResponse, HttpWorkerOptions, IntervalContext, IntervalRequest, IntervalResponse, JSONTypes, JobContext, JobHandler, JobMiddleware, JobRequest, JobResource, JobResponse, JwtSecurityDefinition, KeyValue, KeyValueStoreResource, MessageContext, MessageMiddleware, MessageRequest, MessageResponse, Method, MethodOptions, PublishOptions, Queue, QueuePermission, QueueResource, Queueing, Rate, Route, RouteOptions, SQLDatabaseResource, Schedule, ScheduleMiddleware, Secret, SecretResource, Secrets, SecurityDefinition, SignUrlOptions, Storage, Subscription, SubscriptionWorkerOptions, Topic, TopicResource, TriggerHandler, TriggerMiddleware, ValueStructure, Websocket, WebsocketEventType$1 as WebsocketEventType, WebsocketMiddleware, WebsocketNotificationContext, WebsocketNotificationRequest, WebsocketNotificationResponse, WebsocketNotificationType, WebsocketResource, WhereQueryOperator, WhereValueExpression, api, bucket, createHandler, http, job, json, jsonResponse, keyvalue, kv, oidcRule, queue, queues, schedule, secret, secrets, sql, storage, topic, topics, websocket };
