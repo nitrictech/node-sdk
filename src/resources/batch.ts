@@ -215,12 +215,12 @@ export class JobResource extends SecureResource<JobPermission> {
    */
   public handler(
     middleware: JobMiddleware,
-    requirements: JobResourceRequirements = defaultJobRequirements,
+    requirements: JobResourceRequirements = defaultJobRequirements
   ): Promise<void> {
     const jobRequirements = {
       ...defaultJobRequirements,
       ...requirements,
-    }
+    };
 
     const jobHandler = new JobHandler(this.name, jobRequirements, middleware);
 
