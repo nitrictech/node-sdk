@@ -110,7 +110,7 @@ export const http = (
 
   const port = Number.parseInt(process.env.NITRIC_HTTP_PROXY_PORT);
 
-  if (Number.isNaN(port)) {
+  if (!port || Number.isNaN(port)) {
     // If port isn't set and the nitric environment is not run or cloud
     console.log('NITRIC_HTTP_PROXY_PORT not set. Finding open port...');
     portfinder.getPort((err, port) => {

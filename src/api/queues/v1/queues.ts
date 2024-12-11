@@ -158,7 +158,7 @@ export class Queue<T extends Record<string, any> = Record<string, any>> {
       const request = new QueueDequeueRequest();
 
       // Set the default and min depth to 1.
-      if (Number.isNaN(depth) || depth < 1) {
+      if (!depth || Number.isNaN(depth) || depth < 1) {
         depth = 1;
       }
 

@@ -35,4 +35,9 @@ jobs:
       - name: Build
         run: yarn build
       - name: Run tests
-        run: yarn coverage:upload
+        run: yarn test:coverage
+      - name: Upload coverage
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          gcov_ignore: './src/gen'

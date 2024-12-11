@@ -112,7 +112,7 @@ export class Rate {
     // // This will automatically parse the int off of a valid rate expression e.g. "10 minutes" === 10
     const rateNum = parseInt(rate);
 
-    if (isNaN(rateNum)) {
+    if (!rateNum || isNaN(rateNum)) {
       throw new Error(
         'invalid rate expression, expression must begin with a number'
       );
