@@ -17,10 +17,11 @@ import { HttpClient } from '@nitric/proto/http/v1/http_grpc_pb';
 import { SERVICE_BIND } from '../constants';
 import * as grpc from '@grpc/grpc-js';
 import { ClientMessage, HttpProxyRequest } from '@nitric/proto/http/v1/http_pb';
-import { Server } from 'http';
-import { Http2SecureServer, Http2Server } from 'http2';
 
-type ServerType = Server | Http2Server | Http2SecureServer;
+interface ServerType {
+  on: (eventType: string, callback: () => void, options?: any) => void;
+  close?: () => void;
+}
 
 type ListenerFunction =
   | ((port: number, callback?: () => void) => ServerType | Promise<ServerType>)
