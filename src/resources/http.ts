@@ -19,7 +19,11 @@ import * as grpc from '@grpc/grpc-js';
 import { ClientMessage, HttpProxyRequest } from '@nitric/proto/http/v1/http_pb';
 
 interface ServerType {
-  on: (eventType: string, callback: () => void, options?: any) => void;
+  on: (
+    eventType: 'close',
+    callback: () => void,
+    options?: Record<string, any>
+  ) => void;
   close?: () => void;
 }
 
