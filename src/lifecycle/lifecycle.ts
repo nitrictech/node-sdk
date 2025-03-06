@@ -60,17 +60,17 @@ const whenRunning = <T>(callback: Lifecycle<T>) =>
 const whenCollecting = <T>(callback: Lifecycle<T>) =>
   whenInLifecycles([LifecycleStage.Build], callback);
 
-const isRunning = () => isInLifecycle([LifecycleStage.LocalRun, LifecycleStage.Cloud]);
+const isRunning = () =>
+  isInLifecycle([LifecycleStage.LocalRun, LifecycleStage.Cloud]);
 
 const isCollecting = () => isInLifecycle([LifecycleStage.Build]);
-
 
 type Lifecycle<T> = () => T;
 
 export const Lifecycle = {
   // Check if the current environment is one of the provided stages
   is: isInLifecycle,
-  // Check if the current lifecycle is collecting application requirements 
+  // Check if the current lifecycle is collecting application requirements
   isCollecting,
   // Check if the current lifecycle is running the app
   isRunning,
