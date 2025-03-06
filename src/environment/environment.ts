@@ -48,7 +48,6 @@ const whenInEnvironments = <T>(stage: EnvironmentStage[], callback: EnvCallback<
 
 const whenLocallyRunning = <T>(callback: EnvCallback<T>) => whenInEnvironments([EnvironmentStage.LocalRun], callback);
 
-
 const whenBuilding = <T>(callback: EnvCallback<T>) => whenInEnvironments([EnvironmentStage.Build], callback);
 
 const whenInCloud = <T>(callback: EnvCallback<T>) => whenInEnvironments([EnvironmentStage.Cloud], callback);
