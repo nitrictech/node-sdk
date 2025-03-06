@@ -40,7 +40,7 @@ const isInEnvironment = (stage: EnvironmentStage[]) => {
 }
 
 // If the current environment is one of the provided stages, execute the provided callback
-const whenInEnvironments = <T>(stage: EnvironmentStage[], callback: EnvCallback<T>) => {
+const whenInEnvironments = <T>(stage: EnvironmentStage[], callback: EnvCallback<T>): T | undefined => {
     if (isInEnvironment(stage)) {
         return callback();
     }
