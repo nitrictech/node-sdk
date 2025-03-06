@@ -16,7 +16,7 @@
 const NITRIC_ENVIRONMENT = 'NITRIC_ENVIRONMENT';
 
 // Possible nitric execution environments
-enum EnvironmentStage {
+enum LifecycleStage {
   // Local development run (using nitric run/start)
   LocalRun = 'run',
   // Local development requirements building/collection (using nitric up)
@@ -25,61 +25,59 @@ enum EnvironmentStage {
   Cloud = 'cloud',
 }
 
-const getCurrentEnvironment = (): EnvironmentStage => {
+const getCurrentLifecycle = (): LifecycleStage => {
   const lifecycle = process.env[NITRIC_ENVIRONMENT];
   if (
     !lifecycle ||
-    !Object.values(EnvironmentStage).includes(lifecycle as EnvironmentStage)
+    !Object.values(LifecycleStage).includes(lifecycle as LifecycleStage)
   ) {
     throw new Error(
       `Unable to determine the current Nitric lifecycle, please ensure the ${NITRIC_ENVIRONMENT} environment variable is set`
     );
   }
-  return lifecycle as EnvironmentStage;
+  return lifecycle as LifecycleStage;
 };
 
 // Check if the current environment is one of the provided stages
-const isInEnvironment = (stage: EnvironmentStage[]) => {
-  const currentStage = getCurrentEnvironment();
+const isInLifecycle = (stage: LifecycleStage[]) => {
+  const currentStage = getCurrentLifecycle();
   return stage.includes(currentStage);
 };
 
 // If the current environment is one of the provided stages, execute the provided callback
-const whenInEnvironments = <T>(
-  stage: EnvironmentStage[],
-  callback: EnvCallback<T>
+const whenInLifecycles = <T>(
+  stage: LifecycleStage[],
+  callback: Lifecycle<T>
 ): T | undefined => {
-  if (isInEnvironment(stage)) {
+  if (isInLifecycle(stage)) {
     return callback();
   }
 };
 
-const whenLocallyRunning = <T>(callback: EnvCallback<T>) =>
-  whenInEnvironments([EnvironmentStage.LocalRun], callback);
+const whenRunning = <T>(callback: Lifecycle<T>) =>
+  whenInLifecycles([LifecycleStage.LocalRun, LifecycleStage.Cloud], callback);
 
-const whenBuilding = <T>(callback: EnvCallback<T>) =>
-  whenInEnvironments([EnvironmentStage.Build], callback);
+const whenCollecting = <T>(callback: Lifecycle<T>) =>
+  whenInLifecycles([LifecycleStage.Build], callback);
 
-const whenInCloud = <T>(callback: EnvCallback<T>) =>
-  whenInEnvironments([EnvironmentStage.Cloud], callback);
+const isRunning = () => isInLifecycle([LifecycleStage.LocalRun, LifecycleStage.Cloud]);
 
-type EnvCallback<T> = () => T;
+const isCollecting = () => isInLifecycle([LifecycleStage.Build]);
 
-export const Environment = {
+
+type Lifecycle<T> = () => T;
+
+export const Lifecycle = {
   // Check if the current environment is one of the provided stages
-  is: isInEnvironment,
-  // Check if the current environment is a local run
-  isLocalRun: () => isInEnvironment([EnvironmentStage.LocalRun]),
-  // Check if the current environment is a build
-  isBuild: () => isInEnvironment([EnvironmentStage.Build]),
-  // Check if the current environment is a cloud environment
-  isCloud: () => isInEnvironment([EnvironmentStage.Cloud]),
+  is: isInLifecycle,
+  // Check if the current lifecycle is collecting application requirements 
+  isCollecting,
+  // Check if the current lifecycle is running the app
+  isRunning,
   // If the current environment is one of the provided stages, execute the provided callback
-  when: whenInEnvironments,
-  // If the current environment is a local run, execute the provided callback
-  whenLocallyRunning,
-  // If the current environment is a build, execute the provided callback
-  whenBuilding,
+  when: whenInLifecycles,
+  // If the current environment is collecting application requirements
+  whenCollecting,
   // If the current environment is a cloud environment, execute the provided callback
-  whenInCloud,
+  whenRunning,
 };
