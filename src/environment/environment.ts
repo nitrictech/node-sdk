@@ -36,29 +36,29 @@ const getCurrentEnvironment = (): EnvironmentStage => {
 // Check if the current environment is one of the provided stages
 const isInEnvironment = (stage: EnvironmentStage[]) => {
     const currentStage = getCurrentEnvironment();
-    return stage.includes(currentStage);;
+    return stage.includes(currentStage);
 }
 
 // If the current environment is one of the provided stages, execute the provided callback
-const whenInEnvironments = (stage: EnvironmentStage[], callback: EnvCallback) => {
+const whenInEnvironments = <T>(stage: EnvironmentStage[], callback: EnvCallback<T>) => {
     if (isInEnvironment(stage)) {
         return callback();
     }
 }
 
-const whenLocalRun = (callback: EnvCallback) => {
+const whenLocalRun = <T>(callback: EnvCallback<T>) => {
     whenInEnvironments([EnvironmentStage.LocalRun], callback);
 }
 
-const whenBuild = (callback: EnvCallback) => {
+const whenBuild = <T>(callback: EnvCallback<T>) => {
     whenInEnvironments([EnvironmentStage.Build], callback);
 }
 
-const whenCloud = (callback: EnvCallback) => {
+const whenCloud = <T>(callback: EnvCallback<T>) => {
     whenInEnvironments([EnvironmentStage.Cloud], callback);
 }
 
-type EnvCallback = () => void;
+type EnvCallback<T> = () => T;
 
 export const Environment = {
     // Check if the current environment is one of the provided stages
