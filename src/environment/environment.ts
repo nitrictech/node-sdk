@@ -66,9 +66,9 @@ export const Environment = {
     // If the current environment is one of the provided stages, execute the provided callback
     when: whenInEnvironments,
     // If the current environment is a local run, execute the provided callback
-    whenLocalRun,
+    whenLocallyRunning,
     // If the current environment is a build, execute the provided callback
-    whenBuild,
+    whenBuilding,
     // If the current environment is a cloud environment, execute the provided callback
-    whenCloud,
+    whenInCloud,
 }
