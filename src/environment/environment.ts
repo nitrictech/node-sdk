@@ -46,17 +46,12 @@ const whenInEnvironments = <T>(stage: EnvironmentStage[], callback: EnvCallback<
     }
 }
 
-const whenLocalRun = <T>(callback: EnvCallback<T>) => {
-    whenInEnvironments([EnvironmentStage.LocalRun], callback);
-}
+const whenLocalRun = <T>(callback: EnvCallback<T>) => whenInEnvironments([EnvironmentStage.LocalRun], callback);
 
-const whenBuild = <T>(callback: EnvCallback<T>) => {
-    whenInEnvironments([EnvironmentStage.Build], callback);
-}
 
-const whenCloud = <T>(callback: EnvCallback<T>) => {
-    whenInEnvironments([EnvironmentStage.Cloud], callback);
-}
+const whenBuild = <T>(callback: EnvCallback<T>) => whenInEnvironments([EnvironmentStage.Build], callback);
+
+const whenCloud = <T>(callback: EnvCallback<T>) => whenInEnvironments([EnvironmentStage.Cloud], callback);
 
 type EnvCallback<T> = () => T;
 
@@ -78,6 +73,3 @@ export const Environment = {
     // If the current environment is a cloud environment, execute the provided callback
     whenCloud,
 }
-
-
-
