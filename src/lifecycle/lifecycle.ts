@@ -16,7 +16,7 @@
 const NITRIC_ENVIRONMENT = 'NITRIC_ENVIRONMENT';
 
 // Possible nitric execution environments
-enum LifecycleStage {
+export enum LifecycleStage {
   // Local development run (using nitric run/start)
   LocalRun = 'run',
   // Local development requirements building/collection (using nitric up)
