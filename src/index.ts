@@ -16,4 +16,4 @@ export * from './resources';
 export * from './types';
 export * from './context';
 export * from './handlers';
-export { Lifecycle } from './lifecycle';
+export * from './lifecycle';
